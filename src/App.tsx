@@ -17,7 +17,7 @@ const COMPANY_INFO = {
     address: "Cyberpark C Blok Kat: 1 No:146 Bilkent, Çankaya / Ankara",
     phone: "+90 312 426 77 22",
     email: "info@turp.app",
-    copyright: "© 2025 Omega CRO. Tüm hakları saklıdır."
+    copyright: "© 2025 Turp Sağlık Teknolojileri A.Ş. Tüm hakları saklıdır."
 };
 
 // --- SUPABASE AYARLARI ---
@@ -29,12 +29,13 @@ if (!supabaseUrl || !supabaseKey) {
 }
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// --- MODÜL İÇERİK VERİTABANI ---
+// --- MODÜL İÇERİK VERİTABANI (RESİMLER EKLENDİ) ---
 const MODULE_CONTENT = {
   'survey': {
     title: "ePRO & Anket Modülü",
     icon: ClipboardList,
     color: "from-blue-600 to-indigo-600",
+    image: "https://images.unsplash.com/photo-1556740758-90de374c12ad?q=80&w=2070&auto=format&fit=crop", // Anket/Tablet görseli
     short: "Kağıt formları unutun. Veriyi kaynağında, hatasız yakalayın.",
     heroDesc: "Katılımcıların yaşam kalitesi ölçeklerini, günlük semptomlarını ve tedavi memnuniyetlerini mobil uygulama üzerinden anlık, güvenilir ve validasyon kuralları çerçevesinde toplayın.",
     details: [
@@ -53,6 +54,7 @@ const MODULE_CONTENT = {
     title: "İlaç Hatırlatma & Uyum",
     icon: Bell,
     color: "from-green-500 to-emerald-700",
+    image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=2030&auto=format&fit=crop", // İlaç/Eczane görseli
     short: "Tedavi uyumunu şansa bırakmayın. Akıllı takip sistemi.",
     heroDesc: "İlaç, doğru zamanda ve doğru dozda alınmadığında araştırma verisi çöp olabilir. Akıllı bildirimler ve görsel teyit sistemleri ile 'Adherence' oranlarını %90'ın üzerine çıkarın.",
     details: [
@@ -71,6 +73,7 @@ const MODULE_CONTENT = {
     title: "Vital Ölçüm & IoT",
     icon: HeartPulse,
     color: "from-rose-500 to-red-700",
+    image: "https://images.unsplash.com/photo-1576091160550-21878bf72a5b?q=80&w=2070&auto=format&fit=crop", // Akıllı saat/Ölçüm görseli
     short: "Klinik dışında da kesintisiz hasta gözlemi.",
     heroDesc: "Hastanın tansiyon, şeker, nabız, kilo ve uyku verilerini Apple Health, Google Fit veya Bluetooth özellikli tıbbi cihazlar üzerinden otomatik ve hatasız çekin.",
     details: [
@@ -89,6 +92,7 @@ const MODULE_CONTENT = {
     title: "Randevu & Vizit Yönetimi",
     icon: Calendar,
     color: "from-purple-600 to-violet-800",
+    image: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?q=80&w=2070&auto=format&fit=crop", // Doktor/Takvim görseli
     short: "No-Show oranlarını minimize eden akıllı takvim.",
     heroDesc: "Karmaşık protokol takvimini hastanın cebine indirin. Saha ziyaretlerini, tele-vizitleri ve laboratuvar randevularını otomatik organize edin ve hatırlatın.",
     details: [
@@ -107,6 +111,7 @@ const MODULE_CONTENT = {
     title: "Yan Etki Bildirimi",
     icon: AlertTriangle,
     color: "from-orange-500 to-amber-600",
+    image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?q=80&w=2070&auto=format&fit=crop", // Hasta/Doktor konsültasyon
     short: "Farmakovijilans için en hızlı ve güvenli yol.",
     heroDesc: "Hastaların yaşadığı beklenmedik durumları anında bildirmesini sağlayan, araştırmacıyla hasta arasındaki 7/24 açık acil durum köprüsü.",
     details: [
@@ -125,6 +130,7 @@ const MODULE_CONTENT = {
     title: "Hasta Bilgilendirme",
     icon: BookOpen,
     color: "from-sky-500 to-cyan-600",
+    image: "https://images.unsplash.com/photo-1576091160501-bbe574695a8d?q=80&w=2070&auto=format&fit=crop", // Tablet/Eğitim
     short: "Bilinçli hasta, başarılı ve etik bir araştırma demektir.",
     heroDesc: "Onam formlarını dijitalleştirin (eConsent) ve hastaları araştırma protokolü hakkında sıkıcı metinler yerine interaktif videolarla eğitin.",
     details: [
@@ -143,6 +149,7 @@ const MODULE_CONTENT = {
     title: "Webinar & Tele-Vizit",
     icon: Video,
     color: "from-fuchsia-600 to-pink-600",
+    image: "https://images.unsplash.com/photo-1616587845419-36f3a89933a3?q=80&w=2071&auto=format&fit=crop", // Video konferans
     short: "Mekan bağımsız, hibrit klinik araştırma altyapısı.",
     heroDesc: "Hastanın merkeze gelemediği durumlarda, uygulama üzerinden güvenli, şifreli ve KVKK uyumlu görüntülü görüşme yapın. Decentralized Clinical Trials (DCT) için ideal.",
     details: [
@@ -251,7 +258,7 @@ const Footer = ({ setView }) => {
   );
 };
 
-// --- MODÜL DETAY SAYFASI ---
+// --- MODÜL DETAY SAYFASI (GÜNCELLENDİ: BACKGROUND IMAGE & STYLE) ---
 const ModuleDetail = ({ moduleId, setView }) => {
   const data = MODULE_CONTENT[moduleId];
 
@@ -264,65 +271,79 @@ const ModuleDetail = ({ moduleId, setView }) => {
 
   return (
     <div className="min-h-screen bg-white animate-in fade-in slide-in-from-right-8 duration-500">
-      <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100 px-6 py-4">
+      <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-100 px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-           <button onClick={() => setView('home')} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-bold transition-colors">
+           <button onClick={() => setView('home')} className="flex items-center gap-2 text-slate-600 hover:text-slate-900 font-bold transition-colors">
              <ArrowLeft size={20}/> Ana Sayfaya Dön
            </button>
-           <button onClick={() => document.getElementById('contact-module').scrollIntoView({behavior: 'smooth'})} className="px-5 py-2 bg-slate-900 text-white rounded-full text-sm font-bold hover:bg-slate-700 transition-colors">
+           <button onClick={() => document.getElementById('contact-module').scrollIntoView({behavior: 'smooth'})} className="px-5 py-2 bg-slate-900 text-white rounded-full text-sm font-bold hover:bg-slate-700 transition-colors shadow-lg">
              Bu Modülü Talep Et
            </button>
         </div>
       </div>
 
-      <section className={`relative py-24 px-6 overflow-hidden`}>
-        <div className={`absolute inset-0 bg-gradient-to-br ${data.color} opacity-5`}></div>
-        <div className="max-w-5xl mx-auto text-center relative z-10">
-           <div className={`w-20 h-20 mx-auto bg-gradient-to-br ${data.color} rounded-2xl flex items-center justify-center text-white shadow-2xl mb-8 rotate-3`}>
-              {React.createElement(data.icon, { size: 40 })}
+      {/* Hero Alanı - RESİMLİ ARKA PLAN */}
+      <section className="relative py-32 px-6 overflow-hidden flex items-center justify-center min-h-[60vh]">
+        {/* Arka Plan Resmi */}
+        <div className="absolute inset-0 z-0">
+            <img src={data.image} alt={data.title} className="w-full h-full object-cover object-center animate-pulse-slow" />
+            {/* Karartma Katmanı (Gradient) */}
+            <div className={`absolute inset-0 bg-gradient-to-r ${data.color} opacity-90 mix-blend-multiply`}></div>
+            <div className="absolute inset-0 bg-black/30"></div>
+        </div>
+        
+        <div className="max-w-5xl mx-auto text-center relative z-10 text-white">
+           <div className="w-24 h-24 mx-auto bg-white/20 backdrop-blur-sm border border-white/30 rounded-3xl flex items-center justify-center text-white shadow-2xl mb-8">
+              {React.createElement(data.icon, { size: 48 })}
            </div>
-           <h1 className="font-heading text-5xl md:text-7xl font-extrabold text-slate-900 mb-6">{data.title}</h1>
-           <p className="text-2xl text-slate-500 font-light max-w-3xl mx-auto mb-10">{data.short}</p>
+           <h1 className="font-heading text-5xl md:text-7xl font-extrabold mb-6 drop-shadow-lg">{data.title}</h1>
+           <p className="text-2xl text-white/90 font-light max-w-3xl mx-auto mb-10 leading-relaxed">{data.short}</p>
         </div>
       </section>
 
-      <section className="py-20 px-6 max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-start">
+      {/* Detaylı Açıklama ve Özellikler */}
+      <section className="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-start">
          <div>
-            <h2 className="font-heading text-3xl font-bold text-slate-900 mb-6">Neden Bu Modül?</h2>
-            <p className="text-lg text-slate-600 leading-relaxed mb-8 font-medium">{data.heroDesc}</p>
-            <div className="space-y-6">
+            <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-8">Neden Bu Modül?</h2>
+            <p className="text-lg text-slate-600 leading-relaxed mb-10 font-medium border-l-4 border-slate-900 pl-6">
+                {data.heroDesc}
+            </p>
+            <div className="space-y-8">
                 {data.details.map((detail, i) => (
-                    <div key={i} className="flex gap-4">
-                        <div className="mt-1.5 w-2 h-2 rounded-full bg-slate-900 shrink-0"></div>
-                        <p className="text-slate-600 leading-relaxed">{detail}</p>
+                    <div key={i} className="flex gap-5">
+                        <div className="mt-1.5 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold shrink-0">{i+1}</div>
+                        <p className="text-slate-600 leading-relaxed text-lg">{detail}</p>
                     </div>
                 ))}
             </div>
          </div>
          
-         <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200">
-            <h3 className="font-heading text-2xl font-bold text-slate-900 mb-8">Teknik Özellikler</h3>
-            <div className="grid gap-6">
+         <div className="bg-slate-50 p-10 rounded-[2rem] border border-slate-200 shadow-xl relative overflow-hidden">
+            <h3 className="font-heading text-2xl font-bold text-slate-900 mb-8 relative z-10">Teknik Özellikler</h3>
+            <div className="grid gap-6 relative z-10">
                 {data.features.map((feat, i) => (
-                    <div key={i} className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex items-start gap-4">
-                        <div className={`p-2 rounded-lg bg-gradient-to-br ${data.color} text-white shrink-0`}>
-                            <CheckCircle size={18}/>
+                    <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-start gap-4 hover:shadow-md transition-shadow">
+                        <div className={`p-3 rounded-xl bg-gradient-to-br ${data.color} text-white shrink-0 shadow-md`}>
+                            <CheckCircle size={20}/>
                         </div>
                         <div>
-                            <h4 className="font-bold text-slate-900">{feat.t}</h4>
-                            <p className="text-sm text-slate-500">{feat.d}</p>
+                            <h4 className="font-bold text-slate-900 text-lg">{feat.t}</h4>
+                            <p className="text-sm text-slate-500 mt-1">{feat.d}</p>
                         </div>
                     </div>
                 ))}
             </div>
+            {/* Dekoratif Arka Plan */}
+            <div className={`absolute top-0 right-0 w-64 h-64 bg-gradient-to-br ${data.color} opacity-5 rounded-full blur-3xl -mr-20 -mt-20`}></div>
          </div>
       </section>
 
+      {/* Alt CTA */}
       <section id="contact-module" className="py-24 bg-slate-900 text-white text-center px-6">
           <div className="max-w-3xl mx-auto">
               <h2 className="font-heading text-4xl font-bold mb-6">Bu Modülü Projenize Ekleyin</h2>
               <p className="text-slate-400 mb-10 text-lg">Turp ekosistemi modülerdir. Sadece ihtiyacınız olanı kullanın, maliyetleri optimize edin.</p>
-              <button onClick={() => setView('home')} className="px-10 py-4 bg-white text-slate-900 font-bold rounded-xl hover:scale-105 transition-transform">
+              <button onClick={() => setView('home')} className="px-12 py-5 bg-white text-slate-900 font-bold rounded-2xl hover:scale-105 transition-transform shadow-xl text-lg">
                   İletişime Geçin
               </button>
           </div>
@@ -334,36 +355,25 @@ const ModuleDetail = ({ moduleId, setView }) => {
 // --- BİLEŞEN: HOME (ANA SAYFA) ---
 const Home = ({ setView }) => {
   const { t } = useTranslation();
-  
-  // İLETİŞİM FORMU STATE'LERİ
   const [contactForm, setContactForm] = useState({ ad_soyad: '', email: '', sirket: '', ilgi_alani: '' });
   const [contactStatus, setContactStatus] = useState('idle'); 
 
   const handleContactSubmit = async (e) => {
-      e.preventDefault();
-      setContactStatus('loading');
-
+      e.preventDefault(); setContactStatus('loading');
       const { error } = await supabase.from('leads').insert([contactForm]);
-
-      if (error) {
-          alert("Hata oluştu: " + error.message);
-          setContactStatus('error');
-      } else {
-          setContactStatus('success');
-          setContactForm({ ad_soyad: '', email: '', sirket: '', ilgi_alani: '' });
-      }
+      if (error) { alert("Hata: " + error.message); setContactStatus('error'); } 
+      else { setContactStatus('success'); setContactForm({ ad_soyad: '', email: '', sirket: '', ilgi_alani: '' }); }
   };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 overflow-hidden">
       
-      {/* 1. HERO SECTION */}
+      {/* 1. HERO */}
       <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
         <div className="absolute inset-0 z-0 bg-slate-900 overflow-hidden">
            <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=2070&auto=format&fit=crop" className="w-full h-full object-cover opacity-20 blur-sm scale-105 animate-pulse-slow" />
            <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/80 to-slate-50"></div>
         </div>
-        
         <div className="relative z-10 max-w-6xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-green-400 px-4 py-1.5 rounded-full text-xs font-bold mb-8 shadow-2xl tracking-wide uppercase">
             <ShieldCheck size={14}/> USBS Onaylı & e-Nabız Entegreli
@@ -427,34 +437,34 @@ const Home = ({ setView }) => {
         </div>
       </section>
 
-      {/* 4. BENTO GRID (MODÜLLER - DÜZELTME: CURSOR POINTER & LINK) */}
+      {/* 4. BENTO GRID (MODÜLLER - DÜZELTME: CURSOR VE TIKLANABİLİRLİK) */}
       <section id="features" className="py-24 px-6 max-w-7xl mx-auto">
          <div className="mb-16"><h2 className="font-heading text-4xl font-bold text-slate-900 mb-4">Teknoloji ile Güçlendirilmiş Çözümler</h2><p className="text-lg text-slate-500">Detaylı bilgi için modüllere tıklayın.</p></div>
          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
             
-            <div onClick={() => setView({ type: 'module', id: 'survey' })} className="cursor-pointer md:col-span-2 bg-gradient-to-br from-rose-600 to-purple-700 rounded-3xl p-10 text-white relative overflow-hidden group hover:shadow-2xl hover:-translate-y-1 transition-all">
+            <div onClick={() => setView({ type: 'module', id: 'survey' })} className="cursor-pointer md:col-span-2 bg-gradient-to-br from-rose-600 to-purple-700 rounded-3xl p-10 text-white relative overflow-hidden group hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
                 <div className="relative z-10"><div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center mb-6"><ClipboardList size={24}/></div><h3 className="text-3xl font-heading font-bold mb-4">ePRO & Anket Modülü</h3><p className="text-rose-100 text-lg max-w-md">Kağıt formları unutun. Veriyi kaynağında, hatasız yakalayın.</p></div>
                 <div className="absolute right-0 bottom-0 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
                 <ArrowRight className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity"/>
             </div>
             
-            <div onClick={() => setView({ type: 'module', id: 'medication' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all group hover:border-green-400">
+            <div onClick={() => setView({ type: 'module', id: 'medication' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all group hover:border-green-400 duration-300">
                 <div className="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-6"><Bell size={24}/></div><h3 className="text-xl font-bold text-slate-900 mb-3">İlaç Hatırlatma</h3><p className="text-slate-500">Tedavi uyumunu şansa bırakmayın.</p>
             </div>
             
-            <div onClick={() => setView({ type: 'module', id: 'vital' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all group hover:border-rose-400">
+            <div onClick={() => setView({ type: 'module', id: 'vital' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all group hover:border-rose-400 duration-300">
                 <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center mb-6"><HeartPulse size={24}/></div><h3 className="text-xl font-bold text-slate-900 mb-3">Vital Ölçüm & IoT</h3><p className="text-slate-500">Giyilebilir cihazlarla kesintisiz takip.</p>
             </div>
 
-            <div onClick={() => setView({ type: 'module', id: 'appointment' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all group hover:border-purple-400">
+            <div onClick={() => setView({ type: 'module', id: 'appointment' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all group hover:border-purple-400 duration-300">
                 <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-6"><Calendar size={24}/></div><h3 className="text-xl font-bold text-slate-900 mb-3">Randevu Yönetimi</h3><p className="text-slate-500">No-Show oranlarını minimize edin.</p>
             </div>
 
-            <div onClick={() => setView({ type: 'module', id: 'adverse' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all group hover:border-orange-400">
+            <div onClick={() => setView({ type: 'module', id: 'adverse' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all group hover:border-orange-400 duration-300">
                 <div className="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center mb-6"><AlertTriangle size={24}/></div><h3 className="text-xl font-bold text-slate-900 mb-3">Yan Etki Bildirimi</h3><p className="text-slate-500">Farmakovijilans için en hızlı yol.</p>
             </div>
 
-            <div className="cursor-pointer md:col-span-2 bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-lg flex flex-col md:flex-row items-center gap-8 relative overflow-hidden hover:border-slate-700 hover:-translate-y-1 transition-all" onClick={() => setView({ type: 'module', id: 'education' })}>
+            <div className="cursor-pointer md:col-span-2 bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-lg flex flex-col md:flex-row items-center gap-8 relative overflow-hidden hover:border-slate-700 hover:-translate-y-2 transition-all duration-300" onClick={() => setView({ type: 'module', id: 'education' })}>
                 <div className="flex-1 relative z-10"><div className="flex gap-3 mb-4"><span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-bold rounded-full border border-slate-700">eConsent</span><span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-bold rounded-full border border-slate-700">Video</span></div><h3 className="text-2xl font-bold text-white mb-2">Eğitim & Webinar</h3><p className="text-slate-400">Hastaları interaktif içeriklerle eğitin, uzaktan görüşün.</p></div>
                 <div className="w-24 h-24 bg-gradient-to-tr from-sky-500 to-cyan-600 rounded-full flex items-center justify-center shadow-lg shadow-sky-900/50 z-10"><BookOpen size={40} className="text-white"/></div>
             </div>
@@ -486,7 +496,7 @@ const Home = ({ setView }) => {
           </div>
       </section>
 
-      {/* 7. FAQ & CONTACT FORM (GÜNCELLENDİ) */}
+      {/* 7. FAQ & CONTACT FORM */}
       <section id="contact" className="py-24 px-6 bg-slate-50">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
             <div>
@@ -517,23 +527,10 @@ const Home = ({ setView }) => {
                                 <input type="text" placeholder="Şirket" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all" value={contactForm.sirket} onChange={e=>setContactForm({...contactForm, sirket: e.target.value})}/>
                             </div>
                             <input type="email" placeholder="Kurumsal E-posta" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all" value={contactForm.email} onChange={e=>setContactForm({...contactForm, email: e.target.value})} required/>
-                            
-                            {/* DÜZELTİLEN SELECT ALANI */}
-                            <select 
-                                className={`w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all ${contactForm.ilgi_alani === "" ? "text-slate-400" : "text-slate-900"}`}
-                                value={contactForm.ilgi_alani} 
-                                onChange={e=>setContactForm({...contactForm, ilgi_alani: e.target.value})}
-                                required
-                            >
-                                <option value="" disabled>İlgilendiğiniz Alanı Seçiniz</option>
-                                <option value="RWE / Gözlemsel Çalışma">RWE / Gözlemsel Çalışma</option>
-                                <option value="Faz Çalışması (III/IV)">Faz Çalışması (III/IV)</option>
-                                <option value="Medikal Cihaz Takibi">Medikal Cihaz Takibi</option>
+                            <select className={`w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all ${contactForm.ilgi_alani===""?"text-slate-400":"text-slate-900"}`} value={contactForm.ilgi_alani} onChange={e=>setContactForm({...contactForm, ilgi_alani: e.target.value})} required>
+                                <option value="" disabled>İlgilendiğiniz Alanı Seçiniz</option><option>RWE / Gözlemsel Çalışma</option><option>Faz Çalışması (III/IV)</option><option>Medikal Cihaz Takibi</option>
                             </select>
-
-                            <button disabled={contactStatus === 'loading'} type="submit" className="w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-rose-600 transition-colors shadow-lg flex items-center justify-center gap-2">
-                                {contactStatus === 'loading' ? <Loader2 className="animate-spin"/> : <>Gönder <Send size={18}/></>}
-                            </button>
+                            <button disabled={contactStatus === 'loading'} type="submit" className="w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-rose-600 flex justify-center gap-2">{contactStatus === 'loading' ? <Loader2 className="animate-spin"/> : <>Gönder <Send size={18}/></>}</button>
                         </form>
                     </>
                 )}
@@ -544,26 +541,11 @@ const Home = ({ setView }) => {
   );
 };
 
-// --- BİLEŞEN: LOGIN ---
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState('login');
-  const [message, setMessage] = useState({ type: '', text: '' });
-  const handleLogin = async (e) => { e.preventDefault(); setLoading(true); setMessage({ type: '', text: '' }); const { error } = await supabase.auth.signInWithPassword({ email, password }); if (error) { setMessage({ type: 'error', text: 'Giriş başarısız: ' + error.message }); } setLoading(false); };
-  const handleResetPassword = async (e) => { e.preventDefault(); setLoading(true); const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin }); if (error) { setMessage({ type: 'error', text: error.message }); } else { setMessage({ type: 'success', text: 'Şifre sıfırlama gönderildi.' }); } setLoading(false); };
-  return ( <div className="min-h-screen flex items-center justify-center bg-slate-50 px-6 py-20"> <div className="bg-white p-10 rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md animate-in fade-in zoom-in duration-500"> <div className="text-center mb-8"> <div className="w-12 h-12 bg-rose-600 rounded-xl flex items-center justify-center text-white mx-auto mb-4 shadow-lg"><Lock size={24} /></div> <h2 className="font-heading text-3xl font-bold text-slate-900">{mode === 'login' ? 'Yönetici Girişi' : 'Şifre Sıfırlama'}</h2> </div> {message.text && <div className={`p-4 rounded-xl mb-6 text-sm font-bold text-center ${message.type === 'error' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>{message.text}</div>} <form onSubmit={mode === 'login' ? handleLogin : handleResetPassword} className="space-y-5"> <div> <label className="block text-xs font-bold text-slate-500 uppercase mb-2">E-posta</label> <div className="relative"><Mail className="absolute left-4 top-3.5 text-slate-400" size={20}/><input type="email" className="w-full pl-12 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:border-rose-500 outline-none font-medium" value={email} onChange={(e) => setEmail(e.target.value)} required/></div> </div> {mode === 'login' && ( <div> <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Şifre</label> <div className="relative"><Key className="absolute left-4 top-3.5 text-slate-400" size={20}/><input type="password" className="w-full pl-12 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:border-rose-500 outline-none font-medium" value={password} onChange={(e) => setPassword(e.target.value)} required/></div> </div> )} <button disabled={loading} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-rose-600 transition-all">{loading ? 'İşleniyor...' : (mode === 'login' ? 'Giriş Yap' : 'Bağlantı Gönder')}</button> </form> <div className="mt-6 text-center"><button onClick={() => {setMode(mode === 'login' ? 'reset' : 'login'); setMessage({type:'',text:''});}} className="text-sm text-slate-500 hover:text-rose-600 font-medium">{mode === 'login' ? 'Şifremi Unuttum' : 'Giriş Ekranına Dön'}</button></div> </div> </div> );
-};
-
-// --- BİLEŞEN: POST DETAY ---
-const PostDetail = ({ post, setView, onEdit }) => { if (!post) return null; return ( <div className="max-w-4xl mx-auto px-6 py-20 animate-in fade-in slide-in-from-bottom-4 duration-500"> <div className="flex justify-between items-center mb-8"> <button onClick={() => setView('blog')} className="group flex items-center gap-2 text-slate-500 hover:text-rose-600 transition-all font-heading font-semibold"><ArrowRight size={18} className="rotate-180" /> Listeye Dön</button> <button onClick={() => onEdit(post)} className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold transition-colors"><Edit3 size={16}/> Düzenle</button> </div> <article className="bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden"> {post.image_url ? (<div className="h-[400px] w-full relative"><img src={post.image_url} alt={post.title} className="w-full h-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div></div>) : (<div className="h-32 bg-slate-100 w-full flex items-center justify-center text-slate-300"><ImageIcon size={48}/></div>)} <div className="p-8 md:p-12"> <div className="flex items-center gap-3 text-sm font-bold text-rose-600 mb-4 uppercase tracking-wider"><Calendar size={16} />{new Date(post.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })}</div> <h1 className="font-heading text-3xl md:text-5xl font-extrabold mb-8 text-slate-900 leading-tight">{post.title}</h1> <div className="blog-content text-lg text-slate-600 leading-relaxed"><ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown></div> </div> </article> </div> ); };
-
-// --- BİLEŞEN: BLOG LİSTESİ ---
-const Blog = ({ setView }) => { const { t } = useTranslation(); const [posts, setPosts] = useState([]); const [loading, setLoading] = useState(true); useEffect(() => { const fetchPosts = async () => { const { data } = await supabase.from('posts').select('*').order('created_at', { ascending: false }); setPosts(data || []); setLoading(false); }; fetchPosts(); }, []); return ( <div className="max-w-7xl mx-auto px-6 py-20"> <h2 className="font-heading text-4xl md:text-5xl font-extrabold text-slate-900 mb-16 text-center">{t("nav_blog")}</h2> {loading ? <div className="text-center"><Loader2 className="animate-spin inline text-rose-600"/></div> : ( <div className="grid md:grid-cols-3 gap-8"> {posts.length === 0 && <div className="col-span-3 text-center py-20 text-slate-500">Henüz yazı yok.</div>} {posts.map(post => ( <div key={post.id} onClick={() => setView({ type: 'detail', post: post })} className="bg-white rounded-2xl overflow-hidden shadow-lg border border-slate-100 hover:shadow-2xl hover:-translate-y-2 transition-all cursor-pointer group"> <div className="h-56 bg-slate-100 relative overflow-hidden">{post.image_url ? <img src={post.image_url} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" /> : <div className="flex items-center justify-center h-full text-slate-300"><ImageIcon size={48}/></div>}</div> <div className="p-8"><h3 className="font-heading font-bold text-xl mb-3 line-clamp-2 text-slate-900 group-hover:text-rose-600 transition-colors">{post.title}</h3><div className="flex items-center gap-2 text-sm font-bold text-slate-900 group-hover:translate-x-2 transition-transform">Devamını Oku <ArrowRight size={16} className="text-rose-600"/></div></div> </div> ))} </div> )} </div> ); };
-
-// --- BİLEŞEN: ADMIN (YÖNETİM) ---
-const Admin = ({ editingPost, setEditingPost, setView, handleLogout }) => { const [form, setForm] = useState({ title: '', content: '' }); const [image, setImage] = useState(null); const [uploading, setUploading] = useState(false); useEffect(() => { if (editingPost) { setForm({ title: editingPost.title, content: editingPost.content }); } else { setForm({ title: '', content: '' }); } }, [editingPost]); const handleSubmit = async (e) => { e.preventDefault(); setUploading(true); try { let url = editingPost ? editingPost.image_url : null; if (image) { const fileExt = image.name.split('.').pop(); const fileName = `${Date.now()}.${fileExt}`; const { error: uploadError } = await supabase.storage.from('blog-images').upload(fileName, image); if (uploadError) throw new Error("Resim Yüklenemedi: " + uploadError.message); const { data } = supabase.storage.from('blog-images').getPublicUrl(fileName); url = data.publicUrl; } if (editingPost) { await supabase.from('posts').update({ title: form.title, content: form.content, image_url: url }).eq('id', editingPost.id); alert("Yazı güncellendi!"); setEditingPost(null); setView('blog'); } else { await supabase.from('posts').insert([{ title: form.title, content: form.content, image_url: url }]); alert("Yazı eklendi!"); setForm({ title: '', content: '' }); setImage(null); } } catch (err) { alert("Hata: " + err.message); } setUploading(false); }; return ( <div className="max-w-3xl mx-auto px-6 py-20"> <div className="flex justify-between items-center mb-8"> <h2 className="font-heading text-3xl font-bold text-slate-900">Yönetim Paneli</h2> <button onClick={handleLogout} className="flex items-center gap-2 text-sm font-bold text-red-600 hover:bg-red-50 px-4 py-2 rounded-lg transition-colors"><LogOut size={16}/> Çıkış Yap</button> </div> <div className="bg-white p-10 rounded-3xl shadow-xl border border-slate-200"> <div className="flex justify-between items-center mb-10"> <div><h2 className="font-heading text-2xl font-bold text-slate-900">{editingPost ? 'Yazıyı Düzenle' : 'Yeni Yazı Ekle'}</h2><p className="text-slate-500">Markdown formatında içerik girebilirsiniz.</p></div> {editingPost && <button onClick={() => {setEditingPost(null); setForm({title:'',content:''});}} className="text-sm text-rose-600 font-bold hover:underline">İptal Et</button>} </div> <form onSubmit={handleSubmit} className="space-y-8"> <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">Başlık</label><input className="w-full p-4 border-2 border-slate-200 rounded-xl font-heading font-bold text-lg outline-none focus:border-rose-500" value={form.title} onChange={e=>setForm({...form, title:e.target.value})} required /></div> <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">İçerik (Markdown)</label><textarea className="w-full p-4 border-2 border-slate-200 rounded-xl font-mono text-sm min-h-[300px] outline-none focus:border-rose-500" value={form.content} onChange={e=>setForm({...form, content:e.target.value})} required /></div> <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">Görsel</label><input type="file" onChange={e=>setImage(e.target.files[0])} className="block w-full text-sm text-slate-500"/></div> <button disabled={uploading} className="w-full bg-slate-900 text-white py-5 rounded-xl font-bold text-lg hover:bg-rose-600 transition-all">{uploading ? 'İşleniyor...' : (editingPost ? 'Güncelle' : 'Yayınla')}</button> </form> </div> </div> ); };
+// --- DİĞER BİLEŞENLER (Blog, Admin, Login, PostDetail) ---
+const Login=()=>{const[e,sE]=useState('');const[p,sP]=useState('');const[l,sL]=useState(false);const[m,sM]=useState('login');const[msg,sMsg]=useState({t:'',txt:''});const hL=async(ev)=>{ev.preventDefault();sL(true);sMsg({t:'',txt:''});const{error}=await supabase.auth.signInWithPassword({email:e,password:p});if(error)sMsg({t:'error',txt:error.message});sL(false)};const hR=async(ev)=>{ev.preventDefault();sL(true);const{error}=await supabase.auth.resetPasswordForEmail(e,{redirectTo:window.location.origin});if(error)sMsg({t:'error',txt:error.message});else sMsg({t:'success',txt:'Link gönderildi.'});sL(false)};return(<div className="min-h-screen flex items-center justify-center bg-slate-50 px-6"><div className="bg-white p-10 rounded-3xl shadow-2xl w-full max-w-md"><div className="text-center mb-8"><h2 className="font-heading text-3xl font-bold">{m==='login'?'Giriş':'Şifre Sıfırla'}</h2></div>{msg.txt&&<div className={`p-4 rounded-xl mb-6 text-sm font-bold text-center ${msg.t==='error'?'bg-red-50 text-red-600':'bg-green-50 text-green-600'}`}>{msg.txt}</div>}<form onSubmit={m==='login'?hL:hR} className="space-y-5"><input type="email" className="w-full p-3 border-2 rounded-xl" placeholder="Email" value={e} onChange={x=>sE(x.target.value)} required/>{m==='login'&&<input type="password" className="w-full p-3 border-2 rounded-xl" placeholder="Şifre" value={p} onChange={x=>sP(x.target.value)} required/>}<button disabled={l} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold">{l?'...':(m==='login'?'Giriş':'Gönder')}</button></form><div className="mt-6 text-center"><button onClick={()=>{sM(m==='login'?'reset':'login');sMsg({t:'',txt:''})}} className="text-sm text-slate-500 font-bold">Değiştir: {m==='login'?'Şifremi Unuttum':'Giriş Yap'}</button></div></div></div>)};
+const PostDetail=({post,setView,onEdit})=>{if(!post)return null;return(<div className="max-w-4xl mx-auto px-6 py-20"><div className="flex justify-between mb-8"><button onClick={()=>setView('blog')} className="font-bold flex gap-2 items-center"><ArrowRight className="rotate-180" size={18}/> Dön</button><button onClick={()=>onEdit(post)} className="bg-slate-100 px-4 py-2 rounded-lg font-bold flex gap-2"><Edit3 size={16}/> Düzenle</button></div><article className="bg-white rounded-3xl shadow-xl overflow-hidden">{post.image_url&&<img src={post.image_url} className="w-full h-96 object-cover"/>}<div className="p-12"><h1 className="font-heading text-4xl font-extrabold mb-8">{post.title}</h1><div className="prose prose-lg"><ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown></div></div></article></div>)};
+const Blog=({setView})=>{const{t}=useTranslation();const[p,sP]=useState([]);const[l,sL]=useState(true);useEffect(()=>{const f=async()=>{const{data}=await supabase.from('posts').select('*').order('created_at',{ascending:false});sP(data||[]);sL(false)};f()},[]);return(<div className="max-w-7xl mx-auto px-6 py-20"><h2 className="font-heading text-4xl font-extrabold text-center mb-16">{t("nav_blog")}</h2>{l?<div className="text-center">...</div>:<div className="grid md:grid-cols-3 gap-8">{p.map(x=>(<div key={x.id} onClick={()=>setView({type:'detail',post:x})} className="bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer hover:-translate-y-2 transition-all"><div className="h-56 bg-slate-100 relative">{x.image_url&&<img src={x.image_url} className="w-full h-full object-cover"/>}</div><div className="p-8"><h3 className="font-bold text-xl mb-2">{x.title}</h3></div></div>))}</div>}</div>)};
+const Admin=({editingPost,setEditingPost,setView,handleLogout})=>{const[f,sF]=useState({title:'',content:''});const[i,sI]=useState(null);const[u,sU]=useState(false);useEffect(()=>{if(editingPost)sF({title:editingPost.title,content:editingPost.content});else sF({title:'',content:''})},[editingPost]);const sub=async(e)=>{e.preventDefault();sU(true);try{let url=editingPost?editingPost.image_url:null;if(i){const n=`${Date.now()}-${i.name.replace(/\W/g,'')}`;await supabase.storage.from('blog-images').upload(n,i);const{data}=supabase.storage.from('blog-images').getPublicUrl(n);url=data.publicUrl}if(editingPost){await supabase.from('posts').update({title:f.title,content:f.content,image_url:url}).eq('id',editingPost.id);alert('Güncellendi');setEditingPost(null);setView('blog')}else{await supabase.from('posts').insert([{title:f.title,content:f.content,image_url:url}]);alert('Eklendi');sF({title:'',content:''});sI(null)}}catch(err){alert(err.message)}sU(false)};return(<div className="max-w-3xl mx-auto px-6 py-20"><div className="flex justify-between mb-8"><h2 className="font-heading text-3xl font-bold">Yönetim</h2><button onClick={handleLogout} className="text-red-600 font-bold flex gap-2"><LogOut size={16}/> Çıkış</button></div><div className="bg-white p-10 rounded-3xl shadow-xl"><form onSubmit={sub} className="space-y-6"><input className="w-full p-4 border-2 rounded-xl font-bold" value={f.title} onChange={e=>sF({...f,title:e.target.value})} placeholder="Başlık"/><textarea className="w-full p-4 border-2 rounded-xl min-h-[200px]" value={f.content} onChange={e=>sF({...f,content:e.target.value})} placeholder="İçerik (Markdown)"/><input type="file" onChange={e=>sI(e.target.files[0])}/><button disabled={u} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold">{u?'...':'Kaydet'}</button></form></div></div>)};
 
 // --- ANA UYGULAMA ---
 export default function App() {
@@ -584,6 +566,7 @@ export default function App() {
 
   const handleLogout = async () => { await supabase.auth.signOut(); setView('home'); };
   const startEdit = (post) => { if (!session) { alert("Düzenleme yapmak için giriş yapmalısınız!"); setView('admin'); return; } setEditingPost(post); setView('admin'); };
+
   const renderView = () => {
     if (view === 'home') return <Home setView={setView} />;
     if (view === 'blog') return <Blog setView={setView} />;
@@ -597,19 +580,25 @@ export default function App() {
     <div className="font-sans text-slate-900 bg-slate-50 min-h-screen flex flex-col selection:bg-rose-200 selection:text-rose-900">
       <nav className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-white/90 backdrop-blur-md shadow-md py-3' : 'bg-transparent py-6'}`}>
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          <div className="font-heading font-bold text-2xl flex items-center gap-2 cursor-pointer group" onClick={()=>setView('home')}><div className="w-10 h-10 bg-rose-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-rose-600/30 group-hover:rotate-3 transition-transform"><Activity size={22}/></div><span className="tracking-tight text-slate-900">Turp</span></div>
+          <div className="font-heading font-bold text-2xl flex items-center gap-2 cursor-pointer group" onClick={()=>setView('home')}>
+            <div className="w-10 h-10 bg-rose-600 rounded-xl flex items-center justify-center text-white shadow-lg shadow-rose-600/30 group-hover:rotate-3 transition-transform"><Activity size={22}/></div>
+            <span className="tracking-tight text-slate-900">Turp</span>
+          </div>
           <div className="flex items-center gap-3 md:gap-6">
             <div className="flex items-center bg-white/80 backdrop-blur border border-slate-200 p-1.5 rounded-full shadow-sm">
               <button onClick={()=>setView('home')} className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${view === 'home' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}>{t("nav_home")}</button>
-              {/* MODÜLLER DROPDOWN (YENİ ÖZELLİK) */}
-              <div className="relative group">
+              {/* MODÜLLER DROPDOWN (DÜZELTİLDİ: HASSASİYET SORUNU ÇÖZÜLDÜ) */}
+              <div className="relative group h-full flex items-center">
                  <button className="px-4 py-2 rounded-full text-sm font-bold text-slate-500 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-1">Modüller <ChevronDown size={14}/></button>
-                 <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden hidden group-hover:block animate-in fade-in slide-in-from-top-2 duration-200">
-                    {Object.entries(MODULE_CONTENT).map(([key, val]) => (
-                        <button key={key} onClick={() => setView({ type: 'module', id: key })} className="block w-full text-left px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-rose-600 border-b border-slate-50 last:border-0 transition-colors">
-                            {val.title}
-                        </button>
-                    ))}
+                 {/* Görünmez Köprü (Padding-Top) */}
+                 <div className="absolute top-full left-0 w-64 pt-4 hidden group-hover:block animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
+                        {Object.entries(MODULE_CONTENT).map(([key, val]) => (
+                            <button key={key} onClick={() => setView({ type: 'module', id: key })} className="block w-full text-left px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-rose-600 border-b border-slate-50 last:border-0 transition-colors">
+                                {val.title}
+                            </button>
+                        ))}
+                    </div>
                  </div>
               </div>
               <button onClick={()=>setView('blog')} className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${view === 'blog' || view?.type === 'detail' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}>{t("nav_blog")}</button>
