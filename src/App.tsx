@@ -98,10 +98,94 @@ const Home = ({ setView }) => {
 };
 
 // --- BLOG, ADMIN ve APP KISIMLARI DEĞİŞMEDEN DEVAM EDER ---
-const Blog = () => { /* ... (önceki kod) ... */ };
-const Admin = () => { /* ... (önceki kod) ... */ };
-// (Blog ve Admin bileşenleri, uzunluktan dolayı burada tekrarlanmamıştır, ancak App.tsx dosyanızda önceki halini korumalıdır.)
+const Blog = () => {
+  const { t } = useTranslation();
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    // Supabase'den verileri çeken fonksiyon
+    const fetchPosts = async () => {
+      // 'posts' tablosundan tüm verileri çek ve oluşturulma tarihine göre sırala
+      const { data } = await supabase.from('posts').select('*').order('created_at', { ascending: false });
+      setPosts(data || []);
+      setLoading(false);
+    };
+    fetchPosts();
+  }, []);
+
+  return (
+    <div className="max-w-7xl mx-auto px-6 py-16">
+      {/* Başlık: Dil seçeneğine göre çevrilir */}
+      <h2 className="font-heading text-3xl font-bold mb-12 text-center">{t("nav_blog")}</h2>
+      
+      {loading ? ( 
+        <div className="text-center"><Loader2 className="animate-spin inline text-rose-600"/> Yükleniyor...</div> 
+      ) : (
+        <div className="grid md:grid-cols-3 gap-8">
+          {posts.length === 0 && <div className="col-span-3 text-center text-slate-400 bg-white p-8 rounded-xl border border-dashed">Henüz yazı yok. Yönetim panelinden ekleyebilirsiniz.</div>}
+          
+          {posts.map(post => (
+            <div key={post.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-200 hover:shadow-lg transition-all">
+              {/* Görsel Alanı */}
+              <div className="h-48 bg-slate-100 relative">
+                 {post.image_url ? (
+                   <img src={post.image_url} className="w-full h-full object-cover" alt={post.title} />
+                 ) : (
+                   <div className="flex items-center justify-center h-full text-slate-300"><ImageIcon/></div>
+                 )}
+              </div>
+              {/* İçerik Alanı */}
+              <div className="p-6">
+                <h3 className="font-heading font-bold text-lg mb-2 line-clamp-2">{post.title}</h3>
+                <p className="text-slate-500 text-sm line-clamp-3 font-sans">{post.content}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};const Admin = () => {
+  const [form, setForm] = useState({ title: '', content: '' });
+  const [image, setImage] = useState(null);
+  const [uploading, setUploading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); setUploading(true);
+    try {
+      let url = null;
+      if (image) {
+        // Resim yükleme mantığı
+        const cleanName = image.name.replace(/[^a-zA-Z0-9.]/g, '');
+        const name = `${Date.now()}-${cleanName}`;
+        await supabase.storage.from('blog-images').upload(name, image);
+        const { data } = supabase.storage.from('blog-images').getPublicUrl(name);
+        url = data.publicUrl;
+      }
+      // Veritabanına veri ekleme
+      await supabase.from('posts').insert([{ title: form.title, content: form.content, image_url: url }]);
+      alert("Yazı başarıyla eklendi!"); setForm({ title: '', content: '' }); setImage(null);
+    } catch (err) { alert("Hata: " + err.message); }
+    setUploading(false);
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto px-6 py-16">
+      <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
+        <h2 className="font-heading text-2xl font-bold mb-6">Blog Yazısı Ekle</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div><label className="block text-sm font-bold text-slate-700 mb-2">Başlık</label><input className="w-full p-3 border rounded-xl" value={form.title} onChange={e=>setForm({...form, title:e.target.value})} required /></div>
+          <div><label className="block text-sm font-bold text-slate-700 mb-2">İçerik</label><textarea className="w-full p-3 border rounded-xl" rows={5} value={form.content} onChange={e=>setForm({...form, content:e.target.value})} required /></div>
+          <div><label className="block text-sm font-bold text-slate-700 mb-2">Görsel</label><input type="file" onChange={e=>setImage(e.target.files[0])} className="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-rose-50 file:text-rose-700 hover:file:bg-rose-100"/></div>
+          <button disabled={uploading} className="w-full bg-slate-900 text-white py-3 rounded-xl font-bold hover:bg-slate-800 transition-all">
+            {uploading ? 'Yükleniyor...' : 'Yayınla'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
 export default function App() {
   const [view, setView] = useState('home');
   const { t, i18n } = useTranslation(); 
