@@ -1,0 +1,17 @@
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+
+// Tüm çeviriler burada tutulur
+const resources = {
+  tr: { translation: { "nav_home": "Ana Sayfa", "nav_blog": "Blog", "nav_admin": "Yönetim", "hero_title_part1": "Klinik Araştırmaları", "hero_title_part2": "Dijitalleştir, Güçlendir.", "hero_subtitle": "Turp ile katılımcı verilerini gerçek zamanlı toplayın, e-Nabız ile doğrulayın ve ilaç geliştirme süreçlerinizi hızlandırın.", "partner_title": "PARTNERLERİMİZ", "section_title": "Neden Turp?", "section_subtitle": "Veri kalitesini artırın, maliyetleri düşürün.", "btn_blog_posts": "Blog Yazıları", "btn_demo": "Demo Talep Et", "feat_1_title": "Veri Doğrulama", "feat_1_desc": "e-Nabız entegrasyonu ile %100 doğrulanmış sağlık geçmişi verisi.", "feat_2_title": "Hasta Uyumu", "feat_2_desc": "İlaç hatırlatıcıları ve oyunlaştırma ile tedavi uyumunu %40 artırın.", "feat_3_title": "Real-World Data", "feat_3_desc": "Hastanın evindeki gerçek yaşam verilerini anlık olarak yakalayın.", "feat_4_title": "Otomasyon", "feat_4_desc": "Manuel süreçleri azaltın, araştırma hızını iki katına çıkarın.", "feat_5_title": "Esnek API", "feat_5_desc": "Mevcut hastane sistemleriyle (HBYS) kolay entegrasyon.", "feat_6_title": "Analitik Rapor", "feat_6_desc": "Sponsorlar için detaylı, anlık ve şeffaf ilerleme raporları.", } },
+  en: { translation: { "nav_home": "Home", "nav_blog": "Blog", "nav_admin": "Admin", "hero_title_part1": "Digitalize, Power Up", "hero_title_part2": "Clinical Trials.", "hero_subtitle": "Collect real-time participant data with Turp, verify with e-Nabiz, and accelerate your drug development processes.", "partner_title": "OUR PARTNERS", "section_title": "Why Turp?", "section_subtitle": "Increase data quality, reduce costs.", "btn_blog_posts": "Blog Posts", "btn_demo": "Request Demo", "feat_1_title": "Data Verification", "feat_1_desc": "100% verified health history data via e-Nabiz integration.", "feat_2_title": "Patient Compliance", "feat_2_desc": "Increase treatment compliance by 40% with reminders and gamification.", "feat_3_title": "Real-World Data", "feat_3_desc": "Capture real-time real-world data from the patient's home.", "feat_4_title": "Automation", "feat_4_desc": "Reduce manual processes, double your research speed.", "feat_5_title": "Flexible API", "feat_5_desc": "Easy integration with existing hospital information systems (HIS).", "feat_6_title": "Analytical Report", "feat_6_desc": "Detailed, real-time, and transparent progress reports for sponsors.", } },
+  zh: { translation: { "nav_home": "首页", "nav_blog": "博客", "nav_admin": "管理", "hero_title_part1": "将临床试验", "hero_title_part2": "数字化，赋能", "hero_subtitle": "通过 Turp 实时收集参与者数据，通过 e-Nabiz 验证，并加速您的药物开发流程。", "partner_title": "我们的合作伙伴", "section_title": "为什么选择 Turp？", "section_subtitle": "提高数据质量，降低成本。", "btn_blog_posts": "博客文章", "btn_demo": "请求演示", "feat_1_title": "数据验证", "feat_1_desc": "通过 e-Nabiz 集成，100% 验证健康历史数据。", "feat_2_title": "患者依从性", "feat_2_desc": "通过提醒和游戏化，将治疗依从性提高 40%。", "feat_3_title": "真实世界数据", "feat_3_desc": "实时捕获患者家庭的真实世界数据。", "feat_4_title": "自动化", "feat_4_desc": "减少手动流程，使您的研究速度翻倍。", "feat_5_title": "灵活的 API", "feat_5_desc": "易于与现有医院信息系统 (HIS) 集成。", "feat_6_title": "分析报告", "feat_6_desc": "为赞助商提供详细、实时和透明的进度报告。", } }
+};
+
+i18n
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({ resources, fallbackLng: "tr", ns: ["translation"], defaultNS: "translation", keySeparator: false, interpolation: { escapeValue: false } });
+
+export default i18n;
