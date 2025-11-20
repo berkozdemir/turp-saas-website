@@ -35,7 +35,7 @@ const MODULE_CONTENT = {
     title: "ePRO & Anket Modülü",
     icon: ClipboardList,
     color: "from-blue-600 to-indigo-600",
-    image: "https://images.unsplash.com/photo-1556740758-90de374c12ad?q=80&w=2070&auto=format&fit=crop",
+    image: "https://zhljpirfyiuraeocgbep.supabase.co/storage/v1/object/public/blog-images/appointment-consulting-doctor-visit-on-mobile-app-2024-11-26-02-03-22-utc.jpg",
     short: "Kağıt formları unutun. Veriyi kaynağında, hatasız yakalayın.",
     heroDesc: "Katılımcıların yaşam kalitesi ölçeklerini, günlük semptomlarını ve tedavi memnuniyetlerini mobil uygulama üzerinden anlık, güvenilir ve validasyon kuralları çerçevesinde toplayın.",
     details: [
@@ -54,7 +54,7 @@ const MODULE_CONTENT = {
     title: "İlaç Hatırlatma & Uyum",
     icon: Bell,
     color: "from-green-500 to-emerald-700",
-    image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?q=80&w=2030&auto=format&fit=crop",
+    image: "https://zhljpirfyiuraeocgbep.supabase.co/storage/v1/object/public/blog-images/a-pile-of-pills-in-blister-packs-close-up-2025-10-18-13-17-21-utc.jpg",
     short: "Tedavi uyumunu şansa bırakmayın. Akıllı takip sistemi.",
     heroDesc: "İlaç, doğru zamanda ve doğru dozda alınmadığında araştırma verisi çöp olabilir. Akıllı bildirimler ve görsel teyit sistemleri ile 'Adherence' oranlarını %90'ın üzerine çıkarın.",
     details: [
@@ -73,7 +73,7 @@ const MODULE_CONTENT = {
     title: "Vital Ölçüm & IoT",
     icon: HeartPulse,
     color: "from-rose-500 to-red-700",
-    image: "https://images.unsplash.com/photo-1576091160550-21878bf72a5b?q=80&w=2070&auto=format&fit=crop",
+    image: "https://zhljpirfyiuraeocgbep.supabase.co/storage/v1/object/public/blog-images/woman-taking-blood-pressure-test-on-smartwatches-2025-08-11-15-24-28-utc.jpg",
     short: "Klinik dışında da kesintisiz hasta gözlemi.",
     heroDesc: "Hastanın tansiyon, şeker, nabız, kilo ve uyku verilerini Apple Health, Google Fit veya Bluetooth özellikli tıbbi cihazlar üzerinden otomatik ve hatasız çekin.",
     details: [
@@ -92,7 +92,7 @@ const MODULE_CONTENT = {
     title: "Randevu & Vizit Yönetimi",
     icon: Calendar,
     color: "from-purple-600 to-violet-800",
-    image: "https://images.unsplash.com/photo-1505751172876-fa1923c5c528?q=80&w=2070&auto=format&fit=crop",
+    image: "https://zhljpirfyiuraeocgbep.supabase.co/storage/v1/object/public/blog-images/chairs-on-empty-building-2025-01-27-22-50-08-utc.jpg",
     short: "No-Show oranlarını minimize eden akıllı takvim.",
     heroDesc: "Karmaşık protokol takvimini hastanın cebine indirin. Saha ziyaretlerini, tele-vizitleri ve laboratuvar randevularını otomatik organize edin ve hatırlatın.",
     details: [
@@ -111,7 +111,7 @@ const MODULE_CONTENT = {
     title: "Yan Etki Bildirimi",
     icon: AlertTriangle,
     color: "from-orange-500 to-amber-600",
-    image: "https://images.unsplash.com/photo-1581056771107-24ca5f033842?q=80&w=2070&auto=format&fit=crop",
+    image: "https://zhljpirfyiuraeocgbep.supabase.co/storage/v1/object/public/blog-images/doctor-presenting-report-of-diagnosis-2025-01-09-06-41-33-utc.jpg",
     short: "Farmakovijilans için en hızlı ve güvenli yol.",
     heroDesc: "Hastaların yaşadığı beklenmedik durumları anında bildirmesini sağlayan, araştırmacıyla hasta arasındaki 7/24 açık acil durum köprüsü.",
     details: [
@@ -130,7 +130,7 @@ const MODULE_CONTENT = {
     title: "Hasta Bilgilendirme",
     icon: BookOpen,
     color: "from-sky-500 to-cyan-600",
-    image: "https://images.unsplash.com/photo-1576091160501-bbe574695a8d?q=80&w=2070&auto=format&fit=crop",
+    image: "https://zhljpirfyiuraeocgbep.supabase.co/storage/v1/object/public/blog-images/senior-woman-eye-exam-and-vision-for-snellen-test-2025-04-06-12-48-50-utc.jpg",
     short: "Bilinçli hasta, başarılı ve etik bir araştırma demektir.",
     heroDesc: "Onam formlarını dijitalleştirin (eConsent) ve hastaları araştırma protokolü hakkında sıkıcı metinler yerine interaktif videolarla eğitin.",
     details: [
@@ -149,7 +149,7 @@ const MODULE_CONTENT = {
     title: "Webinar & Tele-Vizit",
     icon: Video,
     color: "from-fuchsia-600 to-pink-600",
-    image: "https://images.unsplash.com/photo-1616587845419-36f3a89933a3?q=80&w=2071&auto=format&fit=crop",
+    image: "https://zhljpirfyiuraeocgbep.supabase.co/storage/v1/object/public/blog-images/virtual-doctor-working-from-home-on-a-video-call-2025-11-02-01-48-10-utc.jpg",
     short: "Mekan bağımsız, hibrit klinik araştırma altyapısı.",
     heroDesc: "Hastanın merkeze gelemediği durumlarda, uygulama üzerinden güvenli, şifreli ve KVKK uyumlu görüntülü görüşme yapın. Decentralized Clinical Trials (DCT) için ideal.",
     details: [
