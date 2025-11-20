@@ -211,7 +211,7 @@ const Home = ({ setView }) => {
             </div>
             <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl transition-all">
                 <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6"><Globe size={24}/></div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">Saha Dışı (Remote)</h3>
+                <h3 className="text-xl font-bold text-slate-900 mb-3">Merkez Dışı (Remote)</h3>
                 <p className="text-slate-500">Hastane vizitlerine sıkışıp kalmayın. Hastanın evinden gerçek yaşam verisi toplayın.</p>
             </div>
             <div className="md:col-span-2 bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-lg flex flex-col md:flex-row items-center gap-8 relative overflow-hidden">
