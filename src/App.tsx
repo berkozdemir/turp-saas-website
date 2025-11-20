@@ -12,13 +12,12 @@ import {
   Video, ClipboardList, Bell, HeartPulse, AlertTriangle, BookOpen
 } from 'lucide-react';
 
-// --- KURUMSAL BİLGİLER (SABİT DEĞİŞKENLER) ---
-// İleride değiştirmek isterseniz sadece burayı düzenlemeniz yeterli olacaktır.
+// --- KURUMSAL BİLGİLER ---
 const COMPANY_INFO = {
     address: "Cyberpark C Blok Kat: 1 No:146 Bilkent, Çankaya / Ankara",
     phone: "+90 312 426 77 22",
     email: "info@turp.app",
-    copyright: "© 2025 Turp Sağlık Teknolojileri A.Ş. Tüm hakları saklıdır."
+    copyright: "© 2025 Omega CRO. Tüm hakları saklıdır."
 };
 
 // --- SUPABASE AYARLARI ---
@@ -181,7 +180,7 @@ const FAQItem = ({ question, answer }) => {
   );
 };
 
-// --- BİLEŞEN: FOOTER (GÜNCELLENMİŞ ADRES) ---
+// --- BİLEŞEN: FOOTER ---
 const Footer = ({ setView }) => {
   return (
     <footer className="bg-slate-900 text-white pt-20 pb-10 border-t border-slate-800">
@@ -255,11 +254,16 @@ const Footer = ({ setView }) => {
 // --- MODÜL DETAY SAYFASI ---
 const ModuleDetail = ({ moduleId, setView }) => {
   const data = MODULE_CONTENT[moduleId];
+
+  // Sayfa açılınca en tepeye kaydır
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [moduleId]);
+
   if (!data) return <div className="p-20 text-center">Modül bulunamadı.</div>;
 
   return (
     <div className="min-h-screen bg-white animate-in fade-in slide-in-from-right-8 duration-500">
-      {/* Üst Navigasyon */}
       <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100 px-6 py-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
            <button onClick={() => setView('home')} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-bold transition-colors">
@@ -271,7 +275,6 @@ const ModuleDetail = ({ moduleId, setView }) => {
         </div>
       </div>
 
-      {/* Hero Alanı */}
       <section className={`relative py-24 px-6 overflow-hidden`}>
         <div className={`absolute inset-0 bg-gradient-to-br ${data.color} opacity-5`}></div>
         <div className="max-w-5xl mx-auto text-center relative z-10">
@@ -283,7 +286,6 @@ const ModuleDetail = ({ moduleId, setView }) => {
         </div>
       </section>
 
-      {/* Detaylı Açıklama ve Özellikler */}
       <section className="py-20 px-6 max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-start">
          <div>
             <h2 className="font-heading text-3xl font-bold text-slate-900 mb-6">Neden Bu Modül?</h2>
@@ -316,7 +318,6 @@ const ModuleDetail = ({ moduleId, setView }) => {
          </div>
       </section>
 
-      {/* Alt CTA */}
       <section id="contact-module" className="py-24 bg-slate-900 text-white text-center px-6">
           <div className="max-w-3xl mx-auto">
               <h2 className="font-heading text-4xl font-bold mb-6">Bu Modülü Projenize Ekleyin</h2>
@@ -334,7 +335,7 @@ const ModuleDetail = ({ moduleId, setView }) => {
 const Home = ({ setView }) => {
   const { t } = useTranslation();
   
-  // İLETİŞİM FORMU STATE'LERİ (DÜZELTİLDİ: BOŞ BAŞLANGIÇ)
+  // İLETİŞİM FORMU STATE'LERİ
   const [contactForm, setContactForm] = useState({ ad_soyad: '', email: '', sirket: '', ilgi_alani: '' });
   const [contactStatus, setContactStatus] = useState('idle'); 
 
@@ -388,7 +389,7 @@ const Home = ({ setView }) => {
       {/* 2. PARTNERLER */}
       <section className="py-10 bg-white border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-6 text-center">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-8">GÜVENİLEN PARTNERLERİMİZ</p>
+            <p className="text-center text-xs font-bold text-slate-400 uppercase tracking-widest mb-8">GÜVENİLEN PARTNERLERİMİZ</p>
             <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
                 <span className="text-2xl font-heading font-bold text-slate-800">PharmaCo</span>
                 <span className="text-2xl font-heading font-bold text-slate-800">NovusBio</span>
@@ -426,50 +427,41 @@ const Home = ({ setView }) => {
         </div>
       </section>
 
-      {/* 4. BENTO GRID (MODÜLLER) */}
+      {/* 4. BENTO GRID (MODÜLLER - DÜZELTME: CURSOR POINTER & LINK) */}
       <section id="features" className="py-24 px-6 max-w-7xl mx-auto">
-         <div className="mb-16">
-             <h2 className="font-heading text-4xl font-bold text-slate-900 mb-4">Teknoloji ile Güçlendirilmiş Çözümler</h2>
-             <p className="text-lg text-slate-500">Detaylı bilgi için modüllere tıklayın.</p>
-         </div>
+         <div className="mb-16"><h2 className="font-heading text-4xl font-bold text-slate-900 mb-4">Teknoloji ile Güçlendirilmiş Çözümler</h2><p className="text-lg text-slate-500">Detaylı bilgi için modüllere tıklayın.</p></div>
          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
             
-            {/* e-Nabız / Anket */}
-            <div onClick={() => setView({ type: 'module', id: 'survey' })} className="cursor-pointer md:col-span-2 bg-gradient-to-br from-rose-600 to-purple-700 rounded-3xl p-10 text-white relative overflow-hidden group hover:shadow-2xl transition-all">
-                <div className="relative z-10"><div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center mb-6"><ClipboardList size={24}/></div><h3 className="text-3xl font-heading font-bold mb-4">ePRO & Anket Modülü</h3><p className="text-rose-100 text-lg max-w-md">Kağıt formları unutun. Veriyi kaynağında, hatasız yakalayın. Detaylar için tıklayın.</p></div>
+            <div onClick={() => setView({ type: 'module', id: 'survey' })} className="cursor-pointer md:col-span-2 bg-gradient-to-br from-rose-600 to-purple-700 rounded-3xl p-10 text-white relative overflow-hidden group hover:shadow-2xl hover:-translate-y-1 transition-all">
+                <div className="relative z-10"><div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center mb-6"><ClipboardList size={24}/></div><h3 className="text-3xl font-heading font-bold mb-4">ePRO & Anket Modülü</h3><p className="text-rose-100 text-lg max-w-md">Kağıt formları unutun. Veriyi kaynağında, hatasız yakalayın.</p></div>
                 <div className="absolute right-0 bottom-0 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
                 <ArrowRight className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity"/>
             </div>
             
-            {/* İlaç Takip */}
-            <div onClick={() => setView({ type: 'module', id: 'medication' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl transition-all group hover:border-green-400">
+            <div onClick={() => setView({ type: 'module', id: 'medication' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all group hover:border-green-400">
                 <div className="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-6"><Bell size={24}/></div><h3 className="text-xl font-bold text-slate-900 mb-3">İlaç Hatırlatma</h3><p className="text-slate-500">Tedavi uyumunu şansa bırakmayın.</p>
             </div>
             
-            {/* Vital / IoT */}
-            <div onClick={() => setView({ type: 'module', id: 'vital' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl transition-all group hover:border-rose-400">
+            <div onClick={() => setView({ type: 'module', id: 'vital' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all group hover:border-rose-400">
                 <div className="w-12 h-12 bg-rose-100 text-rose-600 rounded-xl flex items-center justify-center mb-6"><HeartPulse size={24}/></div><h3 className="text-xl font-bold text-slate-900 mb-3">Vital Ölçüm & IoT</h3><p className="text-slate-500">Giyilebilir cihazlarla kesintisiz takip.</p>
             </div>
 
-            {/* Randevu */}
-            <div onClick={() => setView({ type: 'module', id: 'appointment' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl transition-all group hover:border-purple-400">
+            <div onClick={() => setView({ type: 'module', id: 'appointment' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all group hover:border-purple-400">
                 <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-6"><Calendar size={24}/></div><h3 className="text-xl font-bold text-slate-900 mb-3">Randevu Yönetimi</h3><p className="text-slate-500">No-Show oranlarını minimize edin.</p>
             </div>
 
-            {/* Yan Etki */}
-            <div onClick={() => setView({ type: 'module', id: 'adverse' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl transition-all group hover:border-orange-400">
+            <div onClick={() => setView({ type: 'module', id: 'adverse' })} className="cursor-pointer bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all group hover:border-orange-400">
                 <div className="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center mb-6"><AlertTriangle size={24}/></div><h3 className="text-xl font-bold text-slate-900 mb-3">Yan Etki Bildirimi</h3><p className="text-slate-500">Farmakovijilans için en hızlı yol.</p>
             </div>
 
-            {/* Hasta Eğitim & Webinar */}
-            <div className="md:col-span-2 bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-lg flex flex-col md:flex-row items-center gap-8 relative overflow-hidden cursor-pointer hover:border-slate-700 transition-all" onClick={() => setView({ type: 'module', id: 'education' })}>
+            <div className="cursor-pointer md:col-span-2 bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-lg flex flex-col md:flex-row items-center gap-8 relative overflow-hidden hover:border-slate-700 hover:-translate-y-1 transition-all" onClick={() => setView({ type: 'module', id: 'education' })}>
                 <div className="flex-1 relative z-10"><div className="flex gap-3 mb-4"><span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-bold rounded-full border border-slate-700">eConsent</span><span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-bold rounded-full border border-slate-700">Video</span></div><h3 className="text-2xl font-bold text-white mb-2">Eğitim & Webinar</h3><p className="text-slate-400">Hastaları interaktif içeriklerle eğitin, uzaktan görüşün.</p></div>
                 <div className="w-24 h-24 bg-gradient-to-tr from-sky-500 to-cyan-600 rounded-full flex items-center justify-center shadow-lg shadow-sky-900/50 z-10"><BookOpen size={40} className="text-white"/></div>
             </div>
          </div>
       </section>
 
-      {/* 5. WORKFLOW & STATS */}
+      {/* 5. WORKFLOW */}
       <section className="py-24 bg-white border-y border-slate-100">
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
@@ -526,6 +518,7 @@ const Home = ({ setView }) => {
                             </div>
                             <input type="email" placeholder="Kurumsal E-posta" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all" value={contactForm.email} onChange={e=>setContactForm({...contactForm, email: e.target.value})} required/>
                             
+                            {/* DÜZELTİLEN SELECT ALANI */}
                             <select 
                                 className={`w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all ${contactForm.ilgi_alani === "" ? "text-slate-400" : "text-slate-900"}`}
                                 value={contactForm.ilgi_alani} 
@@ -608,6 +601,17 @@ export default function App() {
           <div className="flex items-center gap-3 md:gap-6">
             <div className="flex items-center bg-white/80 backdrop-blur border border-slate-200 p-1.5 rounded-full shadow-sm">
               <button onClick={()=>setView('home')} className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${view === 'home' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}>{t("nav_home")}</button>
+              {/* MODÜLLER DROPDOWN (YENİ ÖZELLİK) */}
+              <div className="relative group">
+                 <button className="px-4 py-2 rounded-full text-sm font-bold text-slate-500 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-1">Modüller <ChevronDown size={14}/></button>
+                 <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden hidden group-hover:block animate-in fade-in slide-in-from-top-2 duration-200">
+                    {Object.entries(MODULE_CONTENT).map(([key, val]) => (
+                        <button key={key} onClick={() => setView({ type: 'module', id: key })} className="block w-full text-left px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-rose-600 border-b border-slate-50 last:border-0 transition-colors">
+                            {val.title}
+                        </button>
+                    ))}
+                 </div>
+              </div>
               <button onClick={()=>setView('blog')} className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${view === 'blog' || view?.type === 'detail' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}>{t("nav_blog")}</button>
               <button onClick={()=>setView('admin')} className={`hidden md:flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${view === 'admin' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}>
                   {session ? <Lock size={14} className="text-green-400"/> : <Lock size={14}/>} {t("nav_admin")}
