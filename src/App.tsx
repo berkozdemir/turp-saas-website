@@ -25,8 +25,13 @@ const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div className="border-b border-slate-200 last:border-0">
-      <button onClick={() => setIsOpen(!isOpen)} className="flex items-center justify-between w-full py-6 text-left focus:outline-none group">
-        <span className={`text-lg font-heading font-bold transition-colors ${isOpen ? 'text-rose-600' : 'text-slate-800 group-hover:text-rose-600'}`}>{question}</span>
+      <button 
+        onClick={() => setIsOpen(!isOpen)} 
+        className="flex items-center justify-between w-full py-6 text-left focus:outline-none group"
+      >
+        <span className={`text-lg font-heading font-bold transition-colors ${isOpen ? 'text-rose-600' : 'text-slate-800 group-hover:text-rose-600'}`}>
+          {question}
+        </span>
         {isOpen ? <ChevronUp className="text-rose-600"/> : <ChevronDown className="text-slate-400"/>}
       </button>
       <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 pb-6' : 'max-h-0 opacity-0'}`}>
@@ -43,9 +48,19 @@ const Footer = ({ setView }) => {
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-1">
-            <div className="flex items-center gap-2 font-heading font-bold text-2xl text-white mb-6"><Activity size={24} className="text-rose-500"/> Turp</div>
-            <p className="text-slate-400 text-sm leading-relaxed mb-6">Klinik araştırmalarda veriyi kaynağından doğrulayan, USBS onaylı yeni nesil dijital sağlık platformu.</p>
+            <div className="flex items-center gap-2 font-heading font-bold text-2xl text-white mb-6">
+              <Activity size={24} className="text-rose-500"/> Turp
+            </div>
+            <p className="text-slate-400 text-sm leading-relaxed mb-6">
+              Klinik araştırmalarda veriyi kaynağından doğrulayan, USBS onaylı yeni nesil dijital sağlık platformu.
+            </p>
+            <div className="flex gap-4">
+              <a href="#" className="p-2 bg-slate-800 rounded-full hover:bg-rose-600 transition-colors"><Linkedin size={18}/></a>
+              <a href="#" className="p-2 bg-slate-800 rounded-full hover:bg-rose-600 transition-colors"><Twitter size={18}/></a>
+              <a href="#" className="p-2 bg-slate-800 rounded-full hover:bg-rose-600 transition-colors"><Instagram size={18}/></a>
+            </div>
           </div>
+          
           <div>
             <h4 className="font-bold text-lg mb-6">Platform</h4>
             <ul className="space-y-4 text-slate-400 text-sm">
@@ -54,6 +69,7 @@ const Footer = ({ setView }) => {
               <li><a href="#" className="hover:text-white transition-colors">e-Nabız Entegrasyonu</a></li>
             </ul>
           </div>
+
           <div>
             <h4 className="font-bold text-lg mb-6">Kurumsal</h4>
             <ul className="space-y-4 text-slate-400 text-sm">
@@ -62,33 +78,42 @@ const Footer = ({ setView }) => {
               <li><a href="#" className="hover:text-white transition-colors">İletişim</a></li>
             </ul>
           </div>
+
           <div>
             <h4 className="font-bold text-lg mb-6">İletişim</h4>
             <ul className="space-y-4 text-slate-400 text-sm">
-              <li className="flex items-start gap-3"><MapPin size={18} className="text-rose-500 shrink-0 mt-0.5"/><span>Maslak, İstanbul</span></li>
-              <li className="flex items-center gap-3"><Mail size={18} className="text-rose-500 shrink-0"/><span>hello@turp.com.tr</span></li>
+              <li className="flex items-start gap-3">
+                <MapPin size={18} className="text-rose-500 shrink-0 mt-0.5"/>
+                <span>Maslak, İstanbul</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail size={18} className="text-rose-500 shrink-0"/>
+                <span>hello@turp.com.tr</span>
+              </li>
             </ul>
           </div>
         </div>
-        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500"><p>&copy; 2025 Turp Sağlık Teknolojileri A.Ş.</p></div>
+        
+        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+          <p>&copy; 2025 Turp Sağlık Teknolojileri A.Ş. Tüm hakları saklıdır.</p>
+        </div>
       </div>
     </footer>
   );
 };
 
-// --- BİLEŞEN: HOME (ANA SAYFA - İLETİŞİM FORMU GÜNCELLENDİ) ---
+// --- BİLEŞEN: HOME (ANA SAYFA) ---
 const Home = ({ setView }) => {
   const { t } = useTranslation();
   
-  // İLETİŞİM FORMU STATE'LERİ
-  const [contactForm, setContactForm] = useState({ ad_soyad: '', email: '', sirket: '', ilgi_alani: 'RWE / Gözlemsel Çalışma' });
-  const [contactStatus, setContactStatus] = useState('idle'); // idle, loading, success, error
+  // İLETİŞİM FORMU STATE'LERİ (Varsayılan seçim boş)
+  const [contactForm, setContactForm] = useState({ ad_soyad: '', email: '', sirket: '', ilgi_alani: '' });
+  const [contactStatus, setContactStatus] = useState('idle'); 
 
   const handleContactSubmit = async (e) => {
       e.preventDefault();
       setContactStatus('loading');
 
-      // Supabase'e kayıt ekle
       const { error } = await supabase.from('leads').insert([contactForm]);
 
       if (error) {
@@ -96,7 +121,7 @@ const Home = ({ setView }) => {
           setContactStatus('error');
       } else {
           setContactStatus('success');
-          setContactForm({ ad_soyad: '', email: '', sirket: '', ilgi_alani: 'RWE / Gözlemsel Çalışma' });
+          setContactForm({ ad_soyad: '', email: '', sirket: '', ilgi_alani: '' });
       }
   };
 
@@ -109,13 +134,25 @@ const Home = ({ setView }) => {
            <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=2070&auto=format&fit=crop" className="w-full h-full object-cover opacity-20 blur-sm scale-105 animate-pulse-slow" />
            <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/80 to-slate-50"></div>
         </div>
+        
         <div className="relative z-10 max-w-6xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-green-400 px-4 py-1.5 rounded-full text-xs font-bold mb-8 shadow-2xl tracking-wide uppercase"><ShieldCheck size={14}/> USBS Onaylı & e-Nabız Entegreli</div>
-          <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-extrabold text-slate-900 mb-8 leading-tight tracking-tight"><span className="text-white">Tahminleri Değil,</span> <br/><span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-purple-500 to-indigo-500">Gerçekleri Yönetin.</span></h1>
-          <p className="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed font-light">Klinik araştırmalarda katılımcı verilerini kaynağından doğrulayan, Türkiye'nin ilk ve tek RWE platformu.</p>
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-green-400 px-4 py-1.5 rounded-full text-xs font-bold mb-8 shadow-2xl tracking-wide uppercase">
+            <ShieldCheck size={14}/> USBS Onaylı & e-Nabız Entegreli
+          </div>
+          <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-extrabold text-slate-900 mb-8 leading-tight tracking-tight">
+             <span className="text-white">Tahminleri Değil,</span> <br/>
+             <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-purple-500 to-indigo-500">Gerçekleri Yönetin.</span>
+          </h1>
+          <p className="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed font-light">
+            Klinik araştırmalarda katılımcı verilerini kaynağından doğrulayan, Türkiye'nin ilk ve tek RWE platformu.
+          </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button onClick={() => document.getElementById('contact').scrollIntoView({behavior: 'smooth'})} className="px-8 py-4 bg-rose-600 text-white font-bold rounded-xl shadow-xl hover:bg-rose-500 hover:-translate-y-1 transition-all flex items-center justify-center gap-2">Demo Talep Et <ArrowRight size={18}/></button>
-            <button onClick={() => document.getElementById('features').scrollIntoView({behavior: 'smooth'})} className="px-8 py-4 bg-white/10 backdrop-blur text-white border border-white/20 font-bold rounded-xl hover:bg-white/20 transition-all">Platformu Keşfet</button>
+            <button onClick={() => document.getElementById('contact').scrollIntoView({behavior: 'smooth'})} className="px-8 py-4 bg-rose-600 text-white font-bold rounded-xl shadow-xl shadow-rose-900/20 hover:bg-rose-500 hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+              Demo Talep Et <ArrowRight size={18}/>
+            </button>
+            <button onClick={() => document.getElementById('features').scrollIntoView({behavior: 'smooth'})} className="px-8 py-4 bg-white/10 backdrop-blur text-white border border-white/20 font-bold rounded-xl hover:bg-white/20 transition-all">
+              Platformu Keşfet
+            </button>
           </div>
         </div>
       </section>
@@ -128,87 +165,118 @@ const Home = ({ setView }) => {
                 <span className="text-2xl font-heading font-bold text-slate-800">PharmaCo</span>
                 <span className="text-2xl font-heading font-bold text-slate-800">NovusBio</span>
                 <span className="text-2xl font-heading font-bold text-slate-800">MED-DATA</span>
+                <span className="text-2xl font-heading font-bold text-slate-800">GenHealth</span>
             </div>
         </div>
       </section>
 
       {/* 3. KARŞILAŞTIRMA */}
       <section className="py-24 px-6 bg-slate-50">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
-            <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden">
-                <div className="absolute top-0 right-0 bg-red-100 text-red-600 px-4 py-1 rounded-bl-2xl text-xs font-bold">Geleneksel</div>
-                <ul className="space-y-4 mt-4">
-                    <li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>Hasta beyanına dayalı, doğrulanmamış veri.</span></li>
-                    <li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>Kağıt formlar ve manuel giriş hataları.</span></li>
-                    <li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>Yüksek "Drop-out" oranları.</span></li>
-                </ul>
+        <div className="max-w-6xl mx-auto">
+            <div className="text-center mb-16">
+                <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">Geleneksel Yöntemler Yetersiz Kalıyor</h2>
+                <p className="text-slate-500">Manuel süreçler veri güvenilirliğini düşürürken maliyetleri artırıyor.</p>
             </div>
-            <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-xl relative overflow-hidden transform md:scale-105 z-10">
-                <div className="absolute top-0 right-0 bg-green-500 text-white px-4 py-1 rounded-bl-2xl text-xs font-bold">Turp Yöntemi</div>
-                <ul className="space-y-4 mt-4">
-                    <li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">e-Nabız ile %100 dijital doğrulama.</span></li>
-                    <li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">Anlık veri akışı ve otomatik raporlama.</span></li>
-                    <li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">Akıllı bildirimlerle yüksek hasta uyumu.</span></li>
-                </ul>
+            <div className="grid md:grid-cols-2 gap-8">
+                <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden">
+                    <div className="absolute top-0 right-0 bg-red-100 text-red-600 px-4 py-1 rounded-bl-2xl text-xs font-bold">Geleneksel</div>
+                    <ul className="space-y-4 mt-4">
+                        <li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>Hasta beyanına dayalı, doğrulanmamış veri.</span></li>
+                        <li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>Kağıt formlar ve manuel giriş hataları.</span></li>
+                        <li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>Yüksek "Drop-out" oranları.</span></li>
+                    </ul>
+                </div>
+                <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-xl relative overflow-hidden transform md:scale-105 z-10">
+                    <div className="absolute top-0 right-0 bg-green-500 text-white px-4 py-1 rounded-bl-2xl text-xs font-bold">Turp Yöntemi</div>
+                    <ul className="space-y-4 mt-4">
+                        <li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">e-Nabız ile %100 dijital doğrulama.</span></li>
+                        <li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">Anlık veri akışı ve otomatik raporlama.</span></li>
+                        <li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">Akıllı bildirimlerle yüksek hasta uyumu.</span></li>
+                    </ul>
+                </div>
             </div>
         </div>
       </section>
 
       {/* 4. BENTO GRID */}
       <section id="features" className="py-24 px-6 max-w-7xl mx-auto">
+         <div className="mb-16">
+             <h2 className="font-heading text-4xl font-bold text-slate-900 mb-4">Teknoloji ile Güçlendirilmiş Çözümler</h2>
+             <p className="text-lg text-slate-500">Araştırmanızın her aşaması için özel modüller.</p>
+         </div>
          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
             <div className="md:col-span-2 bg-gradient-to-br from-rose-600 to-purple-700 rounded-3xl p-10 text-white relative overflow-hidden group">
-                <div className="relative z-10"><div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center mb-6"><Database size={24}/></div><h3 className="text-3xl font-heading font-bold mb-4">e-Nabız Entegrasyonu</h3><p className="text-rose-100 text-lg max-w-md">Hastanın ilaç geçmişini ve tanılarını tek tıkla, resmi kaynaklardan doğrulayın.</p></div>
+                <div className="relative z-10">
+                    <div className="w-12 h-12 bg-white/20 backdrop-blur rounded-xl flex items-center justify-center mb-6"><Database size={24}/></div>
+                    <h3 className="text-3xl font-heading font-bold mb-4">e-Nabız Entegrasyonu</h3>
+                    <p className="text-rose-100 text-lg max-w-md">Hastanın kullandığı diğer ilaçları (concomitant) ve geçmiş tanılarını tek tıkla, resmi kaynaklardan doğrulayın.</p>
+                </div>
                 <div className="absolute right-0 bottom-0 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>
             </div>
             <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl transition-all group">
-                <div className="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-6"><Smartphone size={24}/></div><h3 className="text-xl font-bold text-slate-900 mb-3">Akıllı İlaç Takibi</h3><p className="text-slate-500">Uygulama içi hatırlatıcı ve görsel teyit sistemi.</p>
+                <div className="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-6"><Smartphone size={24}/></div>
+                <h3 className="text-xl font-bold text-slate-900 mb-3">Akıllı İlaç Takibi</h3>
+                <p className="text-slate-500">Uygulama içi hatırlatıcı ve görsel teyit sistemi.</p>
             </div>
             <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-lg hover:shadow-xl transition-all">
-                <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6"><Globe size={24}/></div><h3 className="text-xl font-bold text-slate-900 mb-3">Saha Dışı (Remote)</h3><p className="text-slate-500">Hastanın evinden gerçek yaşam verisi toplayın.</p>
+                <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6"><Globe size={24}/></div>
+                <h3 className="text-xl font-bold text-slate-900 mb-3">Saha Dışı (Remote)</h3>
+                <p className="text-slate-500">Hastanın evinden gerçek yaşam verisi toplayın.</p>
             </div>
             <div className="md:col-span-2 bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-lg flex flex-col md:flex-row items-center gap-8 relative overflow-hidden">
-                <div className="flex-1 relative z-10"><div className="flex gap-3 mb-4"><span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-bold rounded-full border border-slate-700">KVKK</span><span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-bold rounded-full border border-slate-700">GDPR</span></div><h3 className="text-2xl font-bold text-white mb-2">Global Uyumluluk</h3><p className="text-slate-400">Verileriniz banka düzeyinde şifreleme ile korunur.</p></div>
+                <div className="flex-1 relative z-10"><div className="flex gap-3 mb-4"><span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-bold rounded-full border border-slate-700">KVKK</span><span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-bold rounded-full border border-slate-700">GDPR</span><span className="px-3 py-1 bg-slate-800 text-slate-300 text-xs font-bold rounded-full border border-slate-700">ISO 27001</span></div><h3 className="text-2xl font-bold text-white mb-2">Global Uyumluluk Standartları</h3><p className="text-slate-400">Verileriniz banka düzeyinde şifreleme ile korunur.</p></div>
                 <div className="w-24 h-24 bg-gradient-to-tr from-green-500 to-emerald-600 rounded-full flex items-center justify-center shadow-lg shadow-green-900/50 z-10"><ShieldCheck size={40} className="text-white"/></div>
             </div>
          </div>
       </section>
 
-      {/* 5. WORKFLOW & STATS */}
+      {/* 5. WORKFLOW */}
       <section className="py-24 bg-white border-y border-slate-100">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+            <div className="text-center mb-16"><h2 className="font-heading text-3xl font-bold text-slate-900">Süreç Nasıl İşler?</h2></div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+                <div className="hidden md:block absolute top-12 left-0 w-full h-0.5 bg-slate-100 -z-10"></div>
                 {[
-                    {step:"01", title:"Kurulum", desc:"Sponsor paneli entegrasyonu."},
-                    {step:"02", title:"Davet", desc:"Hastalara mobil uygulama linki."},
-                    {step:"03", title:"Onay", desc:"Hasta e-Nabız onayı verir."},
-                    {step:"04", title:"Akış", desc:"Gerçek zamanlı veri akışı başlar."}
+                    {step:"01", title:"Kurulum", desc:"Sponsor paneli entegrasyonu yapılır."},
+                    {step:"02", title:"Davet", desc:"Hastalara mobil uygulama linki SMS ile gider."},
+                    {step:"03", title:"Onay", desc:"Hasta e-Nabız üzerinden veri paylaşımını onaylar."},
+                    {step:"04", title:"Akış", desc:"Gerçek zamanlı veri akışı ve analiz başlar."}
                 ].map((s,i)=>(
-                    <div key={i}><div className="w-20 h-20 mx-auto bg-slate-50 border-4 border-white rounded-full flex items-center justify-center text-xl font-bold text-rose-600 mb-4 shadow-sm">{s.step}</div><h3 className="font-bold text-slate-900">{s.title}</h3><p className="text-xs text-slate-500 px-4">{s.desc}</p></div>
+                    <div key={i} className="text-center bg-white">
+                        <div className="w-24 h-24 mx-auto bg-slate-50 border-4 border-white rounded-full flex items-center justify-center text-2xl font-bold text-slate-300 mb-6 shadow-sm shadow-slate-200 relative z-10"><span className="text-rose-600">{s.step}</span></div>
+                        <h3 className="font-bold text-lg text-slate-900 mb-2">{s.title}</h3>
+                        <p className="text-sm text-slate-500 px-4">{s.desc}</p>
+                    </div>
                 ))}
             </div>
           </div>
       </section>
 
-      {/* 7. FAQ & CONTACT FORM (GÜNCELLENDİ: TEŞEKKÜR MESAJI EKLENDİ) */}
+      {/* 6. STATS */}
+      <section className="py-20 bg-rose-600 text-white">
+          <div className="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+              {[{val:"%45", label:"Daha Hızlı Hasta Alımı"}, {val:"%99.8", label:"Veri Doğruluğu"}, {val:"%30", label:"Maliyet Tasarrufu"}, {val:"7/24", label:"Gerçek Zamanlı İzleme"}].map((s,i)=>(
+                  <div key={i}><div className="text-4xl md:text-5xl font-heading font-extrabold mb-2">{s.val}</div><div className="text-rose-200 text-sm font-medium uppercase tracking-wide">{s.label}</div></div>
+              ))}
+          </div>
+      </section>
+
+      {/* 7. FAQ & CONTACT FORM */}
       <section id="contact" className="py-24 px-6 bg-slate-50">
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
             <div>
                 <h2 className="font-heading text-3xl font-bold text-slate-900 mb-8">Sıkça Sorulan Sorular</h2>
                 <div className="space-y-2">
-                    <FAQItem question="e-Nabız verisi için onay gerekiyor mu?" answer="Evet, KVKK gereği hastanın mobil uygulama üzerinden açık rıza vermesi ve e-Nabız şifresiyle onaylaması zorunludur." />
+                    <FAQItem question="e-Nabız verisi için hasta onayı gerekiyor mu?" answer="Evet, KVKK gereği hastanın mobil uygulama üzerinden açık rıza vermesi ve e-Nabız şifresiyle onaylaması zorunludur." />
                     <FAQItem question="Mevcut EDC sistemimizle entegre olur mu?" answer="Turp, modern REST API altyapısı sayesinde mevcut Electronic Data Capture (EDC) sistemlerinizle sorunsuz haberleşir." />
                     <FAQItem question="Hangi verileri çekebiliyoruz?" answer="Hastanın tanıları, reçeteli ilaç geçmişi, radyoloji raporları ve tahlil sonuçları çekilebilir." />
                 </div>
             </div>
 
-            {/* İLETİŞİM FORMU ALANI */}
             <div className="bg-white p-8 rounded-3xl shadow-xl border border-slate-200 relative overflow-hidden">
                 {contactStatus === 'success' ? (
                     <div className="absolute inset-0 bg-white z-20 flex flex-col items-center justify-center text-center p-8 animate-in fade-in zoom-in duration-500">
-                        <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-green-200">
-                            <CheckCircle size={48} />
-                        </div>
+                        <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6 shadow-lg shadow-green-200"><CheckCircle size={48} /></div>
                         <h3 className="font-heading text-3xl font-bold text-slate-900 mb-2">Başvurunuz Alındı!</h3>
                         <p className="text-slate-500 mb-8">Uzman ekibimiz talebinizi inceleyip en kısa sürede sizinle iletişime geçecektir.</p>
                         <button onClick={() => setContactStatus('idle')} className="text-rose-600 font-bold hover:underline">Yeni bir talep oluştur</button>
@@ -224,11 +292,19 @@ const Home = ({ setView }) => {
                                 <input type="text" placeholder="Şirket" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all" value={contactForm.sirket} onChange={e=>setContactForm({...contactForm, sirket: e.target.value})}/>
                             </div>
                             <input type="email" placeholder="Kurumsal E-posta" className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all" value={contactForm.email} onChange={e=>setContactForm({...contactForm, email: e.target.value})} required/>
-                            <select className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all text-slate-500" value={contactForm.ilgi_alani} onChange={e=>setContactForm({...contactForm, ilgi_alani: e.target.value})}>
-                                <option>RWE / Gözlemsel Çalışma</option>
-                                <option>Faz Çalışması (III/IV)</option>
-                                <option>Medikal Cihaz Takibi</option>
+                            
+                            <select 
+                                className={`w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all ${contactForm.ilgi_alani === "" ? "text-slate-400" : "text-slate-900"}`}
+                                value={contactForm.ilgi_alani} 
+                                onChange={e=>setContactForm({...contactForm, ilgi_alani: e.target.value})}
+                                required
+                            >
+                                <option value="" disabled>İlgilendiğiniz Alanı Seçiniz</option>
+                                <option value="RWE / Gözlemsel Çalışma">RWE / Gözlemsel Çalışma</option>
+                                <option value="Faz Çalışması (III/IV)">Faz Çalışması (III/IV)</option>
+                                <option value="Medikal Cihaz Takibi">Medikal Cihaz Takibi</option>
                             </select>
+
                             <button disabled={contactStatus === 'loading'} type="submit" className="w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-rose-600 transition-colors shadow-lg flex items-center justify-center gap-2">
                                 {contactStatus === 'loading' ? <Loader2 className="animate-spin"/> : <>Gönder <Send size={18}/></>}
                             </button>
@@ -236,7 +312,6 @@ const Home = ({ setView }) => {
                     </>
                 )}
             </div>
-
         </div>
       </section>
     </div>
@@ -283,7 +358,6 @@ export default function App() {
 
   const handleLogout = async () => { await supabase.auth.signOut(); setView('home'); };
   const startEdit = (post) => { if (!session) { alert("Düzenleme yapmak için giriş yapmalısınız!"); setView('admin'); return; } setEditingPost(post); setView('admin'); };
-
   const renderView = () => {
     if (view === 'home') return <Home setView={setView} />;
     if (view === 'blog') return <Blog setView={setView} />;
