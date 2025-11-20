@@ -86,22 +86,22 @@ const Footer = ({ setView }) => {
             <ul className="space-y-4 text-slate-400 text-sm">
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-rose-500 shrink-0 mt-0.5"/>
-                <span>Maslak Mah. Büyükdere Cad. No:123<br/>Sarıyer, İstanbul</span>
+                <span>Cyberpark C blopk Kat:1 No:146 Bilkent<br/>Çankaya, Ankara</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone size={18} className="text-rose-500 shrink-0"/>
-                <span>+90 (212) 555 00 00</span>
+                <span>+90 (312) 426 77 22</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={18} className="text-rose-500 shrink-0"/>
-                <span>hello@turp.com.tr</span>
+                <span>info@turp.app</span>
               </li>
             </ul>
           </div>
         </div>
         
         <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
-          <p>&copy; 2025 Turp Sağlık Teknolojileri A.Ş. Tüm hakları saklıdır.</p>
+          <p>&copy; 2025 Omega CRO. Tüm hakları saklıdır.</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white">Gizlilik Politikası</a>
             <a href="#" className="hover:text-white">Kullanım Koşulları</a>
