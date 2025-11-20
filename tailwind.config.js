@@ -5,7 +5,13 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      // YENİ EKLENEN KISIM: Başlıklar için Outfit fontunu tanımlıyoruz
+      fontFamily: {
+        'heading': ['Outfit', 'sans-serif'], 
+        'sans': ['Inter', 'sans-serif'],
+      },
+    },
   },
   plugins: [],
 }
