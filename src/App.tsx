@@ -145,18 +145,29 @@ const Admin = ({ editingPost, setEditingPost, setView, handleLogout }) => {
     e.preventDefault(); setUploading(true);
     try {
       let url = editingPost ? editingPost.image_url : null;
+      
       if (image) {
-        const name = `${Date.now()}-${image.name.replace(/[^a-zA-Z0-9.]/g, '')}`;
-        await supabase.storage.from('blog-images').upload(name, image);
-        const { data } = supabase.storage.from('blog-images').getPublicUrl(name);
+        // Dosya adını güvenli hale getiriyoruz (Tarih + Uzantı)
+        const fileExt = image.name.split('.').pop();
+        const fileName = `${Date.now()}.${fileExt}`;
+        
+        // Yükleme işlemini yap ve hatayı kontrol et
+        const { error: uploadError } = await supabase.storage.from('blog-images').upload(fileName, image);
+        if (uploadError) throw new Error("Resim Yüklenemedi: " + uploadError.message);
+
+        // Public URL al
+        const { data } = supabase.storage.from('blog-images').getPublicUrl(fileName);
         url = data.publicUrl;
       }
+
       if (editingPost) {
-        await supabase.from('posts').update({ title: form.title, content: form.content, image_url: url }).eq('id', editingPost.id);
-        alert("Yazı güncellendi!"); setEditingPost(null); setView('blog');
+        const { error } = await supabase.from('posts').update({ title: form.title, content: form.content, image_url: url }).eq('id', editingPost.id);
+        if(error) throw error;
+        alert("Yazı başarıyla güncellendi!"); setEditingPost(null); setView('blog');
       } else {
-        await supabase.from('posts').insert([{ title: form.title, content: form.content, image_url: url }]);
-        alert("Yazı eklendi!"); setForm({ title: '', content: '' }); setImage(null);
+        const { error } = await supabase.from('posts').insert([{ title: form.title, content: form.content, image_url: url }]);
+        if(error) throw error;
+        alert("Yazı başarıyla eklendi!"); setForm({ title: '', content: '' }); setImage(null);
       }
     } catch (err) { alert("Hata: " + err.message); }
     setUploading(false);
@@ -176,7 +187,13 @@ const Admin = ({ editingPost, setEditingPost, setView, handleLogout }) => {
         <form onSubmit={handleSubmit} className="space-y-8">
           <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">Başlık</label><input className="w-full p-4 border-2 border-slate-200 rounded-xl font-heading font-bold text-lg outline-none focus:border-rose-500" value={form.title} onChange={e=>setForm({...form, title:e.target.value})} required /></div>
           <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">İçerik (Markdown)</label><textarea className="w-full p-4 border-2 border-slate-200 rounded-xl font-mono text-sm min-h-[300px] outline-none focus:border-rose-500" value={form.content} onChange={e=>setForm({...form, content:e.target.value})} required /></div>
-          <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">Görsel</label><input type="file" onChange={e=>setImage(e.target.files[0])} className="block w-full text-sm text-slate-500"/></div>
+          <div>
+              <label className="block text-sm font-bold text-slate-700 mb-3 uppercase">Görsel</label>
+              <div className="relative border-2 border-dashed border-slate-300 rounded-xl p-6 hover:bg-slate-50 transition-colors">
+                <input type="file" onChange={e=>setImage(e.target.files[0])} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"/>
+                <div className="flex flex-col items-center text-slate-400"><Upload size={24} className="mb-2"/><span className="text-sm font-medium">{image ? image.name : "Dosya seçmek için tıklayın"}</span></div>
+              </div>
+          </div>
           <button disabled={uploading} className="w-full bg-slate-900 text-white py-5 rounded-xl font-bold text-lg hover:bg-rose-600 transition-all">{uploading ? 'İşleniyor...' : (editingPost ? 'Güncelle' : 'Yayınla')}</button>
         </form>
       </div>
@@ -195,30 +212,17 @@ export default function App() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => { setSession(session); });
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      // BURADAKİ YÖNLENDİRME SİLİNDİ, SORUN DÜZELDİ.
-    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => { setSession(session); });
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => { window.removeEventListener('scroll', handleScroll); subscription.unsubscribe(); };
   }, []);
 
-  // Manuel çıkış yapma fonksiyonu
-  const handleLogout = async () => {
-    await supabase.auth.signOut();
-    setView('home'); // Çıkış yapınca Ana Sayfaya git
-  };
-
-  const startEdit = (post) => {
-    if (!session) { alert("Düzenleme yapmak için giriş yapmalısınız!"); setView('admin'); return; }
-    setEditingPost(post); setView('admin');
-  };
-
+  const handleLogout = async () => { await supabase.auth.signOut(); setView('home'); };
+  const startEdit = (post) => { if (!session) { alert("Düzenleme yapmak için giriş yapmalısınız!"); setView('admin'); return; } setEditingPost(post); setView('admin'); };
   const renderView = () => {
     if (view === 'home') return <Home setView={setView} />;
     if (view === 'blog') return <Blog setView={setView} />;
-    // Admin'e logout fonksiyonunu da gönderiyoruz
     if (view === 'admin') return session ? <Admin editingPost={editingPost} setEditingPost={setEditingPost} setView={setView} handleLogout={handleLogout} /> : <Login />;
     if (typeof view === 'object' && view.type === 'detail') return <PostDetail post={view.post} setView={setView} onEdit={startEdit} />;
     return <Home setView={setView} />;
@@ -233,9 +237,7 @@ export default function App() {
             <div className="flex items-center bg-white/80 backdrop-blur border border-slate-200 p-1.5 rounded-full shadow-sm">
               <button onClick={()=>setView('home')} className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${view === 'home' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}>{t("nav_home")}</button>
               <button onClick={()=>setView('blog')} className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${view === 'blog' || view?.type === 'detail' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}>{t("nav_blog")}</button>
-              <button onClick={()=>setView('admin')} className={`hidden md:flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${view === 'admin' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}>
-                  {session ? <Lock size={14} className="text-green-400"/> : <Lock size={14}/>} {t("nav_admin")}
-              </button>
+              <button onClick={()=>setView('admin')} className={`hidden md:flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${view === 'admin' ? 'bg-slate-900 text-white shadow-md' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'}`}>{session ? <Lock size={14} className="text-green-400"/> : <Lock size={14}/>} {t("nav_admin")}</button>
             </div>
             <div className="flex items-center gap-1 bg-white/80 backdrop-blur border border-slate-200 p-1.5 rounded-full shadow-sm"><Globe size={16} className="text-slate-400 ml-2 hidden md:block" />{languages.map((lang) => (<button key={lang.code} onClick={() => i18n.changeLanguage(lang.code)} className={`w-8 h-8 rounded-full text-xs font-bold flex items-center justify-center ${i18n.language === lang.code ? 'bg-rose-600 text-white shadow-md' : 'text-slate-400 hover:bg-slate-200'}`}>{lang.label}</button>))}</div>
           </div>
