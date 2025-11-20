@@ -84,18 +84,18 @@ const Footer = ({ setView }) => {
             <ul className="space-y-4 text-slate-400 text-sm">
               <li className="flex items-start gap-3">
                 <MapPin size={18} className="text-rose-500 shrink-0 mt-0.5"/>
-                <span>Maslak, İstanbul</span>
+                <span>Cyberpark C Blok Kat 1: Çankaya, Ankara</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail size={18} className="text-rose-500 shrink-0"/>
-                <span>hello@turp.com.tr</span>
+                <span>info@turp.app</span>
               </li>
             </ul>
           </div>
         </div>
         
         <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
-          <p>&copy; 2025 Turp Sağlık Teknolojileri A.Ş. Tüm hakları saklıdır.</p>
+          <p>&copy; 2025 Omega CRO Tüm hakları saklıdır.</p>
         </div>
       </div>
     </footer>
