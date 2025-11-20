@@ -29,8 +29,8 @@ if (!supabaseUrl || !supabaseKey) {
 }
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// --- MODÜL İÇERİK VERİTABANI (SADECE ÇEVİRİ ANAHTARLARIYLA) ---
-// *ÖNEMLİ*: Artık title veya short gibi alanlar, i18n.ts'deki KEY'i tutuyor.
+// --- MODÜL İÇERİK VERİTABANI (SADECE KEYLERİ TUTAR) ---
+// Lütfen buradaki 'image' linklerini kendi Supabase Storage linklerinizle güncelleyin.
 const MODULE_CONTENT = {
   'survey': {
     titleKey: "mod_survey_title", icon: ClipboardList, color: "from-blue-600 to-indigo-600",
@@ -83,8 +83,7 @@ const MODULE_CONTENT = {
   }
 };
 
-// --- YARDIMCI BİLEŞEN: DİLİ DİNAMİK ALAN MODÜL ÇEKİCİ ---
-// Bu fonksiyon, MODULE_CONTENT'in static verilerini alıp, o anki dile göre çevirir.
+// --- ÇEVİRİ FONKSİYONU ---
 const getModuleContentTranslated = (t) => {
     return Object.entries(MODULE_CONTENT).map(([id, data]) => ({
         id,
@@ -94,16 +93,17 @@ const getModuleContentTranslated = (t) => {
         icon: data.icon,
         color: data.color,
         image: data.image,
-        details: data.details.map(key => t(key)), // Dizileri de çevir
-        features: data.features.map(f => ({ t: f.t, d: t(f.d) })) // Özellik dizilerini çevir
+        details: data.details.map(key => t(key)),
+        features: data.features.map(f => ({ t: f.t, d: t(f.d) }))
     })).reduce((acc, curr) => ({ ...acc, [curr.id]: curr }), {});
 };
 
-
-// --- YARDIMCI BİLEŞEN: OPTİMİZE EDİLMİŞ RESİM ---
+// --- BİLEŞEN: OPTİMİZE EDİLMİŞ RESİM ---
 const OptimizedImage = ({ src, alt, width, height, className }) => {
   if (!src) return null;
+  
   let optimizedSrc = src;
+  // Sadece Supabase URL'lerini dönüştür
   if (src.includes('supabase.co') && src.includes('/storage/v1/object/public')) {
     optimizedSrc = src.replace('/storage/v1/object/public', '/storage/v1/render/image/public');
     const params = [];
@@ -113,10 +113,13 @@ const OptimizedImage = ({ src, alt, width, height, className }) => {
     params.push('resize=contain');
     optimizedSrc += `?${params.join('&')}`;
   }
-  return (<img src={optimizedSrc} alt={alt} className={className} loading="lazy" />);
+
+  return (
+    <img src={optimizedSrc} alt={alt} className={className} loading="lazy" />
+  );
 };
 
-// --- YARDIMCI BİLEŞEN: SSS (FAQ) ---
+// --- BİLEŞEN: SSS (FAQ) ---
 const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -125,33 +128,86 @@ const FAQItem = ({ question, answer }) => {
         <span className={`text-lg font-heading font-bold transition-colors ${isOpen ? 'text-rose-600' : 'text-slate-800 group-hover:text-rose-600'}`}>{question}</span>
         {isOpen ? <ChevronUp className="text-rose-600"/> : <ChevronDown className="text-slate-400"/>}
       </button>
-      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 pb-6' : 'max-h-0 opacity-0'}`}><p className="text-slate-600 leading-relaxed">{answer}</p></div>
+      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 pb-6' : 'max-h-0 opacity-0'}`}>
+        <p className="text-slate-600 leading-relaxed">{answer}</p>
+      </div>
     </div>
   );
 };
 
 // --- BİLEŞEN: FOOTER ---
 const Footer = ({ setView }) => {
+  const { t } = useTranslation();
   return (
     <footer className="bg-slate-900 text-white pt-20 pb-10 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          <div className="col-span-1 md:col-span-1"><div className="flex items-center gap-2 font-heading font-bold text-2xl text-white mb-6"><Activity size={24} className="text-rose-500"/> Turp</div><p className="text-slate-400 text-sm leading-relaxed mb-6">Klinik araştırmalarda veriyi kaynağından doğrulayan, USBS onaylı yeni nesil dijital sağlık platformu.</p></div>
-          <div><h4 className="font-bold text-lg mb-6">Platform</h4><ul className="space-y-4 text-slate-400 text-sm"><li><button onClick={() => setView('home')} className="hover:text-white transition-colors">Ana Sayfa</button></li><li><button onClick={() => setView('blog')} className="hover:text-white transition-colors">Blog & Haberler</button></li><li><a href="#" className="hover:text-white transition-colors">e-Nabız Entegrasyonu</a></li><li><a href="#" className="hover:text-white transition-colors">Güvenlik & KVKK</a></li></ul></div>
-          <div><h4 className="font-bold text-lg mb-6">Kurumsal</h4><ul className="space-y-4 text-slate-400 text-sm"><li><a href="#" className="hover:text-white transition-colors">Hakkımızda</a></li><li><a href="#" className="hover:text-white transition-colors">Kariyer</a></li><li><button onClick={() => setView('admin')} className="hover:text-white transition-colors">Partner Girişi</button></li><li><a href="#" className="hover:text-white transition-colors">İletişim</a></li></ul></div>
-          <div><h4 className="font-bold text-lg mb-6">İletişim</h4><ul className="space-y-4 text-slate-400 text-sm"><li className="flex items-start gap-3"><MapPin size={18} className="text-rose-500 shrink-0 mt-0.5"/><span>{COMPANY_INFO.address}</span></li><li className="flex items-center gap-3"><Phone size={18} className="text-rose-500 shrink-0"/><span>{COMPANY_INFO.phone}</span></li><li className="flex items-center gap-3"><Mail size={18} className="text-rose-500 shrink-0"/><span>{COMPANY_INFO.email}</span></li></ul></div>
+          <div className="col-span-1 md:col-span-1">
+            <div className="flex items-center gap-2 font-heading font-bold text-2xl text-white mb-6">
+              <Activity size={24} className="text-rose-500"/> Turp
+            </div>
+            <p className="text-slate-400 text-sm leading-relaxed mb-6">{t("hero_desc")}</p>
+            <div className="flex gap-4">
+              <a href="#" className="p-2 bg-slate-800 rounded-full hover:bg-rose-600 transition-colors"><Linkedin size={18}/></a>
+              <a href="#" className="p-2 bg-slate-800 rounded-full hover:bg-rose-600 transition-colors"><Twitter size={18}/></a>
+              <a href="#" className="p-2 bg-slate-800 rounded-full hover:bg-rose-600 transition-colors"><Instagram size={18}/></a>
+            </div>
+          </div>
+          
+          <div>
+            <h4 className="font-bold text-lg mb-6">Platform</h4>
+            <ul className="space-y-4 text-slate-400 text-sm">
+              <li><button onClick={() => setView('home')} className="hover:text-white transition-colors">Ana Sayfa</button></li>
+              <li><button onClick={() => setView('blog')} className="hover:text-white transition-colors">Blog & Haberler</button></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-lg mb-6">Kurumsal</h4>
+            <ul className="space-y-4 text-slate-400 text-sm">
+              <li><a href="#" className="hover:text-white transition-colors">Hakkımızda</a></li>
+              <li><button onClick={() => setView('admin')} className="hover:text-white transition-colors">Partner Girişi</button></li>
+              <li><a href="#" className="hover:text-white transition-colors">İletişim</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-bold text-lg mb-6">İletişim</h4>
+            <ul className="space-y-4 text-slate-400 text-sm">
+              <li className="flex items-start gap-3">
+                <MapPin size={18} className="text-rose-500 shrink-0 mt-0.5"/>
+                <span>{COMPANY_INFO.address}</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone size={18} className="text-rose-500 shrink-0"/>
+                <span>{COMPANY_INFO.phone}</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail size={18} className="text-rose-500 shrink-0"/>
+                <span>{COMPANY_INFO.email}</span>
+              </li>
+            </ul>
+          </div>
         </div>
-        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500"><p>{COMPANY_INFO.copyright}</p></div>
+        
+        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
+          <p>{COMPANY_INFO.copyright}</p>
+          <div className="flex gap-6">
+            <a href="#" className="hover:text-white">Gizlilik Politikası</a>
+            <a href="#" className="hover:text-white">Kullanım Koşulları</a>
+          </div>
+        </div>
       </div>
     </footer>
   );
 };
 
-// --- MODÜL DETAY SAYFASI (DÜZELTİLDİ: ÇEVİRİ KULLANIMI) ---
+// --- BİLEŞEN: MODÜL DETAY ---
 const ModuleDetail = ({ moduleId, setView }) => {
   const { t } = useTranslation();
-  const allModules = getModuleContentTranslated(t); // Çevrilmiş veriyi al
+  const allModules = getModuleContentTranslated(t); 
   const data = allModules[moduleId];
+  
   useEffect(() => { window.scrollTo(0, 0); }, [moduleId]);
 
   if (!data) return <div className="p-20 text-center">Modül bulunamadı.</div>;
@@ -184,14 +240,14 @@ const ModuleDetail = ({ moduleId, setView }) => {
       <section className="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-start">
          <div>
             <h2 className="font-heading text-3xl font-bold text-slate-900 mb-6">{t("module_why")}</h2>
-            <p className="text-lg text-slate-600 leading-relaxed mb-10 font-medium border-l-4 border-slate-900 pl-6">{data.heroDesc}</p>
+            <p className="text-lg text-slate-600 leading-relaxed mb-8 font-medium border-l-4 border-slate-900 pl-6">{data.heroDesc}</p>
             <div className="space-y-8">
-                {data.details.map((detail, i) => (<div key={i} className="flex gap-5"><div className="mt-1.5 w-2 h-2 rounded-full bg-slate-900 shrink-0"></div><p className="text-slate-600 leading-relaxed text-lg">{detail}</p></div>))}
+                {data.details.map((detail, i) => (<div key={i} className="flex gap-5"><div className="mt-1.5 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 font-bold shrink-0">{i+1}</div><p className="text-slate-600 leading-relaxed text-lg">{detail}</p></div>))}
             </div>
          </div>
          <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200">
             <h3 className="font-heading text-2xl font-bold text-slate-900 mb-8">{t("module_tech")}</h3>
-            <div className="grid gap-6">{data.features.map((feat, i) => (<div key={i} className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex items-start gap-4"><div className={`p-2 rounded-lg bg-gradient-to-br ${data.color} text-white shrink-0`}><CheckCircle size={20}/></div><div><h4 className="font-bold text-slate-900 text-lg">{feat.t}</h4><p className="text-sm text-slate-500 mt-1">{feat.d}</p></div></div>))}</div>
+            <div className="grid gap-6">{data.features.map((feat, i) => (<div key={i} className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 flex items-start gap-4"><div className={`p-2 rounded-lg bg-gradient-to-br ${data.color} text-white shrink-0`}><CheckCircle size={20}/></div><div><h4 className="font-bold text-slate-900">{feat.t}</h4><p className="text-sm text-slate-500">{feat.d}</p></div></div>))}</div>
          </div>
       </section>
 
@@ -209,29 +265,19 @@ const ModuleDetail = ({ moduleId, setView }) => {
 // --- BİLEŞEN: HOME (ANA SAYFA) ---
 const Home = ({ setView }) => {
   const { t } = useTranslation();
-  const modules = getModuleContentTranslated(t); // Çevrilmiş modül verisini al
-
+  const modules = getModuleContentTranslated(t);
   const [contactForm, setContactForm] = useState({ ad_soyad: '', email: '', sirket: '', ilgi_alani: '' });
   const [contactStatus, setContactStatus] = useState('idle'); 
 
   const handleContactSubmit = async (e) => {
-      e.preventDefault();
-      setContactStatus('loading');
-
+      e.preventDefault(); setContactStatus('loading');
       const { error } = await supabase.from('leads').insert([contactForm]);
-
-      if (error) {
-          alert("Hata: " + error.message);
-          setContactStatus('error');
-      } else {
-          setContactStatus('success');
-          setContactForm({ ad_soyad: '', email: '', sirket: '', ilgi_alani: '' });
-      }
+      if (error) { alert("Hata: " + error.message); setContactStatus('error'); } 
+      else { setContactStatus('success'); setContactForm({ ad_soyad: '', email: '', sirket: '', ilgi_alani: '' }); }
   };
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 overflow-hidden">
-      
       <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
         <div className="absolute inset-0 z-0 bg-slate-900 overflow-hidden">
            <img src="https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=2070&auto=format&fit=crop" className="w-full h-full object-cover opacity-20 blur-sm scale-105 animate-pulse-slow" />
@@ -247,7 +293,12 @@ const Home = ({ setView }) => {
 
       <section className="py-10 bg-white border-b border-slate-100"><div className="max-w-7xl mx-auto px-6 text-center"><p className="text-center text-xs font-bold text-slate-400 uppercase tracking-widest mb-8">{t("partners_title")}</p><div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-50 grayscale hover:grayscale-0 transition-all duration-500"><span className="text-2xl font-heading font-bold text-slate-800">PharmaCo</span><span className="text-2xl font-heading font-bold text-slate-800">NovusBio</span><span className="text-2xl font-heading font-bold text-slate-800">MED-DATA</span><span className="text-2xl font-heading font-bold text-slate-800">GenHealth</span></div></div></section>
 
-      <section className="py-24 px-6 bg-slate-50"><div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8"><div className="text-center mb-16"><h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t("prob_title")}</h2><p className="text-slate-500">{t("prob_desc")}</p></div><div className="grid md:grid-cols-2 gap-8"><div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden"><div className="absolute top-0 right-0 bg-red-100 text-red-600 px-4 py-1 rounded-bl-2xl text-xs font-bold">Geleneksel</div><ul className="space-y-4 mt-4"><li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>{t("bad_1")}</span></li><li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>{t("bad_2")}</span></li><li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>{t("bad_3")}</span></li></ul></div><div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-xl relative overflow-hidden transform md:scale-105 z-10"><div className="absolute top-0 right-0 bg-green-500 text-white px-4 py-1 rounded-bl-2xl text-xs font-bold">Turp Yöntemi</div><ul className="space-y-4 mt-4"><li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">{t("good_1")}</span></li><li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">{t("good_2")}</span></li><li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">{t("good_3")}</span></li></ul></div></div></div></section>
+      <section className="py-24 px-6 bg-slate-50">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
+            <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden"><div className="absolute top-0 right-0 bg-red-100 text-red-600 px-4 py-1 rounded-bl-2xl text-xs font-bold">Geleneksel</div><ul className="space-y-4 mt-4"><li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>{t("bad_1")}</span></li><li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>{t("bad_2")}</span></li><li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>{t("bad_3")}</span></li></ul></div>
+            <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-xl relative overflow-hidden transform md:scale-105 z-10"><div className="absolute top-0 right-0 bg-green-500 text-white px-4 py-1 rounded-bl-2xl text-xs font-bold">Turp Yöntemi</div><ul className="space-y-4 mt-4"><li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">{t("good_1")}</span></li><li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">{t("good_2")}</span></li><li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">{t("good_3")}</span></li></ul></div>
+        </div>
+      </section>
 
       <section id="features" className="py-24 px-6 max-w-7xl mx-auto">
          <div className="mb-16"><h2 className="font-heading text-4xl font-bold text-slate-900 mb-4">{t("modules_title")}</h2><p className="text-lg text-slate-500">{t("modules_desc")}</p></div>
@@ -274,17 +325,27 @@ const Home = ({ setView }) => {
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
             <div><h2 className="font-heading text-3xl font-bold text-slate-900 mb-8">{t("faq_title")}</h2><div className="space-y-2">{['1','2','3'].map(num => <FAQItem key={num} question={t(`faq_${num}_q`)} answer={t(`faq_${num}_a`)} />)}</div></div>
             <div className="bg-white p-8 rounded-3xl shadow-xl border border-slate-200 relative overflow-hidden">
-                {contactStatus === 'success' ? (<div className="absolute inset-0 bg-white z-20 flex flex-col items-center justify-center text-center p-8"><div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6"><CheckCircle size={48} /></div><h3 className="font-heading text-3xl font-bold text-slate-900 mb-2">{t("form_success_title")}</h3><p className="text-slate-500 mb-8">{t("form_success_desc")}</p><button onClick={() => setContactStatus('idle')} className="text-rose-600 font-bold hover:underline">{t("form_new")}</button></div>) : (<><h3 className="font-heading text-2xl font-bold text-slate-900 mb-2">{t("contact_title")}</h3><p className="text-slate-500 mb-8 text-sm">{t("contact_desc")}</p><form className="space-y-4" onSubmit={handleContactSubmit}><div className="grid grid-cols-2 gap-4"><input type="text" placeholder={t("form_name")} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all" value={contactForm.ad_soyad} onChange={e=>setContactForm({...contactForm, ad_soyad: e.target.value})} required/><input type="text" placeholder={t("form_company")} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all" value={contactForm.sirket} onChange={e=>setContactForm({...contactForm, sirket: e.target.value})}/></div><input type="email" placeholder={t("form_email")} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all" value={contactForm.email} onChange={e=>setContactForm({...contactForm, email: e.target.value})} required/><select className={`w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all ${contactForm.ilgi_alani===""?"text-slate-400":"text-slate-900"}`} value={contactForm.ilgi_alani} onChange={e=>setContactForm({...contactForm, ilgi_alani: e.target.value})} required><option value="" disabled>{t("form_select")}</option><option value="RWE / Gözlemsel Çalışma">RWE / Gözlemsel Çalışma</option><option value="Faz Çalışması (III/IV)">Faz Çalışması (III/IV)</option><option value="Medikal Cihaz Takibi">Medikal Cihaz Takibi</option></select><button disabled={contactStatus === 'loading'} type="submit" className="w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-rose-600 flex justify-center gap-2">{contactStatus === 'loading' ? <Loader2 className="animate-spin"/> : <>Gönder <Send size={18}/></>}</button></form></>)}
+                {contactStatus === 'success' ? (<div className="absolute inset-0 bg-white z-20 flex flex-col items-center justify-center text-center p-8"><div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6"><CheckCircle size={48} /></div><h3 className="font-heading text-3xl font-bold text-slate-900 mb-2">{t("form_success_title")}</h3><p className="text-slate-500 mb-8">{t("form_success_desc")}</p><button onClick={() => setContactStatus('idle')} className="text-rose-600 font-bold hover:underline">{t("form_new")}</button></div>) : (<><h3 className="font-heading text-2xl font-bold text-slate-900 mb-2">{t("contact_title")}</h3><p className="text-slate-500 mb-8 text-sm">{t("contact_desc")}</p><form className="space-y-4" onSubmit={handleContactSubmit}><div className="grid grid-cols-2 gap-4"><input type="text" placeholder={t("form_name")} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all" value={contactForm.ad_soyad} onChange={e=>setContactForm({...contactForm, ad_soyad: e.target.value})} required/><input type="text" placeholder={t("form_company")} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all" value={contactForm.sirket} onChange={e=>setContactForm({...contactForm, sirket: e.target.value})}/></div><input type="email" placeholder={t("form_email")} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all" value={contactForm.email} onChange={e=>setContactForm({...contactForm, email: e.target.value})} required/><select className={`w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all ${contactForm.ilgi_alani===""?"text-slate-400":"text-slate-900"}`} value={contactForm.ilgi_alani} onChange={e=>setContactForm({...contactForm, ilgi_alani: e.target.value})} required><option value="" disabled>{t("form_select")}</option><option value="RWE / Gözlemsel Çalışma">RWE / Gözlemsel Çalışma</option><option value="Faz Çalışması (III/IV)">Faz Çalışması (III/IV)</option><option value="Medikal Cihaz Takibi">Medikal Cihaz Takibi</option></select><button disabled={contactStatus === 'loading'} type="submit" className="w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-rose-600 flex justify-center gap-2">{contactStatus === 'loading' ? <Loader2 className="animate-spin"/> : <> {t("form_send")} <Send size={18}/></>}</button></form></>)}
             </div>
         </div>
       </section>
     </div>
   );
 };
-const Login = () => { const [email, setEmail] = useState(''); const [password, setPassword] = useState(''); const [loading, setLoading] = useState(false); const [mode, setMode] = useState('login'); const [message, setMessage] = useState({ type: '', text: '' }); const handleLogin = async (e) => { e.preventDefault(); setLoading(true); setMessage({ type: '', text: '' }); const { error } = await supabase.auth.signInWithPassword({ email, password }); if (error) { setMessage({ type: 'error', text: 'Giriş başarısız: ' + error.message }); } setLoading(false); }; const handleResetPassword = async (e) => { e.preventDefault(); setLoading(true); const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin }); if (error) { setMessage({ type: 'error', text: error.message }); } else { setMessage({ type: 'success', text: 'Şifre sıfırlama gönderildi.' }); } setLoading(false); }; return ( <div className="min-h-screen flex items-center justify-center bg-slate-50 px-6 py-20"> <div className="bg-white p-10 rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md animate-in fade-in zoom-in duration-500"> <div className="text-center mb-8"> <div className="w-12 h-12 bg-rose-600 rounded-xl flex items-center justify-center text-white mx-auto mb-4 shadow-lg"><Lock size={24} /></div> <h2 className="font-heading text-3xl font-bold text-slate-900">{mode === 'login' ? 'Yönetici Girişi' : 'Şifre Sıfırlama'}</h2> </div> {message.text && <div className={`p-4 rounded-xl mb-6 text-sm font-bold text-center ${message.type === 'error' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>{message.text}</div>} <form onSubmit={mode === 'login' ? handleLogin : handleResetPassword} className="space-y-5"> <div> <label className="block text-xs font-bold text-slate-500 uppercase mb-2">E-posta</label> <div className="relative"><Mail className="absolute left-4 top-3.5 text-slate-400" size={20}/><input type="email" className="w-full pl-12 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:border-rose-500 outline-none font-medium" value={email} onChange={(e) => setEmail(e.target.value)} required/></div> </div> {mode === 'login' && ( <div> <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Şifre</label> <div className="relative"><Key className="absolute left-4 top-3.5 text-slate-400" size={20}/><input type="password" className="w-full pl-12 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:border-rose-500 outline-none font-medium" value={password} onChange={(e) => setPassword(e.target.value)} required/></div> </div> )} <button disabled={loading} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-rose-600 transition-all">{loading ? 'İşleniyor...' : (mode === 'login' ? 'Giriş Yap' : 'Bağlantı Gönder')}</button> </form> <div className="mt-6 text-center"><button onClick={() => {setMode(mode === 'login' ? 'reset' : 'login'); setMessage({type:'',text:''});}} className="text-sm text-slate-500 hover:text-rose-600 font-medium">{mode === 'login' ? 'Şifremi Unuttum' : 'Giriş Ekranına Dön'}</button></div> </div> </div> );
+
+// --- BİLEŞEN: LOGIN ---
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState('login');
+  const [message, setMessage] = useState({ type: '', text: '' });
+  const handleLogin = async (e) => { e.preventDefault(); setLoading(true); setMessage({ type: '', text: '' }); const { error } = await supabase.auth.signInWithPassword({ email, password }); if (error) { setMessage({ type: 'error', text: 'Giriş başarısız: ' + error.message }); } setLoading(false); };
+  const handleResetPassword = async (e) => { e.preventDefault(); setLoading(true); const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin }); if (error) { setMessage({ type: 'error', text: error.message }); } else { setMessage({ type: 'success', text: 'Şifre sıfırlama gönderildi.' }); } setLoading(false); };
+  return ( <div className="min-h-screen flex items-center justify-center bg-slate-50 px-6 py-20"> <div className="bg-white p-10 rounded-3xl shadow-2xl border border-slate-100 w-full max-w-md animate-in fade-in zoom-in duration-500"> <div className="text-center mb-8"> <div className="w-12 h-12 bg-rose-600 rounded-xl flex items-center justify-center text-white mx-auto mb-4 shadow-lg"><Lock size={24} /></div> <h2 className="font-heading text-3xl font-bold text-slate-900">{mode === 'login' ? 'Yönetici Girişi' : 'Şifre Sıfırlama'}</h2> </div> {message.text && <div className={`p-4 rounded-xl mb-6 text-sm font-bold text-center ${message.type === 'error' ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'}`}>{message.text}</div>} <form onSubmit={mode === 'login' ? handleLogin : handleResetPassword} className="space-y-5"> <div> <label className="block text-xs font-bold text-slate-500 uppercase mb-2">E-posta</label> <div className="relative"><Mail className="absolute left-4 top-3.5 text-slate-400" size={20}/><input type="email" className="w-full pl-12 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:border-rose-500 outline-none font-medium" value={email} onChange={(e) => setEmail(e.target.value)} required/></div> </div> {mode === 'login' && ( <div> <label className="block text-xs font-bold text-slate-500 uppercase mb-2">Şifre</label> <div className="relative"><Key className="absolute left-4 top-3.5 text-slate-400" size={20}/><input type="password" className="w-full pl-12 pr-4 py-3 border-2 border-slate-200 rounded-xl focus:border-rose-500 outline-none font-medium" value={password} onChange={(e) => setPassword(e.target.value)} required/></div> </div> )} <button disabled={loading} className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold text-lg hover:bg-rose-600 transition-all">{loading ? 'İşleniyor...' : (mode === 'login' ? 'Giriş Yap' : 'Bağlantı Gönder')}</button> </form> <div className="mt-6 text-center"><button onClick={() => {setMode(mode === 'login' ? 'reset' : 'login'); setMessage({type:'',text:''});}} className="text-sm text-slate-500 hover:text-rose-600 font-medium">{mode === 'login' ? 'Şifremi Unuttum' : 'Giriş Ekranına Dön'}</button></div> </div> </div> );
 };
 
-// --- BİLEŞEN: POST DETAY (OPTİMİZE RESİMLİ) ---
+// --- BİLEŞEN: POST DETAY ---
 const PostDetail = ({ post, setView, onEdit }) => { if (!post) return null; return ( <div className="max-w-4xl mx-auto px-6 py-20 animate-in fade-in slide-in-from-bottom-4 duration-500"> <div className="flex justify-between items-center mb-8"> <button onClick={() => setView('blog')} className="group flex items-center gap-2 text-slate-500 hover:text-rose-600 transition-all font-heading font-semibold"><ArrowRight size={18} className="rotate-180" /> Listeye Dön</button> <button onClick={() => onEdit(post)} className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold transition-colors"><Edit3 size={16}/> Düzenle</button> </div> <article className="bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden"> {post.image_url ? (<div className="h-[400px] w-full relative"><OptimizedImage src={post.image_url} alt={post.title} width={1200} className="w-full h-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent"></div></div>) : (<div className="h-32 bg-slate-100 w-full flex items-center justify-center text-slate-300"><ImageIcon size={48}/></div>)} <div className="p-8 md:p-12"> <div className="flex items-center gap-3 text-sm font-bold text-rose-600 mb-4 uppercase tracking-wider"><Calendar size={16} />{new Date(post.created_at).toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' })}</div> <h1 className="font-heading text-3xl md:text-5xl font-extrabold mb-8 text-slate-900 leading-tight">{post.title}</h1> <div className="blog-content text-lg text-slate-600 leading-relaxed"><ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content}</ReactMarkdown></div> </div> </article> </div> ); };
 
 // --- BİLEŞEN: BLOG LİSTESİ ---
@@ -301,7 +362,7 @@ export default function App() {
   const { t, i18n } = useTranslation(); 
   const languages = [{ code: 'tr', label: 'TR' }, { code: 'en', label: 'EN' }, { code: 'zh', label: 'ZH' }];
   const [isScrolled, setIsScrolled] = useState(false);
-  const modules = MODULE_CONTENT; 
+  const modules = getModuleContentTranslated(t);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => { setSession(session); });
