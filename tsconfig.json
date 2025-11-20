@@ -2,14 +2,11 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
-    
-    // HATA DÜZELTİLDİ: DOMContentHitters kaldırıldı, DOM.Iterable eklendi.
     "lib": ["ES2020", "DOM", "DOM.Iterable"], 
-    
     "module": "ESNext",
     "skipLibCheck": true,
 
-    /* Bundler Ayarları */
+    /* Çözünürlük ve Birlikte Çalışma Ayarları (Bu Kısım Hataları Çözer) */
     "moduleResolution": "node",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
@@ -17,6 +14,10 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    // BU İKİ AYAR ZORUNLUDUR: Modüller arası uyumluluğu sağlar.
+    "allowSyntheticDefaultImports": true, 
+    "esModuleInterop": true, 
+    
     /* Linter (Kod Kalitesi) Ayarları */
     "strict": true,
     "noUnusedLocals": true,
