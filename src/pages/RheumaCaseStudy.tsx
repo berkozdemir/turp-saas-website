@@ -34,9 +34,9 @@ export const RheumaCaseStudy = ({ setView }: { setView: any }) => {
              <div className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-1.5 rounded-full text-xs font-bold mb-8 uppercase tracking-wider shadow-lg">
                  <Activity size={14}/> Romatoloji Hibrit Model
              </div>
-             <h1 className="font-heading text-5xl md:text-7xl font-extrabold mb-8 leading-tight">Rheuma-Link Projesi</h1>
+             <h1 className="font-heading text-5xl md:text-7xl font-extrabold mb-8 leading-tight">Romatoloji Kayıt Sistemi Projesi</h1>
              <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-                 Romatoid Artrit (RA) ve Ankilozan Spondilit (AS) hastalarında, hastane vizitlerini dijitalleştirerek hekim zamanından %35 tasarruf sağlayan hibrit izlem modeli.
+                 Romatoid Artrit (RA) ve Ankilozan Spondilit (AS) hastalarında, hastane vizitlerini dijitalleştirerek hekim zamanından %45 tasarruf sağlayan hibrit izlem modeli.
              </p>
           </div>
        </section>
@@ -49,7 +49,7 @@ export const RheumaCaseStudy = ({ setView }: { setView: any }) => {
                 <ul className="space-y-6">
                    <li className="flex gap-4">
                        <div className="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center shrink-0"><Clock size={20}/></div>
-                       <div><h4 className="font-bold text-slate-900">Kısıtlı Poliklinik Süresi</h4><p className="text-slate-600 text-sm">Hekimler, 15 dakikalık vizit süresinin büyük kısmını anket doldurmaya (HAQ, BASDAI) harcıyor.</p></div>
+                       <div><h4 className="font-bold text-slate-900">Kısıtlı Poliklinik Süresi</h4><p className="text-slate-600 text-sm">Hekimler, 45 dakikalık vizit süresinin büyük kısmını anket doldurmaya (HAQ, BASDAI) harcıyor.</p></div>
                    </li>
                    <li className="flex gap-4">
                        <div className="w-10 h-10 bg-red-100 text-red-600 rounded-full flex items-center justify-center shrink-0"><Brain size={20}/></div>
@@ -104,14 +104,14 @@ export const RheumaCaseStudy = ({ setView }: { setView: any }) => {
                 <h4 className="font-bold text-slate-700 mb-6 flex items-center gap-2"><Clock size={20}/> Hekim Zaman Kullanımı</h4>
                 <div className="space-y-6">
                    <div>
-                      <div className="flex justify-between text-xs font-bold text-slate-500 mb-2"><span>Geleneksel (20 dk)</span><span>Veri Girişi: 15dk</span></div>
+                      <div className="flex justify-between text-xs font-bold text-slate-500 mb-2"><span>Geleneksel (40 dk)</span><span>Veri Girişi: 20dk</span></div>
                       <div className="w-full h-4 bg-slate-100 rounded-full overflow-hidden flex">
                          <div className="h-full bg-red-400 w-[75%]"></div>
                          <div className="h-full bg-slate-300 w-[25%]"></div>
                       </div>
                    </div>
                    <div>
-                      <div className="flex justify-between text-xs font-bold text-slate-900 mb-2"><span>Turp Modeli (7 dk)</span><span className="text-green-600">Veri Girişi: 0dk</span></div>
+                      <div className="flex justify-between text-xs font-bold text-slate-900 mb-2"><span>Turp Modeli (15 dk)</span><span className="text-green-600">Veri Girişi: 0dk</span></div>
                       <div className="w-full h-4 bg-slate-100 rounded-full overflow-hidden flex">
                          <div className="h-full bg-green-500 w-[35%]"></div>
                       </div>
