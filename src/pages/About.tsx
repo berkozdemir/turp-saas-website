@@ -43,7 +43,7 @@ export const About = ({ setView }) => {
         <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
                 <h2 className="font-heading text-3xl font-bold text-slate-900 mb-6">Yazılım Odaklı Değil, <br/><span className="text-rose-600">Gönüllü Odaklıyız.</span></h2>
-                <p className="text-slate-600 leading-relaxed mb-6 text-lg font-medium border-l-4 border-slate-900 pl-4">"Sizin derdinizden en iyi biz anlarız, çünkü biz de sizdeniz."</p>
+                <p className="text-slate-600 leading-relaxed mb-6 text-lg font-medium border-l-4 border-slate-900 pl-4">"Kaliteli veri toplamak, kanıt düzeyini güçlendirir."</p>
                 <p className="text-slate-600 leading-relaxed mb-6">
                     Pek çok teknoloji firması klinik araştırmayı "öğrenmeye" çalışırken; biz <strong>1997'den beri</strong> bu süreçleri planlayan, yöneten ve dönüştüren ekibiz. Dijitalleşme ve IoT, <strong>ICH-GCP</strong> standartlarında veri toplamak için birer araçtır.
                 </p>
