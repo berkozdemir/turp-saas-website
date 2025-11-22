@@ -10,7 +10,7 @@ export const ROICalculator = () => {
     // --- 2. MALİYET VARSAYIMLARI (Kullanıcı Değiştirebilir) ---
     const [showSettings, setShowSettings] = useState(false); // Ayarları gizle/göster
 
-    // CRA (Saha İzleme Uzmanı)
+    // CRA (Klinik Araştırma İzleyicisi)
     const [craMonthlySalary, setCraMonthlySalary] = useState(160000);
     const [craDailyExpense, setCraDailyExpense] = useState(6000); // Yol, Yemek, Konaklama
     const [craVisitEffort, setCraVisitEffort] = useState(0.25); // Gün cinsinden (0.25 = 2 saat)
@@ -19,13 +19,13 @@ export const ROICalculator = () => {
     const [sdcMonthlySalary, setSdcMonthlySalary] = useState(120000);
     const [sdcHoursPerVisit, setSdcHoursPerVisit] = useState(3); // Saat cinsinden
 
-    // Site & Hasta Masrafları
+    // Merkez & Araştırıcı & Gönüllü Masrafları
     const [investigatorFee, setInvestigatorFee] = useState(3000);
     const [examFee, setExamFee] = useState(3000);
     const [patientTravelFee, setPatientTravelFee] = useState(800);
 
-    // Turp
-    const [turpDailyLicense, setTurpDailyLicense] = useState(69.99);
+    // --- TURP SABİT FİYATI (Değiştirilemez) ---
+    const turpDailyLicense = 69.99;
 
     // --- HESAPLAMALAR ---
     
@@ -101,7 +101,7 @@ export const ROICalculator = () => {
                             <div className="space-y-6">
                                 <div>
                                     <div className="flex justify-between mb-2 text-sm font-bold text-slate-700">
-                                        <label>Hasta Sayısı</label>
+                                        <label>Gönüllü Sayısı</label>
                                         <span className="text-rose-600">{patientCount}</span>
                                     </div>
                                     <input type="range" min="10" max="2000" step="10" value={patientCount} onChange={(e) => setPatientCount(Number(e.target.value))} className="w-full h-2 bg-slate-200 rounded-lg cursor-pointer accent-rose-600"/>
@@ -111,14 +111,14 @@ export const ROICalculator = () => {
                                         <label>Vizit Sayısı</label>
                                         <span className="text-rose-600">{visitCount}</span>
                                     </div>
-                                    <input type="range" min="2" max="50" step="1" value={visitCount} onChange={(e) => setVisitCount(Number(e.target.value))} className="w-full h-2 bg-slate-200 rounded-lg cursor-pointer accent-rose-600"/>
+                                    <input type="range" min="2" max="36" step="1" value={visitCount} onChange={(e) => setVisitCount(Number(e.target.value))} className="w-full h-2 bg-slate-200 rounded-lg cursor-pointer accent-rose-600"/>
                                 </div>
                                 <div>
                                     <div className="flex justify-between mb-2 text-sm font-bold text-slate-700">
                                         <label>Süre (Ay)</label>
                                         <span className="text-rose-600">{durationMonths} Ay</span>
                                     </div>
-                                    <input type="range" min="3" max="60" step="1" value={durationMonths} onChange={(e) => setDurationMonths(Number(e.target.value))} className="w-full h-2 bg-slate-200 rounded-lg cursor-pointer accent-rose-600"/>
+                                    <input type="range" min="3" max="36" step="1" value={durationMonths} onChange={(e) => setDurationMonths(Number(e.target.value))} className="w-full h-2 bg-slate-200 rounded-lg cursor-pointer accent-rose-600"/>
                                 </div>
                             </div>
                         </div>
@@ -152,11 +152,11 @@ export const ROICalculator = () => {
                                     <div className="space-y-3">
                                         <p className="text-xs font-bold text-rose-600 uppercase tracking-wider">Saha & Veri (SDC)</p>
                                         <div className="grid grid-cols-2 gap-2 items-center">
-                                            <label className="text-slate-600">SDC Aylık (TL)</label>
+                                            <label className="text-slate-600">Saha Görevlisi Aylık (TL)</label>
                                             <input type="number" value={sdcMonthlySalary} onChange={e=>setSdcMonthlySalary(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/>
                                         </div>
                                         <div className="grid grid-cols-2 gap-2 items-center">
-                                            <label className="text-slate-600">SDC Eforu (Saat)</label>
+                                            <label className="text-slate-600">Vizit Başına Saha Görevlisi Eforu (Saat)</label>
                                             <input type="number" value={sdcHoursPerVisit} onChange={e=>setSdcHoursPerVisit(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/>
                                         </div>
                                     </div>
@@ -164,22 +164,25 @@ export const ROICalculator = () => {
                                     <div className="space-y-3">
                                         <p className="text-xs font-bold text-rose-600 uppercase tracking-wider">Diğer Giderler (Vizit Başı)</p>
                                         <div className="grid grid-cols-2 gap-2 items-center">
-                                            <label className="text-slate-600">Araştırıcı (TL)</label>
+                                            <label className="text-slate-600">Araştırıcı Ücreti (TL)</label>
                                             <input type="number" value={investigatorFee} onChange={e=>setInvestigatorFee(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/>
                                         </div>
                                         <div className="grid grid-cols-2 gap-2 items-center">
-                                            <label className="text-slate-600">Muayene (TL)</label>
+                                            <label className="text-slate-600">Muayene Ücreti (TL)</label>
                                             <input type="number" value={examFee} onChange={e=>setExamFee(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/>
                                         </div>
                                         <div className="grid grid-cols-2 gap-2 items-center">
-                                            <label className="text-slate-600">Hasta Yol (TL)</label>
+                                            <label className="text-slate-600">Gönüllü Yol/Yemek (TL)</label>
                                             <input type="number" value={patientTravelFee} onChange={e=>setPatientTravelFee(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/>
                                         </div>
                                     </div>
                                     <hr/>
+                                    {/* SABİT TURP LİSANS BEDELİ */}
                                     <div className="grid grid-cols-2 gap-2 items-center bg-green-50 p-2 rounded-lg">
                                         <label className="text-green-800 font-bold">Turp Lisans (Gün)</label>
-                                        <input type="number" value={turpDailyLicense} onChange={e=>setTurpDailyLicense(Number(e.target.value))} className="p-2 border border-green-200 rounded text-right font-bold text-green-700"/>
+                                        <div className="p-2 border border-green-200 rounded text-right font-bold text-slate-500 bg-slate-100 cursor-not-allowed">
+                                            {turpDailyLicense} ₺
+                                        </div>
                                     </div>
                                 </div>
                             )}
