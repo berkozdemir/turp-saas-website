@@ -1,55 +1,72 @@
 import React, { useState } from 'react';
-import { Calculator, TrendingUp, AlertCircle } from 'lucide-react';
+import { Calculator, TrendingUp, AlertCircle, Settings, ChevronDown, ChevronUp, DollarSign, Users, Calendar, Activity } from 'lucide-react';
 
 export const ROICalculator = () => {
-    // Varsayılan Değerler
+    // --- 1. ÇALIŞMA KAPSAMI (Temel Girdiler) ---
     const [patientCount, setPatientCount] = useState(100);
     const [visitCount, setVisitCount] = useState(10);
-    const [durationMonths, setDurationMonths] = useState(12); // YENİ: Çalışma Süresi
+    const [durationMonths, setDurationMonths] = useState(12);
+
+    // --- 2. MALİYET VARSAYIMLARI (Kullanıcı Değiştirebilir) ---
+    const [showSettings, setShowSettings] = useState(false); // Ayarları gizle/göster
+
+    // CRA (Saha İzleme Uzmanı)
+    const [craMonthlySalary, setCraMonthlySalary] = useState(160000);
+    const [craDailyExpense, setCraDailyExpense] = useState(6000); // Yol, Yemek, Konaklama
+    const [craVisitEffort, setCraVisitEffort] = useState(0.25); // Gün cinsinden (0.25 = 2 saat)
+
+    // SDC (Saha Veri Koordinatörü)
+    const [sdcMonthlySalary, setSdcMonthlySalary] = useState(120000);
+    const [sdcHoursPerVisit, setSdcHoursPerVisit] = useState(3); // Saat cinsinden
+
+    // Site & Hasta Masrafları
+    const [investigatorFee, setInvestigatorFee] = useState(3000);
+    const [examFee, setExamFee] = useState(3000);
+    const [patientTravelFee, setPatientTravelFee] = useState(800);
+
+    // Turp
+    const [turpDailyLicense, setTurpDailyLicense] = useState(69.99);
+
+    // --- HESAPLAMALAR ---
     
     // Sabitler
-    const CRA_MONTHLY_COST = 120000;
     const WORK_DAYS = 22;
-    const CRA_DAILY_COST = CRA_MONTHLY_COST / WORK_DAYS;
-    const CRA_VISIT_EFFORT_DAYS = 0.25; // 1/4 gün (Geleneksel)
-    const INVESTIGATOR_FEE = 3000;
-    const EXAM_FEE = 3000;
-    
-    // YENİ: Turp Lisans Bedeli
-    const TURP_DAILY_LICENSE_FEE = 69.99;
+    const WORK_HOURS = 8;
 
-    // --- 1. GELENEKSEL MALİYET HESABI ---
-    const craCostPerVisit = CRA_DAILY_COST * CRA_VISIT_EFFORT_DAYS;
-    const siteCostPerVisit = INVESTIGATOR_FEE + EXAM_FEE;
-    const traditionalCostPerVisit = craCostPerVisit + siteCostPerVisit;
+    // 1. GELENEKSEL MALİYETLER (Birim Hesapları)
     
+    // CRA Maliyeti: (Günlük Maaş x Efor) + Günlük Harcırah
+    const craDailySalary = craMonthlySalary / WORK_DAYS;
+    const craCostPerVisit = (craDailySalary * craVisitEffort) + craDailyExpense;
+
+    // SDC Maliyeti: (Saatlik Maaş x Harcanan Saat)
+    const sdcHourlySalary = sdcMonthlySalary / WORK_DAYS / WORK_HOURS;
+    const sdcCostPerVisit = sdcHourlySalary * sdcHoursPerVisit;
+
+    // Toplam Geleneksel Birim Maliyet (Vizit Başına)
+    const traditionalCostPerVisit = 
+        craCostPerVisit + 
+        sdcCostPerVisit + 
+        investigatorFee + 
+        examFee + 
+        patientTravelFee;
+
+    // TOPLAM GELENEKSEL PROJE MALİYETİ
     const totalTraditionalCost = patientCount * visitCount * traditionalCostPerVisit;
 
-    // --- 2. TURP İLE MALİYET HESABI ---
+
+    // 2. TURP İLE MALİYETLER
+    // Varsayım: Turp ile operasyonel maliyetler (CRA, SDC, Muayene, Yol) 0'a iner.
+    // Sadece Lisans Bedeli ödenir.
     
-    // A. Operasyonel Maliyetler (Yazılım Sayesinde Düşenler)
-    const turpCraEffort = CRA_VISIT_EFFORT_DAYS * 0.5; // CRA eforu %50 azalır
-    const turpCraCostPerVisit = CRA_DAILY_COST * turpCraEffort;
-
-    // Hibrit Model (%30 Uzaktan)
-    const REMOTE_RATIO = 0.30;
-    const remoteInvestigatorFee = INVESTIGATOR_FEE * 0.5; 
-    // Uzaktan vizitte 'Exam Fee' (Muayene) 0 TL, Hekim ücreti yarı yarıya
-    const weightedSiteCost = ((1 - REMOTE_RATIO) * siteCostPerVisit) + (REMOTE_RATIO * remoteInvestigatorFee);
+    const totalDays = durationMonths * 30;
+    const totalLicenseCost = patientCount * totalDays * turpDailyLicense;
     
-    const turpOperationalCostPerVisit = turpCraCostPerVisit + weightedSiteCost;
-    const totalTurpOperationalCost = patientCount * visitCount * turpOperationalCostPerVisit;
-
-    // B. Yazılım Lisans Maliyeti (YENİ EKLENDİ)
-    const totalDays = durationMonths * 30; // Ayı güne çevir
-    const totalLicenseCost = patientCount * totalDays * TURP_DAILY_LICENSE_FEE;
-
-    // C. Toplam Turp Maliyeti
-    const totalTurpFinalCost = totalTurpOperationalCost + totalLicenseCost;
+    const totalTurpCost = totalLicenseCost; // Operasyonel maliyet 0 kabul edildiği için.
 
     // --- SONUÇLAR ---
-    const savings = totalTraditionalCost - totalTurpFinalCost;
-    const savingsPercent = ((savings / totalTraditionalCost) * 100).toFixed(1);
+    const savings = totalTraditionalCost - totalTurpCost;
+    const savingsPercent = totalTraditionalCost > 0 ? ((savings / totalTraditionalCost) * 100).toFixed(1) : 0;
     const isProfitable = savings > 0;
 
     const formatCurrency = (val: number) => {
@@ -58,105 +75,200 @@ export const ROICalculator = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 py-24 px-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="max-w-6xl mx-auto">
-                <div className="text-center mb-16">
+            <div className="max-w-7xl mx-auto">
+                
+                {/* ÜST BAŞLIK */}
+                <div className="text-center mb-12">
                     <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-1.5 rounded-full text-xs font-bold mb-6 uppercase tracking-wider shadow-sm">
-                        <Calculator size={16}/> Maliyet Analizi
+                        <Calculator size={16}/> Gelişmiş Maliyet Analizi
                     </div>
-                    <h1 className="font-heading text-4xl md:text-6xl font-extrabold text-slate-900 mb-6">Yatırım Getirisi (ROI) Hesaplayıcı</h1>
-                    <p className="text-xl text-slate-500 max-w-2xl mx-auto">
-                        Yazılım maliyetlerini düştükten sonra bile ne kadar kar edeceğinizi şeffaf bir şekilde görün.
+                    <h1 className="font-heading text-4xl md:text-6xl font-extrabold text-slate-900 mb-6">Yatırım Getirisi (ROI)</h1>
+                    <p className="text-xl text-slate-500 max-w-3xl mx-auto">
+                        Saha operasyonlarını dijitalleştirerek elde edeceğiniz devasa tasarrufu hesaplayın.
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-12 gap-8">
-                    {/* Sol Taraf: Girdiler */}
-                    <div className="md:col-span-5 bg-white p-8 rounded-3xl shadow-xl border border-slate-200 h-fit">
-                        <h3 className="font-heading text-2xl font-bold text-slate-900 mb-6">Çalışma Parametreleri</h3>
+                <div className="grid lg:grid-cols-12 gap-8">
+                    
+                    {/* SOL KOLON: AYARLAR VE GİRDİLER */}
+                    <div className="lg:col-span-4 space-y-6">
                         
-                        <div className="space-y-8">
-                            <div>
-                                <div className="flex justify-between mb-2">
-                                    <label className="font-bold text-slate-700">Hasta Sayısı</label>
-                                    <span className="text-rose-600 font-bold">{patientCount}</span>
+                        {/* 1. Çalışma Kapsamı */}
+                        <div className="bg-white p-6 rounded-3xl shadow-lg border border-slate-200">
+                            <h3 className="font-heading text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+                                <Users size={20} className="text-rose-600"/> Çalışma Kapsamı
+                            </h3>
+                            <div className="space-y-6">
+                                <div>
+                                    <div className="flex justify-between mb-2 text-sm font-bold text-slate-700">
+                                        <label>Hasta Sayısı</label>
+                                        <span className="text-rose-600">{patientCount}</span>
+                                    </div>
+                                    <input type="range" min="10" max="2000" step="10" value={patientCount} onChange={(e) => setPatientCount(Number(e.target.value))} className="w-full h-2 bg-slate-200 rounded-lg cursor-pointer accent-rose-600"/>
                                 </div>
-                                <input type="range" min="10" max="1000" step="10" value={patientCount} onChange={(e) => setPatientCount(Number(e.target.value))} className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-rose-600"/>
+                                <div>
+                                    <div className="flex justify-between mb-2 text-sm font-bold text-slate-700">
+                                        <label>Vizit Sayısı</label>
+                                        <span className="text-rose-600">{visitCount}</span>
+                                    </div>
+                                    <input type="range" min="2" max="50" step="1" value={visitCount} onChange={(e) => setVisitCount(Number(e.target.value))} className="w-full h-2 bg-slate-200 rounded-lg cursor-pointer accent-rose-600"/>
+                                </div>
+                                <div>
+                                    <div className="flex justify-between mb-2 text-sm font-bold text-slate-700">
+                                        <label>Süre (Ay)</label>
+                                        <span className="text-rose-600">{durationMonths} Ay</span>
+                                    </div>
+                                    <input type="range" min="3" max="60" step="1" value={durationMonths} onChange={(e) => setDurationMonths(Number(e.target.value))} className="w-full h-2 bg-slate-200 rounded-lg cursor-pointer accent-rose-600"/>
+                                </div>
                             </div>
+                        </div>
 
-                            <div>
-                                <div className="flex justify-between mb-2">
-                                    <label className="font-bold text-slate-700">Hasta Başına Vizit</label>
-                                    <span className="text-rose-600 font-bold">{visitCount}</span>
+                        {/* 2. Gelişmiş Maliyet Ayarları (Accordion) */}
+                        <div className="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
+                            <button 
+                                onClick={() => setShowSettings(!showSettings)}
+                                className="w-full flex items-center justify-between p-6 bg-slate-50 hover:bg-slate-100 transition-colors text-left"
+                            >
+                                <span className="font-heading text-lg font-bold text-slate-900 flex items-center gap-2">
+                                    <Settings size={20} className="text-slate-500"/> Maliyet Varsayımları
+                                </span>
+                                {showSettings ? <ChevronUp size={20}/> : <ChevronDown size={20}/>}
+                            </button>
+                            
+                            {showSettings && (
+                                <div className="p-6 space-y-5 border-t border-slate-200 text-sm">
+                                    <div className="space-y-3">
+                                        <p className="text-xs font-bold text-rose-600 uppercase tracking-wider">CRA (Saha İzleme)</p>
+                                        <div className="grid grid-cols-2 gap-2 items-center">
+                                            <label className="text-slate-600">Aylık Brüt (TL)</label>
+                                            <input type="number" value={craMonthlySalary} onChange={e=>setCraMonthlySalary(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2 items-center">
+                                            <label className="text-slate-600">Günlük Masraf (TL)</label>
+                                            <input type="number" value={craDailyExpense} onChange={e=>setCraDailyExpense(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div className="space-y-3">
+                                        <p className="text-xs font-bold text-rose-600 uppercase tracking-wider">Saha & Veri (SDC)</p>
+                                        <div className="grid grid-cols-2 gap-2 items-center">
+                                            <label className="text-slate-600">SDC Aylık (TL)</label>
+                                            <input type="number" value={sdcMonthlySalary} onChange={e=>setSdcMonthlySalary(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2 items-center">
+                                            <label className="text-slate-600">SDC Eforu (Saat)</label>
+                                            <input type="number" value={sdcHoursPerVisit} onChange={e=>setSdcHoursPerVisit(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div className="space-y-3">
+                                        <p className="text-xs font-bold text-rose-600 uppercase tracking-wider">Diğer Giderler (Vizit Başı)</p>
+                                        <div className="grid grid-cols-2 gap-2 items-center">
+                                            <label className="text-slate-600">Araştırıcı (TL)</label>
+                                            <input type="number" value={investigatorFee} onChange={e=>setInvestigatorFee(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2 items-center">
+                                            <label className="text-slate-600">Muayene (TL)</label>
+                                            <input type="number" value={examFee} onChange={e=>setExamFee(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/>
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-2 items-center">
+                                            <label className="text-slate-600">Hasta Yol (TL)</label>
+                                            <input type="number" value={patientTravelFee} onChange={e=>setPatientTravelFee(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/>
+                                        </div>
+                                    </div>
+                                    <hr/>
+                                    <div className="grid grid-cols-2 gap-2 items-center bg-green-50 p-2 rounded-lg">
+                                        <label className="text-green-800 font-bold">Turp Lisans (Gün)</label>
+                                        <input type="number" value={turpDailyLicense} onChange={e=>setTurpDailyLicense(Number(e.target.value))} className="p-2 border border-green-200 rounded text-right font-bold text-green-700"/>
+                                    </div>
                                 </div>
-                                <input type="range" min="2" max="50" step="1" value={visitCount} onChange={(e) => setVisitCount(Number(e.target.value))} className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-rose-600"/>
-                            </div>
-
-                            {/* YENİ SLIDER: SÜRE */}
-                            <div>
-                                <div className="flex justify-between mb-2">
-                                    <label className="font-bold text-slate-700">Çalışma Süresi (Ay)</label>
-                                    <span className="text-rose-600 font-bold">{durationMonths} Ay</span>
-                                </div>
-                                <input type="range" min="3" max="60" step="1" value={durationMonths} onChange={(e) => setDurationMonths(Number(e.target.value))} className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-rose-600"/>
-                            </div>
-
-                            <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs text-slate-500 space-y-2">
-                                <p className="font-bold text-slate-700 mb-2">Varsayımlar:</p>
-                                <div className="flex justify-between"><span>CRA Maliyeti (Aylık):</span> <span>120.000 ₺</span></div>
-                                <div className="flex justify-between"><span>Site Ödemeleri (Vizit):</span> <span>6.000 ₺</span></div>
-                                <div className="flex justify-between border-t pt-2 mt-2 font-bold text-rose-600">
-                                    <span>Turp Lisansı (Günlük):</span> <span>{TURP_DAILY_LICENSE_FEE} ₺</span>
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </div>
 
-                    {/* Sağ Taraf: Sonuçlar */}
-                    <div className="md:col-span-7 space-y-6">
-                        {/* Tasarruf Kartı */}
-                        <div className={`bg-slate-900 text-white p-10 rounded-3xl shadow-2xl relative overflow-hidden ${!isProfitable ? 'border-2 border-red-500' : ''}`}>
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-green-500 rounded-full blur-[100px] opacity-20"></div>
+                    {/* SAĞ KOLON: SONUÇLAR */}
+                    <div className="lg:col-span-8 space-y-6">
+                        
+                        {/* Ana Tasarruf Kartı */}
+                        <div className={`bg-slate-900 text-white p-8 md:p-12 rounded-3xl shadow-2xl relative overflow-hidden ${!isProfitable ? 'border-4 border-red-500' : ''}`}>
+                            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full blur-[120px] opacity-20"></div>
                             <div className="relative z-10">
-                                <h4 className="text-slate-400 font-bold uppercase tracking-wider mb-2">Net Tasarruf (Lisans Dahil)</h4>
-                                <div className={`text-4xl md:text-6xl font-heading font-extrabold mb-4 ${isProfitable ? 'text-green-400' : 'text-red-400'}`}>
-                                    {formatCurrency(savings)}
+                                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                                    <div>
+                                        <h4 className="text-slate-400 font-bold uppercase tracking-widest text-sm mb-2">Toplam Net Tasarruf</h4>
+                                        <div className={`text-5xl md:text-7xl font-heading font-extrabold ${isProfitable ? 'text-green-400' : 'text-red-500'}`}>
+                                            {formatCurrency(savings)}
+                                        </div>
+                                    </div>
+                                    {isProfitable ? (
+                                        <div className="bg-green-500 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 shadow-lg shadow-green-900/20 animate-pulse-slow">
+                                            <TrendingUp size={24}/> %{savingsPercent} Daha Karlı
+                                        </div>
+                                    ) : (
+                                        <div className="bg-red-500 text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2">
+                                            <AlertCircle size={24}/> Maliyet Artışı
+                                        </div>
+                                    )}
                                 </div>
-                                {isProfitable ? (
-                                    <div className="inline-flex items-center gap-2 bg-green-500/20 text-green-300 px-4 py-2 rounded-lg font-bold">
-                                        <TrendingUp size={20}/> %{savingsPercent} Daha Düşük Maliyet
-                                    </div>
-                                ) : (
-                                    <div className="inline-flex items-center gap-2 bg-red-500/20 text-red-300 px-4 py-2 rounded-lg font-bold">
-                                        <AlertCircle size={20}/> Maliyet Artışı
-                                    </div>
-                                )}
+                                <p className="text-slate-400 text-lg max-w-2xl">
+                                    Turp kullanarak saha operasyonunu tamamen dijitalleştirdiğinizde, yazılım lisans bedelini ödedikten sonra bile bütçenizde devasa bir kaynak açılır.
+                                </p>
                             </div>
                         </div>
 
-                        {/* Detaylı Karşılaştırma */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                                <h5 className="text-slate-500 font-bold mb-2 text-sm uppercase">Geleneksel Yöntem</h5>
-                                <div className="text-2xl font-heading font-bold text-slate-900">{formatCurrency(totalTraditionalCost)}</div>
-                                <div className="mt-4 text-xs text-slate-400 space-y-1">
-                                    <p>• Fiziksel Vizitler</p>
-                                    <p>• Manuel Veri Girişi</p>
-                                    <p>• Yüksek CRA Eforu</p>
+                        {/* Detaylı Karşılaştırma Grid'i */}
+                        <div className="grid md:grid-cols-2 gap-6">
+                            
+                            {/* Geleneksel Kutu */}
+                            <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-lg relative">
+                                <div className="absolute top-4 right-4 bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold uppercase">Geleneksel</div>
+                                <h5 className="text-2xl font-heading font-bold text-slate-900 mb-6">Mevcut Durum</h5>
+                                
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-center border-b border-slate-100 pb-2">
+                                        <span className="text-slate-500 flex items-center gap-2"><Activity size={16}/> CRA Eforu</span>
+                                        <span className="font-bold text-slate-900">{formatCurrency(patientCount * visitCount * craCostPerVisit)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center border-b border-slate-100 pb-2">
+                                        <span className="text-slate-500 flex items-center gap-2"><Users size={16}/> Saha (SDC) Eforu</span>
+                                        <span className="font-bold text-slate-900">{formatCurrency(patientCount * visitCount * sdcCostPerVisit)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center border-b border-slate-100 pb-2">
+                                        <span className="text-slate-500 flex items-center gap-2"><Calendar size={16}/> Hastane & Yol</span>
+                                        <span className="font-bold text-slate-900">{formatCurrency(patientCount * visitCount * (investigatorFee + examFee + patientTravelFee))}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center pt-2">
+                                        <span className="text-slate-900 font-extrabold text-lg">Toplam</span>
+                                        <span className="text-slate-900 font-extrabold text-xl">{formatCurrency(totalTraditionalCost)}</span>
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <div className="bg-white p-6 rounded-2xl shadow-sm border-2 border-green-100 relative overflow-hidden">
-                                <div className="absolute top-0 right-0 bg-green-100 text-green-700 text-[10px] font-bold px-2 py-1 rounded-bl-lg">TURP</div>
-                                <h5 className="text-slate-500 font-bold mb-2 text-sm uppercase">Turp ile Toplam</h5>
-                                <div className="text-2xl font-heading font-bold text-green-600">{formatCurrency(totalTurpFinalCost)}</div>
-                                <div className="mt-4 text-xs text-slate-500 space-y-1 border-t pt-2">
-                                    <div className="flex justify-between">
-                                        <span>Operasyonel Maliyet:</span>
-                                        <span className="font-bold">{formatCurrency(totalTurpOperationalCost)}</span>
+
+                            {/* Turp Kutu */}
+                            <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-xl relative overflow-hidden">
+                                <div className="absolute top-0 right-0 bg-green-600 text-white px-3 py-1 rounded-bl-xl text-xs font-bold uppercase">Turp Yöntemi</div>
+                                <h5 className="text-2xl font-heading font-bold text-white mb-6">Yeni Nesil</h5>
+                                
+                                <div className="space-y-4">
+                                    <div className="flex justify-between items-center border-b border-slate-800 pb-2">
+                                        <span className="text-slate-400 flex items-center gap-2"><Activity size={16}/> CRA Eforu</span>
+                                        <span className="font-bold text-green-400">0 ₺</span>
                                     </div>
-                                    <div className="flex justify-between text-rose-600">
-                                        <span>+ Yazılım Lisansı:</span>
-                                        <span className="font-bold">{formatCurrency(totalLicenseCost)}</span>
+                                    <div className="flex justify-between items-center border-b border-slate-800 pb-2">
+                                        <span className="text-slate-400 flex items-center gap-2"><Users size={16}/> Saha (SDC) Eforu</span>
+                                        <span className="font-bold text-green-400">0 ₺</span>
+                                    </div>
+                                    <div className="flex justify-between items-center border-b border-slate-800 pb-2">
+                                        <span className="text-slate-400 flex items-center gap-2"><Calendar size={16}/> Hastane & Yol</span>
+                                        <span className="font-bold text-green-400">0 ₺</span>
+                                    </div>
+                                    <div className="flex justify-between items-center border-b border-slate-800 pb-2 bg-white/5 p-2 rounded-lg">
+                                        <span className="text-white font-bold flex items-center gap-2"><DollarSign size={16}/> Turp Lisans</span>
+                                        <span className="font-bold text-white">{formatCurrency(totalLicenseCost)}</span>
+                                    </div>
+                                    <div className="flex justify-between items-center pt-2">
+                                        <span className="text-white font-extrabold text-lg">Toplam</span>
+                                        <span className="text-green-400 font-extrabold text-xl">{formatCurrency(totalTurpCost)}</span>
                                     </div>
                                 </div>
                             </div>
