@@ -67,7 +67,7 @@ export const About = ({ setView }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 
                 {/* 1. OMEGA CRO (LİNK EKLENDİ) */}
-                <a href="https://omegacro.com" target="_blank" rel="noopener noreferrer" className="bg-white p-8 rounded-3xl shadow-lg hover:-translate-y-2 transition-all group border border-slate-100 relative block">
+                <a href="https://omega-cro.com.tr" target="_blank" rel="noopener noreferrer" className="bg-white p-8 rounded-3xl shadow-lg hover:-translate-y-2 transition-all group border border-slate-100 relative block">
                     <ExternalLink size={16} className="absolute top-6 right-6 text-slate-300 group-hover:text-rose-600 transition-colors"/>
                     <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-6 text-slate-700 group-hover:bg-slate-900 group-hover:text-white transition-colors">
                         <Award size={32} />
@@ -96,7 +96,7 @@ export const About = ({ setView }) => {
                     </div>
                     <h3 className="font-heading text-xl font-bold text-slate-900 mb-2">Omega Genetik</h3>
                     <p className="text-xs font-bold text-rose-600 uppercase tracking-wide mb-4">Laboratuvar • Ar-Ge</p>
-                    <p className="text-slate-600 text-sm leading-relaxed">Kişiselleştirilmiş tıp, farmakogenetik analizler ve biyobelirteç takibi ile tedavinin genetik altyapısını çözümlüyoruz.</p>
+                    <p className="text-slate-600 text-sm leading-relaxed">Kişiselleştirilmiş tıp, sitogenetik, moleküler ve farmakogenetik analizler ve biyobelirteç takibi ile tedavinin genetik altyapısını çözümlüyoruz.</p>
                 </a>
 
                 {/* 4. TURP (DIGITAL BRIDGE) */}
