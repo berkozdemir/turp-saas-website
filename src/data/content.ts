@@ -1,7 +1,7 @@
 import { ClipboardList, Bell, HeartPulse, Calendar, AlertTriangle, BookOpen, Video } from 'lucide-react';
 
 export const COMPANY_INFO = {
-    address: "Cyberpark C Blok Kat: 1 No:146 Bilkent, Çankaya / Ankara",
+    address: "Omega AraştırmaCyberpark C Blok Kat: 1 No:146 Bilkent, Çankaya / Ankara",
     phone: "+90 312 426 77 22",
     email: "info@turp.app",
     copyright: "© 2025 Turp & Omega Araştırma."
