@@ -5,13 +5,13 @@ import LanguageDetector from 'i18next-browser-languagedetector';
 const resources = {
   tr: {
     translation: {
-      // Navigasyon
+      // --- NAVİGASYON ---
       "nav_home": "Ana Sayfa",
       "nav_blog": "Blog & Haberler",
       "nav_admin": "Yönetim",
       "nav_modules": "Modüller",
       
-      // Hero
+      // --- HERO ---
       "hero_badge": "USBS Onaylı & e-Nabız Entegreli",
       "hero_title_1": "Tahminleri Değil,",
       "hero_title_2": "Gerçekleri Yönetin.",
@@ -19,10 +19,10 @@ const resources = {
       "btn_demo": "Demo Talep Et",
       "btn_discover": "Platformu Keşfet",
 
-      // Ortak
+      // --- ORTAK ---
       "partners_title": "GÜVENİLEN PARTNERLERİMİZ",
       
-      // İletişim Formu (Gelişmiş)
+      // --- İLETİŞİM FORMU ---
       "contact_title": "Araştırmanızı Başlatın",
       "contact_desc": "Uzman ekibimiz size özel bir demo hazırlasın.",
       "form_name": "Adınız",
@@ -47,7 +47,7 @@ const resources = {
       "form_new": "Yeni Talep",
       "form_kvkk_alert": "Lütfen KVKK metnini onaylayın.",
 
-      // Modüller Genel
+      // --- MODÜLLER GENEL ---
       "modules_title": "Teknoloji ile Güçlendirilmiş Çözümler",
       "modules_desc": "Detaylı bilgi için modüllere tıklayın.",
       "module_btn_detail": "Bu Modülü Talep Et",
@@ -58,95 +58,40 @@ const resources = {
       "module_cta_desc": "Turp ekosistemi modülerdir. Sadece ihtiyacınız olanı kullanın.",
       "module_cta_btn": "İletişime Geçin",
 
-      // Modül: Survey
-      "mod_survey_title": "ePRO & Anket Modülü",
-      "mod_survey_short": "Kağıt formları unutun. Veriyi kaynağında yakalayın.",
-      "mod_survey_desc": "Katılımcıların yaşam kalitesi ölçeklerini ve semptomlarını mobil uygulama üzerinden anlık ve güvenilir toplayın.",
-      "mod_survey_d1": "Recall Bias (Hatırlama Yanılgısı) sorununu ortadan kaldırır.",
-      "mod_survey_d2": "FDA 21 CFR Part 11 uyumlu elektronik imza ve denetim izi.",
-      "mod_survey_d3": "Dinamik dallanma mantığı (Branching Logic) ile akıllı sorular.",
+      // --- MODÜLLER DETAY ---
+      "mod_survey_title": "ePRO & Anket Modülü", "mod_survey_short": "Kağıt formları unutun. Veriyi kaynağında yakalayın.", "mod_survey_desc": "Katılımcıların yaşam kalitesi ölçeklerini ve semptomlarını mobil uygulama üzerinden anlık ve güvenilir toplayın.", "mod_survey_d1": "Recall Bias (Hatırlama Yanılgısı) sorununu ortadan kaldırır.", "mod_survey_d2": "FDA 21 CFR Part 11 uyumlu elektronik imza ve denetim izi.", "mod_survey_d3": "Dinamik dallanma mantığı (Branching Logic) ile akıllı sorular.",
       
-      // Modül: Medication
-      "mod_med_title": "İlaç Hatırlatma",
-      "mod_med_short": "Tedavi uyumunu şansa bırakmayın.",
-      "mod_med_desc": "Akıllı bildirimler ve görsel teyit sistemleri ile 'Adherence' oranlarını %90'ın üzerine çıkarın.",
-      "mod_med_d1": "Hasta beyanına değil, dijital kesinliğe dayalı takip.",
-      "mod_med_d2": "Hastanın yaşam döngüsüne uyumlu akıllı erteleme.",
-      "mod_med_d3": "İlaç bitmeden otomatik stok ve lojistik uyarısı.",
+      "mod_med_title": "İlaç Hatırlatma", "mod_med_short": "Tedavi uyumunu şansa bırakmayın.", "mod_med_desc": "Akıllı bildirimler ve görsel teyit sistemleri ile 'Adherence' oranlarını %90'ın üzerine çıkarın.", "mod_med_d1": "Hasta beyanına değil, dijital kesinliğe dayalı takip.", "mod_med_d2": "Hastanın yaşam döngüsüne uyumlu akıllı erteleme.", "mod_med_d3": "İlaç bitmeden otomatik stok ve lojistik uyarısı.",
 
-      // Modül: Vital
-      "mod_vital_title": "Vital Ölçüm & IoT",
-      "mod_vital_short": "Klinik dışında kesintisiz gözlem.",
-      "mod_vital_desc": "Tansiyon, şeker, nabız verilerini Apple Health, Google Fit veya Bluetooth cihazlardan otomatik çekin.",
-      "mod_vital_d1": "Beyaz Önlük Hipertansiyonu etkisini elimine eder.",
-      "mod_vital_d2": "BYOD (Kendi Cihazını Getir) desteği.",
-      "mod_vital_d3": "Referans dışı değerlerde doktora 'Erken Uyarı'.",
+      "mod_vital_title": "Vital Ölçüm & IoT", "mod_vital_short": "Klinik dışında kesintisiz gözlem.", "mod_vital_desc": "Tansiyon, şeker, nabız verilerini Apple Health, Google Fit veya Bluetooth cihazlardan otomatik çekin.", "mod_vital_d1": "Beyaz Önlük Hipertansiyonu etkisini elimine eder.", "mod_vital_d2": "BYOD (Kendi Cihazını Getir) desteği.", "mod_vital_d3": "Referans dışı değerlerde doktora 'Erken Uyarı'.",
 
-      // Modül: Appointment
-      "mod_appt_title": "Randevu Yönetimi",
-      "mod_appt_short": "No-Show oranlarını minimize edin.",
-      "mod_appt_desc": "Karmaşık protokol takvimini hastanın cebine indirin. Saha ziyaretlerini otomatik organize edin.",
-      "mod_appt_d1": "Lojistik zorlukları ve unutulan randevuları engeller.",
-      "mod_appt_d2": "Otomatik vizit penceresi hesaplama.",
-      "mod_appt_d3": "Hastane konumu ve yol tarifi entegrasyonu.",
+      "mod_appt_title": "Randevu Yönetimi", "mod_appt_short": "No-Show oranlarını minimize edin.", "mod_appt_desc": "Karmaşık protokol takvimini hastanın cebine indirin. Saha ziyaretlerini otomatik organize edin.", "mod_appt_d1": "Lojistik zorlukları ve unutulan randevuları engeller.", "mod_appt_d2": "Otomatik vizit penceresi hesaplama.", "mod_appt_d3": "Hastane konumu ve yol tarifi entegrasyonu.",
 
-      // Modül: Adverse
-      "mod_adv_title": "Yan Etki Bildirimi",
-      "mod_adv_short": "Farmakovijilans için en hızlı yol.",
-      "mod_adv_desc": "Beklenmedik durumları anında bildiren, 7/24 açık acil durum köprüsü.",
-      "mod_adv_d1": "Hasta güvenliği ve etik kurallar için anlık bildirim.",
-      "mod_adv_d2": "Basit semptom seçimi ile kolay kullanım.",
-      "mod_adv_d3": "Ciddi Yan Etki (SAE) durumunda anında alarm.",
+      "mod_adv_title": "Yan Etki Bildirimi", "mod_adv_short": "Farmakovijilans için en hızlı yol.", "mod_adv_desc": "Beklenmedik durumları anında bildiren, 7/24 açık acil durum köprüsü.", "mod_adv_d1": "Hasta güvenliği ve etik kurallar için anlık bildirim.", "mod_adv_d2": "Basit semptom seçimi ile kolay kullanım.", "mod_adv_d3": "Ciddi Yan Etki (SAE) durumunda anında alarm.",
 
-      // Modül: Education
-      "mod_edu_title": "Eğitim & eConsent",
-      "mod_edu_short": "Bilinçli hasta, başarılı araştırma.",
-      "mod_edu_desc": "Onam formlarını dijitalleştirin ve hastaları interaktif videolarla eğitin.",
-      "mod_edu_d1": "İmza sürecini dijital ve anlaşılır hale getirir.",
-      "mod_edu_d2": "Video ve animasyonlarla protokol eğitimi.",
-      "mod_edu_d3": "7/24 erişilebilir hasta kütüphanesi.",
+      "mod_edu_title": "Eğitim & eConsent", "mod_edu_short": "Bilinçli hasta, başarılı araştırma.", "mod_edu_desc": "Onam formlarını dijitalleştirin ve hastaları interaktif videolarla eğitin.", "mod_edu_d1": "İmza sürecini dijital ve anlaşılır hale getirir.", "mod_edu_d2": "Video ve animasyonlarla protokol eğitimi.", "mod_edu_d3": "7/24 erişilebilir hasta kütüphanesi.",
 
-      // Modül: Webinar
-      "mod_web_title": "Webinar & Tele-Vizit",
-      "mod_web_short": "Mekan bağımsız klinik araştırma.",
-      "mod_web_desc": "Uygulama üzerinden güvenli, şifreli ve KVKK uyumlu görüntülü görüşme.",
-      "mod_web_d1": "Tıbbi verilerin korunması için şifreli altyapı.",
-      "mod_web_d2": "Doktor ekran paylaşımı ile veri gösterimi.",
-      "mod_web_d3": "Denetimler için otomatik süre loglaması.",
+      "mod_web_title": "Webinar & Tele-Vizit", "mod_web_short": "Mekan bağımsız klinik araştırma.", "mod_web_desc": "Uygulama üzerinden güvenli, şifreli ve KVKK uyumlu görüntülü görüşme.", "mod_web_d1": "Tıbbi verilerin korunması için şifreli altyapı.", "mod_web_d2": "Doktor ekran paylaşımı ile veri gösterimi.", "mod_web_d3": "Denetimler için otomatik süre loglaması.",
 
-      // Problem/Çözüm
-      "prob_title": "Geleneksel Yöntemler Yetersiz",
-      "prob_desc": "Manuel süreçler veri güvenilirliğini düşürürken maliyetleri artırıyor.",
-      "bad_1": "Hasta beyanına dayalı, güvensiz veri.",
-      "bad_2": "Manuel giriş hataları.",
-      "bad_3": "Yüksek 'Drop-out' oranları.",
-      "good_1": "e-Nabız ile %100 dijital doğrulama.",
-      "good_2": "Anlık ve otomatik raporlama.",
-      "good_3": "Akıllı bildirimlerle yüksek uyum.",
+      // --- ANA SAYFA BÖLÜMLERİ ---
+      "prob_title": "Geleneksel Yöntemler Yetersiz", "prob_desc": "Manuel süreçler veri güvenilirliğini düşürürken maliyetleri artırıyor.",
+      "bad_1": "Hasta beyanına dayalı, güvensiz veri.", "bad_2": "Manuel giriş hataları.", "bad_3": "Yüksek 'Drop-out' oranları.",
+      "good_1": "e-Nabız ile %100 dijital doğrulama.", "good_2": "Anlık ve otomatik raporlama.", "good_3": "Akıllı bildirimlerle yüksek uyum.",
 
-      // Stats
-      "stat_1": "Daha Hızlı Hasta Alımı",
-      "stat_2": "Veri Doğruluğu",
-      "stat_3": "Maliyet Tasarrufu",
-      "stat_4": "Gerçek Zamanlı İzleme",
+      "stat_1": "Daha Hızlı Hasta Alımı", "stat_2": "Veri Doğruluğu", "stat_3": "Maliyet Tasarrufu", "stat_4": "Gerçek Zamanlı İzleme",
 
-      // Workflow
       "flow_title": "Süreç Nasıl İşler?",
       "flow_1_t": "Kurulum", "flow_1_d": "Sponsor paneli entegrasyonu.",
       "flow_2_t": "Davet", "flow_2_d": "Hastalara mobil uygulama linki.",
       "flow_3_t": "Onay", "flow_3_d": "Hasta e-Nabız onayı verir.",
       "flow_4_t": "Akış", "flow_4_d": "Gerçek zamanlı veri akışı başlar.",
 
-      // FAQ
       "faq_title": "Sıkça Sorulan Sorular",
-      "faq_1_q": "e-Nabız verisi için onay gerekiyor mu?",
-      "faq_1_a": "Evet, KVKK gereği hastanın mobil uygulama üzerinden açık rıza vermesi zorunludur.",
-      "faq_2_q": "Mevcut EDC sistemimizle entegre olur mu?",
-      "faq_2_a": "Evet, Turp modern REST API ile EDC sistemleriyle konuşabilir.",
-      "faq_3_q": "Hangi verileri çekebiliyoruz?",
-      "faq_3_a": "Tanılar, reçeteler, radyoloji ve tahlil sonuçları.",
+      "faq_1_q": "e-Nabız verisi için onay gerekiyor mu?", "faq_1_a": "Evet, KVKK gereği hastanın mobil uygulama üzerinden açık rıza vermesi zorunludur.",
+      "faq_2_q": "Mevcut EDC sistemimizle entegre olur mu?", "faq_2_a": "Evet, Turp modern REST API ile EDC sistemleriyle konuşabilir.",
+      "faq_3_q": "Hangi verileri çekebiliyoruz?", "faq_3_a": "Tanılar, reçeteler, radyoloji ve tahlil sonuçları.",
 
-      // ROI Hesaplayıcı
+      // --- ROI HESAPLAYICI (YENİ EKLENENLER BURADA) ---
       "roi_badge": "Gelişmiş Maliyet Analizi",
       "roi_title": "Yatırım Getirisi (ROI)",
       "roi_desc": "Saha operasyonlarını dijitalleştirerek elde edeceğiniz devasa tasarrufu hesaplayın.",
@@ -155,17 +100,26 @@ const resources = {
       "roi_visit_count": "Vizit Sayısı",
       "roi_duration": "Süre (Ay)",
       "roi_settings_title": "Maliyet Varsayımları",
+      
       "roi_trad_times": "Geleneksel Süreler (Dk)",
-      "roi_cra": "CRA", "roi_sdc": "SDC",
+      "roi_cra": "CRA", 
+      "roi_sdc": "SDC",
+      
       "roi_turp_times": "Turp ile Süreler (Dk)",
+      
       "roi_salaries": "Maaş & Giderler",
       "roi_cra_monthly": "CRA Aylık", 
       "roi_cra_daily": "CRA Harcırah", 
       "roi_sdc_monthly": "SDC Aylık",
-      "roi_others": "Diğer Giderler",
-      "roi_inv_fee": "Araştırıcı", 
-      "roi_exam_fee": "Muayene", 
-      "roi_travel_fee": "Hasta Yol",
+      
+      // YENİ EKLENEN DETAYLAR
+      "roi_others": "Diğer Giderler (Vizit Başı)",
+      "roi_breakdown_title": "Saha & Hasta Giderleri",
+      "roi_item_inv": "Araştırıcı Ödemesi",
+      "roi_item_inst": "Kurum Ödemesi",
+      "roi_item_vol": "Gönüllü Ödemesi",
+      "roi_travel_fee": "Hasta Yol", // Eski isim uyumluluğu için
+      
       "roi_license": "Turp Lisans (Gün)",
       "roi_saving_title": "Tahmini Toplam Tasarruf",
       "roi_profitable": "Daha Karlı", 
@@ -193,13 +147,9 @@ const resources = {
       "form_centers": "Number of Centers",
       "form_volunteers": "Number of Volunteers",
       "form_duration": "Study Duration (Months)",
-      "form_type": "Study Type",
-      "form_phase": "Study Phase",
-      "form_countries": "Target Countries",
+      "form_type": "Study Type", "form_phase": "Study Phase", "form_countries": "Target Countries",
       "form_select": "Select",
-      "form_opt_rwe": "RWE / Observational",
-      "form_opt_int": "Interventional",
-      "form_opt_device": "Medical Device",
+      "form_opt_rwe": "RWE / Observational", "form_opt_int": "Interventional", "form_opt_device": "Medical Device",
       "form_kvkk": "I have read and accept the Privacy Policy.",
       "form_send": "Start Calculation",
       "form_success_title": "Application Received!", "form_success_desc": "Our team will contact you shortly.",
@@ -211,70 +161,62 @@ const resources = {
       "module_why": "Why This Module?", "module_tech": "Technical Specs",
       "module_cta_title": "Add to Your Project", "module_cta_desc": "Turp is modular. Use only what you need.", "module_cta_btn": "Contact Us",
       
-      "mod_survey_title": "ePRO & Survey", "mod_survey_short": "Forget paper forms. Capture data at source.",
-      "mod_survey_desc": "Collect Quality of Life scales and symptoms instantly via mobile app.",
+      "mod_survey_title": "ePRO & Survey", "mod_survey_short": "Forget paper forms.", "mod_survey_desc": "Collect Quality of Life scales instantly.",
       "mod_survey_d1": "Eliminates Recall Bias.", "mod_survey_d2": "FDA 21 CFR Part 11 compliant.", "mod_survey_d3": "Smart Branching Logic.",
-      
-      "mod_med_title": "Medication Adherence", "mod_med_short": "Don't leave adherence to chance.",
-      "mod_med_desc": "Boost adherence over 90% with smart alerts and visual confirmation.",
-      "mod_med_d1": "Digital certainty instead of patient claim.", "mod_med_d2": "Smart snooze based on lifestyle.", "mod_med_d3": "Automatic stock alerts.",
+      "mod_med_title": "Medication Adherence", "mod_med_short": "Smart tracking system.", "mod_med_desc": "Boost adherence with smart alerts.",
+      "mod_med_d1": "Digital certainty.", "mod_med_d2": "Smart snooze.", "mod_med_d3": "Stock alerts.",
+      "mod_vital_title": "Vitals & IoT", "mod_vital_short": "Continuous observation.", "mod_vital_desc": "Auto-fetch vitals from devices.",
+      "mod_vital_d1": "Eliminates White Coat Hypertension.", "mod_vital_d2": "BYOD support.", "mod_vital_d3": "Early Warning.",
+      "mod_appt_title": "Visit Management", "mod_appt_short": "Minimize No-Show rates.", "mod_appt_desc": "Digital protocol calendar.",
+      "mod_appt_d1": "Prevents forgotten appointments.", "mod_appt_d2": "Auto visit window.", "mod_appt_d3": "Navigation integration.",
+      "mod_adv_title": "Adverse Events", "mod_adv_short": "Fastest pharmacovigilance.", "mod_adv_desc": "24/7 emergency bridge.",
+      "mod_adv_d1": "Instant reporting.", "mod_adv_d2": "Visual proof.", "mod_adv_d3": "Instant SAE alarms.",
+      "mod_edu_title": "Education & eConsent", "mod_edu_short": "Informed patient.", "mod_edu_desc": "Digitize consent forms.",
+      "mod_edu_d1": "Digital signing.", "mod_edu_d2": "Video training.", "mod_edu_d3": "24/7 library.",
+      "mod_web_title": "Webinar & Tele-Visit", "mod_web_short": "Location-independent.", "mod_web_desc": "Secure video calls.",
+      "mod_web_d1": "Encrypted infrastructure.", "mod_web_d2": "Screen sharing.", "mod_web_d3": "Auto-logging.",
 
-      "mod_vital_title": "Vitals & IoT", "mod_vital_short": "Continuous observation outside clinic.",
-      "mod_vital_desc": "Auto-fetch vitals from Apple Health, Google Fit or Bluetooth devices.",
-      "mod_vital_d1": "Eliminates White Coat Hypertension.", "mod_vital_d2": "BYOD support.", "mod_vital_d3": "Early Warning for outliers.",
-
-      "mod_appt_title": "Visit Management", "mod_appt_short": "Minimize No-Show rates.",
-      "mod_appt_desc": "Digital protocol calendar in patient's pocket.",
-      "mod_appt_d1": "Prevents forgotten appointments.", "mod_appt_d2": "Auto visit window calc.", "mod_appt_d3": "Navigation integration.",
-
-      "mod_adv_title": "Adverse Events", "mod_adv_short": "Fastest way for pharmacovigilance.",
-      "mod_adv_desc": "24/7 emergency bridge for reporting unexpected events.",
-      "mod_adv_d1": "Instant reporting for safety.", "mod_adv_d2": "Simple symptom selection.", "mod_adv_d3": "Instant SAE alarms.",
-
-      "mod_edu_title": "Education & eConsent", "mod_edu_short": "Informed patient, successful trial.",
-      "mod_edu_desc": "Digitize consent forms and educate patients with interactive video.",
-      "mod_edu_d1": "Digital and clear signing process.", "mod_edu_d2": "Video protocol training.", "mod_edu_d3": "24/7 patient library.",
-
-      "mod_web_title": "Webinar & Tele-Visit", "mod_web_short": "Location-independent trials.",
-      "mod_web_desc": "Secure, encrypted video calls via app.",
-      "mod_web_d1": "Encrypted infrastructure for medical data.", "mod_web_d2": "Screen sharing for data.", "mod_web_d3": "Auto-logging for audits.",
-
-      "prob_title": "Traditional Methods Fail", "prob_desc": "Manual processes reduce reliability and increase costs.",
-      "bad_1": "Unverified, self-reported data.", "bad_2": "Manual entry errors.", "bad_3": "High Drop-out rates.",
-      "good_1": "100% digital verification.", "good_2": "Instant automated reporting.", "good_3": "High adherence with smart alerts.",
+      "prob_title": "Traditional Methods Fail", "prob_desc": "Manual processes reduce reliability.",
+      "bad_1": "Unverified data.", "bad_2": "Manual errors.", "bad_3": "High Drop-out.",
+      "good_1": "100% digital verification.", "good_2": "Automated reporting.", "good_3": "High adherence.",
 
       "stat_1": "Faster Recruitment", "stat_2": "Data Accuracy", "stat_3": "Cost Saving", "stat_4": "Real-Time Monitoring",
 
       "flow_title": "How It Works?",
-      "flow_1_t": "Setup", "flow_1_d": "Sponsor panel integration.",
-      "flow_2_t": "Invite", "flow_2_d": "App link sent to patients.",
-      "flow_3_t": "Consent", "flow_3_d": "Patient approves data sharing.",
-      "flow_4_t": "Flow", "flow_4_d": "Real-time data flow begins.",
+      "flow_1_t": "Setup", "flow_1_d": "Sponsor integration.",
+      "flow_2_t": "Invite", "flow_2_d": "App link sent.",
+      "flow_3_t": "Consent", "flow_3_d": "Patient approves.",
+      "flow_4_t": "Flow", "flow_4_d": "Data flow begins.",
 
       "faq_title": "Frequently Asked Questions",
-      "faq_1_q": "Is patient consent required?", "faq_1_a": "Yes, explicit consent via mobile app is mandatory by law.",
-      "faq_2_q": "Does it integrate with EDC?", "faq_2_a": "Yes, Turp communicates seamlessly via REST API.",
-      "faq_3_q": "Which data can we fetch?", "faq_3_a": "Diagnoses, prescriptions, radiology, and lab results.",
+      "faq_1_q": "Is consent required?", "faq_1_a": "Yes, explicit consent is mandatory.",
+      "faq_2_q": "Integrate with EDC?", "faq_2_a": "Yes, seamless API integration.",
+      "faq_3_q": "Which data?", "faq_3_a": "Diagnoses, prescriptions, labs.",
 
+      // ROI EN
       "roi_badge": "Advanced Cost Analysis",
       "roi_title": "Return on Investment (ROI)",
-      "roi_desc": "Calculate the massive savings by digitizing field operations.",
+      "roi_desc": "Calculate savings by digitizing field operations.",
       "roi_scope_title": "Study Scope",
-      "roi_patient_count": "Subject Count",
-      "roi_visit_count": "Visit Count",
-      "roi_duration": "Duration (Months)",
+      "roi_patient_count": "Subjects", "roi_visit_count": "Visits", "roi_duration": "Duration (Months)",
       "roi_settings_title": "Cost Assumptions",
       "roi_trad_times": "Traditional Times (Min)",
       "roi_cra": "CRA", "roi_sdc": "SDC",
-      "roi_turp_times": "Times with Turp (Min)",
+      "roi_turp_times": "Turp Times (Min)",
       "roi_salaries": "Salaries & Expenses",
-      "roi_cra_monthly": "CRA Monthly", "roi_cra_daily": "CRA Per Diem", "roi_sdc_monthly": "SDC Monthly",
-      "roi_others": "Other Expenses",
-      "roi_inv_fee": "Investigator", "roi_exam_fee": "Examination", "roi_travel_fee": "Patient Travel",
+      "roi_cra_monthly": "CRA Monthly", "roi_cra_daily": "CRA Expenses", "roi_sdc_monthly": "SDC Monthly",
+      
+      "roi_others": "Other Expenses (Per Visit)",
+      "roi_breakdown_title": "Site & Patient Costs",
+      "roi_item_inv": "Investigator Fee",
+      "roi_item_inst": "Institution Fee",
+      "roi_item_vol": "Volunteer Payment",
+      "roi_travel_fee": "Patient Travel",
+
       "roi_license": "Turp License (Day)",
       "roi_saving_title": "Estimated Total Savings",
       "roi_profitable": "More Profitable", "roi_loss": "Cost Increase",
-      "roi_result_desc": "Digitization frees up 90% of field staff time, paying off license costs.",
+      "roi_result_desc": "Digitization reduces field staff time by 90%, covering license costs.",
       "roi_trad_label": "Traditional", "roi_trad_sub": "Current State",
       "roi_turp_label": "Turp Method", "roi_turp_sub": "Next Generation",
       "roi_total": "Total"
@@ -282,7 +224,7 @@ const resources = {
   },
   zh: {
     translation: {
-      "nav_home": "首页", "nav_blog": "博客与新闻", "nav_admin": "管理", "nav_modules": "模块",
+      "nav_home": "首页", "nav_blog": "博客", "nav_admin": "管理", "nav_modules": "模块",
       "hero_badge": "系统认证 & 电子健康集成",
       "hero_title_1": "管理事实，", "hero_title_2": "而非猜测。",
       "hero_desc": "首个从源头验证临床试验参与者数据的 RWE 平台。",
@@ -292,16 +234,10 @@ const resources = {
       "contact_title": "开始您的研究", "contact_desc": "让我们的专家团队为您准备定制演示。",
       "form_name": "名字", "form_surname": "姓氏", "form_company": "公司",
       "form_email": "企业邮箱", "form_phone": "电话",
-      "form_centers": "中心数量",
-      "form_volunteers": "志愿者数量",
-      "form_duration": "研究持续时间（月）",
-      "form_type": "研究类型",
-      "form_phase": "研究阶段",
-      "form_countries": "目标国家",
+      "form_centers": "中心数量", "form_volunteers": "志愿者数量", "form_duration": "研究持续时间（月）",
+      "form_type": "研究类型", "form_phase": "研究阶段", "form_countries": "目标国家",
       "form_select": "选择",
-      "form_opt_rwe": "RWE / 观察性",
-      "form_opt_int": "干预性",
-      "form_opt_device": "医疗器械",
+      "form_opt_rwe": "RWE / 观察性", "form_opt_int": "干预性", "form_opt_device": "医疗器械",
       "form_kvkk": "我已阅读并接受隐私政策。",
       "form_send": "开始计算",
       "form_success_title": "申请已收到！", "form_success_desc": "我们的团队将尽快与您联系。",
@@ -334,32 +270,30 @@ const resources = {
 
       "stat_1": "更快的招募", "stat_2": "数据准确性", "stat_3": "成本节省", "stat_4": "实时监控",
 
-      "flow_title": "工作原理？",
-      "flow_1_t": "设置", "flow_1_d": "集成。",
-      "flow_2_t": "邀请", "flow_2_d": "发送链接。",
-      "flow_3_t": "同意", "flow_3_d": "批准共享。",
-      "flow_4_t": "流程", "flow_4_d": "数据流开始。",
+      "flow_title": "工作原理？", "flow_1_t": "设置", "flow_1_d": "集成。", "flow_2_t": "邀请", "flow_2_d": "发送链接。", "flow_3_t": "同意", "flow_3_d": "批准共享。", "flow_4_t": "流程", "flow_4_d": "数据流开始。",
 
-      "faq_title": "常见问题",
-      "faq_1_q": "需要同意吗？", "faq_1_a": "是的，必须明确同意。",
-      "faq_2_q": "与 EDC 集成？", "faq_2_a": "是的，通过 API。",
-      "faq_3_q": "哪些数据？", "faq_3_a": "诊断、处方、结果。",
+      "faq_title": "常见问题", "faq_1_q": "需要同意吗？", "faq_1_a": "是的，必须明确同意。", "faq_2_q": "与 EDC 集成？", "faq_2_a": "是的，通过 API。", "faq_3_q": "哪些数据？", "faq_3_a": "诊断、处方、结果。",
 
+      // ROI ZH
       "roi_badge": "高级成本分析",
       "roi_title": "投资回报率 (ROI)",
       "roi_desc": "计算数字化带来的节省。",
       "roi_scope_title": "研究范围",
-      "roi_patient_count": "受试者数",
-      "roi_visit_count": "访视数",
-      "roi_duration": "持续时间（月）",
+      "roi_patient_count": "受试者数", "roi_visit_count": "访视数", "roi_duration": "持续时间（月）",
       "roi_settings_title": "成本假设",
       "roi_trad_times": "传统时间（分）",
       "roi_cra": "CRA", "roi_sdc": "SDC",
       "roi_turp_times": "Turp 时间（分）",
       "roi_salaries": "薪资",
       "roi_cra_monthly": "CRA 月薪", "roi_cra_daily": "CRA 津贴", "roi_sdc_monthly": "SDC 月薪",
+      
       "roi_others": "其他费用",
-      "roi_inv_fee": "研究者", "roi_exam_fee": "检查", "roi_travel_fee": "差旅",
+      "roi_breakdown_title": "现场和患者费用",
+      "roi_item_inv": "研究者费用",
+      "roi_item_inst": "机构费用",
+      "roi_item_vol": "志愿者费用",
+      "roi_travel_fee": "差旅",
+
       "roi_license": "Turp 许可（天）",
       "roi_saving_title": "预计总节省",
       "roi_profitable": "更有利", "roi_loss": "成本增加",
