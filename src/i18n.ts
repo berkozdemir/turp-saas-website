@@ -1,17 +1,20 @@
+// src/i18n.js
+
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 const resources = {
+  // --- TÜRKÇE (TR) ---
   tr: {
     translation: {
-      // --- NAVİGASYON ---
+      // Navigasyon
       nav_home: "Ana Sayfa",
       nav_modules: "Modüller",
       nav_solutions: "Çözümler",
       nav_blog: "Blog",
       nav_admin: "Partner Girişi",
 
-      // --- HERO ---
+      // Hero Alanı
       hero_badge: "USBS Onaylı & e-Nabız Entegreli",
       hero_title_1: "Tahminleri Değil,",
       hero_title_2: "Gerçekleri Yönetin.",
@@ -19,7 +22,7 @@ const resources = {
       btn_demo: "Demo Talep Et",
       btn_explore: "Platformu Keşfet",
 
-      // --- BÖLÜMLER ---
+      // Bölüm Başlıkları
       sec_partners: "GÜVENİLEN PARTNERLERİMİZ",
       sec_modules_title: "Temel Modüller",
       sec_modules_desc: "Araştırmanızın her aşaması için özelleştirilebilir yapı taşları.",
@@ -27,7 +30,7 @@ const resources = {
       sec_solutions_title: "Tedavi Alanlarına Özel Çözümler",
       sec_solutions_desc: "Genel modüllerin ötesinde, spesifik hastalıkların takibi için geliştirilmiş dikey çözümlerimiz.",
       
-      // --- HAKKIMIZDA ---
+      // Hakkımızda (About) Sayfası
       about: {
         back_home: "Ana Sayfaya Dön",
         since: "1997'den Beri",
@@ -61,17 +64,17 @@ const resources = {
         cta_btn: "Bize Ulaşın"
       },
 
-      // --- İLETİŞİM & FOOTER ---
+      // İletişim Formu & Footer
       contact_title: "Bize Ulaşın",
       contact_name: "Adınız",
       contact_company: "Şirket",
       contact_email: "E-posta",
       contact_btn: "Gönder",
       
-      // --- FORM SEÇENEKLERİ (TÜRKÇE - DÜZELTİLDİ) ---
+      // FORM SEÇENEKLERİ (DÜZELTİLDİ)
       form_opt_select: "İlgi Alanı Seçin",
       form_opt_rwe: "RWE / Gözlemsel Çalışma",
-      form_opt_phase: "Faz Çalışması (III/IV)", // Düzeltildi
+      form_opt_phase: "Faz Çalışması (III/IV)", 
       form_opt_device: "Medikal Cihaz Takibi",
       form_opt_general: "Genel Bilgi / Diğer",
 
@@ -80,6 +83,8 @@ const resources = {
       footer_contact: "İletişim"
     }
   },
+
+  // --- İNGİLİZCE (EN) ---
   en: {
     translation: {
       nav_home: "Home",
@@ -99,6 +104,7 @@ const resources = {
       sec_solutions_badge: "Sector Expertise",
       sec_solutions_title: "Therapeutic Area Solutions",
       sec_solutions_desc: "Vertical solutions developed for tracking specific diseases beyond general modules.",
+      
       about: {
         back_home: "Back to Home",
         since: "Since 1997",
@@ -131,16 +137,17 @@ const resources = {
         cta_title: "Leverage the Power of Experience in Your Projects",
         cta_btn: "Contact Us"
       },
+
       contact_title: "Contact Us",
       contact_name: "Your Name",
       contact_company: "Company",
       contact_email: "E-mail",
       contact_btn: "Send",
       
-      // --- FORM OPTIONS (ENGLISH - DÜZELTİLDİ) ---
+      // FORM SEÇENEKLERİ (DÜZELTİLDİ)
       form_opt_select: "Select Interest",
       form_opt_rwe: "RWE / Observational Study",
-      form_opt_phase: "Phase Study (III/IV)", // Düzeltildi
+      form_opt_phase: "Phase Study (III/IV)",
       form_opt_device: "Medical Device Tracking",
       form_opt_general: "General Info / Other",
 
@@ -149,6 +156,8 @@ const resources = {
       footer_contact: "Contact"
     }
   },
+
+  // --- ÇİNCE (ZH) ---
   zh: {
     translation: {
       nav_home: "主页",
@@ -210,10 +219,10 @@ const resources = {
       contact_email: "电子邮件",
       contact_btn: "发送",
 
-      // --- FORM OPTIONS (CHINESE - DÜZELTİLDİ) ---
+      // FORM SEÇENEKLERİ (DÜZELTİLDİ)
       form_opt_select: "选择感兴趣的领域",
       form_opt_rwe: "RWE / 观察性研究",
-      form_opt_phase: "临床分期研究 (III/IV)", // Düzeltildi
+      form_opt_phase: "临床分期研究 (III/IV)",
       form_opt_device: "医疗器械追踪",
       form_opt_general: "一般信息 / 其他",
 
@@ -228,10 +237,10 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng: "tr", 
-    fallbackLng: "en",
+    lng: "tr", // Başlangıç dili Türkçe
+    fallbackLng: "en", // Dil bulunamazsa İngilizceye düş
     interpolation: {
-      escapeValue: false
+      escapeValue: false // React zaten XSS koruması yapar
     }
   });
 
