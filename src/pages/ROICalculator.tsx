@@ -14,7 +14,7 @@ export const ROICalculator = () => {
     // CRA (Klinik Araştırma İzleyicisi)
     const [craMonthlySalary, setCraMonthlySalary] = useState(160000);
     const [craDailyExpense, setCraDailyExpense] = useState(6000); // Yol, Yemek, Konaklama
-    const [craVisitEffort, setCraVisitEffort] = useState(0.25); // Gün cinsinden (0.25 = 2 saat)
+    const [craVisitEffort, setCraVisitEffort] = useState(0.25); // Gün cinsinden
 
     // SDC (Saha Veri Koordinatörü)
     const [sdcMonthlySalary, setSdcMonthlySalary] = useState(120000);
@@ -25,7 +25,7 @@ export const ROICalculator = () => {
     const [examFee, setExamFee] = useState(3000);
     const [patientTravelFee, setPatientTravelFee] = useState(800);
 
-    // B. TURP YÖNTEMİ GİRDİLERİ (YENİ EKLENDİ)
+    // B. TURP YÖNTEMİ GİRDİLERİ
     const [turpCraMinutes, setTurpCraMinutes] = useState(10); // Turp ile CRA süresi (dk)
     const [turpSdcMinutes, setTurpSdcMinutes] = useState(45); // Turp ile SDC süresi (dk)
     
@@ -52,6 +52,7 @@ export const ROICalculator = () => {
     const sdcCostPerVisit_Trad = sdcHourlySalary * sdcHoursPerVisit;
 
     // Toplam Geleneksel Birim Maliyet
+    // DÜZELTME BURADA YAPILDI: State değişkenleri kullanıldı (investigatorFee, examFee...)
     const traditionalCostPerVisit = 
         craCostPerVisit_Trad + 
         sdcCostPerVisit_Trad + 
@@ -67,34 +68,35 @@ export const ROICalculator = () => {
     // A. Operasyonel Maliyetler (Zaman Tasarrufu)
     
     // CRA Maliyeti (Turp): Sadece maaş (Ofisten izleme, harcırah yok)
-    // 10 dk kaç gün eder? -> 10 / (8*60)
     const turpCraEffortDay = turpCraMinutes / MINUTES_IN_DAY;
     const turpCraCostPerVisit = craDailySalary * turpCraEffortDay; 
 
-    // SDC Maliyeti (Turp): 45 dk
+    // SDC Maliyeti (Turp)
     const turpSdcHours = turpSdcMinutes / MINUTES_IN_HOUR;
     const turpSdcCostPerVisit = sdcHourlySalary * turpSdcHours;
 
     // B. Hibrit Model Tasarrufu (%30 Uzaktan)
     const REMOTE_RATIO = 0.30;
-    const remoteInvestigatorFee = INVESTIGATOR_FEE * 0.5; 
-    // Uzaktan vizitte 'Muayene' (examFee) ve 'Yol' (patientTravelFee) 0 TL
+    // DÜZELTME: INVESTIGATOR_FEE yerine investigatorFee state'i kullanıldı
+    const remoteInvestigatorFee = investigatorFee * 0.5; 
     
+    // Fiziksel vizit maliyeti (Tüm masraflar dahil)
     const siteCost_Physical = investigatorFee + examFee + patientTravelFee;
-    const siteCost_Remote = remoteInvestigatorFee; // Sadece hekim emeği
+    // Uzaktan vizit maliyeti (Sadece yarım hekim ücreti)
+    const siteCost_Remote = remoteInvestigatorFee; 
 
     const weightedSiteCost = ((1 - REMOTE_RATIO) * siteCost_Physical) + (REMOTE_RATIO * siteCost_Remote);
     
     // C. Turp Toplam Operasyonel Maliyet (Birim)
     const turpOperationalCostPerVisit = turpCraCostPerVisit + turpSdcCostPerVisit + weightedSiteCost;
-    const totalTurpOperationalCost = patientCount * visitCount * turpOperationalCostPerVisit;
-
+    
     // D. Yazılım Lisans Maliyeti
     const totalDays = durationMonths * 30;
     const totalLicenseCost = patientCount * totalDays * turpDailyLicense;
 
     // E. TOPLAM TURP MALİYETİ
-    const totalTurpFinalCost = totalTurpOperationalCost + totalLicenseCost;
+    // (Operasyonel Giderler + Lisans)
+    const totalTurpFinalCost = (patientCount * visitCount * turpOperationalCostPerVisit) + totalLicenseCost;
 
     // --- SONUÇLAR ---
     const savings = totalTraditionalCost - totalTurpFinalCost;
@@ -161,7 +163,7 @@ export const ROICalculator = () => {
                                         <div className="grid grid-cols-2 gap-2 items-center"><label className="text-slate-600">SDC Eforu (Saat)</label><input type="number" value={sdcHoursPerVisit} onChange={e=>setSdcHoursPerVisit(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/></div>
                                     </div>
                                     <hr/>
-                                    {/* TURP EFORU (YENİ) */}
+                                    {/* TURP EFORU */}
                                     <div className="space-y-3 bg-green-50/50 p-2 rounded-lg border border-green-100">
                                         <p className="text-xs font-bold text-green-600 uppercase tracking-wider flex items-center gap-1"><Clock size={12}/> Turp ile Eforlar</p>
                                         <div className="grid grid-cols-2 gap-2 items-center"><label className="text-slate-600">CRA Süresi (Dk)</label><input type="number" value={turpCraMinutes} onChange={e=>setTurpCraMinutes(Number(e.target.value))} className="p-2 border border-green-200 rounded text-right font-bold text-green-700"/></div>
@@ -174,6 +176,13 @@ export const ROICalculator = () => {
                                         <div className="grid grid-cols-2 gap-2 items-center"><label className="text-slate-600">CRA Aylık (TL)</label><input type="number" value={craMonthlySalary} onChange={e=>setCraMonthlySalary(Number(e.target.value))} className="p-2 border rounded text-right"/></div>
                                         <div className="grid grid-cols-2 gap-2 items-center"><label className="text-slate-600">CRA Harcırah (TL)</label><input type="number" value={craDailyExpense} onChange={e=>setCraDailyExpense(Number(e.target.value))} className="p-2 border rounded text-right"/></div>
                                         <div className="grid grid-cols-2 gap-2 items-center"><label className="text-slate-600">SDC Aylık (TL)</label><input type="number" value={sdcMonthlySalary} onChange={e=>setSdcMonthlySalary(Number(e.target.value))} className="p-2 border rounded text-right"/></div>
+                                    </div>
+                                    <hr/>
+                                    <div className="space-y-3">
+                                        <p className="text-xs font-bold text-rose-600 uppercase tracking-wider">Diğer Giderler</p>
+                                        <div className="grid grid-cols-2 gap-2 items-center"><label className="text-slate-600">Araştırıcı (TL)</label><input type="number" value={investigatorFee} onChange={e=>setInvestigatorFee(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/></div>
+                                        <div className="grid grid-cols-2 gap-2 items-center"><label className="text-slate-600">Muayene (TL)</label><input type="number" value={examFee} onChange={e=>setExamFee(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/></div>
+                                        <div className="grid grid-cols-2 gap-2 items-center"><label className="text-slate-600">Hasta Yol (TL)</label><input type="number" value={patientTravelFee} onChange={e=>setPatientTravelFee(Number(e.target.value))} className="p-2 border rounded text-right font-bold"/></div>
                                     </div>
                                     <hr/>
                                     {/* TURP LİSANS */}
