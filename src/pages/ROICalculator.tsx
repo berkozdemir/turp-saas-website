@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Calculator, TrendingUp, AlertCircle, Settings, ChevronDown, ChevronUp, DollarSign, Users, Calendar, Activity, Clock, Loader2 } from 'lucide-react';
+import { Calculator, TrendingUp, AlertCircle, Settings, ChevronDown, ChevronUp, DollarSign, Users, Calendar, Activity, Clock, Loader2, Lock, CheckCircle, ArrowRight, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const CURRENCY_CONFIG = {
@@ -11,19 +11,45 @@ const CURRENCY_CONFIG = {
 
 export const ROICalculator = ({ initialCurrency = 'TRY' }) => {
     const { t } = useTranslation();
+    
+    // --- ERİŞİM KONTROLÜ (GATE) ---
+    const [hasAccess, setHasAccess] = useState(false);
+    const [leadLoading, setLeadLoading] = useState(false);
+    const [leadForm, setLeadForm] = useState({
+        ad_soyad: '', email: '', telefon: '', firma: '',
+        calisma_turu: 'Girişimsel', faz: 'Faz III', ulkeler: 'TR', kvkk: false
+    });
+
+    const handleLeadSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!leadForm.kvkk) { alert("Lütfen KVKK metnini onaylayın."); return; }
+        
+        setLeadLoading(true);
+        // Lead'i Supabase'e kaydet
+        const { error } = await supabase.from('roi_leads').insert([leadForm]);
+
+        if (error) {
+            alert("Hata oluştu: " + error.message);
+            setLeadLoading(false);
+        } else {
+            setHasAccess(true); // Kilidi aç
+            setLeadLoading(false);
+            window.scrollTo(0, 0);
+        }
+    };
+
+    // --- ROI HESAPLAYICI STATE'LERİ ---
     const [loading, setLoading] = useState(true);
     const [currency, setCurrency] = useState(initialCurrency);
+    const [baseSettings, setBaseSettings] = useState<any>(null);
     const [showSettings, setShowSettings] = useState(false);
 
-    // --- HAM VERİ (VERİTABANINDAN GELEN) ---
-    const [baseSettings, setBaseSettings] = useState(null);
-
-    // --- KAPSAM ---
+    // Kapsam
     const [patientCount, setPatientCount] = useState(100);
     const [visitCount, setVisitCount] = useState(10);
     const [durationMonths, setDurationMonths] = useState(12);
 
-    // --- MALİYETLER (Seçili kura göre değişen state'ler) ---
+    // Maliyetler (Dynamic)
     const [craMonthlySalary, setCraMonthlySalary] = useState(0);
     const [craDailyExpense, setCraDailyExpense] = useState(0);
     const [tradCraMinutes, setTradCraMinutes] = useState(0);
@@ -39,132 +65,129 @@ export const ROICalculator = ({ initialCurrency = 'TRY' }) => {
     const [turpCraMinutes, setTurpCraMinutes] = useState(0);
     const [turpSdcMinutes, setTurpSdcMinutes] = useState(0);
 
-    // --- 1. VERİLERİ ÇEK ---
+    // --- VERİLERİ ÇEK (Sayfa yüklenince arkada hazırla) ---
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const { data, error } = await supabase.from('roi_settings').select('*').single();
-                
-                if (error) throw error;
-                
                 if (data) {
                     setBaseSettings(data);
-                    // İlk açılışta varsayılan para birimine göre doldur
                     updateCurrencyValues(initialCurrency, data);
                 }
-            } catch (err) {
-                console.error("Veri çekme hatası:", err);
-                alert("Veriler yüklenemedi, lütfen sayfayı yenileyin.");
-            } finally {
-                setLoading(false);
-            }
+            } catch (err) { console.error(err); } 
+            finally { setLoading(false); }
         };
         fetchData();
     }, []);
 
-    // --- 2. PARA BİRİMİ DEĞİŞTİRME MANTIĞI ---
-    const updateCurrencyValues = (targetCurrency, sourceData = baseSettings) => {
+    // Para birimi değişince veya ilk yüklemede çalışır
+    const updateCurrencyValues = (targetCurrency: string, sourceData = baseSettings) => {
         if (!sourceData) return;
-        
         setCurrency(targetCurrency);
         
-        // Kuru belirle (TL ise 1, değilse DB'den gelen oran)
         let rate = 1;
         if (targetCurrency === 'USD') rate = sourceData.usd_rate || 45;
         if (targetCurrency === 'EUR') rate = sourceData.eur_rate || 50;
 
-        // Tüm maliyetleri kura böl
         setCraMonthlySalary(sourceData.cra_monthly_salary / rate);
         setCraDailyExpense(sourceData.cra_daily_expense / rate);
-        
         setSdcMonthlySalary(sourceData.sdc_monthly_salary / rate);
-        
         setInvestigatorFee(sourceData.investigator_fee / rate);
         setExamFee(sourceData.exam_fee / rate);
         setPatientTravelFee(sourceData.patient_travel_fee / rate);
-        
         setTurpDailyLicense(sourceData.turp_daily_license / rate);
 
-        // Süreler (Dakika) para biriminden etkilenmez, direkt set et
         setTradCraMinutes(sourceData.trad_cra_minutes);
         setTradSdcMinutes(sourceData.trad_sdc_minutes);
         setTurpCraMinutes(sourceData.turp_cra_minutes);
         setTurpSdcMinutes(sourceData.turp_sdc_minutes);
     };
 
-    // --- 3. HESAPLAMALAR ---
-    const WORK_DAYS = 22; 
-    const WORK_HOURS = 8; 
-    const MINUTES_IN_HOUR = 60; 
-    const MINUTES_IN_DAY = WORK_HOURS * MINUTES_IN_HOUR;
-    
-    // Birim Dakika Maliyetleri
+    // --- HESAPLAMALAR ---
+    const WORK_DAYS = 22; const WORK_HOURS = 8; const MINUTES_IN_HOUR = 60; const MINUTES_IN_DAY = WORK_HOURS * MINUTES_IN_HOUR;
     const craMinuteCost = craMonthlySalary / WORK_DAYS / WORK_HOURS / MINUTES_IN_HOUR;
     const sdcMinuteCost = sdcMonthlySalary / WORK_DAYS / WORK_HOURS / MINUTES_IN_HOUR;
 
-    // A. GELENEKSEL MALİYET
-    // CRA: (Dakika Maliyeti * Süre) + Harcırah
+    // Geleneksel
     const craCostPerVisit_Trad = (craMinuteCost * tradCraMinutes) + craDailyExpense;
-    // SDC: Dakika Maliyeti * Süre
     const sdcCostPerVisit_Trad = sdcMinuteCost * tradSdcMinutes;
-    
     const traditionalCostPerVisit = craCostPerVisit_Trad + sdcCostPerVisit_Trad + investigatorFee + examFee + patientTravelFee;
     const totalTraditionalCost = patientCount * visitCount * traditionalCostPerVisit;
 
-    // B. TURP İLE MALİYET
-    // CRA: Harcırah yok, sadece süre
+    // Turp
     const turpCraCostPerVisit = craMinuteCost * turpCraMinutes; 
-    // SDC: Sadece süre
     const turpSdcCostPerVisit = sdcMinuteCost * turpSdcMinutes; 
-    
-    // Hibrit Site Maliyeti (%30 Uzaktan Tasarrufu)
     const REMOTE_RATIO = 0.30;
     const remoteInvestigatorFee = investigatorFee * 0.5; 
     const weightedSiteCost = ((1 - REMOTE_RATIO) * (investigatorFee + examFee + patientTravelFee)) + (REMOTE_RATIO * remoteInvestigatorFee);
-    
     const turpOperationalCostPerVisit = turpCraCostPerVisit + turpSdcCostPerVisit + weightedSiteCost;
     
-    // Lisans
     const totalDays = durationMonths * 30;
     const totalLicenseCost = patientCount * totalDays * turpDailyLicense;
-
-    // Toplam
     const totalTurpFinalCost = (patientCount * visitCount * turpOperationalCostPerVisit) + totalLicenseCost;
 
-    // Sonuçlar
     const savings = totalTraditionalCost - totalTurpFinalCost;
     const savingsPercent = totalTraditionalCost > 0 ? ((savings / totalTraditionalCost) * 100).toFixed(1) : 0;
     const isProfitable = savings > 0;
+    
+    // @ts-ignore
+    const formatCurrency = (val) => new Intl.NumberFormat(CURRENCY_CONFIG[currency].locale, { style: 'currency', currency: currency, maximumFractionDigits: 0 }).format(val);
 
-    const formatCurrency = (val) => {
-        return new Intl.NumberFormat(CURRENCY_CONFIG[currency].locale, { 
-            style: 'currency', 
-            currency: currency, 
-            maximumFractionDigits: 0 
-        }).format(val);
-    };
+    // --- 1. GÖRÜNÜM: KİLİTLİ FORM ---
+    if (!hasAccess) {
+        return (
+            <div className="min-h-screen bg-slate-50 py-24 px-6 flex items-center justify-center">
+                <div className="max-w-4xl w-full bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col md:flex-row">
+                    <div className="md:w-2/5 bg-slate-900 text-white p-10 flex flex-col justify-center relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-rose-600 rounded-full blur-[80px] opacity-20"></div>
+                        <div className="relative z-10">
+                            <div className="w-16 h-16 bg-white/10 backdrop-blur rounded-2xl flex items-center justify-center mb-6"><Calculator size={32} className="text-rose-500"/></div>
+                            <h2 className="font-heading text-3xl font-bold mb-4">Ne Kadar Tasarruf Edebilirsiniz?</h2>
+                            <p className="text-slate-400 mb-8 leading-relaxed">Turp ile saha operasyonlarınızı dijitalleştirerek bütçenizde ne kadar yer açabileceğinizi 1 dakikada hesaplayın.</p>
+                            <ul className="space-y-3 text-sm text-slate-300">
+                                <li className="flex items-center gap-2"><CheckCircle size={16} className="text-green-400"/> CRA Efor Analizi</li>
+                                <li className="flex items-center gap-2"><CheckCircle size={16} className="text-green-400"/> Hibrit Vizit Tasarrufu</li>
+                                <li className="flex items-center gap-2"><CheckCircle size={16} className="text-green-400"/> Lisans Dahil Net Kar</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="md:w-3/5 p-10">
+                        <h3 className="text-xl font-bold text-slate-900 mb-6">Hesaplayıcıya Erişim Formu</h3>
+                        <form onSubmit={handleLeadSubmit} className="space-y-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div><label className="text-xs font-bold text-slate-500 uppercase">Ad Soyad</label><input required className="w-full p-3 border rounded-lg bg-slate-50 outline-none focus:border-rose-500" value={leadForm.ad_soyad} onChange={e=>setLeadForm({...leadForm, ad_soyad:e.target.value})}/></div>
+                                <div><label className="text-xs font-bold text-slate-500 uppercase">Firma</label><input required className="w-full p-3 border rounded-lg bg-slate-50 outline-none focus:border-rose-500" value={leadForm.firma} onChange={e=>setLeadForm({...leadForm, firma:e.target.value})}/></div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div><label className="text-xs font-bold text-slate-500 uppercase">E-posta</label><input required type="email" className="w-full p-3 border rounded-lg bg-slate-50 outline-none focus:border-rose-500" value={leadForm.email} onChange={e=>setLeadForm({...leadForm, email:e.target.value})}/></div>
+                                <div><label className="text-xs font-bold text-slate-500 uppercase">Telefon</label><input required type="tel" className="w-full p-3 border rounded-lg bg-slate-50 outline-none focus:border-rose-500" value={leadForm.telefon} onChange={e=>setLeadForm({...leadForm, telefon:e.target.value})}/></div>
+                            </div>
+                            <div className="pt-2"><label className="text-xs font-bold text-slate-500 uppercase mb-2 block">Çalışma Türü</label><div className="flex gap-4 text-sm"><label className="flex items-center gap-2 cursor-pointer"><input type="radio" name="tur" checked={leadForm.calisma_turu === 'Girişimsel'} onChange={()=>setLeadForm({...leadForm, calisma_turu:'Girişimsel'})} className="accent-rose-600"/> Girişimsel</label><label className="flex items-center gap-2 cursor-pointer"><input type="radio" name="tur" checked={leadForm.calisma_turu === 'Gözlemsel'} onChange={()=>setLeadForm({...leadForm, calisma_turu:'Gözlemsel'})} className="accent-rose-600"/> Gözlemsel</label></div></div>
+                            <div className="flex items-start gap-2 pt-2"><input type="checkbox" required id="kvkk" className="mt-1 accent-rose-600" checked={leadForm.kvkk} onChange={e=>setLeadForm({...leadForm, kvkk:e.target.checked})} /><label htmlFor="kvkk" className="text-xs text-slate-500 cursor-pointer">KVKK kapsamında verilerimin işlenmesini kabul ediyorum.</label></div>
+                            <button disabled={leadLoading} type="submit" className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-rose-600 transition-all flex items-center justify-center gap-2 shadow-lg">{leadLoading ? <Loader2 className="animate-spin"/> : <>Hesaplamaya Başla <ArrowRight size={18}/></>}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
+    // --- 2. GÖRÜNÜM: HESAPLAYICI ---
     if (loading) return <div className="min-h-screen bg-slate-50 flex items-center justify-center"><Loader2 className="animate-spin text-rose-600" size={48}/></div>;
 
     return (
         <div className="min-h-screen bg-slate-50 py-24 px-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col items-center justify-center mb-12 relative">
-                    {/* Para Birimi Seçici (Desktop) */}
                     <div className="absolute right-0 top-0 hidden md:block">
                         <div className="flex items-center bg-white border border-slate-200 rounded-lg p-1 shadow-sm">
-                            {Object.keys(CURRENCY_CONFIG).map((curr) => (
-                                <button key={curr} onClick={() => updateCurrencyValues(curr)} className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${currency === curr ? 'bg-slate-900 text-white' : 'text-slate-500 hover:bg-slate-100'}`}>{curr}</button>
-                            ))}
+                            {/* @ts-ignore */}
+                            {Object.keys(CURRENCY_CONFIG).map((curr) => (<button key={curr} onClick={() => updateCurrencyValues(curr)} className={`px-3 py-1 text-xs font-bold rounded-md transition-all ${currency === curr ? 'bg-slate-900 text-white' : 'text-slate-500 hover:bg-slate-100'}`}>{curr}</button>))}
                         </div>
                     </div>
-
                     <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-1.5 rounded-full text-xs font-bold mb-6 uppercase tracking-wider shadow-sm"><Calculator size={16}/> {t("roi_badge")}</div>
                     <h1 className="font-heading text-4xl md:text-6xl font-extrabold text-slate-900 mb-6 text-center">{t("roi_title")}</h1>
                     <p className="text-xl text-slate-500 max-w-3xl mx-auto text-center">{t("roi_desc")}</p>
-                    
-                    {/* Para Birimi Seçici (Mobil) */}
-                    <div className="mt-6 md:hidden flex gap-2">{Object.keys(CURRENCY_CONFIG).map((curr) => (<button key={curr} onClick={() => updateCurrencyValues(curr)} className={`px-4 py-2 text-sm font-bold rounded-lg border ${currency === curr ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200'}`}>{curr}</button>))}</div>
                 </div>
 
                 <div className="grid lg:grid-cols-12 gap-8">
@@ -177,8 +200,6 @@ export const ROICalculator = ({ initialCurrency = 'TRY' }) => {
                                 <div><div className="flex justify-between mb-2 text-sm font-bold text-slate-700"><label>{t("roi_duration")}</label><span className="text-rose-600">{durationMonths}</span></div><input type="range" min="3" max="60" step="1" value={durationMonths} onChange={(e) => setDurationMonths(Number(e.target.value))} className="w-full h-2 bg-slate-200 rounded-lg cursor-pointer accent-rose-600"/></div>
                             </div>
                         </div>
-                        
-                        {/* Ayarlar */}
                         <div className="bg-white rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
                             <button onClick={() => setShowSettings(!showSettings)} className="w-full flex items-center justify-between p-6 bg-slate-50 hover:bg-slate-100 transition-colors text-left"><span className="font-heading text-lg font-bold text-slate-900 flex items-center gap-2"><Settings size={20} className="text-slate-500"/> {t("roi_settings_title")}</span>{showSettings ? <ChevronUp size={20}/> : <ChevronDown size={20}/>}</button>
                             {showSettings && (
@@ -233,7 +254,7 @@ export const ROICalculator = ({ initialCurrency = 'TRY' }) => {
                                 <div className="absolute top-4 right-4 bg-slate-100 text-slate-500 px-3 py-1 rounded-full text-xs font-bold uppercase">{t("roi_trad_label")}</div>
                                 <h5 className="text-2xl font-heading font-bold text-slate-900 mb-6">{t("roi_trad_sub")}</h5>
                                 <div className="space-y-4">
-                                    <div className="flex justify-between border-b border-slate-100 pb-2"><span className="text-slate-500 flex gap-2"><Activity size={16}/> {t("roi_cra")} ({tradCraMinutes} dk)</span><span className="font-bold">{formatCurrency(patientCount * visitCount * craCostPerVisit_Trad)}</span></div>
+                                    <div className="flex justify-between border-b border-slate-100 pb-2"><span className="text-slate-500 flex gap-2"><Activity size={16}/> {t("roi_cra")} ({tradCraMinutes} dk + Harcırah)</span><span className="font-bold">{formatCurrency(patientCount * visitCount * craCostPerVisit_Trad)}</span></div>
                                     <div className="flex justify-between border-b border-slate-100 pb-2"><span className="text-slate-500 flex gap-2"><Users size={16}/> {t("roi_sdc")} ({tradSdcMinutes} dk)</span><span className="font-bold">{formatCurrency(patientCount * visitCount * sdcCostPerVisit_Trad)}</span></div>
                                     <div className="flex justify-between border-b border-slate-100 pb-2"><span className="text-slate-500 flex gap-2"><Calendar size={16}/> {t("roi_others")}</span><span className="font-bold">{formatCurrency(patientCount * visitCount * (investigatorFee + examFee + patientTravelFee))}</span></div>
                                     <div className="flex justify-between pt-2"><span className="font-extrabold text-lg">{t("roi_total")}</span><span className="font-extrabold text-xl">{formatCurrency(totalTraditionalCost)}</span></div>
