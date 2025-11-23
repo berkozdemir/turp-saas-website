@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
 import './i18n.ts' 
+import { HelmetProvider } from 'react-helmet-async';
+
 
 // --- 1. HATA YAKALAYICI (KOD HATALARI İÇİN) ---
 class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { hasError: boolean, error: any }> {
