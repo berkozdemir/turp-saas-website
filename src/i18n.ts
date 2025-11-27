@@ -19,7 +19,7 @@ const resources = {
       "hero_title_2": "Gerçekleri Yönetin.",
       "hero_desc": "Klinik araştırmalarda katılımcı verilerini kaynağından doğrulayan, Türkiye'nin ilk ve tek RWE platformu.",
       "btn_demo": "Demo Talep Et",
-      "btn_explore": "Platformu Keşfet",
+      "btn_discover": "Platformu Keşfet",
 
       // --- ORTAK ---
       "partners_title": "GÜVENİLEN PARTNERLERİMİZ",

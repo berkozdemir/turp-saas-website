@@ -1,5 +1,4 @@
-import React from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
 
 export const LoadingScreen = () => (
   <div className="min-h-screen flex items-center justify-center bg-slate-50">

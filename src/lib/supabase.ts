@@ -1,10 +1,13 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// ENV değişkenlerini typesafe al
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
 
+// Runtime kontrolü (opsiyonel ama faydalı)
 if (!supabaseUrl || !supabaseKey) {
-  console.error("Supabase anahtarları eksik!");
+  console.error("❌ Supabase anahtarları eksik! ENV değişkenlerini kontrol edin.");
 }
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+// Tip güvenli client oluşturma
+export const supabase: SupabaseClient = createClient(supabaseUrl, supabaseKey);

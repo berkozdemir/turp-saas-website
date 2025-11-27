@@ -77,7 +77,7 @@ export const ROICalculator = ({ initialCurrency = 'TRY' }) => {
     const sdcMinuteCost = sdcMonthlySalary / WORK_DAYS / WORK_HOURS / MINUTES_IN_HOUR;
 
     // 1. GELENEKSEL (Mevcut Durum)
-    const craCostPerVisit_Trad = (craMinuteCost * tradCraMinutes) + craDailyExpense;
+    const craCostPerVisit_Trad = (craMinuteCost * tradCraMinutes);
     const sdcCostPerVisit_Trad = sdcMinuteCost * tradSdcMinutes;
     
     // Detaylı Toplamlar (Geleneksel)
