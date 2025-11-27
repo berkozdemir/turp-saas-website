@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Activity, Globe, ChevronDown, Lock, FileText } from "lucide-react";
+// Lock ikonunu import listesinden çıkardım (artık kullanılmıyor)
+import { Activity, Globe, ChevronDown, FileText } from "lucide-react";
 import { supabase } from "./lib/supabase";
 import { getModuleContentTranslated } from "./data/content";
 import { Footer } from "./components/Footer";
@@ -18,14 +19,13 @@ import { Login } from "./pages/Login";
 import { ROICalculator } from "./pages/ROICalculator";
 import { RheumaCaseStudy } from "./pages/RheumaCaseStudy";
 
-// view'ı şimdilik serbest bırakalım (any), diğer dosyalarla kavga etmesin
 export default function App() {
   // --- STATE YÖNETİMİ ---
-  const [view, setView] = useState<any>("home"); // Hangi sayfa açık?
-  const [editingPost, setEditingPost] = useState<any | null>(null); // Admin'de hangi yazı düzenleniyor?
-  const [session, setSession] = useState<any | null>(null); // Kullanıcı giriş yapmış mı?
-  const [globalCurrency, setGlobalCurrency] = useState("TRY"); // Varsayılan para birimi
-  const [isScrolled, setIsScrolled] = useState(false); // Navbar scroll efekti için
+  const [view, setView] = useState<any>("home"); 
+  const [editingPost, setEditingPost] = useState<any | null>(null); 
+  const [session, setSession] = useState<any | null>(null); 
+  const [globalCurrency, setGlobalCurrency] = useState("TRY"); 
+  const [isScrolled, setIsScrolled] = useState(false); 
 
   // i18n (Çeviri) Kurulumu
   const { t, i18n } = useTranslation();
@@ -35,7 +35,7 @@ export default function App() {
     { code: "zh", label: "ZH" },
   ];
 
-  // Modül listesini (Navbardaki dropdown için) çeviriye göre çek
+  // Modül listesini çek
   const rawModules = getModuleContentTranslated(t);
   const modules: Record<string, any> =
     rawModules && typeof rawModules === "object" ? rawModules : {};
@@ -62,7 +62,7 @@ export default function App() {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
 
-    // 3. Konum ve Dil Algılama (Geo-Location)
+    // 3. Konum ve Dil Algılama
     const initLocalization = async () => {
       try {
         const settings = await detectLocationSettings();
@@ -82,7 +82,6 @@ export default function App() {
 
     initLocalization();
 
-    // Temizlik
     return () => {
       window.removeEventListener("scroll", handleScroll);
       if (subscription && typeof subscription.unsubscribe === "function") {
@@ -118,7 +117,6 @@ export default function App() {
 
   // --- SAYFA YÖNLENDİRİCİSİ (ROUTER) ---
   const renderView = () => {
-    // Basit string view'lar
     if (typeof view === "string") {
       switch (view) {
         case "home":
@@ -128,7 +126,7 @@ export default function App() {
         case "blog":
           return <Blog setView={setView} />;
         case "roi":
-          return <ROICalculator initialCurrency={globalCurrency} />;
+          return <ROICalculator initialCurrency={globalCurrency} setView={setView} />;
         case "case-rheuma":
           return <RheumaCaseStudy setView={setView} />;
         case "admin":
@@ -147,7 +145,6 @@ export default function App() {
       }
     }
 
-    // Obje bazlı yönlendirmeler (Detail sayfaları)
     if (typeof view === "object" && view !== null) {
       if (view.type === "module") {
         return <ModuleDetail moduleId={view.id} setView={setView} />;
@@ -157,15 +154,16 @@ export default function App() {
           <PostDetail post={view.post} setView={setView} onEdit={startEdit} />
         );
       }
+      if (view.type === "roi") {
+        return <ROICalculator initialCurrency={globalCurrency} setView={setView} />;
+      }
     }
 
-    // Fallback
     return <Home setView={setView} />;
   };
 
   return (
     <div className="font-sans text-slate-900 bg-slate-50 min-h-screen flex flex-col selection:bg-rose-200 selection:text-rose-900">
-      {/* SEO bileşeni */}
       <SEO view={view} />
 
       {/* --- NAVBAR --- */}
@@ -202,12 +200,11 @@ export default function App() {
                 {t("nav_home")}
               </button>
 
-              {/* Modüller Dropdown (Flicker Korumalı) */}
+              {/* Modüller Dropdown */}
               <div className="relative group h-full flex items-center">
                 <button className="px-4 py-2 rounded-full text-sm font-bold text-slate-500 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-1">
                   {t("nav_modules")} <ChevronDown size={14} />
                 </button>
-                {/* Görünmez Köprü (Padding Top) */}
                 <div className="absolute top-full left-0 w-64 pt-4 hidden group-hover:block animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
                     {Object.entries(modules ?? {}).map(([key, val]) => (
@@ -227,7 +224,7 @@ export default function App() {
               <button
                 onClick={() => setView("roi")}
                 className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
-                  view === "roi"
+                  view === "roi" || (typeof view === 'object' && view.type === 'roi')
                     ? "bg-slate-900 text-white shadow-md"
                     : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
                 }`}
@@ -268,19 +265,7 @@ export default function App() {
                 Hakkımızda
               </button>
 
-              {/* Admin Butonu (Sadece Giriş Yapılmışsa Navbar'da göster, yoksa Footer'da) */}
-              {session && (
-                <button
-                  onClick={() => setView("admin")}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold transition-all ${
-                    view === "admin"
-                      ? "bg-slate-900 text-white shadow-md"
-                      : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                  }`}
-                >
-                  <Lock size={14} className="text-green-400" /> {t("nav_admin")}
-                </button>
-              )}
+              {/* Yönetim butonu buradan kaldırıldı */}
             </div>
 
             {/* Dil Değiştirici */}
@@ -290,7 +275,7 @@ export default function App() {
                 <button
                   key={lang.code}
                   onClick={() => changeLanguage(lang.code)}
-                  className={`w-8 h-8 rounded-full text-xs font-bold flex itemsদের justify-center transition-all ${
+                  className={`w-8 h-8 rounded-full text-xs font-bold flex items-center justify-center transition-all ${
                     i18n.language === lang.code
                       ? "bg-rose-600 text-white shadow-md"
                       : "text-slate-400 hover:bg-slate-200"

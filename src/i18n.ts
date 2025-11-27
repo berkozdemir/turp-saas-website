@@ -19,7 +19,7 @@ const resources = {
       "hero_title_2": "Gerçekleri Yönetin.",
       "hero_desc": "Klinik araştırmalarda katılımcı verilerini kaynağından doğrulayan, Türkiye'nin ilk ve tek RWE platformu.",
       "btn_demo": "Demo Talep Et",
-      "btn_discover": "Platformu Keşfet",
+      "btn_discover": "Maliyet Avantajınızı Görün",
 
       // --- ORTAK ---
       "partners_title": "GÜVENİLEN PARTNERLERİMİZ",
@@ -199,8 +199,8 @@ const resources = {
       "hero_title_2": "Not Guesses.",
       "hero_desc": "The first and only RWE platform verifying participant data from the source for clinical trials.",
       "btn_demo": "Request Demo",
-      "btn_explore": "Discover Platform",
-      "btn_discover": "Explore Platform",
+      "btn_explore": "See Your Cost Advantage",
+      "btn_discover": "See Your Cost Advantage",
 
       // COMMON
       "partners_title": "TRUSTED PARTNERS",
@@ -380,8 +380,8 @@ const resources = {
       "hero_title_2": "而非猜测。",
       "hero_desc": "首个从源头验证临床试验参与者数据的 RWE 平台。",
       "btn_demo": "申请演示",
-      "btn_explore": "探索平台",
-      "btn_discover": "探索平台",
+      "btn_explore": "查看您的成本优势",
+      "btn_discover": "查看您的成本优势",
 
       // COMMON
       "partners_title": "值得信赖的合作伙伴",

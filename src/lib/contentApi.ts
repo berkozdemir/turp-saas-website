@@ -15,7 +15,9 @@ export const fetchBlogPosts = async (lang: LangCode): Promise<BlogPost[]> => {
       `
       id,
       slug,
+      type,
       created_at,
+      image_url,
       content_translations!inner (
         id,
         lang,

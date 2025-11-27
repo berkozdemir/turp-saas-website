@@ -1,31 +1,59 @@
+// src/pages/Home.tsx
 // @ts-nocheck
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '../lib/supabase';
 import { getModuleContentTranslated } from '../data/content';
-import { ShieldCheck, ArrowRight, XCircle, CheckCircle, ClipboardList, Bell, HeartPulse, Calendar, AlertTriangle, BookOpen, Loader2, Send, Activity, Users, DollarSign } from 'lucide-react';
+// Calculator ikonunu ekledik
+import { ShieldCheck, ArrowRight, XCircle, CheckCircle, Loader2, Send, Calculator } from 'lucide-react';
 import { FAQItem } from '../components/FAQItem';
 
-export const Home = ({ setView }) => {
+// ---> 1. EmailJS import edildi
+import emailjs from '@emailjs/browser';
+
+interface HomeProps {
+  setView: (view: any) => void;
+}
+
+export const Home: React.FC<HomeProps> = ({ setView }) => {
   const { t } = useTranslation();
+  
   // Dil değiştiğinde modül içeriklerini yeniden hesapla
   const modules = getModuleContentTranslated(t);
   
   const [contactForm, setContactForm] = useState({ ad_soyad: '', email: '', sirket: '', ilgi_alani: '' });
   const [contactStatus, setContactStatus] = useState('idle'); 
 
+  // ---> 2. Form Gönderme Fonksiyonu Güncellendi
   const handleContactSubmit = async (e) => {
       e.preventDefault();
       setContactStatus('loading');
 
-      const { error } = await supabase.from('leads').insert([contactForm]);
+      // A. Önce Supabase Veritabanına Kaydet (Yedekleme)
+      const { error: dbError } = await supabase.from('leads').insert([contactForm]);
 
-      if (error) {
-          alert("Hata: " + error.message);
-          setContactStatus('error');
-      } else {
-          setContactStatus('success');
-          setContactForm({ ad_soyad: '', email: '', sirket: '', ilgi_alani: '' });
+      if (dbError) {
+          console.error("Supabase Kayıt Hatası:", dbError);
+          // Veritabanı hatası olsa bile mail göndermeyi denesin diye return yapmıyoruz.
+      }
+
+      // B. EmailJS ile Mail Gönder
+      try {
+        await emailjs.send(
+            'service_iz5ll4b',   // <-- EmailJS Service ID (örn: service_g3f8...)
+            'template_vreyzwj',  // <-- EmailJS Template ID (örn: template_abc1...)
+            contactForm,         // Form verileri (template değişkenleriyle eşleşmeli)
+            '3T23mHkWPpTQOpry6'    // <-- EmailJS Public Key (Account > API Keys)
+        );
+
+        // Başarılı olursa
+        setContactStatus('success');
+        setContactForm({ ad_soyad: '', email: '', sirket: '', ilgi_alani: '' });
+
+      } catch (mailError) {
+        console.error("Mail Gönderme Hatası:", mailError);
+        alert("Bir hata oluştu. Lütfen internet bağlantınızı kontrol edip tekrar deneyin.");
+        setContactStatus('error');
       }
   };
 
@@ -74,33 +102,48 @@ export const Home = ({ setView }) => {
         </div>
       </section>
 
-      {/* 3. KARŞILAŞTIRMA (PROBLEM/ÇÖZÜM) */}
+      {/* 3. KARŞILAŞTIRMA (PROBLEM/ÇÖZÜM) + ROI BUTTON */}
       <section className="py-24 px-6 bg-slate-50">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
-            <div className="text-center mb-16 md:col-span-2">
-                <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t("prob_title")}</h2>
-                <p className="text-slate-500">{t("prob_desc")}</p>
-            </div>
-            
-            {/* Geleneksel */}
-            <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden">
-                <div className="absolute top-0 right-0 bg-red-100 text-red-600 px-4 py-1 rounded-bl-2xl text-xs font-bold">{t("roi_trad_label")}</div>
-                <ul className="space-y-4 mt-4">
-                    <li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>{t("bad_1")}</span></li>
-                    <li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>{t("bad_2")}</span></li>
-                    <li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>{t("bad_3")}</span></li>
-                </ul>
+        <div className="max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+                <div className="text-center mb-8 md:col-span-2">
+                    <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900 mb-4">{t("prob_title")}</h2>
+                    <p className="text-slate-500">{t("prob_desc")}</p>
+                </div>
+                
+                {/* Geleneksel */}
+                <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden">
+                    <div className="absolute top-0 right-0 bg-red-100 text-red-600 px-4 py-1 rounded-bl-2xl text-xs font-bold">{t("roi_trad_label")}</div>
+                    <ul className="space-y-4 mt-4">
+                        <li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>{t("bad_1")}</span></li>
+                        <li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>{t("bad_2")}</span></li>
+                        <li className="flex items-start gap-3 text-slate-600"><XCircle className="text-red-500 shrink-0"/> <span>{t("bad_3")}</span></li>
+                    </ul>
+                </div>
+
+                {/* Turp Yöntemi */}
+                <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-xl relative overflow-hidden transform md:scale-105 z-10">
+                    <div className="absolute top-0 right-0 bg-green-500 text-white px-4 py-1 rounded-bl-2xl text-xs font-bold">{t("roi_turp_label")}</div>
+                    <ul className="space-y-4 mt-4">
+                        <li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">{t("good_1")}</span></li>
+                        <li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">{t("good_2")}</span></li>
+                        <li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">{t("good_3")}</span></li>
+                    </ul>
+                </div>
             </div>
 
-            {/* Turp Yöntemi */}
-            <div className="bg-slate-900 p-8 rounded-3xl border border-slate-800 shadow-xl relative overflow-hidden transform md:scale-105 z-10">
-                <div className="absolute top-0 right-0 bg-green-500 text-white px-4 py-1 rounded-bl-2xl text-xs font-bold">{t("roi_turp_label")}</div>
-                <ul className="space-y-4 mt-4">
-                    <li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">{t("good_1")}</span></li>
-                    <li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">{t("good_2")}</span></li>
-                    <li className="flex items-start gap-3 text-slate-300"><CheckCircle className="text-green-400 shrink-0"/> <span className="text-white font-medium">{t("good_3")}</span></li>
-                </ul>
+            {/* ---> ROI BUTONU <--- */}
+            <div className="text-center mt-12 bg-white border border-slate-200 rounded-2xl p-8 max-w-2xl mx-auto shadow-sm">
+                <p className="text-slate-500 mb-4 text-sm font-medium">{t("roi_desc")}</p>
+                <button
+                    onClick={() => setView({ type: 'roi' })}
+                    className="inline-flex items-center gap-2 px-8 py-3 bg-white border-2 border-slate-100 rounded-full text-slate-700 font-bold hover:border-rose-500 hover:text-rose-600 hover:shadow-lg transition-all"
+                >
+                    <Calculator size={20} />
+                    {t("roi_title")}
+                </button>
             </div>
+
         </div>
       </section>
 
