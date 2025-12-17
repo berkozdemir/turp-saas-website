@@ -1,6 +1,47 @@
 // src/lib/contentApi.ts
-import { supabase } from "./supabase";
 import type { BlogPost, LangCode, PageContent } from "../types/content";
+
+const API_URL = import.meta.env.VITE_API_URL;
+const API_SECRET = import.meta.env.VITE_API_SECRET;
+
+// API Çekirdek Fonksiyonu
+async function fetchAPI(action: string, params: Record<string, any> = {}, method: 'GET' | 'POST' = 'GET') {
+  if (!API_URL) {
+    console.error("VITE_API_URL tanımlı değil!");
+    return null;
+  }
+
+  const url = new URL(API_URL);
+  url.searchParams.append("action", action);
+
+  if (method === 'GET') {
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+  }
+
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    "X-Api-Key": API_SECRET || ""
+  };
+
+  try {
+    const response = await fetch(url.toString(), {
+      method,
+      headers,
+      body: method === 'POST' ? JSON.stringify(params) : undefined
+    });
+
+    if (!response.ok) {
+      console.error(`API Hatası: ${response.statusText}`);
+      return null;
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("API Fetch Hatası:", error);
+    return null;
+  }
+}
 
 export const normalizeLang = (raw: string | undefined | null): LangCode => {
   const base = (raw || "tr").split("-")[0];
@@ -8,169 +49,55 @@ export const normalizeLang = (raw: string | undefined | null): LangCode => {
   return "en";
 };
 
+// PHP API'den gelen veriyi React uygulamamızın beklediği tipe dönüştürür
+function mapPostToType(post: any, lang: LangCode): BlogPost {
+  // PHP API düz veri dönüyor (content_translations yok)
+  // Bu yüzden mevcut veriyi, istenen dilmiş gibi kabul ediyoruz.
+  return {
+    id: post.id,
+    translationId: post.id, // Translation ID olarak kendi ID'sini kullanıyoruz
+    slug: post.slug,
+    lang: lang,
+    title: post.title,
+    excerpt: post.excerpt,
+    body: post.content, // PHP'de 'content', React'ta 'body'
+    content: post.content,
+    image_url: post.featured_image, // PHP'de 'featured_image'
+    created_at: post.published_at || post.created_at || new Date().toISOString()
+  };
+}
+
 export const fetchBlogPosts = async (lang: LangCode): Promise<BlogPost[]> => {
-  const { data, error } = await supabase
-    .from("contents")
-    .select(
-      `
-      id,
-      slug,
-      type,
-      created_at,
-      image_url,
-      content_translations!inner (
-        id,
-        lang,
-        title,
-        excerpt,
-        body,
-        seo_image_url
-      )
-    `
-    )
-    .eq("type", "post")
-    .eq("status", "published")
-    .eq("content_translations.lang", lang)
-    .order("created_at", { ascending: false });
+  // PHP API'da şu an filtreleme yok, tüm postları çekip client side filtreliyoruz
+  const response = await fetchAPI('get_blog_posts');
 
-  if (error) {
-    console.error("fetchBlogPosts error:", error);
-    throw error;
-  }
+  if (!response?.data) return [];
 
-  if (!data) return [];
+  // Status check: Sadece published olanlar
+  const posts = response.data.filter((p: any) => p.status === 'published');
 
-  return data.map((row: any) => {
-    const tr = Array.isArray(row.content_translations)
-      ? row.content_translations[0]
-      : row.content_translations;
-
-    const body = tr?.body || "";
-
-    const post: BlogPost = {
-      id: row.id,
-      translationId: tr.id,
-      slug: row.slug,
-      lang: tr.lang as LangCode,
-      title: tr.title,
-      excerpt: tr.excerpt ?? null,
-      body,
-      content: body,
-      image_url: tr.seo_image_url ?? null,
-      created_at: row.created_at,
-    };
-
-    return post;
-  });
+  return posts.map((p: any) => mapPostToType(p, lang));
 };
 
 export const fetchBlogPostBySlug = async (
   slug: string,
   lang: LangCode
 ): Promise<BlogPost | null> => {
-  const { data, error } = await supabase
-    .from("contents")
-    .select(
-      `
-      id,
-      slug,
-      created_at,
-      content_translations!inner (
-        id,
-        lang,
-        title,
-        excerpt,
-        body,
-        seo_image_url
-      )
-    `
-    )
-    .eq("type", "post")
-    .eq("status", "published")
-    .eq("slug", slug)
-    .eq("content_translations.lang", lang)
-    .single();
-
-  if (error) {
-    console.error("fetchBlogPostBySlug error:", error);
-    return null;
-  }
-
-  if (!data) return null;
-
-  const tr = Array.isArray(data.content_translations)
-    ? data.content_translations[0]
-    : data.content_translations;
-
-  const body = tr?.body || "";
-
-  return {
-    id: data.id,
-    translationId: tr.id,
-    slug: data.slug,
-    lang: tr.lang as LangCode,
-    title: tr.title,
-    excerpt: tr.excerpt ?? null,
-    body,
-    content: body,
-    image_url: tr.seo_image_url ?? null,
-    created_at: data.created_at,
-  };
+  // API tarafında 'get_post_by_slug' yok, mecburen tümünü çekip buluyoruz (Optimize edilebilir)
+  const posts = await fetchBlogPosts(lang);
+  return posts.find(p => p.slug === slug) || null;
 };
 
 /**
  * PAGE tipi içerik: Örn. slug = "about", type = "page"
+ * NOT: PHP API'da şu an 'pages' tablosu veya endpoint'i görünmüyor.
+ * Geçici olarak boş dönüyoruz veya ilerde eklenebilir.
  */
 export const fetchPageBySlug = async (
   slug: string,
   lang: LangCode
 ): Promise<PageContent | null> => {
-  const { data, error } = await supabase
-    .from("contents")
-    .select(
-      `
-      id,
-      slug,
-      created_at,
-      content_translations!inner (
-        id,
-        lang,
-        title,
-        body,
-        seo_image_url
-      )
-    `
-    )
-    .eq("type", "page")
-    .eq("status", "published")
-    .eq("slug", slug)
-    .eq("content_translations.lang", lang)
-    .single();
-
-  if (error) {
-    console.error("fetchPageBySlug error:", error);
-    return null;
-  }
-
-  if (!data) return null;
-
-  const tr = Array.isArray(data.content_translations)
-    ? data.content_translations[0]
-    : data.content_translations;
-
-  const body = tr?.body || "";
-
-  const page: PageContent = {
-    id: data.id,
-    translationId: tr.id,
-    slug: data.slug,
-    lang: tr.lang as LangCode,
-    title: tr.title,
-    body,
-    content: body,
-    image_url: tr.seo_image_url ?? null,
-    created_at: data.created_at,
-  };
-
-  return page;
+  console.warn("API üzerinde sayfa yapısı henüz tanımlı değil. (slug: " + slug + ")");
+  // Mock veya boş data
+  return null;
 };

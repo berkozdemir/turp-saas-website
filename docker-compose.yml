@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  # Geliştirme Ortamı (Development)
+  app-dev:
+    image: node:20-alpine
+    container_name: turp-saas-dev
+    working_dir: /app
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    command: npm run dev -- --host
+    environment:
+      - VITE_API_URL=${VITE_API_URL}
+      - VITE_API_SECRET=${VITE_API_SECRET}
+
+  # Üretim Ortamı Testi (Production Preview)
+  # Çalıştırmak için: docker-compose up app-prod
+  app-prod:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: turp-saas-prod
+    ports:
+      - "8080:80"
