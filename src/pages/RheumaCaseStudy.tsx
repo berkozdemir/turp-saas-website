@@ -28,7 +28,7 @@ export const RheumaCaseStudy = ({ setView }: { setView: any }) => {
        {/* Hero */}
        <section className="relative py-32 px-6 bg-slate-900 text-white overflow-hidden">
           <div className="absolute inset-0 opacity-20">
-              <img src="https://zhljpirfyiuraeocgbep.supabase.co/storage/v1/object/public/blog-images/doctor-and-patient-looking-at-x-ray-and-hand-in-do-2025-10-17-01-13-49-utc.jpg" className="w-full h-full object-cover" alt="Rheumatology" />
+              <img src="/uploads/doctor-and-patient-looking-at-x-ray-and-hand-in-do-2025-10-17-01-13-49-utc.jpg" className="w-full h-full object-cover" alt="Rheumatology" />
           </div>
           <div className="max-w-5xl mx-auto relative z-10 text-center">
              <div className="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-1.5 rounded-full text-xs font-bold mb-8 uppercase tracking-wider shadow-lg">

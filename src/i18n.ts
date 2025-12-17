@@ -11,8 +11,9 @@ const resources = {
       "nav_blog": "Blog & Haberler",
       "nav_admin": "Yönetim",
       "nav_modules": "Modüller",
-      "nav_solutions": "Çözümler",
-      
+      "nav_solutions": "Senaryolar",
+      "nav_about": "Hakkımızda",
+
       // --- HERO ---
       "hero_badge": "USBS Onaylı & e-Nabız Entegreli",
       "hero_title_1": "Tahminleri Değil,",
@@ -24,7 +25,7 @@ const resources = {
       // --- ORTAK ---
       "partners_title": "GÜVENİLEN PARTNERLERİMİZ",
       "sec_partners": "GÜVENİLEN PARTNERLERİMİZ",
-      
+
       // --- İLETİŞİM FORMU ---
       "contact_title": "Araştırmanızı Başlatın",
       "contact_desc": "Uzman ekibimiz size özel bir demo hazırlasın.",
@@ -77,7 +78,7 @@ const resources = {
 
       // --- MODÜLLER DETAY ---
       "mod_survey_title": "ePRO & Anket Modülü", "mod_survey_short": "Kağıt formları unutun. Veriyi kaynağında yakalayın.", "mod_survey_desc": "Katılımcıların yaşam kalitesi ölçeklerini ve semptomlarını mobil uygulama üzerinden anlık ve güvenilir toplayın.", "mod_survey_d1": "Recall Bias (Hatırlama Yanılgısı) sorununu ortadan kaldırır.", "mod_survey_d2": "FDA 21 CFR Part 11 uyumlu elektronik imza ve denetim izi.", "mod_survey_d3": "Dinamik dallanma mantığı (Branching Logic) ile akıllı sorular.",
-      
+
       "mod_med_title": "İlaç Hatırlatma", "mod_med_short": "Tedavi uyumunu şansa bırakmayın.", "mod_med_desc": "Akıllı bildirimler ve görsel teyit sistemleri ile 'Adherence' oranlarını %90'ın üzerine çıkarın.", "mod_med_d1": "Hasta beyanına değil, dijital kesinliğe dayalı takip.", "mod_med_d2": "Hastanın yaşam döngüsüne uyumlu akıllı erteleme.", "mod_med_d3": "İlaç bitmeden otomatik stok ve lojistik uyarısı.",
 
       "mod_vital_title": "Vital Ölçüm & IoT", "mod_vital_short": "Klinik dışında kesintisiz gözlem.", "mod_vital_desc": "Tansiyon, şeker, nabız verilerini Apple Health, Google Fit veya Bluetooth cihazlardan otomatik çekin.", "mod_vital_d1": "Beyaz Önlük Hipertansiyonu etkisini elimine eder.", "mod_vital_d2": "BYOD (Kendi Cihazını Getir) desteği.", "mod_vital_d3": "Referans dışı değerlerde doktora 'Erken Uyarı'.",
@@ -107,6 +108,10 @@ const resources = {
       "faq_1_q": "e-Nabız verisi için onay gerekiyor mu?", "faq_1_a": "Evet, KVKK gereği hastanın mobil uygulama üzerinden açık rıza vermesi zorunludur.",
       "faq_2_q": "Mevcut EDC sistemimizle entegre olur mu?", "faq_2_a": "Evet, Turp modern REST API ile EDC sistemleriyle konuşabilir.",
       "faq_3_q": "Hangi verileri çekebiliyoruz?", "faq_3_a": "Tanılar, reçeteler, radyoloji ve tahlil sonuçları.",
+
+      // BLOG
+      "blog_no_posts": "Henüz yazı yok.",
+      "blog_read_more": "Devamını Oku",
 
       // --- HAKKIMIZDA (ABOUT) ---
       about: {
@@ -192,6 +197,7 @@ const resources = {
       "nav_admin": "Admin",
       "nav_modules": "Modules",
       "nav_solutions": "Solutions",
+      "nav_about": "About",
 
       // HERO
       "hero_badge": "USBS Approved & e-Pulse Integrated",
@@ -260,22 +266,22 @@ const resources = {
       // MODULES DETAIL
       "mod_survey_title": "ePRO & Survey", "mod_survey_short": "Forget paper forms.", "mod_survey_desc": "Collect Quality of Life scales instantly.",
       "mod_survey_d1": "Eliminates Recall Bias.", "mod_survey_d2": "FDA 21 CFR Part 11 compliant.", "mod_survey_d3": "Smart Branching Logic.",
-      
+
       "mod_med_title": "Medication Adherence", "mod_med_short": "Smart tracking system.", "mod_med_desc": "Boost adherence with smart alerts.",
       "mod_med_d1": "Digital certainty.", "mod_med_d2": "Smart snooze.", "mod_med_d3": "Stock alerts.",
-      
+
       "mod_vital_title": "Vitals & IoT", "mod_vital_short": "Continuous observation.", "mod_vital_desc": "Auto-fetch vitals from devices.",
       "mod_vital_d1": "Eliminates White Coat Hypertension.", "mod_vital_d2": "BYOD support.", "mod_vital_d3": "Early Warning.",
-      
+
       "mod_appt_title": "Visit Management", "mod_appt_short": "Minimize No-Show rates.", "mod_appt_desc": "Digital protocol calendar.",
       "mod_appt_d1": "Prevents forgotten appointments.", "mod_appt_d2": "Auto visit window.", "mod_appt_d3": "Navigation integration.",
-      
+
       "mod_adv_title": "Adverse Events", "mod_adv_short": "Fastest pharmacovigilance.", "mod_adv_desc": "24/7 emergency bridge.",
       "mod_adv_d1": "Instant reporting.", "mod_adv_d2": "Visual proof.", "mod_adv_d3": "Instant SAE alarms.",
-      
+
       "mod_edu_title": "Education & eConsent", "mod_edu_short": "Informed patient.", "mod_edu_desc": "Digitize consent forms.",
       "mod_edu_d1": "Digital signing.", "mod_edu_d2": "Video training.", "mod_edu_d3": "24/7 library.",
-      
+
       "mod_web_title": "Webinar & Tele-Visit", "mod_web_short": "Location-independent.", "mod_web_desc": "Secure video calls.",
       "mod_web_d1": "Encrypted infrastructure.", "mod_web_d2": "Screen sharing.", "mod_web_d3": "Auto-logging.",
 
@@ -296,6 +302,10 @@ const resources = {
       "faq_1_q": "Is consent required?", "faq_1_a": "Yes, explicit consent is mandatory.",
       "faq_2_q": "Integrate with EDC?", "faq_2_a": "Yes, seamless API integration.",
       "faq_3_q": "Which data?", "faq_3_a": "Diagnoses, prescriptions, labs.",
+
+      // BLOG
+      "blog_no_posts": "No posts yet.",
+      "blog_read_more": "Read More",
 
       // ABOUT
       about: {
@@ -373,6 +383,7 @@ const resources = {
       "nav_admin": "管理",
       "nav_modules": "模块",
       "nav_solutions": "解决方案",
+      "nav_about": "关于我们",
 
       // HERO
       "hero_badge": "系统认证 & 电子健康集成",
@@ -441,22 +452,22 @@ const resources = {
       // MODULES DETAIL
       "mod_survey_title": "ePRO & 问卷", "mod_survey_short": "忘记纸质表格。", "mod_survey_desc": "即时收集生活质量量表。",
       "mod_survey_d1": "消除回忆偏差。", "mod_survey_d2": "符合 FDA 21 CFR Part 11。", "mod_survey_d3": "智能分支逻辑。",
-      
+
       "mod_med_title": "药物依从性", "mod_med_short": "智能追踪。", "mod_med_desc": "通过智能提醒提高依从性。",
       "mod_med_d1": "数字确定性。", "mod_med_d2": "智能贪睡。", "mod_med_d3": "库存警报。",
-      
+
       "mod_vital_title": "生命体征 & 物联网", "mod_vital_short": "持续观察。", "mod_vital_desc": "自动获取生命体征。",
       "mod_vital_d1": "消除白大衣高血压。", "mod_vital_d2": "支持 BYOD。", "mod_vital_d3": "早期预警。",
-      
+
       "mod_appt_title": "访视管理", "mod_appt_short": "减少缺席。", "mod_appt_desc": "数字日历。",
       "mod_appt_d1": "防止忘记。", "mod_appt_d2": "自动访视窗口。", "mod_appt_d3": "导航集成。",
-      
+
       "mod_adv_title": "不良事件", "mod_adv_short": "最快途径。", "mod_adv_desc": "24/7 紧急桥梁。",
       "mod_adv_d1": "即时报告。", "mod_adv_d2": "视觉证据。", "mod_adv_d3": "SAE 警报。",
-      
+
       "mod_edu_title": "教育 & 同意", "mod_edu_short": "知情的患者。", "mod_edu_desc": "数字化同意书。",
       "mod_edu_d1": "数字签署。", "mod_edu_d2": "视频培训。", "mod_edu_d3": "资料库。",
-      
+
       "mod_web_title": "网络研讨会", "mod_web_short": "无地点限制。", "mod_web_desc": "安全视频通话。",
       "mod_web_d1": "加密基础设施。", "mod_web_d2": "屏幕共享。", "mod_web_d3": "自动记录。",
 
@@ -469,7 +480,11 @@ const resources = {
 
       "flow_title": "工作原理？", "flow_1_t": "设置", "flow_1_d": "集成。", "flow_2_t": "邀请", "flow_2_d": "发送链接。", "flow_3_t": "同意", "flow_3_d": "批准共享。", "flow_4_t": "流程", "flow_4_d": "数据流开始。",
 
-      "faq_title": "常见问题", "faq_1_q": "需要同意吗？", "faq_1_a": "是的，必须明确同意。", "faq_2_q": "与 EDC 集成？", "faq_2_a": "是的，通过 API。", "faq_3_q": "哪些数据？", "faq_3_a": "诊断、处方、结果。",
+      "faq_title": "常见问题", "faq_1_q": "需要同意吗？", "faq_1_a": "是的，必须明确同意。", "faq_2_q": "与 EDC 集成？", "faq_2_a": "是的，通过 API。", "faq_3_q": "哪些数据?", "faq_3_a": "诊断、处方、结果。",
+
+      // BLOG
+      "blog_no_posts": "暂无文章",
+      "blog_read_more": "阅读更多",
 
       // ABOUT
       about: {

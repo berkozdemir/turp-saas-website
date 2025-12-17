@@ -3,6 +3,8 @@ import { OptimizedImage } from "../components/OptimizedImage";
 import { ArrowRight, Calendar, Edit3, ImageIcon } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { useEffect } from "react";
+import { trackBlogView } from "../lib/analytics";
 
 interface PostDetailProps {
   post: {
@@ -18,6 +20,11 @@ interface PostDetailProps {
 
 export const PostDetail: React.FC<PostDetailProps> = ({ post, setView, onEdit }) => {
   if (!post) return null;
+
+  // Track blog view
+  useEffect(() => {
+    trackBlogView(post.title, post.id);
+  }, [post.id, post.title]);
 
   return (
     <div className="max-w-4xl mx-auto px-6 py-20 animate-in fade-in slide-in-from-bottom-4 duration-500">

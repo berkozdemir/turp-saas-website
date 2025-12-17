@@ -2,7 +2,6 @@
 // @ts-nocheck
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '../lib/supabase';
 import { getModuleContentTranslated } from '../data/content';
 // Calculator ikonunu ekledik
 import { ShieldCheck, ArrowRight, XCircle, CheckCircle, Loader2, Send, Calculator } from 'lucide-react';

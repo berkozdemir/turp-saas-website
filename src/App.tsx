@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 // Lock ikonunu import listesinden çıkardım (artık kullanılmıyor)
 import { Activity, Globe, ChevronDown, FileText } from "lucide-react";
-import { supabase } from "./lib/supabase";
 import { getModuleContentTranslated } from "./data/content";
 import { Footer } from "./components/Footer";
 import { detectLocationSettings } from "./utils/geo";
@@ -18,17 +17,21 @@ import { Admin } from "./pages/Admin";
 import { Login } from "./pages/Login";
 import { ROICalculator } from "./pages/ROICalculator";
 import { RheumaCaseStudy } from "./pages/RheumaCaseStudy";
+import useAnalytics from "./lib/analytics";
 
 export default function App() {
   // --- STATE YÖNETİMİ ---
-  const [view, setView] = useState<any>("home"); 
-  const [editingPost, setEditingPost] = useState<any | null>(null); 
-  const [session, setSession] = useState<any | null>(null); 
-  const [globalCurrency, setGlobalCurrency] = useState("TRY"); 
-  const [isScrolled, setIsScrolled] = useState(false); 
+  const [view, setView] = useState<any>("home");
+  const [editingPost, setEditingPost] = useState<any | null>(null);
+  const [session, setSession] = useState<any | null>(null);
+  const [globalCurrency, setGlobalCurrency] = useState("TRY");
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // i18n (Çeviri) Kurulumu
   const { t, i18n } = useTranslation();
+
+  // Google Analytics
+  useAnalytics();
   const languages = [
     { code: "tr", label: "TR" },
     { code: "en", label: "EN" },
@@ -42,27 +45,11 @@ export default function App() {
 
   // --- BAŞLANGIÇ AYARLARI (EFFECTS) ---
   useEffect(() => {
-    // 1. Oturum Kontrolü
-    supabase.auth
-      .getSession()
-      .then(({ data: { session } }) => {
-        setSession(session);
-      })
-      .catch((err) => {
-        console.error("Supabase session error:", err);
-      });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    // 2. Scroll Dinleyicisi
+    // 1. Scroll Dinleyicisi
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
 
-    // 3. Konum ve Dil Algılama
+    // 2. Konum ve Dil Algılama
     const initLocalization = async () => {
       try {
         const settings = await detectLocationSettings();
@@ -84,20 +71,13 @@ export default function App() {
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      if (subscription && typeof subscription.unsubscribe === "function") {
-        subscription.unsubscribe();
-      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // --- YARDIMCI FONKSİYONLAR ---
-  const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut();
-    } catch (err) {
-      console.error("Logout error:", err);
-    }
+  const handleLogout = () => {
+    setSession(null);
     setView("home");
   };
 
@@ -112,7 +92,14 @@ export default function App() {
   };
 
   const changeLanguage = (lng: string) => {
+    const oldLang = i18n.language;
     i18n.changeLanguage(lng);
+
+    // Track language change
+    if (window.gtag) {
+      const { trackLanguageChange } = require('./lib/analytics');
+      trackLanguageChange(oldLang, lng);
+    }
   };
 
   // --- SAYFA YÖNLENDİRİCİSİ (ROUTER) ---
@@ -126,7 +113,7 @@ export default function App() {
         case "blog":
           return <Blog setView={setView} />;
         case "roi":
-          return <ROICalculator initialCurrency={globalCurrency} setView={setView} />;
+          return <ROICalculator initialCurrency={globalCurrency} />;
         case "case-rheuma":
           return <RheumaCaseStudy setView={setView} />;
         case "admin":
@@ -155,7 +142,7 @@ export default function App() {
         );
       }
       if (view.type === "roi") {
-        return <ROICalculator initialCurrency={globalCurrency} setView={setView} />;
+        return <ROICalculator initialCurrency={globalCurrency} />;
       }
     }
 
@@ -164,15 +151,14 @@ export default function App() {
 
   return (
     <div className="font-sans text-slate-900 bg-slate-50 min-h-screen flex flex-col selection:bg-rose-200 selection:text-rose-900">
-      <SEO view={view} />
+      <SEO view={view} post={view?.type === 'detail' ? view.post : undefined} />
 
       {/* --- NAVBAR --- */}
       <nav
-        className={`sticky top-0 z-50 transition-all duration-300 ${
-          isScrolled
-            ? "bg-white/90 backdrop-blur-md shadow-md py-3"
-            : "bg-transparent py-6"
-        }`}
+        className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled
+          ? "bg-white/90 backdrop-blur-md shadow-md py-3"
+          : "bg-transparent py-6"
+          }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           {/* Logo */}
@@ -191,11 +177,10 @@ export default function App() {
             <div className="flex items-center bg-white/80 backdrop-blur border border-slate-200 p-1.5 rounded-full shadow-sm">
               <button
                 onClick={() => setView("home")}
-                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
-                  view === "home"
-                    ? "bg-slate-900 text-white shadow-md"
-                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${view === "home"
+                  ? "bg-slate-900 text-white shadow-md"
+                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                  }`}
               >
                 {t("nav_home")}
               </button>
@@ -223,46 +208,42 @@ export default function App() {
               {/* Diğer Linkler */}
               <button
                 onClick={() => setView("roi")}
-                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
-                  view === "roi" || (typeof view === 'object' && view.type === 'roi')
-                    ? "bg-slate-900 text-white shadow-md"
-                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${view === "roi" || (typeof view === 'object' && view.type === 'roi')
+                  ? "bg-slate-900 text-white shadow-md"
+                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                  }`}
               >
                 ROI
               </button>
 
               <button
                 onClick={() => setView("case-rheuma")}
-                className={`hidden lg:flex items-center gap-1 px-4 py-2 rounded-full text-sm font-bold transition-all ${
-                  view === "case-rheuma"
-                    ? "bg-slate-900 text-white shadow-md"
-                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                }`}
+                className={`hidden lg:flex items-center gap-1 px-4 py-2 rounded-full text-sm font-bold transition-all ${view === "case-rheuma"
+                  ? "bg-slate-900 text-white shadow-md"
+                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                  }`}
               >
-                <FileText size={14} /> Senaryolar
+                <FileText size={14} /> {t("nav_solutions")}
               </button>
 
               <button
                 onClick={() => setView("blog")}
-                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
-                  view === "blog"
-                    ? "bg-slate-900 text-white shadow-md"
-                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                }`}
+                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${view === "blog"
+                  ? "bg-slate-900 text-white shadow-md"
+                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                  }`}
               >
                 {t("nav_blog")}
               </button>
 
               <button
                 onClick={() => setView("about")}
-                className={`hidden md:block px-4 py-2 rounded-full text-sm font-bold transition-all ${
-                  view === "about"
-                    ? "bg-slate-900 text-white shadow-md"
-                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                }`}
+                className={`hidden md:block px-4 py-2 rounded-full text-sm font-bold transition-all ${view === "about"
+                  ? "bg-slate-900 text-white shadow-md"
+                  : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                  }`}
               >
-                Hakkımızda
+                {t("nav_about")}
               </button>
 
               {/* Yönetim butonu buradan kaldırıldı */}
@@ -275,11 +256,10 @@ export default function App() {
                 <button
                   key={lang.code}
                   onClick={() => changeLanguage(lang.code)}
-                  className={`w-8 h-8 rounded-full text-xs font-bold flex items-center justify-center transition-all ${
-                    i18n.language === lang.code
-                      ? "bg-rose-600 text-white shadow-md"
-                      : "text-slate-400 hover:bg-slate-200"
-                  }`}
+                  className={`w-8 h-8 rounded-full text-xs font-bold flex items-center justify-center transition-all ${i18n.language === lang.code
+                    ? "bg-rose-600 text-white shadow-md"
+                    : "text-slate-400 hover:bg-slate-200"
+                    }`}
                 >
                   {lang.label}
                 </button>

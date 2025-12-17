@@ -23,7 +23,7 @@ export const About = ({ setView }) => {
       {/* HERO */}
       <section className="relative pt-20 pb-32 px-6 bg-slate-900 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-            <img src="https://zhljpirfyiuraeocgbep.supabase.co/storage/v1/object/public/blog-images/collage-of-diverse-multiethnic-people-faces-smilin-2025-03-18-18-55-30-utc.jpg" className="w-full h-full object-cover" alt="Lab" />
+            <img src="/uploads/collage-of-diverse-multiethnic-people-faces-smilin-2025-03-18-18-55-30-utc.jpg" className="w-full h-full object-cover" alt="Lab" />
         </div>
         <div className="max-w-4xl mx-auto text-center relative z-10">
             <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 text-white px-4 py-1.5 rounded-full text-xs font-bold mb-8 uppercase tracking-wider">
@@ -50,7 +50,7 @@ export const About = ({ setView }) => {
             </div>
             <div className="relative">
                 <div className="absolute -inset-4 bg-gradient-to-tr from-rose-500 to-purple-600 rounded-[2rem] opacity-20 blur-xl"></div>
-                <img src="https://zhljpirfyiuraeocgbep.supabase.co/storage/v1/object/public/blog-images/i-always-notice-a-persons-smile-2025-04-06-05-17-54-utc.jpg" className="relative rounded-2xl shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500 grayscale hover:grayscale-0" alt="Research Team" />
+                <img src="/uploads/i-always-notice-a-persons-smile-2025-04-06-05-17-54-utc.jpg" className="relative rounded-2xl shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500 grayscale hover:grayscale-0" alt="Research Team" />
             </div>
         </div>
       </section>

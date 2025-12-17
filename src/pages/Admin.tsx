@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 import { LogOut, Upload } from 'lucide-react';
 
 // Blog Yazısı için Arayüz (PostDetail ve Blog'dan türetilmiştir)

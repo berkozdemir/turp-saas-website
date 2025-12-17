@@ -62,14 +62,14 @@ function mapPostToType(post: any, lang: LangCode): BlogPost {
     excerpt: post.excerpt,
     body: post.content, // PHP'de 'content', React'ta 'body'
     content: post.content,
-    image_url: post.featured_image, // PHP'de 'featured_image'
+    image_url: post.image_url || post.featured_image, // Veritabanında image_url olarak geçiyor
     created_at: post.published_at || post.created_at || new Date().toISOString()
   };
 }
 
 export const fetchBlogPosts = async (lang: LangCode): Promise<BlogPost[]> => {
-  // PHP API'da şu an filtreleme yok, tüm postları çekip client side filtreliyoruz
-  const response = await fetchAPI('get_blog_posts');
+  // API'ye dil parametresi gönder
+  const response = await fetchAPI('get_blog_posts', { lang });
 
   if (!response?.data) return [];
 

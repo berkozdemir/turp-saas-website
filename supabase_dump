@@ -1,0 +1,1302 @@
+-- PostgreSQL database dump
+--
+
+-- \restrict buksPJd0pj5XFKeMWVZbCDBrkiPXVxIufHVx3RGKHXk2xOBgiyOS3OBD8bp73OT
+
+-- Dumped from database version 17.6
+-- Dumped by pg_dump version 17.6
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Data for Name: audit_log_entries; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- Data for Name: flow_state; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous") VALUES
+	('00000000-0000-0000-0000-000000000000', 'fb7903ff-94ff-4db6-acce-a43350c0862b', 'authenticated', 'authenticated', 'berko@omega-cro.com.tr', '$2a$10$yc0z3vw5wmcWASzu.wMR6uuufKrQFqb2TVzNVFjyMaylfD.CQr7ze', '2025-11-20 20:34:35.120592+00', NULL, '', NULL, '', NULL, '', '', NULL, '2025-11-27 21:41:53.388078+00', '{"provider": "email", "providers": ["email"]}', '{"email_verified": true}', NULL, '2025-11-20 20:34:35.086418+00', '2025-11-27 22:40:27.914093+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
+
+
+--
+-- Data for Name: identities; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "provider", "last_sign_in_at", "created_at", "updated_at", "id") VALUES
+	('fb7903ff-94ff-4db6-acce-a43350c0862b', 'fb7903ff-94ff-4db6-acce-a43350c0862b', '{"sub": "fb7903ff-94ff-4db6-acce-a43350c0862b", "email": "berko@omega-cro.com.tr", "email_verified": false, "phone_verified": false}', 'email', '2025-11-20 20:34:35.106329+00', '2025-11-20 20:34:35.106375+00', '2025-11-20 20:34:35.106375+00', 'e42f8e0e-4989-496f-b952-eb4bbc1d3c35');
+
+
+--
+-- Data for Name: instances; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- Data for Name: oauth_clients; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- Data for Name: sessions; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+INSERT INTO "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "factor_id", "aal", "not_after", "refreshed_at", "user_agent", "ip", "tag", "oauth_client_id", "refresh_token_hmac_key", "refresh_token_counter", "scopes") VALUES
+	('332094cf-b717-41ba-8de1-2892c3c9c402', 'fb7903ff-94ff-4db6-acce-a43350c0862b', '2025-11-27 21:41:53.388791+00', '2025-11-27 22:40:27.92467+00', NULL, 'aal1', NULL, '2025-11-27 22:40:27.923435', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36', '37.130.67.29', NULL, NULL, NULL, NULL, NULL);
+
+
+--
+-- Data for Name: mfa_amr_claims; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "authentication_method", "id") VALUES
+	('332094cf-b717-41ba-8de1-2892c3c9c402', '2025-11-27 21:41:53.453416+00', '2025-11-27 21:41:53.453416+00', 'password', 'd82cb585-142e-455d-a324-1a53c0076775');
+
+
+--
+-- Data for Name: mfa_factors; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- Data for Name: mfa_challenges; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- Data for Name: oauth_authorizations; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- Data for Name: oauth_client_states; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- Data for Name: oauth_consents; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- Data for Name: one_time_tokens; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- Data for Name: refresh_tokens; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+INSERT INTO "auth"."refresh_tokens" ("instance_id", "id", "token", "user_id", "revoked", "created_at", "updated_at", "parent", "session_id") VALUES
+	('00000000-0000-0000-0000-000000000000', 6, 'ovboa2juiggx', 'fb7903ff-94ff-4db6-acce-a43350c0862b', true, '2025-11-27 21:41:53.421109+00', '2025-11-27 22:40:27.895262+00', NULL, '332094cf-b717-41ba-8de1-2892c3c9c402'),
+	('00000000-0000-0000-0000-000000000000', 7, 'zfzhj5ngpa62', 'fb7903ff-94ff-4db6-acce-a43350c0862b', false, '2025-11-27 22:40:27.906374+00', '2025-11-27 22:40:27.906374+00', 'ovboa2juiggx', '332094cf-b717-41ba-8de1-2892c3c9c402');
+
+
+--
+-- Data for Name: sso_providers; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- Data for Name: saml_providers; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- Data for Name: saml_relay_states; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- Data for Name: sso_domains; Type: TABLE DATA; Schema: auth; Owner: supabase_auth_admin
+--
+
+
+
+--
+-- Data for Name: contents; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: content_translations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+
+
+--
+-- Data for Name: leads; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."leads" ("id", "created_at", "ad_soyad", "email", "sirket", "ilgi_alani") VALUES
+	(1, '2025-11-20 21:21:47.165531+00', 'Berk Özdemir', 'berko@omega-cro.com.tr', 'Omega', 'RWE / Gözlemsel Çalışma'),
+	(2, '2025-11-27 23:09:35.903355+00', 'Berk Özdemir', 'berko@omega-cro.com.tr', 'deneme', 'RWE');
+
+
+--
+-- Data for Name: posts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."posts" ("id", "title", "content", "image_url", "created_at", "lang") VALUES
+	(1, ' Gerçek Yaşam Kanıtı (RWE) Çalışmalarında Hasta Bildirimli Sonuçların (PRO) Stratejik Önemi ve Turp Uygulamasının Rolü', '## Giriş: Kanıtın Evrimi ve Yeni Değer Kaynağı
+
+Klinik araştırma ve ilaç geliştirme ekosistemi, uzun yıllar boyunca **Randomize Kontrollü Çalışmaların (RKÇ)** sağladığı yüksek standartlı kanıta (efficacy) dayanmıştır. Ancak, RKÇ''lerin sınırlı popülasyonları, katı dahil etme/hariç tutma kriterleri ve kontrollü tedavi ortamları, ilacın **gerçek dünyadaki etkinliği (effectiveness)** ve kullanılabilirliği hakkında eksik bir tablo çizmektedir.
+
+İşte bu noktada, **Gerçek Yaşam Kanıtı (Real-World Evidence - RWE)** sahneye çıkmıştır. Elektronik Sağlık Kayıtları (EHR), hasta dosyaları ve sigorta veri tabanlarından toplanan veriler kullanılarak, geleneksel araştırmanın bıraktığı boşluklar doldurulmaktadır. Ancak RWE''nin tam potansiyelini ortaya çıkarmak için, bu geniş veri setine **hastanın doğrudan deneyimini** ekleme gereklidir. Bu, **Hasta Bildirimli Sonuçların (Patient-Reported Outcomes - PROs)** stratejik entegrasyonu sayesinde mümkün hale gelir.
+
+**PRO''lar**, hastaların kendi sağlık durumları, semptomları ve tedavi etkileri hakkındaki doğrudan algılarını, herhangi bir tıbbi profesyonel yorumuna gerek kalmadan yansıtan ölçümlerdir. RWE''nin geniş kapsamı ile PRO''ların derinliği birleştiğinde, regülatörler, ödeme kuruluşları ve sağlık hizmeti sağlayıcıları için karar alma süreçlerini kökten değiştirecek güçlü, bütünsel bir kanıt standardı oluşur.
+
+---
+
+## 1. Gerçek Yaşam Kanıtı (RWE) ve Geleneksel Verinin Sınırları
+
+### RKÇ''den Gerçekliğe Geçiş
+
+Geleneksel faz 3 RKÇ''ler, ilacın optimal koşullarda işe yarayıp yaramadığını gösterirken, hastaların aşağıdaki gerçeklikleri yeterince açıklayamaz:
+
+- Birden fazla hastalığı (komorbiditeler) olan hastalar
+- Karmaşık ilaç rejimlerine uyum sağlamaya çalışan hastalar
+- Sosyal ve ekonomik farklılıkları olan hastalar
+- Gerçek yaşam ortamlarında uzun vadede ilacı kullanan hastalar
+
+RWE, bu eksiklikleri gidermek için tasarlanmıştır. Geniş heterojen popülasyonda toplanan veriler, ilacın veya tedavinin gerçek dünyadaki performansı hakkında kapsamlı bilgi sağlar.
+
+### RWD''nin Kritik Boşlukları
+
+Ancak **Gerçek Yaşam Verileri (RWD)**, doğası gereği hastanın **öznel deneyimi** ile ilgili önemli eksiklikler taşır:
+
+**Semptom Şiddeti**
+Bir EHR kaydı, hastanın ne zaman hastaneye gittiğini gösterir, ancak evde yaşadığı ağrı, yorgunluk veya bulantının şiddetini ve sürekliliğini kaydeder mi? Hayır.
+
+**Yaşam Kalitesi (Quality of Life - QoL)**
+Tedavi sonrası hastanın yaşam kalitesinde meydana gelen değişiklikler (uyku düzeni, sosyal aktiviteye katılım, günlük işlevsellik) geleneksel tıbbi kayıtlarda yer almaz.
+
+**Tedaviye Uyum (Adherence ve Persistence)**
+Hastanın reçeteyi düzenli kullanıp kullanmadığı veya tedavi rejimini ne kadar süreyle sürdürdüğü çoğunlukla belirsizdir.
+
+**Subjektif Yan Etkiler**
+Hafif veya orta şiddette yan etkiler (baş ağrısı, mide rahatsızlığı, enerji kaybı), doktor görüşmesinde unutulabilir veya ciddiye alınmayabilir.
+
+İşte bu boşlukları dolduran tek güvenilir kaynak, hastanın kendisidir—yani **PRO''lardır**.
+
+---
+
+## 2. PRO''lar: Hasta Sesinin Doğrudan Kanıta Dönüşümü
+
+### PRO Nedir ve Neden Önemlidir?
+
+**PRO (Hasta Bildirimli Sonuç)**, hastanın sağlık durumu, semptomları ve hastalık veya tedavi ile ilgili işlevsel kapasitesi hakkındaki doğrudan algısının ölçümüdür. PRO''lar, ilacın hastanın günlük yaşamına, ruh haline ve genel refahına olan etkisini sayısal olarak nicelleştirir.
+
+**ePRO (elektronik PRO)** ise mobil uygulamalar veya web arayüzleri aracılığıyla verinin anlık ve otomatik toplanmasını sağlar.
+
+### PRO''ların RWE Çalışmalarında Kritik Rolü
+
+**1. Hümanize Edilmiş Kanıt**
+
+Regülatörler (FDA, EMA) ve ödeme kuruluşları, ilacın sadece biyolojik belirteçleri (biomarker) iyileştirmesinin ötesinde, **hastanın hayatını nasıl değiştirdiğini** görmek isterler. PRO verisi, tedavinin klinik faydasını hastanın perspektifinden sunar ve regülatif karar almada kritik rol oynar.
+
+**2. Veri Bütünlüğü ve Gerçek Zamanlılık**
+
+Özellikle kronik hastalıklarda, hastane vizitleri arasındaki dönemde yaşanan semptomlar sıklıkla unutulur veya yanlış hatırlanır (recall bias). ePRO platformları aracılığıyla veri, olayın hemen ardından toplanır, böylece hatırlama hataları en aza indirgenir.
+
+**3. Heterojen Popülasyonun Derinlemesine Analizi**
+
+RWE çalışmaları yüz binlerce hastayı içerebilir. PRO verisi bu geniş popülasyonda, hangi demografik grupların veya komorbiditesi olan hastaların tedaviden daha fazla fayda gördüğünü, hangi alt gruplarda yan etkilerin daha sık olduğunu anlamak için kritik bir analitik katman ekler.
+
+---
+
+## 3. PRO ve RWE Sinerjisi: Değer Zincirinde Dönüşüm
+
+### Tedavi Uyumu (Adherence) ve Persistansın Ölçülmesi
+
+RWE çalışmalarının başarısı, hastanın tedaviye ne kadar süreyle devam ettiğine (persistence) ve ne kadar düzenli kullandığına (adherence) doğrudan bağlıdır.
+
+**Geleneksel RWD Sorunu**: Eczane kayıtları ilaçların satın alındığını gösterebilir, ancak hastanın gerçekten kullanıp kullanmadığını göstermez. Hastane vizitleri ise seyrek olduğundan, bu arada geçen zamanı kapsayamaz.
+
+**PRO Çözümü**: Dijital PRO platformları aracılığıyla:
+- Hastalar mobil uygulama üzerinden ilaç alımını teyit edebilir
+- Sistem, vizit hatırlatmaları göndererek hastane erişimlerindeki kaçış oranlarını düşürür
+- Hastanın kendi raporladığı yan etkiler, tedaviye devam etme kararını etkileyen faktörleri ortaya koymaktadır
+
+### Veri Kalitesi ve Doğrulanabilirlik
+
+PRO verisini RWE''ye entegre ederken veri güvenilirliğini sağlamak, kritik bir zorluktur. Modern çözümler şunları içerir:
+
+**Kimlik Doğrulama (KYC)**
+Hastanın kimliğinin ulusal sağlık sistemleri üzerinden doğrulanması, toplanan PRO verisinin gerçek ve izlenebilir bir kaynaktan geldiğini garantiye almaktadır. Bu, regülatörler için verinin güvenilirliğini ve kabul edilebilirliğini katlanarak artırır.
+
+**Medikasyon Geçmişi Doğrulaması**
+PRO''larla toplanan semptom ve yan etki verileri, hastanın geçmişteki komorbiditeler ve eşlik eden ilaçlar ile çapraz kontrol edilir. Bu, yanlılık riskini (bias) minimize eder ve sadece dijital entegrasyonla mümkündür.
+
+**Temporal Tutarlılık**
+Veri toplama hızı (gün cinsinden) arttıkça, verinin doğruluğu ve değeri artar. Aylık anketler yerine günlük ePRO uyarıları, hastaların hatırlama yanlılığını önemli ölçüde azaltır.
+
+### Stratejik Karar Almada PRO''ların Etkisi
+
+PRO destekli RWE verisi, ilaç şirketlerinin ve ödeme kuruluşlarının karar süreçlerini doğrudan etkiler:
+
+**Pazar Erişimi ve Ödeme Kararları**
+
+Ödeme kuruluşları (reimbursement bodies), ilacın sadece klinik etkinliğinin ötesinde, **hastanın yaşam kalitesini ne kadar iyileştirdiğini** görmek isterler. PRO verisi, ilacın fiyatlandırılması ve geri ödeme kapsamı kararları için vazgeçilmez argüman sunar.
+
+**Farmakovijilans ve Güvenlik**
+
+İlaç piyasaya sürüldükten sonra (Post-Marketing Surveillance), nadir görülen veya hastalar tarafından önemsenmeyip rapor edilmeyen yan etkiler, PRO araçları aracılığıyla hızlı bir şekilde toplanabilir.
+
+**Etiketleme ve Hak Talepleri**
+
+PRO verisi, ilacın ambalaj etiketine "Yaşam Kalitesini İyileştirir" veya "Ağrıyı %X Oranında Azaltır" gibi yeni iddiaların eklenmesi için güçlü bir kanıt sunabilir.
+
+---
+
+## 4. Turp Uygulaması: PRO ve RWE Entegrasyonunun Pratik Gerçekleştirilmesi
+
+### Turp Nedir? Bütünleşik Dijital Ekosistem
+
+**Turp**, klinik araştırma profesyonelleri, CRO''lar ve sponsorlar için tasarlanan, **ePRO toplama**, **hasta yönetimi** ve **sağlık sistem entegrasyonu**''nü birleştiren kapsamlı bir mobil uygulamadır. Turp, PRO''ların RWE çalışmalarında etkin bir şekilde kullanılabilmesini sağlayan teknolojik altyapıyı sunmaktadır.
+
+### Turp''ün Temel Özellikleri ve RWE''ye Katkıları
+
+#### 1. e-Nabız Entegrasyonu: Doğrulama ve Bütünlük
+
+**Türkiye''nin Ulusal Sağlık Bilgi Sistemine Bağlantı**
+
+Turp, e-Nabız (Ulusal Sağlık Bilişim Portalı) ve MHRS (Merkezi Hekim Randevu Sistemi) ile doğrudan entegre çalışır. Bu entegrasyon, aşağıdaki kritik faydaları sağlar:
+
+- **Kimlik Doğrulaması (KYC)**: Hasta, kimliğini e-Nabız üzerinden doğrulamış olarak Turp uygulamasına giriş yapar. Bu, PRO verisinin gerçek ve izlenebilir bir kaynaktan geldiğini 100% garantiye alır.
+
+- **Medikasyon Geçmişi Otomatik Alınması**: Hastanın tüm eczane ve hastane ilaç reçete geçmişi, otomatik olarak Turp''e yüklenir. PRO''larla toplanan semptom verileri, bu medikasyon geçmişi ile otomatik olarak çapraz kontrol edilir. Böylece, bir yan etki raporlaması hangi ilaç ile ilişkili olduğu algoritmik olarak belirlenebilir.
+
+- **Komorbidite ve Sağlık Durumu Profili**: Hastanın kronik hastalıkları (hipertansiyon, diyabet vb.), e-Nabız''dan otomatik olarak alınır. RWE analizi sırasında bu veriler, alt grup analizleri için kullanılabilir.
+
+- **Veri Doğrulama ve Tutarlılık**: Turp üzerinden toplanan PRO verileri, e-Nabız''daki tıbbi kayıtlarla otomatik olarak çapraz kontrol edilir. Böylece, veri yanlılığı (bias) ve tutarsızlıklar saptanabilir.
+
+#### 2. Akıllı Hatırlatma Sistemi: Adherence ve Persistence Maksimizasyonu
+
+**Problem**: Geleneksel RWE çalışmalarında, hastalar anketleri unutur veya ihmal ederler. Bu, veri toplama yetersizliğine ve seçim yanlılığına (selection bias) yol açar.
+
+**Turp''ün Çözümü**: Turp, AI-destekli, kişiselleştirilmiş hatırlatma sistemi kullanır:
+
+- **Optimal Zamanlama**: Hastanın telefonunu en sık kullandığı saatler ve ilaç alım zamanları gibi faktörleri göz önüne alarak, en uygun zamanda anket hatırlatması gönderilir.
+
+- **Çok Kanallı İletişim**: SMS, push notification, e-mail gibi çeşitli kanallardan hatırlatma yapılır. Hasta, tercihine göre kanal seçebilir.
+
+- **Yerinde Yanıt**: Hatırlatma, mobil uygulamaya direkt olarak yönlendirir. Hasta, tarayıcı açmak veya başka bir adıma gerek duymadan anketleri mobil uygulama aracılığıyla kolayca doldurabilir.
+
+- **Verilerin Gösterilmesi**: Aplikasyon, hastaya önceki yanıtlarını göstererek, veri tutarlılığını sağlar ve tekrar hatırlamayı azaltır.
+
+**Etkinlik**: Turp kullanan çalışmalarda, anket tamamlanma oranı %85''e ulaşırken, geleneksel paper-based yöntemlerde bu oran %40''ın altında kalmaktadır.
+
+#### 3. Yapılandırılmış PRO Anketleri: Veri Kalitesi
+
+**Turp''ün Anket Mimarisi**:
+
+- **Hazır Kütüphane**: FDA-onaylı, validasyon görmüş PRO ölçümleri (PROMIS, SF-36, EQ-5D gibi) Turp''de hazır olarak bulunur.
+- **Koşullu Sorular**: Hastanın önceki yanıtlarına göre, sonraki sorular dinamik olarak değişir. Gereksiz sorulardan kaçınılır.
+- **Mantık Kontrolleri**: Sayı aralıkları (range checks), tutarlılık kontrolleri otomatik olarak yapılır. Hatalı veri girişi anında reddedilir.
+- **Çok Dil Desteği**: Anketler, Türkçe, İngilizce, Kürtçe vb. dillerde sunulur.
+
+#### 4. Gerçek Zamanlı Veri Analitikleri: Sponsorlar ve CRO''lar İçin
+
+**Turp''ün Dashboard Özellikleri**:
+
+- **Canlı PRO Veri Tabanı**: Sponsorlar ve CRO''lar, araştırma süreci boyunca, toplanan PRO verilerini gerçek zamanlı olarak görebilir.
+
+- **Anormal Değer Uyarıları**: Hasta tarafından raporlanan ciddi yan etki veya acil durumlar (ağır ağrı, şiddetli baş dönmesi vb.), otomatik olarak algılanır ve araştırma ekibine uyarı gönderilir.
+
+- **Adherence Takibi**: Her hastanın anket doldurma sıklığı, kaçırdığı anketler ve uyum durumu, dashboard üzerinden görülebilir.
+
+- **Kohorta Analizi**: Alt grup analizleri (yaşa göre, cinsiyete göre, komorbiditelerine göre) otomatik olarak yapılır ve sonuçlar visualize edilir.
+
+#### 5. Hastaya Merkezli Tasarım: Kullanabilirlik ve Hasta Memnuniyeti
+
+- **Sezgisel Arayüz**: Yaşlı hastalar bile, minimal eğitim ile uygulamayı kullanabilir.
+- **Sesli Seçenek**: Okuryazarlığı düşük hastalar, soruları sesli olarak dinleyip, sesli olarak yanıt verebilir.
+- **Oyunlaştırma**: Anketleri tamamlayan hastalar puan kazanır, bu puanları sağlık hedefleri için özür olabilir.
+- **İlerleme Göstergeleri**: Hastalar, kendi sağlık gidişatlarını görebilir, bu da motivasyon artırır.
+
+---
+
+## 5. Turp ile RWE + PRO Entegrasyonunun Fiili Sonuçları
+
+### Veri Kalitesi İyileşmeleri
+
+| Metrik | Turp Öncesi | Turp Sonrası | İyileşme |
+|--------|------------|------------|----------|
+| **Anket Tamamlanma Oranı** | %40 | %85 | +112% |
+| **Veri Kullanılabilirlik** | %70 | %98 | +40% |
+| **Veri Girişi Hataları** | 8-12% | <1% | -90% |
+| **Hayat Çevirme Süresi (Data Lock)** | 6-8 hafta | 1-2 hafta | -75% |
+| **Hasta Memnuniyeti** | 5.2/10 | 8.1/10 | +55% |
+
+### Araştırma Çıktılarında Etkinlik
+
+- **Yanlılık Azalması**: e-Nabız entegrasyonu sayesinde seçim yanlılığı (selection bias) ve hatırlama yanlılığı (recall bias) önemli ölçüde azalmıştır.
+- **Alt Grup Analizi**: Otomatik medikasyon ve komorbidite verileri, daha güvenilir alt grup analizlerine imkân tanımaktadır.
+- **Denetime Hazır Veri**: FDA ve EMA denetimlerinde, Turp''ün sistem log''ları ve kimlik doğrulama kayıtları, veri bütünlüğünün kanıtı olarak sunulur.
+- **Hızlı Insight**: Gerçek zamanlı dashboard, araştırma süreci sırasında anomalilerin erken tespitini sağlar.
+
+---
+
+## 6. Regülatif Kabul Edilebilirlik
+
+### FDA ve EMA''nın Turp Destekli PRO Verilerine Bakışı
+
+- **21 CFR Part 11 Uyumluluğu**: Turp, FDA''nın elektronik kayıtlar için gereken sağlamlık standartlarına (21 CFR Part 11) uyumludur.
+- **Veri Bütünlüğü İzleri**: Turp, veri girişinin kimin tarafından, ne zaman yapıldığını kaydeder. Bu izler, düzenleyici denetimlerinde veri güvenilirliğinin kanıtıdır.
+- **Önceden Tanımlanmış Analitik Plan**: Turp üzerinde toplanan PRO verileri, CDISC standartları (SDTM, ADaM) ile uyumlu olacak şekilde yapılandırılır.
+
+---
+
+## 7. Sonuç: Turp ile PRO ve RWE, Araştırmanın Yeni Teminatı
+
+Klinik araştırma profesyonelleri—sponsorlar, CRO''lar ve araştırmacılar—artık, **PRO destekli RWE**, sadece bir hedef değil, bir **gerçekliktir**.
+
+**Turp uygulaması, bu dönüşümü mümkün kılmaktadır:**
+
+- **e-Nabız Entegrasyonu**: Veri güvenilirliği ve regülatif kabul edilebilirlik sağlanır
+- **Akıllı Hatırlatmalar**: Adherence ve veri tamamlanma oranları maksimize edilir
+- **Yapılandırılmış Anketler**: Veri kalitesi ve kulanılabilirlik artırılır
+- **Gerçek Zamanlı Analitik**: Araştırma süreci daha kontrollü ve verimli olur
+- **Hasta Merkezli Tasarım**: Hasta memnuniyeti ve katılımı iyileşir
+
+### PRO''ların Geleceği
+
+Turp gibi entegre dijital platformlar sayesinde:
+
+1. **Regülatif Harita Değişiyor**: FDA ve EMA, artık PRO veriyi RCT sonuçları kadar kuvvetle kabul etmektedir.
+2. **Pazar Erişimi Hızlanıyor**: PRO destekli RWE kanıtı, ödeme kuruluşlarının geri ödeme kararlarını hızlandırmaktadır.
+3. **Araştırma Maliyetleri Azalıyor**: Veri kalitesi iyileştikçe, analiz çalışmaları azalmakta ve projeler daha hızlı sonuçlanmaktadır.
+4. **Hasta Katılımı Artıyor**: Turp gibi kullanıcı dostu platformlar, hastaların araştırmalara katılımını teşvik etmektedir.
+
+**Sonuç olarak, Turp, PRO''ları geleneksel veriye sadece bir "ek" değil, araştırma tasarımının **temel bir unsuru** haline getirmektedir. Bu, hastaları merkezine alan, kanıta dayalı, hümanize edilmiş bir araştırma paradigmasına geçişin kapısını açmıştır.**
+', 'https://zhljpirfyiuraeocgbep.supabase.co/storage/v1/object/public/blog-images/1763670544528-BarwerdvanderPlas201124P1A0566.width1160.jpg', '2025-11-20 19:59:03.314551+00', 'tr'),
+	(2, 'Prostat Kanseri Tedavisinde Hasta Bildirimli Sonuçların (PRO) Stratejik Önemi ve Turp''ün Gerçekleştirdiği Dönüşüm', '## Giriş: Prostat Kanseri ve Yaşam Kalitesi Paradoksu
+
+Prostat kanseri, dünya çapında erkeklerde en yaygın görülen malign hastalıklardan biridir. **Gleason skoru, PSA seviyeleri, TNM evrelemesi** gibi objektif prognostik faktörler, hastalığın biyolojik davranışını gösterse de, **hastanın tedavi sırasında ve sonrasında yaşadığı fonksiyonel kayıpları, semptomu ve yaşam kalitesini tam olarak yansıtamaz.**
+
+Prostat kanseri tedavisi (radikal prostatektomi, radyoterapi, androjen deprivasyon terapisi, kemoterapı), birçok zaman erkek hastanın **eritillik (erectile dysfunction - ED), inkontinans (urinary incontinence), gastrointestinal yan etkiler** gibi yaşam kalitesi problemlerine neden olmaktadır. Bu sorunlar, **hastaların hayat kalitesini, sosyal ilişkilerini ve ruh sağlığını** derinden etkilemektedir.
+
+İşte tam bu noktada, **Hasta Bildirimli Sonuçlar (PRO''lar)**, prostat kanseri araştırmalarında ve klinik pratikte **kritik bir rol** oynamaya başlamıştır. PRO''lar, objektif tıbbi verinin ötesine geçerek, hastanın gerçek yaşamından sesini ve deneyimini araştırmalara taşımaktadır.
+
+Bu kapsamlı rehberde, prostat kanseri tedavisinde **PRO''ların stratejik önemi, yaşam kalitesi ölçümleri, yan etki yönetimi** ve **Turp uygulamasının bu alanda sağladığı dönüşümü** detaylı olarak ele alacağız.
+
+---
+
+## 1. Prostat Kanseri Tedavisi ve Geleneksel Başarı Kriterlerinin Yetersizliği
+
+### Geleneksel Tedavi Sonuç Ölçütleri
+
+Prostat kanseri araştırmalarında, uzun yıldır aşağıdaki objektif parametreler başarı göstergesi olarak kullanılmıştır:
+
+- **Hastalık Serbest Yaşam Süresi (Recurrence-Free Survival - RFS)**
+- **Genel Yaşam Süresi (Overall Survival - OS)**
+- **PSA Yanıt Oranı** (%50 ve üzeri PSA düşüşü)
+- **Radyolojik Yanıt** (RECIST kriterlerine göre)
+
+### Klinik Paradoks: İyi Objektif Sonuçlar, Kötü Yaşam Kalitesi
+
+**Problem**: Pek çok prostat kanseri hastası, objektif olarak "başarılı" tedavi aldıktan sonra (hastalık remisyonda, PSA normal), aşağıdaki sorunlardan şikayetçidir:
+
+- **Eritillik (ED)**: Radikal prostatektomi sonrası %40-60 oranında, radyoterapi sonrası %20-50 oranında kalıcı ED gelişir.
+- **Uriner İnkontinans**: Ameliyat sonrası %5-20 oranında persisten inkontinans meydana gelir.
+- **Gastrointestinal Yan Etkiler**: Radyoterapi sonrası ishaal, anorektal sorunlar kronik olarak devam edebilir.
+- **Androjen Deprivasyon Yan Etkileri**: ADT kullanan hastalar, kilo alımı, osteoporoz, yorgunluk, kognitif düşüş yaşayabilir.
+- **Ruh Sağlığı**: Anksiyete, depresyon, sosyal izolasyon sıklıkla gözlenebilir.
+
+**Geleneksel Yaklaşımdaki Boşluk**: Klasik RCT''ler, bu yaşam kalitesi sorunlarını yeterince ölçmez ve raporlamaz. Klinik çıktılar sadece "remisyon", "sağkalım" ile sınırlı kalabilir, oysa hastanın günlük yaşamı önemli ölçüde etkilenmiş olabilir.
+
+---
+
+## 2. PRO''lar: Prostat Kanserinde Hasta Deneyiminin Kuantitatif Ölçümü
+
+### Prostat Kanseri Bağlamında PRO''lar
+
+**PRO (Hasta Bildirimli Sonuç)**, prostat kanseri hastasının tedavi öncesi, sırası ve sonrasında yaşadığı semptomlar, yan etkiler, yaşam kalitesi ve fonksiyonel durumunun **kendi doğrudan raporlaması**dır. Hiçbir hekim veya hemşirenin yorumu olmaksızın, hasta tarafından yapılan bu ölçümler, tedavinin gerçek etkisini gösterir.
+
+### Prostat Kanseri Spesifik PRO Ölçütleri
+
+#### 1. **Yaşam Kalitesi Anketleri**
+
+**EORTC QLQ-C30 + PR25 Modülü**
+- Kanser hastalarında genel yaşam kalitesini ölçer (EORTC QLQ-C30)
+- Prostat spesifik yan etkileri ölçer (PR25 modülü): ED, inkontinans, gastrointestinal semptomlar
+
+**FACT-P (Functional Assessment of Cancer Therapy - Prostate)**
+- Prostat kanseri hastasına özel tasarlanmış yaşam kalitesi anketi
+- Fiziksel, sosyal, duygusal ve fonksiyonel boyutları ölçer
+- 39 soru içerir ve kısa zamanda tamamlanabilir
+
+**SF-36 (Short Form 36)**
+- Genel sağlık durumu ve yaşam kalitesi ölçer
+- Fiziksel ve mental bileşenleri değerlendirir
+
+#### 2. **Fonksiyonel Başarısızlık Ölçütleri**
+
+**Eritillik Fonksiyon Ölçeği (IIEF - International Index of Erectile Function)**
+- 15 soru, erkek cinsel işlevi ve memnuniyeti ölçer
+- Prostat kanseri tedavisi sonrası ED''nin şiddetini belirler
+- Tedavi müdahalelerinin (PDE-5 inhibitörleri, intrakorporeal enjeksiyon) etkinliğini değerlendirir
+
+**Uriner İnkontinans Ölçeği (ICIQ-UI SF - Incontinence Severity Index)**
+- İnkontinansın şiddeti ve yaşam kalitesi etkisini ölçer
+- Hasta tarafından raporlanan günlük kaçak idrar miktarı ve sosyal etkileri değerlendirir
+
+**Gastrointestinal Semptom Ölçeği (EORTC QLQ-C30''daki GI modülü)**
+- Diyaré, kusma, ishal sonrası sorunlar ölçer
+- Radyoterapi sonrası gastrointestinal toksisite izlenir
+
+#### 3. **Psikososyal Sonuçlar**
+
+**Depresyon ve Anksiyete Ölçeği (PHQ-9, GAD-7)**
+- Prostat kanseri tanısı ve tedavisi sonrası ruh sağlığı takip edilir
+- Prognostik faktör olarak davranır (depresif hastalar daha kötü uyum gösterir)
+
+**Beden İmajı ve Cinsellik Ölçeği (Body Image Scale)**
+- Tedavi sonrası beden algısındaki değişiklikleri ve cinsel kimliğe etkileri ölçer
+
+---
+
+## 3. PRO''lar Prostat Kanseri Araştırmalarında Neden Kritiktir?
+
+### Tedavi Seçimini Etkileyen Veriler
+
+Prostat kanserinde, genellikle **birden fazla tedavi seçeneği** vardır (cerrahisi vs. radyoterapi vs. aktif izlem vs. kombinasyon). Aynı hastalık evresine sahip iki hasta için farklı tedaviler uygun olabilir. PRO verileri:
+
+- **Bireyselleştirilmiş Karar Alma**: ED ve inkontinans açısından daha toleranslı bir hastaya daha agresif tedavi verilebilir; hassas hastalara konservatif yaklaşımlar sunulabilir.
+- **Hasta Tercihi Tabanlı Tıp**: Hastanın yaşam kalitesi öncelikleri (çalışmaya dönme, cinsel yaşam, sosyal aktiviteler) doğrultusunda tedavi planlanması
+
+### Yan Etkilerin Proaktif Yönetimi
+
+Geleneksel İzlemde: Hasta 3-6 ayda doktor ziyaretinde yan etkilerden bahseder, ancak bu arada yaşanan sorunlar eksik kalabilir.
+
+**PRO-Destekli Yaklaşımda**: Hastalar, Turp uygulaması üzerinden, haftada 1-2 kez ED, inkontinans, enerji seviyeleri hakkında sor edilirler. Sorunlar **erken tespiti** ve **proaktif müdahale** (örn. ED için PDE-5 inhibitörü başlangıcı) mümkün hale gelir.
+
+### Regülatif Kabul Edilebilirlik
+
+**FDA ve EMA**, son yıllarda prostat kanseri ilaçlarının onayında PRO verilerini çok ciddiye almaya başladı. Örneğin:
+
+- **Enzalutamid** onayında, FACT-P yaşam kalitesi sonuçları sunulmuştur
+- **Abiraterone** çalışmalarında, PSA yanıt kadar yaşam kalitesi sonuçları raporlanmıştır
+- Yeni hormonal ajanlar ve kemoterapeutikler için PRO verileri, pazar erişimi ve geri ödeme kararlarında etkili olmaktadır
+
+---
+
+## 4. Prostat Kanseri RWE ve PRO''lar: Gerçek Dünyadaki Etkisizlik Problemi
+
+### Klinik Uygulamada Karşılaşılan Paradoks
+
+RCT''lerde, **androjen deprivasyon tedavisi (ADT)** kullanılan prostat kanseri hastalarında PSA yanıt oranı %80-90 olabilir. Ancak, gerçek dünyadaki pratikte:
+
+- Hastalar reçeteyi **uygun şekilde kullanmayabilir** (hafta sonunda alma, hap sayısını azaltma)
+- Yan etkiler (kilo alımı, osteoporoz, ED) nedeniyle **tedaviye uyum** azalabilir
+- Sosyal ve ekonomik kısıtlamalar nedeniyle **persistans** yeterli olmayabilir
+
+**RWE + PRO Çözümü**: Gerçek dünyadaki uyum ve persistans sorunları, PRO verileri sayesinde tespit edilebilir ve müdahale planlanabilir.
+
+---
+
+## 5. Prostat Kanseri Hastaları İçin Turp Uygulaması: Entegre Çözüm
+
+### Turp''ün Prostat Kanseri Hastalarına Özel Özellikleri
+
+#### 1. e-Nabız Entegrasyonu: Komorbidite ve Medikasyon Takibi
+
+Prostat kanseri hastalarının çoğu **yaşlı olup, ek hastalıkları** vardır (hipertansiyon, diyabet, kardiyovasküler hastalık). Turp, e-Nabız aracılığıyla:
+
+- **Komorbidite Profili Otomatik Alınması**: Diyabet, kalp hastalığı, osteoporoz gibi ek hastalıklar otomatik olarak Turp''e yüklenir.
+- **İlaç-İlaç Etkileşimi Analizi**: ADT, kemoterapeutikler, komorbidite ilaçları arasında etkileşim otomatik olarak kontrolür.
+- **Kardiyovasküler Risk Takibi**: ED tedavisi (PDE-5 inhibitörleri), kardiyak riskli hastalarda özel uyarı ve kontrol mekanizmaları devreye girer.
+
+#### 2. Prostat Spesifik PRO Anketleri
+
+Turp''deki yerleşik PRO kütüphanesi, **prostat kanseri hastalarına özel anketleri** içerir:
+
+**Haftalık İzleme Anketleri:**
+- "Bu hafta sık idrara çıkma sorunu yaşadınız mı?" (1-10 şiddet ölçeği)
+- "Gece kaç kez tuvalete gittiniz?" (objektif sayı)
+- "İnkontinans yaşadınız mı ve ne kadar?" (pad sayısı)
+- "Cinsel işlev hakkında şikayetiniz var mı?" (IIEF mini)
+- "Genel enerji ve yorgunluk seviyeleri nasıl?" (0-10 ölçek)
+- "Ruh durumunuz (depresyon/anksiyete) nasıl?" (PHQ-2)
+
+**Aylık Kapsamlı Anketler:**
+- Tam FACT-P yaşam kalitesi anketi
+- Tam IIEF-15 erkek fonksiyonu anketi
+- ICIQ-UI SF inkontinans anketi
+- SF-36 genel yaşam kalitesi
+
+#### 3. Akıllı Hatırlatma: Tedavi Uyumu ve Vizit Takibi
+
+Prostat kanseri hastalarında, ADT uyumu kritiktir. Turp, bu noktada:
+
+- **İlaç Alımı Hatırlatmaları**: Hastaya günlük olarak "ADT ilacınızı aldınız mı?" sorusu gönderilir. Cevaplar, adherence oranını hesaplar.
+- **PSA Kontrol Randevusu Hatırlatmaları**: Başlıca PSA takibinin ne zaman yapılacağı, hastaya SMS ve push notification ile hatırlatılır. **No-show oranı %70 azalır.**
+- **Dozaj Uyarıları**: Hastanın, dozajını kendi başına değiştirmesi durumunda (yan etki nedeniyle), Turp, doktor görüşmesi önerilir.
+
+#### 4. Yan Etki Algılama ve Proaktif Müdahale
+
+Turp, haftalık PRO verilerini analiz ederek:
+
+- **ED Riski Öngörü**: IIEF puanı belirli bir seviyeye düşerse, sistem doktor ve hastaya uyarı gönderir. PDE-5 inhibitörü başlama önerilir.
+- **İnkontinans Artışı**: Günlük pad sayısı artar ise, sistem üroloji konsultasyonu tavsiye eder.
+- **Depresyon Belirtileri**: PHQ-2 puanı yükselse, psikiyatrik destek önerilir.
+- **Osteoporoz Riski**: ADT kullanan hastaların, düzenli aralıklarla kemik yoğunluğu ölçümü (DEXA) alması önerilir, Turp bu takvimi hatırlatır.
+
+#### 5. Hasta Eğitimi ve Kaynaklar
+
+Turp, prostat kanserli hastaların uyum, self-management ve psikolojik destek için gerekli içeriği sağlar:
+
+- **Videolar**: ADT yan etkileri, ED tedavisi, beslenme, egzersiz rehberleri
+- **Makale Kütüphanesi**: Prostat kanseri, tedavi seçenekleri, yaşam stili değişiklikleri
+- **Peer Support**: Benzer durumdaki diğer hastalarla bağlantı (anonim forum)
+
+---
+
+## 6. Prostat Kanseri Araştırmalarında Turp Destekli PRO''lar: Pratik Uygulamalar
+
+### Klinisyen Perspektifi: Tedavi Planlaması
+
+**Senaryo**: 65 yaşında, ADT tedavisine alınmış prostat kanseri hastası.
+
+**Turp Olmadan**:
+- Hasta, 3 ayda doktor ziyaretinde yan etkilerden bahseder
+- Doktor, ED başladığını öğrenir (bu arada 3 ay boyunca hastanın cinsel yaşamı etkilendi)
+- İnkontinans belirtileri kaçırılabilir
+
+**Turp İle**:
+- Hafta 1: ED başlangıcı tespit edilir, hemen PDE-5 inhibitörü önerilir
+- Hafta 2: İnkontinans artışı algılanır, fizik terapi başlangıcı tavsiye edilir
+- Hafta 3: Depresyon belirtileri görülür, psikolog konsultasyonu önerilir
+- Devam: Ayın sonunda, kapsamlı PRO raporu oluşturulur, tedavi planı güncellenebilir
+
+**Sonuç**: Hasta, proaktif müdahale ile yaşam kalitesi daha iyi korunur.
+
+### Araştırma Perspektifi: Prostat Kanseri RWE Çalışmaları
+
+**Yeni Hormon Ajanının Değerlendirilmesi**:
+
+Turp, yeni bir androgen reseptor inhibitörü (ARI) kullanan prostat kanseri hastalarının, gerçek yaşam verilerini toplayabilir:
+
+- **Geniş Hasta Kohortu**: Ülke çapında, yüzlerce prostate kanserli hastanın tedavi verilerini toplama
+- **PRO Verileri**: Haftalık yaşam kalitesi, yan etki, uyum, persistans verileri
+- **RWD ile Entegrasyon**: e-Nabız''dan alınan PSA, TNM stage, komorbidite verileriyle birleştirilir
+- **Alt Grup Analizi**: Yaşa göre, evreye göre, komorbiditeye göre, tedaviye uyuma göre çalışan gruplar
+- **Regülatif Sunuş**: Yeni ilacın pazar erişimi için, RCT sonuçlarına ek olarak, RWE + PRO kanıtı sunulur
+
+---
+
+## 7. Prostat Kanseri Hastalarında Turp''ün Ölçülebilir Etkileri
+
+### Klinik Sonuçlarda İyileşmeler
+
+| Sonuç | Turp Öncesi | Turp Sonrası | İyileşme |
+|-------|------------|------------|----------|
+| **Yan Etki Tespit Zamanı** | 3 ay (vizit sırasında) | 7 gün (PRO algılama) | -95% |
+| **PDE-5 İnhib. Başlanma Zamanı** | 3+ ay geç | İçinde hap başlanır | -80% geç kalma |
+| **Yatırım Tedavisine Müdahale** | %25 | %8 | -68% |
+| **Tedaviye Uyum (Adherence)** | %65 | %88 | +35% |
+| **Hastalara Memnuniyet** | 6.1/10 | 8.7/10 | +43% |
+
+### Klinik Yönetimde Etkinlik
+
+- **Vizit Süresi Azalması**: Turp raporları, doktor konsultasyonunu daha fokuslu ve kısa kılar
+- **Hayat Tehdit Eden Yan Etkiler Erken Tespiti**: Kardiyak komplikasyonlar (syncope, palpitasyon), sepsis semptomları otomatik flaglenir
+- **Sosyal Destek Koordinasyonu**: Depresyon belirtileri tespit edilince, sosyal hizmet uzmanı otomatik olarak harekete geçebilir
+
+---
+
+## 8. Regülatif Perspektif: PRO''lar ve Onay Süreçleri
+
+### FDA ve EMA''nın Prostat Kanseri Çalışmalarında PRO Beklentileri
+
+Son yıllarda, regülatörler prostat kanseri ilaç onaylarında **PRO verilerini** zorunlu hale getirmeye başlamıştır:
+
+**FDA Rehberi**: 
+- Metastatik Hormon-Sensitif Prostat Kanseri (mHSPC) tedavisinde, **EORTC QLQ-C30** ve **prostat modülü** verileri istenmektedir
+- Metastatik Castration-Resistant Prostat Kanseri (mCRPC)''de, **yan etki profili ve yaşam kalitesi** çalışmaları beklenmektedir
+
+**EMA Tavsiyesi**:
+- Prostat kanseri araştırmalarında, yaşam kalitesi sonuçları, sağkalım sonuçları kadar önemli görülmektedir
+- Yan etkilerin hasta perspektifinden raporlanması, regülatif kararlarda etkilidir
+
+### Turp Destekli RWE + PRO''lar: Regülatif Kabul Edilebilirlik
+
+Turp kullanılarak toplanan PRO verileri, aşağıdaki nedenlerden dolayı regülatörler tarafından güçlü olarak kabul edilir:
+
+- **e-Nabız Entegrasyonu**: Veri doğrulama ve kimlik doğrulaması 100% güvence altındadır
+- **Gerçek Zamanlı Toplama**: Hatırlama yanlılığı (recall bias) minimize edilir
+- **21 CFR Part 11 Uyumluluğu**: Dijital veri altyapısı FDA standartlarına uyumludur
+- **Geniş Heterojen Kohorta**: RCT''nin aksine, gerçek hastalar (yaşlı, komorbid) temsil edilir
+
+---
+
+## 9. Prostat Kanseri Hastası Perspektifi: Turp ile Yaşam Kalitesi
+
+### Hasta Hikayesi: "Yeni Kontrol Duygusu"
+
+**Hasta (62 yaşında)**: Prostat kanseri tanısı aldı, ADT + radyoterapiye karar verildi.
+
+**İlk Kaygılar**:
+- "ED olacak mı?"
+- "İnkontinans olacak mı?"
+- "Nasıl uyum sağlayacağım?"
+
+**Turp Sonrası Deneyim**:
+- Haftalık anketler aracılığıyla, kendi semptomlarını izler
+- Yan etkileri **proaktif olarak** yönetir (ED belirtileri başlangıcında, hemen PDE-5 inhibitörü)
+- Depresyon hissettiğinde, sistem psikiyatrik destek önerir
+- Peer support grubunda, benzer hastalarla deneyim paylaşır
+- **Sonuç**: Tedaviye uyum artar, yaşam kalitesi korunur, kaygı azalır
+
+---
+
+## 10. Sonuç: Prostat Kanserinde PRO ve Turp, Hasta Merkezli Bakımın Yeni Standardı
+
+Prostat kanseri tedavisi, sadece **PSA seviyeleri ve sağkalım** ile değerlendirilmemeli. Hastanın **günlük yaşamı, cinsel işlevi, kontinans, ruh sağlığı** eşit derecede önemlidir.
+
+### Turp ile Prostat Kanseri RWE + PRO Paradigması
+
+**Turp uygulaması, prostat kanserinde PRO''ları gerçeklik haline getirmektedir:**
+
+1. **e-Nabız Entegrasyonu**: Tüm tıbbi veriler (PSA, TNM, komorbidite, medikasyonlar) otomatik ve güvenli şekilde entegre edilir
+
+2. **Prostat Spesifik PRO''lar**: FACT-P, IIEF-15, ICIQ-UI SF gibi kanıta dayalı, validasyon görmüş anketler, yapılandırılmış şekilde toplanır
+
+3. **Akıllı Hatırlatmalar**: Haftalık izleme, vizit hatırlatmaları, ilaç kullanım teyidi, adherence maksimize edilir
+
+4. **Proaktif Yan Etki Yönetimi**: ED, inkontinans, depresyon erken tespit edilir ve müdahale yapılır
+
+5. **Regülatif Güç**: e-Nabız entegrasyonu ve dijital altyapısı, FDA/EMA standartlarına uyumludur, pazar erişimini hızlandırır
+
+6. **Hasta Memnuniyeti**: Prostat kanseri hastalarının, tedaviye uyumu ve yaşam kalitesi iyileşir
+
+### Geleceğin Prostat Kanseri Bakımı
+
+- **Kişiselleştirilmiş Tedavi**: PRO verileri, tedavi seçimini ve dozajını hastanın bireysel ihtiyaçlarına göre optimize eder
+- **Predictive Analytics**: Turp''in AI modelleri, hangi hastanın ED, inkontinans, depresyon geliştirebileceğini önceden tahmin eder
+- **Değer Tabanlı Bakım**: Hastanın yaşam kalitesi sonuçları, sağlık hizmetinin kalitesinin ölçütü haline gelir
+
+### Prostat Kanserinde PRO''ların Son Sözcüğü
+
+Prostat kanserinde, **objektif kanıtlar (PSA, sağkalım) başlı başına yeterli değildir.** Hastanın sesini, deneyimini, yaşam kalitesi etkilerini ölçerek, araştırmalara ve klinik pratiğe katmak, **hümanize edilmiş ve etkili bir bakım paradigması** oluşturmaktadır.
+
+**Turp gibi entegre dijital platformlar**, bu dönüşümü gerçekleştirerek, prostat kanseri hastalarının yaşam kalitesini korurken, klinisyenlere ve araştırmacılara güçlü, doğrulanabilir kanıt sunmaktadır.
+
+Sonuç olarak, prostat kanseri tedavisi artık sadece **"hastalığı yok etmek"** değil, aynı zamanda **"hastanın hayatını iyileştirmek"** hakkındadır. PRO ve Turp, bu yeni bakım felsefesinin teknolojik ve metodolojik temelidir.
+
+---
+
+**Alan:** Onkoloji / Prostat Kanseri | **Hedef Kitle:** Onkologlar, urolog-onkologlar, klinik araştırmacılar, CRO profesyonelleri', 'https://zhljpirfyiuraeocgbep.supabase.co/storage/v1/object/public/blog-images/1763671944811.jpg', '2025-11-20 20:46:48.320836+00', 'tr'),
+	(3, 'Meme Kanseri Tedavisinde Hasta Bildirimli Sonuçların (PRO) Stratejik Önemi ve Turp''ün Gerçekleştirdiği Dönüşüm', '## Giriş: Meme Kanseri ve Yaşam Kalitesi Paradoksu
+
+Meme kanseri, dünyada kadınlarda en yaygın görülen malign hastalıktır. **Hormon reseptor durumu, HER2 durumu, Ki-67 proliferasyonu, TNM evrelemesi** gibi objektif prognostik faktörler, hastalığın biyolojik davranışını gösterse de, **hastanın tedavi sırasında ve sonrasında yaşadığı fiziksel, psikolojik ve sosyal etkilerini tam olarak yansıtamaz.**
+
+Meme kanseri tedavisi (cerrahi, kemoterapı, radyoterapi, hormonal tedavi, targeted therapy), birçok zaman kadın hastanın **görünüş değişiklikleri, kol şişmesi (lenfödem), kemoterapinin nöropati ve bilişsel yan etkileri, hormonal tedavinin vasomotor semptomları** gibi yaşam kalitesi sorunlarına neden olmaktadır. Bu sorunlar, **hastaların özgüven, body image, cinsellik, çalışma kapasitesi ve ruh sağlığını** derinden etkilemektedir.
+
+İşte tam bu noktada, **Hasta Bildirimli Sonuçlar (PRO''lar)**, meme kanseri araştırmalarında ve klinik pratikte **kritik bir rol** oynamaya başlamıştır. PRO''lar, objektif tıbbi verinin ötesine geçerek, hastanın gerçek yaşamından sesini ve deneyimini araştırmalara taşımaktadır.
+
+Bu kapsamlı rehberde, meme kanseri tedavisinde **PRO''ların stratejik önemi, yaşam kalitesi ölçümleri, yan etki yönetimi** ve **Turp uygulamasının bu alanda sağladığı dönüşümü** detaylı olarak ele alacağız.
+
+---
+
+## 1. Meme Kanseri Tedavisi ve Geleneksel Başarı Kriterlerinin Yetersizliği
+
+### Geleneksel Tedavi Sonuç Ölçütleri
+
+Meme kanseri araştırmalarında, uzun yıldır aşağıdaki objektif parametreler başarı göstergesi olarak kullanılmıştır:
+
+- **Hastalık Serbest Yaşam Süresi (Disease-Free Survival - DFS)**
+- **Genel Yaşam Süresi (Overall Survival - OS)**
+- **Tümör Yanıt Oranı (Response Rate - RR)** (%50 ve üzeri tümör küçülmesi)
+- **Patolojik Tam Yanıt (Pathological Complete Response - pCR)**
+
+### Klinik Paradoks: İyi Objektif Sonuçlar, Önemli Yaşam Kalitesi Sorunları
+
+**Problem**: Pek çok meme kanseri hastası, objektif olarak "başarılı" tedavi aldıktan sonra (pCR, hastalık remisyonda, sağkalım iyileşmiş), aşağıdaki sorunlardan şikayetçidir:
+
+- **Lenfedema**: Cerrahi ve radyoterapiden sonra %20-30 oranında; kronik, progresif ve yaşam boyunca devam eden sorun
+- **Nöropatik Ağrı (Post-Mastectomy Pain Syndrome - PMPS)**: Cerrahi sonrası %25-60 oranında; sıklıkla kronik ve tedaviye dirençli
+- **Kemo-İlişkili Kognitif Disfonksiyon (Chemo Brain/Chemo Fog)**: Kemoterapiyi alan hastaların %70''inde rapor edilen bellek ve konsantrasyon sorunları
+- **Vasomotor Semptomlar**: Tamoksifen, aromataz inhibitörleri kullanan pre-menoposal kadınlarda sıcak basması ve gece terlemesi
+- **Görünüş Değişiklikleri ve Body Image**: Mastektomi veya lumpektomi sonrası asimetri, dövme/tatuaj ihtiyacı, protez uyumu
+- **Cinsel İşlev Bozukluğu**: Hormonal tedavi ve kemoterapi nedeniyle libido kaybı, vajinal kuruluk, dyspareunia
+- **Ruh Sağlığı**: Depresyon, anksiyete, travma sonrası stres bozukluğu (PTSD), sosyal izolasyon
+
+**Geleneksel Yaklaşımdaki Boşluk**: Klasik RCT''ler, bu yaşam kalitesi sorunlarını yeterince ölçmez ve raporlamaz. Klinik çıktılar sadece "remisyon", "sağkalım" ile sınırlı kalabilir, oysa hastanın günlük yaşamı önemli ölçüde etkilenmiş olabilir.
+
+---
+
+## 2. PRO''lar: Meme Kanserinde Hasta Deneyiminin Kuantitatif Ölçümü
+
+### Meme Kanseri Bağlamında PRO''lar
+
+**PRO (Hasta Bildirimli Sonuç)**, meme kanseri hastasının tedavi öncesi, sırası ve sonrasında yaşadığı semptomlar, yan etkiler, yaşam kalitesi, body image, cinsel işlev ve fonksiyonel durumunun **kendi doğrudan raporlaması**dır. Hiçbir hekim veya hemşirenin yorumu olmaksızın, hasta tarafından yapılan bu ölçümler, tedavinin gerçek etkisini gösterir.
+
+### Meme Kanseri Spesifik PRO Ölçütleri
+
+#### 1. **Yaşam Kalitesi Anketleri**
+
+**EORTC QLQ-C30 + BR23 Modülü**
+- Kanser hastalarında genel yaşam kalitesini ölçer (EORTC QLQ-C30)
+- Meme kanseri spesifik yan etkileri ölçer (BR23 modülü): göğüs ağrısı, kol şişmesi, göğüs semptomları, sekonder malignite korkusu
+
+**FACT-B (Functional Assessment of Cancer Therapy - Breast)**
+- Meme kanseri hastasına özel tasarlanmış yaşam kalitesi anketi
+- Fiziksel, sosyal, duygusal, fonksiyonel ve meme kanserine spesifik kaygıları ölçer
+- 36 soru içerir ve kısa zamanda tamamlanabilir
+
+**BREAST-Q (Breast Cancer Surgery and Outcomes)**
+- Meme cerrahisi sonrası beden memnuniyeti ve göğüs rekonstruksiyon memnuniyetini ölçer
+- Cosmetic outcomes ve patient satisfaction odaklı
+- Implant vs. autologous rekonstruksiyon seçimlerinde rehber olur
+
+**SF-36 (Short Form 36)**
+- Genel sağlık durumu ve yaşam kalitesi ölçer
+- Fiziksel ve mental bileşenleri değerlendirir
+
+#### 2. **Lenfödem ve Kolda Fonksiyon Ölçütleri**
+
+**Lenfödem Yağıltı Ölçeği (LYMPH-Q)**
+- Kolda şişme, sertlik, belirtiler ve işlevsellik ölçer
+- Eğer varsa lenfödemaya tedaviye yanıt değerlendirir
+
+**Kol Edema Seviyesi Ölçeği (Circumference Measurement + Bioimpedance)**
+- Objektif lenfödem ölçümü (santimetre, mL hacim)
+- PRO ile birleşince, hasta raporlanan ve objektif verinin uyumu değerlendirilir
+
+#### 3. **Nöropati ve Ağrı Ölçütleri**
+
+**EORTC QLQ-CIPN20 (Chemotherapy-Induced Peripheral Neuropathy)**
+- Kemoterapi ilişkili periferik nöropatinin şiddetini ölçer
+- Sensory, motor, autonomic semptomları ve etkilenen fonksiyonları değerlendirir
+
+**Neuropathic Pain Scale (NPS)**
+- Post-mastektomi ağrı sendromu (PMPS) şiddetini ölçer
+- Ağrının lokasyonu, karakteri, etkili faktörler
+
+**Brief Pain Inventory (BPI)**
+- Ağrı şiddeti ve yaşam kalitesine etkisini ölçer
+
+#### 4. **Body Image ve Cinsellik Ölçütleri**
+
+**Body Image Scale (BIS)**
+- Tedavi sonrası beden memnuniyeti ve görünüş endişesi
+- Giyim seçimleri ve sosyal aktivitelere etkileri
+
+**Female Sexual Function Index (FSFI)**
+- Cinsel işlev, lubrikasyon, orgasm, memnuniyet değerlendirilir
+- Hormonal tedavi ve kemoterapi sonrası cinsel sorunları ölçer
+
+**Relationship and Sexuality Questionnaire (RSQ)**
+- İlişkiye etkileri, cinsel memnuniyeti, partnership dinamikleri
+
+#### 5. **Kognitif Fonksiyon ve Kemobrain Ölçütleri**
+
+**FACT-Cog (Cognitive Function Module)**
+- Kemoterapiye bağlı kognitif disfonksiyonu (chemo fog) ölçer
+- Bellek, konsantrasyon, sözel akıcılık, zihinsel gevşeklik
+
+**Montreal Cognitive Assessment (MoCA)**
+- Objektif kognitif test (objektif + PRO kombinasyonu)
+
+#### 6. **Psikososyal Sonuçlar**
+
+**Depresyon ve Anksiyete Ölçeği (PHQ-9, GAD-7)**
+- Meme kanseri tanısı ve tedavisi sonrası ruh sağlığı takip edilir
+- Prognostik faktör olarak davranır
+
+**Impact of Event Scale (IES)**
+- Kanser tanısının travmatik etkisi ve başa çıkma mekanizmaları
+
+---
+
+## 3. PRO''lar Meme Kanseri Araştırmalarında Neden Kritiktir?
+
+### Tedavi Seçimini Etkileyen Veriler
+
+Meme kanserinde, genellikle **birden fazla tedavi seçeneği** vardır (lumpektomi vs. mastektomi, rekonstrüksiyon seçenekleri, neoadjuvan vs. adjuvan kemoterapi). Benzer hastalık evresine sahip iki hasta için farklı tedaviler uygun olabilir. PRO verileri:
+
+- **Bireyselleştirilmiş Karar Alma**: Beden imajından çok endişeli bir hastaya mastektomi + rekonstrüksiyon; estetik sonuçtan daha çok işlevselliği önemseyen hastaya lumpektomi sunulabilir.
+- **Hasta Tercihi Tabanlı Tıp**: Hastanın yaşam kalitesi öncelikleri (kariyeri, çocuk sahibi olma, cinsel yaşam) doğrultusunda tedavi planlanması
+
+### Yan Etkilerin Proaktif Yönetimi
+
+Geleneksel İzlemde: Hasta 3-6 ayda onkoloğu ziyaretinde yan etkilerden bahseder, ancak bu arada yaşanan sorunlar eksik kalabilir.
+
+**PRO-Destekli Yaklaşımda**: Hastalar, Turp uygulaması üzerinden, haftada 1-2 kez lenfödem, nöropatik ağrı, vasomotor semptomlar, cinsel işlev, body image hakkında sor edilirler. Sorunlar **erken tespiti** ve **proaktif müdahale** (örn. lenfödem fizyoterapisi, nöropatik ağrı tedavisi, psikiyatrik destek) mümkün hale gelir.
+
+### Regülatif Kabul Edilebilirlik
+
+**FDA ve EMA**, son yıllarda meme kanseri ilaçlarının onayında PRO verilerini çok ciddiye almaya başladı. Örneğin:
+
+- **HER2-pozitif hastalarda trastuzumab** onayında, yaşam kalitesi sonuçları sunulmuştur
+- **CDK4/6 inhibitörleri (palbociclib, ribociclib)** çalışmalarında, yaşam kalitesi verisi regülatif kararı etkilemiştir
+- Yeni hormon tedavileri ve targeted ajanlar için PRO verileri, pazar erişimi ve geri ödeme kararlarında etkili olmaktadır
+
+---
+
+## 4. Meme Kanseri RWE ve PRO''lar: Gerçek Dünyadaki Tedavi Uyumu
+
+### Klinik Uygulamada Karşılaşılan Paradoks
+
+RCT''lerde, **adjuvan kemoterapi** alan meme kanseri hastalarında tedaviye uyum oranı %85-95 olabilir. Ancak, gerçek dünyadaki pratikte:
+
+- Hastalar yan etkileri nedeniyle tedaviye uyum göstermeyebilir (erken sonlandırma)
+- Hormonal tedavi (tamoksifen, aromataz inhibitörleri) kullanan hastalar, yan etkiler nedeniyle uyumsuz kalabilir
+- Lenfödem, nöropatik ağrı, ruh sağlığı sorunları hastaları desteğe ihtiyaç duyduğunu söylemekten alıkoyabilir
+
+**RWE + PRO Çözümü**: Gerçek dünyadaki tedavi uyumu, yan etki sorunları ve yaşam kalitesi sonuçları, PRO verileri sayesinde tespit edilebilir ve müdahale planlanabilir.
+
+---
+
+## 5. Meme Kanseri Hastaları İçin Turp Uygulaması: Entegre Çözüm
+
+### Turp''ün Meme Kanseri Hastalarına Özel Özellikleri
+
+#### 1. e-Nabız Entegrasyonu: Komorbidite ve Medikasyon Takibi
+
+Meme kanseri hastalarının çoğu **yaşlı olup, ek hastalıkları** vardır (hipertansiyon, diyabet, kardiyovasküler hastalık, osteoporoz). Turp, e-Nabız aracılığıyla:
+
+- **Komorbidite Profili Otomatik Alınması**: Osteoporoz, kardiyovasküler hastalık, diyabet gibi ek hastalıklar otomatik olarak Turp''e yüklenir.
+- **İlaç-İlaç Etkileşimi Analizi**: Kemoterapi, hormonal tedavi, ek ilaçlar arasında etkileşim otomatik olarak kontrolür.
+- **Kardiyovasküler Risk Takibi**: Trastuzumab kullanan hastaların kardiyotoksisitesi, echokardiografi takibi otomatik hatırlatılır.
+- **Kemik Sağlığı Monitorlaması**: Aromataz inhibitörleri kullanan hastaların DEXA taraması ve kalsiyum/D vitamini kullanımı takip edilir.
+
+#### 2. Meme Kanseri Spesifik PRO Anketleri
+
+Turp''deki yerleşik PRO kütüphanesi, **meme kanseri hastalarına özel anketleri** içerir:
+
+**Haftalık İzleme Anketleri:**
+- "Bu hafta kol veya göğüs alanında şişlik hissettiniz mi?" (lenfödem taraması, 1-10 ölçek)
+- "Kol veya el kuvvetinde azalma var mı?" (fonksiyonel değerlendirme)
+- "Nöropatik ağrı (iğnelenme, yanma, uyuşukluk) yaşadınız mı?" (CIPN taraması, lokasyon)
+- "Sıcak basması veya gece terlemesi yaşadınız mı?" (vasomotor semptomlar, sıklık)
+- "Cinsel işlev hakkında sorun var mı?" (FSFI mini)
+- "Beden görünüşü hakkında kaygı var mı?" (body image, 0-10 ölçek)
+- "Ruh durumunuz (depresyon/anksiyete) nasıl?" (PHQ-2)
+- "Konsantrasyon ve bellek sorunu yaşadınız mı?" (chemo brain taraması)
+
+**Aylık Kapsamlı Anketler:**
+- Tam FACT-B yaşam kalitesi anketi
+- Tam FSFI cinsel işlev anketi
+- BIS body image anketi
+- EORTC QLQ-CIPN20 nöropatik ağrı anketi
+- SF-36 genel yaşam kalitesi
+
+#### 3. Akıllı Hatırlatma: Tedavi Uyumu ve Vizit Takibi
+
+Meme kanseri hastalarında, kemoterapinin tamamlanması ve hormonal tedaviye uyumu kritiktir. Turp, bu noktada:
+
+- **Kemoterapi Siklusu Hatırlatmaları**: Her kemoterapisi sırasında, hastaya vizit, kan testi, yan etki takibi hakkında hatırlatmalar gönderilir. **No-show oranı %70 azalır.**
+- **Hormonal Tedavi Uyumu**: Tamoksifen, aromataz inhibitörleri günlük alım hatırlatmaları, uyum oranını artırır.
+- **Kardiyovasküler Takip Hatırlatmaları**: Trastuzumab kullanan hastalar, periyodik echokardiografi için hatırlatılır.
+- **Kemik Sağlığı Monitorlaması**: Aromataz inhibitörleri kullanan hastaların DEXA taraması ve osteoporoz tedavisi takip edilir.
+
+#### 4. Yan Etki Algılama ve Proaktif Müdahale
+
+Turp, haftalık PRO verilerini analiz ederek:
+
+- **Lenfödem Erken Tespiti**: Kol çevresi artışı veya şişlik hissi başlarsa, derhal fiziksel terapist konsultasyonu önerilir, kompresyon giyim başlanır.
+- **Nöropatik Ağrı Riski**: CIPN puanı artar ise, sistem nöroloji veya anestezi konsultasyonu tavsiye eder, pregabalin/gabapentin başlama önerilir.
+- **Vasomotor Semptomlar**: Sıcak basması ve gece terlemesi artar ise, hormonal olmayan seçenekler (SSRI, venlafaxin) veya alternatif terapiler önerilir.
+- **Cinsel İşlev Sorunları**: FSFI puanı düşerse, jinekoloji/seksolog konsultasyonu ve hormonal değerlendirme yapılır.
+- **Body Image Disturbance**: BIS puanı yükselse, psikiyatristik destek ve varsa rekonstrüksiyon danışmanı önerilir.
+- **Depresyon/Anksiyete Belirtileri**: PHQ-2 puanı yükselse, psikiyatrik destek önerilir, uygun ilaç tedavisi (SSRİ vb.) başlanabilir.
+- **Kognitif Disfonksiyon**: Chemo brain semptomları tespit edilirse, nöropsikoloji değerlendirmesi, bilişsel rehabilitasyon önerilir.
+
+#### 5. Hasta Eğitimi ve Kaynaklar
+
+Turp, meme kanserli hastaların uyum, self-management ve psikolojik destek için gerekli içeriği sağlar:
+
+- **Videolar**: Lenfödem yönetimi, egzersiz rehberleri, beslenme, yan etki yönetimi, cinsel sağlık, body image
+- **Makale Kütüphanesi**: Meme kanseri, tedavi seçenekleri, yaşam stili değişiklikleri, rekonstrüksiyon bilgisi
+- **Peer Support**: Benzer durumdaki diğer hastalarla bağlantı (anonim forum), yaşam deneyimleri paylaşma
+- **Fizyoterapist ve Diyetisyen Tavsiyesi**: Turp aracılığıyla video danışmanlık
+
+---
+
+## 6. Meme Kanseri Araştırmalarında Turp Destekli PRO''lar: Pratik Uygulamalar
+
+### Klinisyen Perspektifi: Tedavi Planlaması
+
+**Senaryo**: 55 yaşında, HER2-pozitif meme kanseri tanısı alan hastaya adjuvan kemoterapi (trastuzumab) başlanılıyor.
+
+**Turp Olmadan**:
+- Hasta, 3 ayda onkoloğu ziyaretinde yan etkilerden bahseder
+- Onkolog, lenfödem başladığını veya nöropatik ağrı olduğunu öğrenir (bu arada 3 ay boyunca hastanın semptomları şiddetlendi)
+- Body image disturbance ve depresyon belirtileri kaçırılabilir
+- Hormonal tedaviye başlandıktan sonra vasomotor semptomlar yaşansa bile, aylarca rapor edilmez
+
+**Turp İle**:
+- Hafta 1: Kemoterapi başına yan etkileri monitorlanmaya başlanır, terapötik rehber sağlanır
+- Hafta 2: Lenfödem belirtileri tespit edilir, fizyoterapist konsultasyonu önerilir
+- Hafta 3: İlk nöropatik ağrı işareti algılanır, nöroloji konsultasyonu + pregabalin önerilir
+- Hafta 4: Body image ve depresyon belirtileri görülür, psikolog başvurusu önerilir
+- Ay 3: Trastuzumab müdahalesine karşı kardiyotokkisitesi ekokardiografi ile takip edilir
+- Devam: Aylık PRO raporu oluşturulur, yan etki yönetimi proaktif hale gelir
+
+**Sonuç**: Hasta, yaşam kalitesi kaybı minimize edilmiş şekilde tedaviyi tamamlar.
+
+### Araştırma Perspektivi: Meme Kanseri RWE Çalışmaları
+
+**CDK4/6 İnhibitörünün Gerçek Dünyadaki Etkinliği Çalışması**:
+
+Turp, CDK4/6 inhibitörü (palbociclib, ribociclib) kullanan meme kanseri hastalarının gerçek yaşam verilerini toplayabilir:
+
+- **Geniş Hasta Kohortu**: Ülke çapında, yüzlerce hormon pozitif/HER2-negatif meme kanserli hastanın tedavi verilerini toplama
+- **PRO Verileri**: Haftalık yaşam kalitesi, yan etki (diyaré, nötropeni, müaltin), uyum, persistans verileri
+- **RWD ile Entegrasyon**: e-Nabız''dan alınan hormon durumu, TNM stage, komorbidite, kardiyovasküler durum verileriyle birleştirilir
+- **Alt Grup Analizi**: Yaşa göre, menopoasal statüye göre, komorbiditeye göre, tedaviye uyuma göre çalışan gruplar
+- **Yaşam Kalitesi Sonuçları**: Diyarenin yaşam kalitesini nasıl etkilediği, hormonal tedavinin vasomotor semptomları
+- **Regülatif Sunuş**: Yeni ilacın pazar erişimi için, RCT sonuçlarına ek olarak, RWE + PRO kanıtı sunulur
+
+---
+
+## 7. Meme Kanseri Hastalarında Turp''ün Ölçülebilir Etkileri
+
+### Klinik Sonuçlarda İyileşmeler
+
+| Sonuç | Turp Öncesi | Turp Sonrası | İyileşme |
+|-------|------------|------------|----------|
+| **Yan Etki Tespit Zamanı** | 3 ay (vizit sırasında) | 7 gün (PRO algılama) | -95% |
+| **Fizyoterapist Başvurusu (Lenfödem)** | 6+ ay geç | 2 hafta içinde | -85% geç kalma |
+| **Nöropatik Ağrı Müdahalesi** | 3+ ay geç | 3 hafta içinde | -80% geç kalma |
+| **Psikiyatrik Destek Başlanması** | %15 | %65 | +433% |
+| **Tedaviye Uyum (Adherence)** | %70 | %91 | +30% |
+| **Hastaların Memnuniyeti** | 5.8/10 | 8.9/10 | +53% |
+
+### Klinik Yönetimde Etkinlik
+
+- **Vizit Süresi Optimizasyonu**: Turp raporları, onkolog konsultasyonunu daha fokuslu ve kısa kılar
+- **Multidisipliner Koordinasyon**: Fizyoterapist, nöroloji, psikiyatri, jinekolog otomatik olarak haberdar edilir
+- **Hayat Tehdit Eden Komplikasyonların Erken Tespiti**: Kardiyotoksisitesi belirtileri, enfeksyon semptomları otomatik flaglenir
+- **Sosyal Destek Aktivasyonu**: Depresyon belirtileri tespit edilince, sosyal hizmet uzmanı otomatik olarak harekete geçebilir
+
+---
+
+## 8. Regülatif Perspektif: PRO''lar ve Onay Süreçleri
+
+### FDA ve EMA''nın Meme Kanseri Çalışmalarında PRO Beklentileri
+
+Son yıllarda, regülatörler meme kanseri ilaç onaylarında **PRO verilerini** zorunlu hale getirmeye başlamıştır:
+
+**FDA Rehberi**: 
+- Hormon reseptor pozitif/HER2-negatif hastalarda endokrinoterapide **FACT-B** ve yaşam kalitesi verileri istenmektedir
+- HER2-pozitif hastalarda trastuzumab-türevleri için **kardiyotoksisitesi ve yaşam kalitesi** sonuçları
+- Triple-negatif meme kanseri tedavilerinde, **nöropatik ağrı ve yaşam kalitesi** verileri
+
+**EMA Tavsiyesi**:
+- Meme kanseri araştırmalarında, yaşam kalitesi sonuçları, sağkalım sonuçları kadar önemli görülmektedir
+- Yan etkilerin hasta perspektifinden raporlanması, regülatif kararlarda etkilidir
+- Body image ve cinsel işlev sonuçları, PRO verileri ile desteklenmesi beklenmektedir
+
+### Turp Destekli RWE + PRO''lar: Regülatif Kabul Edilebilirlik
+
+Turp kullanılarak toplanan PRO verileri, aşağıdaki nedenlerden dolayı regülatörler tarafından güçlü olarak kabul edilir:
+
+- **e-Nabız Entegrasyonu**: Veri doğrulama ve kimlik doğrulaması 100% güvence altındadır
+- **Gerçek Zamanlı Toplama**: Hatırlama yanlılığı (recall bias) minimize edilir
+- **21 CFR Part 11 Uyumluluğu**: Dijital veri altyapısı FDA standartlarına uyumludur
+- **Geniş Heterojen Kohorta**: RCT''nin aksine, gerçek hastalar (yaşlı, komorbid, farklı genetik profil) temsil edilir
+
+---
+
+## 9. Meme Kanseri Hastası Perspektifi: Turp ile Yaşam Kalitesi
+
+### Hasta Hikayesi: "Tedaviye Katlanma, Çözümle Rahat Etme"
+
+**Hasta (52 yaşında)**: Meme kanseri tanısı aldı, adjuvan kemoterapiye karar verildi, ardından trastuzumab + hormonal tedavi önerildi.
+
+**İlk Kaygılar**:
+- "Kemoterapi yan etkileri ne olacak?"
+- "Lenfödem oluşacak mı?"
+- "Cinsel yaşamım nasıl etkilenecek?"
+- "Ruh sağlığımı nasıl koruyacağım?"
+', 'https://zhljpirfyiuraeocgbep.supabase.co/storage/v1/object/public/blog-images/1763672414773.jpg', '2025-11-20 21:00:17.765941+00', 'tr'),
+	(5, 'Nefrolojide Dijital Dönüşüm: TURP Mobil Uygulaması ile Hasta Takip Devrimi', '
+
+Kronik böbrek hastalığı yönetimi, süreklilik gerektiren kompleks bir süreçtir. TURP Mobil Uygulaması, nefroloji hasta takibinde yeni bir çağ başlatıyor. İşte bu yenilikçi yaklaşımın detayları:
+
+---
+
+## **TURP Mobil: Nefrolojide Dijital Çözüm**
+
+### **Uygulamanın Amacı:**
+Nefroloji hastalarının günlük sağlık verilerini takip ederek, hem hastalar hem de hekimler için kapsamlı bir yönetim platformu sunmak.
+
+---
+
+## **TURP Mobil''in Nefroloji Pratiğine Entegrasyonu**
+
+### **1. Gerçek Zamanlı Vital Takip**
+- **Kan Basıncı Monitörü**: Hipertansiyon yönetimi için 7/24 takip
+- **Sıvı Dengesi Kaydı**: Günlük sıvı alım-çıktı takibi
+- **Ağırlık İzleme**: Ödem ve hipervolemi monitorizasyonu
+
+### **2. Laboratuvar Entegrasyonu**
+```
+✅ GFR Takibi
+✅ Elektrolit Düzeyleri
+✅ Albümin/Kreatinin Oranı
+✅ Hemoglobin Değerleri
+```
+
+### **3. İlaç Yönetim Modülü**
+- **Akıllı Hatırlatıcılar**: İlaç doz zamanları
+- **Yan Etki Takibi**: İlaç toleransı monitorizasyonu
+- **Reçete Yenileme Bildirimleri**
+
+---
+
+## **Hasta Merkezli Özellikler**
+
+### **Bildirim ve Uyarı Sistemi**
+```json
+{
+  "acil_uyarilar": [
+    "Hipertansif kriz riski",
+    "Hiperkalemi belirtileri",
+    "Akut böbrek hasarı bulguları",
+    "Aşırı sıvı yükü işaretleri"
+  ],
+  "rutin_bildirimler": [
+    "İlaç hatırlatıcıları",
+    "Diyet önerileri",
+    "Kontrol randevuları",
+    "Laboratuvar takipleri"
+  ]
+}
+```
+
+### **Eğitim ve Farkındalık Modülleri**
+- **Böbrek Dostu Beslenme Rehberi**
+- **Egzersiz Programları**
+- **Hastalık Yönetimi İpuçları**
+- **Semptom Yönetimi Kılavuzları**
+
+---
+
+## **Klinisyen Dashboard Özellikleri**
+
+### **Hasta Paneli:**
+- **Tedavi Uyum Raporları**
+- **Semptom Skorlama Grafikleri**
+- **Acil Durum Bildirimleri**
+- **Trend Analizleri**
+
+### **Klinik Karar Desteği:**
+```
+📊 Otomatik KDIGO Kılavuzu Uyum Kontrolü
+📈 Progressyon Risk Skorlama
+🔔 Renal Replasman Tedavisi Zamanlama Önerileri
+```
+
+---
+
+## **Veri Güvenliği ve Uyumluluk**
+
+### **HIPAA Uyumlu Altyapı:**
+- **Uçtan Uca Şifreleme**
+- **Anonimize Veri Depolama**
+- **Güvenli Bulut Arşivleme**
+
+### **Entegrasyon Yetenekleri:**
+- **Hospital Information Systems (HIS)**
+- **Electronic Health Records (EHR)**
+- **Laboratory Information Systems (LIS)**
+
+---
+
+## **Klinik Çıktılar ve Etkinlik**
+
+### **Kanıta Dayalı Faydalar:**
+- **%40** Acil Servis Başvurularında Azalma
+- **%35** Hastane Yatış Sürelerinde Kısalma
+- **%60** Hasta Tedavi Uyumunda Artış
+- **%45** Yaşam Kalitesi Skorlarında İyileşme
+
+---
+
+## **Gelecek Yol Haritası**
+
+### **Yapay Zeka Entegrasyonu:**
+- **Prediktif Analitik**: Akut böbrek hasarı öngörüsü
+- **Kişiselleştirilmiş Tedavi Algoritmaları**
+- **Otomatik Doz Ayarlama Önerileri**
+
+### **Genişletme Planları:**
+- **Pediatrik Nefroloji Modülü**
+- **Diyaliz Hastası Özelleştirmesi**
+- **Transplant Hasta Takip Sistemi**
+
+---
+
+## **Sonuç**
+
+TURP Mobil Uygulaması, nefroloji pratiğinde hasta merkezli dijital dönüşümün öncüsü olarak, kronik böbrek hastalığı yönetiminde yeni standartlar belirliyor. Hem hasta deneyimini iyileştiren hem de klinik sonuçları optimize eden bu platform, nefrolojide dijital sağlığın geleceğini şekillendiriyor.
+
+**#DijitalNefroloji #HastaMerkezliBakım #TURPMobil #TeleNefroloji #KronikBöbrekHastalığıYönetimi**', 'https://zhljpirfyiuraeocgbep.supabase.co/storage/v1/object/public/blog-images/1764281471944.jpg', '2025-11-27 22:11:32.781558+00', 'tr');
+
+
+--
+-- Data for Name: roi_leads; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."roi_leads" ("id", "created_at", "ad_soyad", "email", "telefon", "firma", "calisma_turu", "faz", "ulkeler", "kvkk_onayi", "merkez_sayisi", "gonullu_sayisi", "calisma_suresi", "kvkk") VALUES
+	(1, '2025-11-22 15:58:48.132132+00', 'Berk Özdemir', 'berko@omega-cro.com.tr', '903124267722', 'Omega', 'Gözlemsel', 'Faz III', 'TR', false, '10', '100', '12', true);
+
+
+--
+-- Data for Name: roi_settings; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."roi_settings" ("id", "created_at", "cra_monthly_salary", "cra_daily_expense", "trad_cra_minutes", "sdc_monthly_salary", "trad_sdc_minutes", "investigator_fee", "exam_fee", "patient_travel_fee", "turp_daily_license", "turp_cra_minutes", "turp_sdc_minutes", "usd_rate", "eur_rate") VALUES
+	(1, '2025-11-22 15:01:31.372345+00', 160000, 6000, 10, 120000, 45, 3000, 3000, 800, 69.99, 2, 15, 45, 50);
+
+
+--
+-- Data for Name: buckets; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
+--
+
+INSERT INTO "storage"."buckets" ("id", "name", "owner", "created_at", "updated_at", "public", "avif_autodetection", "file_size_limit", "allowed_mime_types", "owner_id", "type") VALUES
+	('blog-images', 'blog-images', NULL, '2025-11-20 10:47:34.363632+00', '2025-11-20 10:47:34.363632+00', true, false, NULL, NULL, NULL, 'STANDARD');
+
+
+--
+-- Data for Name: buckets_analytics; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
+--
+
+
+
+--
+-- Data for Name: buckets_vectors; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
+--
+
+
+
+--
+-- Data for Name: objects; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
+--
+
+INSERT INTO "storage"."objects" ("id", "bucket_id", "name", "owner", "created_at", "updated_at", "last_accessed_at", "metadata", "version", "owner_id", "user_metadata", "level") VALUES
+	('f252363d-401d-4222-9131-5ffa9a0dd40e', 'blog-images', '1763670236202-cpt3596fig0001m.jpg', NULL, '2025-11-20 20:23:58.71909+00', '2025-11-20 20:23:58.71909+00', '2025-11-20 20:23:58.71909+00', '{"eTag": "\"01f8d1308cd63e937b1e6fa9e275f808\"", "size": 259666, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-20T20:23:59.000Z", "contentLength": 259666, "httpStatusCode": 200}', '05738b64-b860-4bcc-be50-1648d580935c', NULL, '{}', 1),
+	('26bd6b0d-f70b-4bfc-a690-1d0e30355589', 'blog-images', '1764281471944.jpg', 'fb7903ff-94ff-4db6-acce-a43350c0862b', '2025-11-27 22:11:32.127292+00', '2025-11-27 22:11:32.127292+00', '2025-11-27 22:11:32.127292+00', '{"eTag": "\"c42ddbbba87f8a8353364c90e0f5880f-3\"", "size": 12505280, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-27T22:11:32.000Z", "contentLength": 12505280, "httpStatusCode": 200}', 'f2a91dd9-6a44-4300-81e2-5a80f3faf938', 'fb7903ff-94ff-4db6-acce-a43350c0862b', '{}', 1),
+	('ea193dcd-39ce-487c-9f2b-32d99fb734cc', 'blog-images', '1763670544528-BarwerdvanderPlas201124P1A0566.width1160.jpg', NULL, '2025-11-20 20:29:06.637507+00', '2025-11-20 20:29:06.637507+00', '2025-11-20 20:29:06.637507+00', '{"eTag": "\"5b0ce5d0cffa45f9931889f3d9916024\"", "size": 216013, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-20T20:29:07.000Z", "contentLength": 216013, "httpStatusCode": 200}', '9580cfd3-dd97-41e0-bb04-90c8fbb1585d', NULL, '{}', 1),
+	('388503b4-f9b9-4413-a94e-508f4f60ff63', 'blog-images', '1763671944811.jpg', 'fb7903ff-94ff-4db6-acce-a43350c0862b', '2025-11-20 20:52:28.413993+00', '2025-11-20 20:52:28.413993+00', '2025-11-20 20:52:28.413993+00', '{"eTag": "\"285c2152696aa728efc09b69b2c882ac\"", "size": 134922, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-20T20:52:29.000Z", "contentLength": 134922, "httpStatusCode": 200}', '963e3c01-ae40-49a7-a2dc-f3d8c0d7e8df', 'fb7903ff-94ff-4db6-acce-a43350c0862b', '{}', 1),
+	('1fec7c59-15a5-4ce6-aad2-140e94f00550', 'blog-images', '1763672414773.jpg', 'fb7903ff-94ff-4db6-acce-a43350c0862b', '2025-11-20 21:00:17.266531+00', '2025-11-20 21:00:17.266531+00', '2025-11-20 21:00:17.266531+00', '{"eTag": "\"1e4faee6fe52d8400072ede1d944fbd2\"", "size": 342552, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-20T21:00:18.000Z", "contentLength": 342552, "httpStatusCode": 200}', '42e75974-c412-4d49-975c-4389194ee678', 'fb7903ff-94ff-4db6-acce-a43350c0862b', '{}', 1),
+	('59da6d07-d5ed-4b24-ace4-d60369f926f3', 'blog-images', 'appointment-consulting-doctor-visit-on-mobile-app-2024-11-26-02-03-22-utc.jpg', NULL, '2025-11-20 22:20:39.148558+00', '2025-11-20 22:20:39.148558+00', '2025-11-20 22:20:39.148558+00', '{"eTag": "\"7551ffc30fe0f2291c85dd4286e2db9f-2\"", "size": 11451621, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-20T22:20:20.000Z", "contentLength": 11451621, "httpStatusCode": 200}', 'ccb1d869-3f12-49b5-b3d1-ec0d8fc59fcb', NULL, NULL, 1),
+	('3e29725e-633a-49c1-9630-ca85c8e6c9ed', 'blog-images', 'a-pile-of-pills-in-blister-packs-close-up-2025-10-18-13-17-21-utc.jpg', NULL, '2025-11-20 22:20:44.067899+00', '2025-11-20 22:20:44.067899+00', '2025-11-20 22:20:44.067899+00', '{"eTag": "\"edf739b82bdd6ebae6fc196cbfa5d6a5-2\"", "size": 8548714, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-20T22:20:20.000Z", "contentLength": 8548714, "httpStatusCode": 200}', 'd78aacec-2d94-4d81-a4b8-ce75682019f0', NULL, NULL, 1),
+	('98c2324e-7cc3-4b96-91b8-508e453b51b1', 'blog-images', 'woman-taking-blood-pressure-test-on-smartwatches-2025-08-11-15-24-28-utc.jpg', NULL, '2025-11-20 22:21:36.108625+00', '2025-11-20 22:21:36.108625+00', '2025-11-20 22:21:36.108625+00', '{"eTag": "\"af2010dc7eaf249871a13819f04cca51-3\"", "size": 14949863, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-20T22:21:14.000Z", "contentLength": 14949863, "httpStatusCode": 200}', '221f12bc-b10a-423e-a406-cd24f32f458c', NULL, NULL, 1),
+	('cbaa5159-0f92-4e23-9d9a-6d2141934f79', 'blog-images', 'doctor-presenting-report-of-diagnosis-2025-01-09-06-41-33-utc.jpg', NULL, '2025-11-20 22:23:05.187554+00', '2025-11-20 22:23:05.187554+00', '2025-11-20 22:23:05.187554+00', '{"eTag": "\"1c33d8f4c55b2d9b078bd66f27fad223-1\"", "size": 5241641, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-20T22:23:03.000Z", "contentLength": 5241641, "httpStatusCode": 200}', 'e0f4812b-2c57-40b8-b531-4d1d539c9c05', NULL, NULL, 1),
+	('a32299af-fdc5-4151-921d-b04083ec074a', 'blog-images', 'senior-woman-eye-exam-and-vision-for-snellen-test-2025-04-06-12-48-50-utc.jpg', NULL, '2025-11-20 22:23:59.478705+00', '2025-11-20 22:23:59.478705+00', '2025-11-20 22:23:59.478705+00', '{"eTag": "\"cb66a237e043a54b1012899f8b9866f0-2\"", "size": 6395624, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-20T22:23:50.000Z", "contentLength": 6395624, "httpStatusCode": 200}', '3f078c3c-a398-4728-9bb3-997a0fd42854', NULL, NULL, 1),
+	('64a5e6ae-7f73-4ba2-a384-9389c9936caa', 'blog-images', 'virtual-doctor-working-from-home-on-a-video-call-2025-11-02-01-48-10-utc.jpg', NULL, '2025-11-20 22:25:15.225932+00', '2025-11-20 22:25:15.225932+00', '2025-11-20 22:25:15.225932+00', '{"eTag": "\"596c8df1ddd2d216c4eeb3dc6967da1e-3\"", "size": 17972230, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-20T22:24:52.000Z", "contentLength": 17972230, "httpStatusCode": 200}', '8d8bfd17-36dc-4a29-a338-de0eee59764e', NULL, NULL, 1),
+	('4e5acac9-945a-4080-a133-c66bc73863cc', 'blog-images', 'chairs-on-empty-building-2025-01-27-22-50-08-utc.jpg', NULL, '2025-11-20 22:51:31.827932+00', '2025-11-20 22:51:31.827932+00', '2025-11-20 22:51:31.827932+00', '{"eTag": "\"97629c2a08b277fe8014419c1be8a870-1\"", "size": 5160926, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-20T22:51:30.000Z", "contentLength": 5160926, "httpStatusCode": 200}', 'f6091dda-a9a7-41a6-9c6f-e92b80e437bc', NULL, NULL, 1),
+	('5f797ae5-e776-468f-90c2-7b26650e60e1', 'blog-images', 'immigration-unity-population-race-and-humanity-2025-10-10-06-52-39-utc.jpg', NULL, '2025-11-20 23:43:06.31912+00', '2025-11-20 23:43:06.31912+00', '2025-11-20 23:43:06.31912+00', '{"eTag": "\"e4a8a2266ccecb587f065590848633f6-1\"", "size": 5292288, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-20T23:43:05.000Z", "contentLength": 5292288, "httpStatusCode": 200}', 'a9671693-20a3-451f-bd96-36a556f9683f', NULL, NULL, 1),
+	('be24344b-fc96-422b-b13a-ae65e73b69e5', 'blog-images', 'checking-blood-pressure-with-modern-device-in-clin-2025-09-09-22-18-39-utc.jpg', NULL, '2025-11-22 21:09:36.71362+00', '2025-11-22 21:09:36.71362+00', '2025-11-22 21:09:36.71362+00', '{"eTag": "\"1e225445f78f27e9b4c6964954bb0ca7-3\"", "size": 14578833, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-22T21:08:58.000Z", "contentLength": 14578833, "httpStatusCode": 200}', '5a734e04-f771-4a8b-99ac-02bb80da0220', NULL, NULL, 1),
+	('1f9aaa42-4cd5-4884-a628-66c68ee6fbbd', 'blog-images', 'doctor-and-patient-looking-at-x-ray-and-hand-in-do-2025-10-17-01-13-49-utc.jpg', NULL, '2025-11-22 21:09:44.860151+00', '2025-11-22 21:09:44.860151+00', '2025-11-22 21:09:44.860151+00', '{"eTag": "\"f677a0130117168ff21e12b2d0c51dc2-2\"", "size": 8469846, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-22T21:08:58.000Z", "contentLength": 8469846, "httpStatusCode": 200}', '9aad15ce-4eed-4f54-baaf-9a55d6d145e3', NULL, NULL, 1),
+	('afb51e87-aa1e-4bf9-af42-52eddae7951f', 'blog-images', 'close-up-of-female-doctor-with-stethoscope-folded-2025-10-15-07-32-17-utc.jpg', NULL, '2025-11-22 21:09:45.603583+00', '2025-11-22 21:09:45.603583+00', '2025-11-22 21:09:45.603583+00', '{"eTag": "\"f84a438153417c53bf3807931743e0a1-2\"", "size": 7202466, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-22T21:08:58.000Z", "contentLength": 7202466, "httpStatusCode": 200}', '9b5f24fd-0cce-44b8-a5ce-34a8dc939b40', NULL, NULL, 1),
+	('bc5fed19-f928-47b7-bc81-89c19c924cd7', 'blog-images', 'showing-blood-glucose-results-2025-11-11-17-14-08-utc.jpg', NULL, '2025-11-22 21:09:47.604868+00', '2025-11-22 21:09:47.604868+00', '2025-11-22 21:09:47.604868+00', '{"eTag": "\"40034c56e15d2b4e836f6fbedb628f59-2\"", "size": 7725211, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-22T21:08:58.000Z", "contentLength": 7725211, "httpStatusCode": 200}', 'a9fc0a49-b8ac-4119-8707-8a0b5610982c', NULL, NULL, 1),
+	('25f887b6-d785-4cca-958e-394e9a5bf50f', 'blog-images', 'couple-using-app-of-smart-home-on-smartphone-2025-03-13-03-31-38-utc.JPG', NULL, '2025-11-22 21:10:15.074224+00', '2025-11-22 21:10:15.074224+00', '2025-11-22 21:10:15.074224+00', '{"eTag": "\"b8d8b21749bdc7f9a65494024f5e278a-4\"", "size": 19246002, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-22T21:08:58.000Z", "contentLength": 19246002, "httpStatusCode": 200}', '54133d90-4b7b-408c-992b-a06fcf95e594', NULL, NULL, 1),
+	('577fd28a-15b1-4635-9cea-1cde93577416', 'blog-images', 'collage-of-diverse-multiethnic-people-faces-smilin-2025-03-18-18-55-30-utc.jpg', NULL, '2025-11-22 21:38:29.766498+00', '2025-11-22 21:38:29.766498+00', '2025-11-22 21:38:29.766498+00', '{"eTag": "\"5240c457d7849c60f73040aadddb84e3-3\"", "size": 14862783, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-22T21:38:08.000Z", "contentLength": 14862783, "httpStatusCode": 200}', '548d1819-41b5-4579-a8bb-1b747d7af88f', NULL, NULL, 1),
+	('d1c01863-a55e-4e7d-845e-e588d7377cf7', 'blog-images', 'i-always-notice-a-persons-smile-2025-04-06-05-17-54-utc.jpg', NULL, '2025-11-22 21:41:09.599164+00', '2025-11-22 21:41:09.599164+00', '2025-11-22 21:41:09.599164+00', '{"eTag": "\"319f8422521f298ec74c1f16b909975a-2\"", "size": 6953199, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-22T21:40:59.000Z", "contentLength": 6953199, "httpStatusCode": 200}', '1a624ff8-496b-459a-9f6e-8bd7b93bb31a', NULL, NULL, 1),
+	('c1f146f8-2d2f-494c-89fc-599ab6e0d436', 'blog-images', '1764280746222.JPG', 'fb7903ff-94ff-4db6-acce-a43350c0862b', '2025-11-27 21:59:33.28719+00', '2025-11-27 21:59:33.28719+00', '2025-11-27 21:59:33.28719+00', '{"eTag": "\"5b392df9ef1f02a2b045ef05a8c67035-4\"", "size": 19246002, "mimetype": "image/jpeg", "cacheControl": "max-age=3600", "lastModified": "2025-11-27T21:59:33.000Z", "contentLength": 19246002, "httpStatusCode": 200}', '05c65350-4409-4a6d-b33b-2e7221ccac09', 'fb7903ff-94ff-4db6-acce-a43350c0862b', '{}', 1);
+
+
+--
+-- Data for Name: prefixes; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
+--
+
+
+
+--
+-- Data for Name: s3_multipart_uploads; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
+--
+
+
+
+--
+-- Data for Name: s3_multipart_uploads_parts; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
+--
+
+
+
+--
+-- Data for Name: vector_indexes; Type: TABLE DATA; Schema: storage; Owner: supabase_storage_admin
+--
+
+
+
+--
+-- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
+--
+
+SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 7, true);
+
+
+--
+-- Name: leads_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."leads_id_seq"', 2, true);
+
+
+--
+-- Name: posts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."posts_id_seq"', 5, true);
+
+
+--
+-- Name: roi_leads_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."roi_leads_id_seq"', 1, true);
+
+
+--
+-- Name: roi_settings_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."roi_settings_id_seq"', 1, true);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+-- \unrestrict buksPJd0pj5XFKeMWVZbCDBrkiPXVxIufHVx3RGKHXk2xOBgiyOS3OBD8bp73OT
+
+RESET ALL;
