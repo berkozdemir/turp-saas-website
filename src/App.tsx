@@ -246,7 +246,14 @@ export default function App() {
                 {t("nav_about")}
               </button>
 
-              {/* Yönetim butonu buradan kaldırıldı */}
+              {/* Admin Panel Butonu */}
+              <button
+                onClick={() => setView('admin')}
+                className="p-2 rounded-full text-slate-500 hover:text-rose-600 hover:bg-slate-100 transition-all"
+                title="Admin Panel"
+              >
+                <Lock size={18} />
+              </button>
             </div>
 
             {/* Dil Değiştirici */}
