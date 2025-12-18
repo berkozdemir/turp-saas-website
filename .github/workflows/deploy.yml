@@ -43,10 +43,10 @@ jobs:
             ls -R;
             
             echo 'Uploading Frontend...';
-            mirror -R ./dist/ /httpdocs/ --exclude uploads/ --exclude api/ --exclude .git/ --delete-first;
+            mirror -R ./dist/ / --exclude uploads/ --exclude api/ --exclude .git/ --delete-first;
             
             echo 'Uploading API...';
-            mirror -R ./api/ /httpdocs/api/ --exclude .git/;
+            mirror -R ./api/ /api/ --exclude .git/;
             
             quit;
           "
