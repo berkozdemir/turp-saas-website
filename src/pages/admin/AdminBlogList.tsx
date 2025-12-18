@@ -1,0 +1,211 @@
+import { useState, useEffect } from "react";
+import { Search, Plus, Edit2, Trash2, Globe, Clock, FileText, Loader2, ChevronLeft, ChevronRight, Eye } from "lucide-react";
+
+interface AdminBlogListProps {
+    token: string;
+    onEdit: (post: any) => void;
+    onCreate: () => void;
+}
+
+export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) => {
+    const [posts, setPosts] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [filterLang, setFilterLang] = useState("all");
+    const [filterStatus, setFilterStatus] = useState("all");
+    const [search, setSearch] = useState("");
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+
+    const API_URL = import.meta.env.VITE_API_URL || "/api";
+
+    const fetchPosts = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(
+                `${API_URL}/index.php?action=get_blog_posts_admin&lang=${filterLang}&status=${filterStatus}&search=${search}&page=${page}`,
+                {
+                    headers: { Authorization: `Bearer ${token}` }
+                }
+            );
+            const data = await response.json();
+            if (data.success) {
+                setPosts(data.data);
+                setTotalPages(data.pagination.pages);
+            } else {
+                alert("Hata: " + (data.error || "Blog yazıları alınamadı"));
+            }
+        } catch (err) {
+            alert("Bağlantı hatası");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            fetchPosts();
+        }, 300); // Debounce search
+        return () => clearTimeout(timer);
+    }, [filterLang, filterStatus, search, page]);
+
+    const handleDelete = async (id: number) => {
+        if (!confirm("Bu içeriği silmek istediğinize emin misiniz? Bu işlem geri alınamaz.")) return;
+
+        try {
+            const response = await fetch(`${API_URL}/index.php?action=delete_blog_post`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({ id }),
+            });
+            const data = await response.json();
+            if (data.success) {
+                setPosts(posts.filter(p => p.id !== id));
+            } else {
+                alert("Silme hatası");
+            }
+        } catch (err) {
+            alert("Bağlantı hatası");
+        }
+    };
+
+    return (
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            {/* Header & Toolbar */}
+            <div className="p-6 border-b border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 className="text-xl font-bold flex items-center gap-2 mb-1">
+                        <FileText className="text-rose-600" /> Blog İçerikleri
+                    </h2>
+                    <p className="text-slate-500 text-sm">Web sitesi yazılarını buradan yönetin.</p>
+                </div>
+
+                <button
+                    type="button"
+                    onClick={onCreate}
+                    className="bg-slate-900 text-white px-4 py-2 rounded-xl font-bold hover:bg-rose-600 transition-all flex items-center gap-2 shadow-lg shadow-rose-200"
+                >
+                    <Plus size={18} /> Yeni İçerik Ekle
+                </button>
+            </div>
+
+            <div className="p-4 bg-slate-50 border-b border-slate-100 flex flex-wrap gap-4 items-center">
+                <div className="relative flex-1 min-w-[200px]">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                    <input
+                        type="text"
+                        placeholder="Başlıkta ara..."
+                        className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg outline-none focus:border-rose-500"
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                    />
+                </div>
+                <select
+                    className="p-2 border border-slate-200 rounded-lg outline-none focus:border-rose-500 bg-white"
+                    value={filterLang}
+                    onChange={e => setFilterLang(e.target.value)}
+                >
+                    <option value="all">Tüm Diller</option>
+                    <option value="tr">Türkçe</option>
+                    <option value="en">English</option>
+                    <option value="zh">Chinese</option>
+                </select>
+                <select
+                    className="p-2 border border-slate-200 rounded-lg outline-none focus:border-rose-500 bg-white"
+                    value={filterStatus}
+                    onChange={e => setFilterStatus(e.target.value)}
+                >
+                    <option value="all">Tüm Durumlar</option>
+                    <option value="published">Yayında</option>
+                    <option value="draft">Taslak</option>
+                    <option value="archived">Arşiv</option>
+                </select>
+            </div>
+
+            {/* Table */}
+            <div className="overflow-x-auto">
+                <table className="w-full text-left">
+                    <thead className="bg-white text-slate-500 text-xs uppercase font-bold border-b border-slate-100">
+                        <tr>
+                            <th className="p-4">Durum</th>
+                            <th className="p-4">Başlık / Yazar</th>
+                            <th className="p-4">Dil</th>
+                            <th className="p-4">Tarih</th>
+                            <th className="p-4 text-right">İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                        {loading ? (
+                            <tr><td colSpan={5} className="p-8 text-center text-slate-400"><Loader2 className="animate-spin mx-auto" /></td></tr>
+                        ) : posts.length === 0 ? (
+                            <tr><td colSpan={5} className="p-8 text-center text-slate-500">İçerik bulunamadı.</td></tr>
+                        ) : (
+                            posts.map(post => (
+                                <tr key={post.id} className="hover:bg-slate-50 transition-colors group">
+                                    <td className="p-4">
+                                        <span className={`px-2 py-1 rounded text-xs font-bold uppercase ${post.status === 'published' ? 'bg-green-100 text-green-700' :
+                                            post.status === 'draft' ? 'bg-slate-100 text-slate-600' : 'bg-orange-100 text-orange-700'
+                                            }`}>
+                                            {post.status}
+                                        </span>
+                                    </td>
+                                    <td className="p-4">
+                                        <div className="font-bold text-slate-900 line-clamp-1">{post.title}</div>
+                                        <div className="text-xs text-slate-400 flex items-center gap-1 mt-1">
+                                            <Edit2 size={10} /> {post.author || 'Anonim'}
+                                        </div>
+                                    </td>
+                                    <td className="p-4">
+                                        <div className="flex items-center gap-1 text-sm text-slate-600 uppercase font-bold">
+                                            <Globe size={14} className="text-slate-400" /> {post.language}
+                                        </div>
+                                    </td>
+                                    <td className="p-4 text-sm text-slate-500">
+                                        <div className="flex items-center gap-1">
+                                            <Clock size={14} /> {new Date(post.created_at).toLocaleDateString("tr-TR")}
+                                        </div>
+                                    </td>
+                                    <td className="p-4 text-right space-x-2">
+                                        <button type="button" onClick={() => onEdit(post)} className="p-2 bg-white border border-slate-200 rounded-lg hover:border-cyan-500 hover:text-cyan-600 transition-all shadow-sm">
+                                            <Edit2 size={16} />
+                                        </button>
+                                        <button type="button" onClick={() => handleDelete(post.id)} className="p-2 bg-white border border-slate-200 rounded-lg hover:border-red-500 hover:text-red-600 transition-all shadow-sm">
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+                <div className="p-4 border-t border-slate-100 flex justify-center gap-2">
+                    <button
+                        type="button"
+                        disabled={page === 1}
+                        onClick={() => setPage(p => p - 1)}
+                        className="p-2 border rounded hover:bg-slate-50 disabled:opacity-50"
+                    >
+                        <ChevronLeft size={16} />
+                    </button>
+                    <span className="px-4 py-2 text-sm text-slate-600 font-medium">
+                        {page} / {totalPages}
+                    </span>
+                    <button
+                        type="button"
+                        disabled={page === totalPages}
+                        onClick={() => setPage(p => p + 1)}
+                        className="p-2 border rounded hover:bg-slate-50 disabled:opacity-50"
+                    >
+                        <ChevronRight size={16} />
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+};

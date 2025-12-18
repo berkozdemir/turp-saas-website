@@ -1,109 +1,175 @@
-import { useState, useEffect } from 'react';
-import { LogOut, Upload } from 'lucide-react';
+import { useState, useEffect } from "react";
+import { Login } from "./Login";
+import { AdminMessages } from "./admin/AdminMessages";
+import { AdminBlogList } from "./admin/AdminBlogList";
+import { AdminBlogEditor } from "./admin/AdminBlogEditor";
+import {
+  Mail,
+  FileText,
+  LogOut,
+  ExternalLink,
+  Menu,
+  X
+} from "lucide-react";
 
-// Blog Yazısı için Arayüz (PostDetail ve Blog'dan türetilmiştir)
-interface PostType {
-  id: number;
-  created_at?: string;
-  title: string;
-  content: string;
-  image_url: string | null;
-}
+export const Admin = () => {
+  const [session, setSession] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState(() => localStorage.getItem("admin_active_tab") || "messages");
+  const [editingPost, setEditingPost] = useState<any | null>(() => {
+    const saved = localStorage.getItem("admin_editing_post");
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-// Admin Bileşeni Prop'ları için Arayüz
-interface AdminProps {
-  editingPost: PostType | null;
-  setEditingPost: (post: PostType | null) => void;
-  // setView'in aldığı değerlere göre basitçe string olarak tiplendirildi
-  setView: (view: string) => void;
-  handleLogout: () => Promise<void>;
-}
+  // Check login status on mount
+  useEffect(() => {
+    const storedSession = localStorage.getItem("admin_session");
+    if (storedSession) {
+      setSession(JSON.parse(storedSession));
+    }
+  }, []);
 
-export const Admin = ({ editingPost, setEditingPost, setView, handleLogout }: AdminProps) => {
-  const [form, setForm] = useState<{ title: string; content: string }>({ title: '', content: '' });
-  const [image, setImage] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
+  // Persist active tab
+  useEffect(() => {
+    localStorage.setItem("admin_active_tab", activeTab);
+  }, [activeTab]);
 
+  // Persist editing post
   useEffect(() => {
     if (editingPost) {
-      setForm({ title: editingPost.title, content: editingPost.content });
+      localStorage.setItem("admin_editing_post", JSON.stringify(editingPost));
     } else {
-      setForm({ title: '', content: '' });
+      localStorage.removeItem("admin_editing_post");
     }
   }, [editingPost]);
 
-  // Form submit olayını tiplendir
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setUploading(true);
-    try {
-      // Resim yükleme şimdilik pasif (veya API endpoint lazım)
-      // url'i formdan alalım veya image state'i varsa base64 yapalım (basitlik için image_url'i elle girilen bir alan yapabiliriz ya da şimdilik atlayalım)
-      let url = editingPost ? editingPost.image_url : '';
-
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/index.php';
-
-      const payload = {
-        title: form.title,
-        content: form.content,
-        image_url: url,
-        lang: 'tr', // Varsayılan TR (Admin panel)
-        status: 'published'
-      };
-
-      if (editingPost) {
-        // UPDATE
-        const res = await fetch(`${API_URL}?action=update_post&id=${editingPost.id}`, {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
-        const json = await res.json();
-        if (json.error) throw new Error(json.error);
-
-        alert("Yazı güncellendi!");
-        setEditingPost(null);
-        setView('blog');
-      } else {
-        // CREATE
-        const res = await fetch(`${API_URL}?action=create_post`, {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
-        const json = await res.json();
-        if (json.error) throw new Error(json.error);
-
-        alert("Yazı eklendi!");
-        setForm({ title: '', content: '' });
-        setImage(null);
-      }
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : "Bilinmeyen bir hata oluştu.";
-      alert("Hata: " + errorMessage);
-    }
-    setUploading(false);
+  const handleLogout = () => {
+    localStorage.removeItem("admin_session");
+    setSession(null);
   };
 
-  // Dosya değişim olayını tiplendir ve null kontrolü ekle
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setImage(e.target.files[0]);
-    } else {
-      setImage(null);
+  const handleLogin = (data: any) => {
+    setSession(data);
+    localStorage.setItem("admin_session", JSON.stringify(data));
+  };
+
+  if (!session) {
+    return <Login onLogin={handleLogin} />;
+  }
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "messages":
+        return <AdminMessages token={session.token} />;
+      case "blog_list":
+        return (
+          <AdminBlogList
+            token={session.token}
+            onEdit={(post) => {
+              setEditingPost(post);
+              setActiveTab("blog_edit");
+            }}
+            onCreate={() => {
+              setEditingPost(null);
+              setActiveTab("blog_edit");
+            }}
+          />
+        );
+      case "blog_edit":
+        return (
+          <AdminBlogEditor
+            token={session.token}
+            post={editingPost}
+            onCancel={() => setActiveTab("blog_list")}
+            onSave={() => setActiveTab("blog_list")}
+          />
+        );
+      default:
+        return <AdminMessages token={session.token} />;
     }
   };
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-20">
-      <div className="flex justify-between items-center mb-8"><h2 className="font-heading text-3xl font-bold text-slate-900">Yönetim Paneli</h2><button onClick={handleLogout} className="flex items-center gap-2 text-sm font-bold text-red-600 hover:bg-red-50 px-4 py-2 rounded-lg transition-colors"><LogOut size={16} /> Çıkış Yap</button></div>
-      <div className="bg-white p-10 rounded-3xl shadow-xl border border-slate-200">
-        <div className="flex justify-between items-center mb-10"><div><h2 className="font-heading text-2xl font-bold text-slate-900">{editingPost ? 'Yazıyı Düzenle' : 'Yeni Yazı Ekle'}</h2><p className="text-slate-500">Markdown formatında içerik girebilirsiniz.</p></div>{editingPost && <button onClick={() => { setEditingPost(null); setForm({ title: '', content: '' }); }} className="text-sm text-rose-600 font-bold hover:underline">İptal Et</button>}</div>
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">Başlık</label><input className="w-full p-4 border-2 border-slate-200 rounded-xl font-heading font-bold text-lg outline-none focus:border-rose-500" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} required /></div>
-          <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">İçerik (Markdown)</label><textarea className="w-full p-4 border-2 border-slate-200 rounded-xl font-mono text-sm min-h-[300px] outline-none focus:border-rose-500" value={form.content} onChange={e => setForm({ ...form, content: e.target.value })} required /></div>
-          <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">Görsel</label><div className="relative border-2 border-dashed border-slate-300 rounded-xl p-6 hover:bg-slate-50 transition-colors"><input type="file" onChange={handleFileChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" /><div className="flex flex-col items-center text-slate-400"><Upload size={24} className="mb-2" /><span className="text-sm font-medium">{image ? image.name : "Dosya seçmek için tıklayın"}</span></div></div></div>
-          <button disabled={uploading} type="submit" className="w-full bg-slate-900 text-white py-5 rounded-xl font-bold text-lg hover:bg-rose-600 transition-all">{uploading ? 'İşleniyor...' : (editingPost ? 'Güncelle' : 'Yayınla')}</button>
-        </form>
-      </div>
+    <div className="min-h-screen bg-slate-50 flex">
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        className="lg:hidden fixed bottom-6 right-6 z-50 bg-slate-900 text-white p-4 rounded-full shadow-2xl"
+      >
+        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      {/* Sidebar */}
+      <aside className={`
+        fixed inset-y-0 left-0 z-40 w-64 bg-slate-900 text-white transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0
+        ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
+      `}>
+        <div className="p-6">
+          <div className="flex items-center gap-3 mb-10">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-purple-600 flex items-center justify-center font-bold text-white">T</div>
+            <span className="font-heading font-bold text-lg">Turp <span className="text-slate-400">Panel</span></span>
+          </div>
+
+          <nav className="space-y-2">
+            <button
+              onClick={() => { setActiveTab("messages"); setMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "messages"
+                ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                : "text-slate-400 hover:bg-white/5 hover:text-white"
+                }`}
+            >
+              <Mail size={20} />
+              <span className="font-medium">Mesajlar</span>
+            </button>
+
+            <button
+              onClick={() => { setActiveTab("blog_list"); setMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab.startsWith("blog")
+                ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                : "text-slate-400 hover:bg-white/5 hover:text-white"
+                }`}
+            >
+              <FileText size={20} />
+              <span className="font-medium">İçerik / Blog</span>
+            </button>
+          </nav>
+        </div>
+
+        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-white/10 space-y-2">
+          <a href="/" target="_blank" className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors">
+            <ExternalLink size={18} />
+            <span className="text-sm font-medium">Siteyi Görüntüle</span>
+          </a>
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 text-rose-400 hover:text-rose-300 transition-colors">
+            <LogOut size={18} />
+            <span className="text-sm font-medium">Güvenli Çıkış</span>
+          </button>
+        </div>
+      </aside>
+
+      {/* Main Content */}
+      <main className="flex-1 p-6 lg:p-10 overflow-y-auto h-screen">
+        <header className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-2xl font-bold text-slate-900">
+              {activeTab === 'messages' && "Mesaj Yönetimi"}
+              {activeTab === 'blog_list' && "İçerik Yönetimi"}
+              {activeTab === 'blog_edit' && "İçerik Düzenleyici"}
+            </h1>
+            <p className="text-slate-500 text-sm mt-1">Hoşgeldin, {session.user.name}</p>
+          </div>
+        </header>
+
+        {renderContent()}
+      </main>
+
+      {/* Overlay for mobile */}
+      {mobileMenuOpen && (
+        <div
+          onClick={() => setMobileMenuOpen(false)}
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden backdrop-blur-sm"
+        ></div>
+      )}
     </div>
   );
 };

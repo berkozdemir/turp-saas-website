@@ -4,18 +4,29 @@ import path from 'path'; // <--- YENİ EKLENEN KISIM
 
 export default defineConfig({
   plugins: [react()],
-  
+
   // Vercel'in doğru dosya yollarını çözmesini sağlayan ayar
   resolve: {
     alias: {
       // @ sembolünü kullanarak src klasörüne hızlı erişim sağlıyoruz.
-      '@': path.resolve(__dirname, './src'), 
+      '@': path.resolve(__dirname, './src'),
     },
   },
-  
+
   // Çıktı yollarını ve statik varlıkları doğru ayarlıyoruz (genellikle bu zorunlu değildir ama sorunları çözer)
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
   },
+
+  // Dev server proxy - API isteklerini Docker backend'e yönlendir
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
+  }
 });

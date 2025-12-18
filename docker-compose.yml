@@ -37,6 +37,9 @@ services:
       DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
     depends_on:
       - db
+    volumes:
+      - ./api:/var/www/html
+
 
   # 3. Frontend Geliştirme (Vite)
   app-dev:

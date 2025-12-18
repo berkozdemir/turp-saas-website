@@ -57,10 +57,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+// Parse action early for API key bypass logic
+$action = $_GET['action'] ?? '';
+
 $client_secret = $_SERVER['HTTP_X_API_KEY'] ?? '';
 
+// Bypass API key for auth endpoints and public contact form
+$auth_actions = ['login', 'forgot-password', 'verify-reset-token', 'reset-password', 'contact'];
+$is_auth_request = in_array($action, $auth_actions);
+
 // Secret kontrolünü isteğe bağlı yapabiliriz local test için, ama güvenlik için açık kalsın
-if ($server_secret && $client_secret !== $server_secret) {
+if ($server_secret && $client_secret !== $server_secret && !$is_auth_request) {
     http_response_code(403);
     echo json_encode(["error" => "Erişim Reddedildi: Geçersiz API Anahtarı"]);
     exit();
@@ -81,26 +88,22 @@ try {
 $data = json_decode(file_get_contents("php://input"));
 $action = $_GET['action'] ?? '';
 
+// Include password reset helper
+require_once __DIR__ . '/forgot_password_helper.php';
+
+// Include Contact API
+require_once __DIR__ . '/contact_api.php';
+
+// Include Blog API
+require_once __DIR__ . '/blog_api.php';
+
 // =================================================================
 // ACTIONS
 // =================================================================
 
-// --- A. GİRİŞ YAPMA (LOGIN) ---
-if ($action == 'login') {
-    $email = $data->email ?? '';
-    $pass = $data->password ?? '';
-    $stmt = $conn->prepare("SELECT id, email, password, full_name, phone FROM iwrs_saas_users WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+// OLD LOGIN CODE REMOVED - Now using new admin auth system below
 
-    if ($user && $pass === $user['password']) {
-        unset($user['password']);
-        echo json_encode(["success" => true, "user" => $user]);
-    } else {
-        echo json_encode(["success" => false, "message" => "Hatalı e-posta veya şifre"]);
-    }
-    exit();
-}
+
 
 // --- E. BLOG İŞLEMLERİ ---
 if ($action == 'get_blog_posts') {
@@ -135,10 +138,138 @@ if ($action == 'get_roi_settings') {
 // DİĞER FONKSİYONLAR (Test için temel olanları ekledik, diğerleri kullanıcı kodundan kopyalanabilir)
 // Şimdilik test amaçlı en önemli kısımları koydum.
 
-// --- H. TEST ---
-if ($action == 'test') {
-    echo json_encode(["message" => "Docker Backendi Çalışıyor!"]);
-    exit();
+// --- ADMIN AUTHENTICATION ---
+
+// 1. LOGIN
+if ($action == 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $request_body = json_decode(file_get_contents('php://input'), true) ?? [];
+    $email = $request_body['email'] ?? '';
+    $password = $request_body['password'] ?? '';
+    $remember_me = $request_body['remember_me'] ?? false;
+
+    if (empty($email) || empty($password)) {
+        echo json_encode(['error' => 'E-posta ve şifre gereklidir']);
+        exit;
+    }
+
+    try {
+        $stmt = $conn->prepare("SELECT id, email, password_hash, name FROM admin_users WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user || !password_verify($password, $user['password_hash'])) {
+            echo json_encode(['error' => 'Hatalı e-posta veya şifre']);
+            exit;
+        }
+
+        $token = bin2hex(random_bytes(32));
+        $expires_days = $remember_me ? 7 : 1;
+        $expires_at = date('Y-m-d H:i:s', strtotime("+{$expires_days} days"));
+        $ip_address = $_SERVER['REMOTE_ADDR'] ?? '';
+        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+
+        $stmt = $conn->prepare("INSERT INTO admin_sessions (user_id, token, ip_address, user_agent, expires_at) VALUES (?, ?, ?, ?, ?)");
+        $stmt->execute([$user['id'], $token, $ip_address, $user_agent, $expires_at]);
+
+        $stmt = $conn->prepare("UPDATE admin_users SET last_login = NOW() WHERE id = ?");
+        $stmt->execute([$user['id']]);
+
+        echo json_encode(['success' => true, 'token' => $token, 'user' => ['id' => $user['id'], 'email' => $user['email'], 'name' => $user['name']]]);
+    } catch (Exception $e) {
+        echo json_encode(['error' => 'Bir hata oluştu: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
+// 2. FORGOT PASSWORD
+if ($action == 'forgot-password' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $request_body = json_decode(file_get_contents('php://input'), true) ?? [];
+    $email = $request_body['email'] ?? '';
+
+    $ip_address = $_SERVER['REMOTE_ADDR'] ?? '';
+    send_password_reset_email_inline($conn, $email, $ip_address, $brevo_api_key);
+
+    echo json_encode(['message' => 'Eğer bu e-posta ile kayıtlı bir hesabınız varsa, şifre sıfırlama bağlantısı gönderildi.']);
+    exit;
+}
+
+// 3. VERIFY RESET TOKEN
+if ($action == 'verify-reset-token' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+    $token = $_GET['token'] ?? '';
+
+    if (empty($token)) {
+        echo json_encode(['valid' => false, 'error' => 'Token gereklidir']);
+        exit;
+    }
+
+    try {
+        $stmt = $conn->prepare("SELECT id, expires_at, used_at FROM password_reset_tokens WHERE token = ?");
+        $stmt->execute([$token]);
+        $reset_token = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$reset_token) {
+            echo json_encode(['valid' => false, 'error' => 'Geçersiz token']);
+        } elseif ($reset_token['used_at'] !== null) {
+            echo json_encode(['valid' => false, 'error' => 'Bu token zaten kullanılmış']);
+        } elseif (strtotime($reset_token['expires_at']) < time()) {
+            echo json_encode(['valid' => false, 'error' => 'Token süresi dolmuş']);
+        } else {
+            echo json_encode(['valid' => true]);
+        }
+    } catch (Exception $e) {
+        echo json_encode(['valid' => false, 'error' => 'Bir hata oluştu']);
+    }
+    exit;
+}
+
+// 4. RESET PASSWORD
+if ($action == 'reset-password' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $request_body = json_decode(file_get_contents('php://input'), true) ?? [];
+    $token = $request_body['token'] ?? '';
+    $new_password = $request_body['new_password'] ?? '';
+
+    if (empty($token) || empty($new_password)) {
+        echo json_encode(['error' => 'Token ve yeni şifre gereklidir']);
+        exit;
+    }
+
+    if (strlen($new_password) < 8) {
+        echo json_encode(['error' => 'Şifre en az 8 karakter olmalıdır']);
+        exit;
+    }
+
+    try {
+        $stmt = $conn->prepare("SELECT id, user_id, expires_at, used_at FROM password_reset_tokens WHERE token = ?");
+        $stmt->execute([$token]);
+        $reset_token = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$reset_token) {
+            echo json_encode(['error' => 'Geçersiz token']);
+            exit;
+        }
+
+        if ($reset_token['used_at'] !== null) {
+            echo json_encode(['error' => 'Bu token zaten kullanılmış']);
+            exit;
+        }
+
+        if (strtotime($reset_token['expires_at']) < time()) {
+            echo json_encode(['error' => 'Token süresi dolmuş. Lütfen tekrar şifre sıfırlama isteği gönderin.']);
+            exit;
+        }
+
+        $password_hash = password_hash($new_password, PASSWORD_BCRYPT);
+        $stmt = $conn->prepare("UPDATE admin_users SET password_hash = ? WHERE id = ?");
+        $stmt->execute([$password_hash, $reset_token['user_id']]);
+
+        $stmt = $conn->prepare("UPDATE password_reset_tokens SET used_at = NOW() WHERE id = ?");
+        $stmt->execute([$reset_token['id']]);
+
+        echo json_encode(['success' => true, 'message' => 'Şifreniz başarıyla güncellendi']);
+    } catch (Exception $e) {
+        echo json_encode(['error' => 'Bir hata oluştu: ' . $e->getMessage()]);
+    }
+    exit;
 }
 
 echo json_encode(["error" => "Geçersiz işlem"]);
