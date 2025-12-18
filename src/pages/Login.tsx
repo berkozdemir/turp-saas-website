@@ -210,6 +210,7 @@ export const Login = ({ onLogin }: LoginProps) => {
                     🔒 Bu panel yalnızca yetkili kullanıcılar içindir. Tüm giriş denemeleri kaydedilmektedir.
                   </p>
                 </div>
+                <p className="mt-4 text-center text-xs text-slate-300 font-mono">Build: v2.1 (Deploy Debug)</p>
               </>
             )}
 
