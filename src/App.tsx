@@ -125,7 +125,7 @@ export default function App() {
               handleLogout={handleLogout}
             />
           ) : (
-            <Login />
+            <Login onLogin={() => setSession({ user: { email: 'admin@turp.health' } })} />
           );
         default:
           return <Home setView={setView} />;

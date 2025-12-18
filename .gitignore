@@ -1,28 +1,46 @@
 # Dependencies
 node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage
+
+# Production
+dist
+build
+
+# Environment Secrets
+.env
+.env.local
+.env.production
+.env.development
+.env.*.local
+
+# Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+logs/
+*.log
 
-# Build outputs
-dist/
-build/
-*.tgz
-*.tar.gz
-
-# Environment files
-.env
-.env.local
-
-# OS files
+# OS & Workspace
 .DS_Store
-Thumbs.db
-
-# IDE files
 .vscode/
 .idea/
 *.swp
 *.swo
+Thumbs.db
+desktop.ini
+
+# API Credentials (If you create a separate config file)
+api/config.php
+scripts/secrets/
+uploads/
+site.zip
+site_lite.zip
+uploads_optimized.zip
+turp_backup.sql
 
 # Logs
 logs/

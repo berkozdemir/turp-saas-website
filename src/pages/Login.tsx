@@ -6,9 +6,11 @@ export const Login = ({ onLogin }: { onLogin: () => void }) => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Basit login - production'da API entegrasyonu gerekir
-    if (email && password) {
+    // Basit login kontrolü
+    if (email === "admin@turp.health" && password === "Turp2024!") {
       onLogin();
+    } else {
+      alert("Hatalı kullanıcı adı veya şifre!");
     }
   };
 

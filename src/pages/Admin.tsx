@@ -15,7 +15,7 @@ interface AdminProps {
   editingPost: PostType | null;
   setEditingPost: (post: PostType | null) => void;
   // setView'in aldığı değerlere göre basitçe string olarak tiplendirildi
-  setView: (view: string) => void; 
+  setView: (view: string) => void;
   handleLogout: () => Promise<void>;
 }
 
@@ -25,47 +25,60 @@ export const Admin = ({ editingPost, setEditingPost, setView, handleLogout }: Ad
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    if (editingPost) { 
-      setForm({ title: editingPost.title, content: editingPost.content }); 
-    } else { 
-      setForm({ title: '', content: '' }); 
+    if (editingPost) {
+      setForm({ title: editingPost.title, content: editingPost.content });
+    } else {
+      setForm({ title: '', content: '' });
     }
   }, [editingPost]);
 
   // Form submit olayını tiplendir
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { 
-    e.preventDefault(); 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setUploading(true);
     try {
-      let url = editingPost ? editingPost.image_url : null;
-      if (image) {
-        // image state'i artık File tipinde, 'name' özelliği mevcut.
-        const fileExt = image.name.split('.').pop();
-        const fileName = `${Date.now()}.${fileExt}`;
-        
-        const { error: uploadError } = await supabase.storage.from('blog-images').upload(fileName, image);
-        if (uploadError) throw new Error("Resim Yüklenemedi: " + uploadError.message);
-        
-        const { data } = supabase.storage.from('blog-images').getPublicUrl(fileName);
-        url = data.publicUrl;
-      }
-      
+      // Resim yükleme şimdilik pasif (veya API endpoint lazım)
+      // url'i formdan alalım veya image state'i varsa base64 yapalım (basitlik için image_url'i elle girilen bir alan yapabiliriz ya da şimdilik atlayalım)
+      let url = editingPost ? editingPost.image_url : '';
+
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/index.php';
+
+      const payload = {
+        title: form.title,
+        content: form.content,
+        image_url: url,
+        lang: 'tr', // Varsayılan TR (Admin panel)
+        status: 'published'
+      };
+
       if (editingPost) {
-        // editingPost'un id'si olacağı varsayılıyor
-        await supabase.from('posts').update({ title: form.title, content: form.content, image_url: url }).eq('id', editingPost.id);
-        alert("Yazı güncellendi!"); 
-        setEditingPost(null); 
+        // UPDATE
+        const res = await fetch(`${API_URL}?action=update_post&id=${editingPost.id}`, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.error) throw new Error(json.error);
+
+        alert("Yazı güncellendi!");
+        setEditingPost(null);
         setView('blog');
       } else {
-        await supabase.from('posts').insert([{ title: form.title, content: form.content, image_url: url }]);
-        alert("Yazı eklendi!"); 
-        setForm({ title: '', content: '' }); 
+        // CREATE
+        const res = await fetch(`${API_URL}?action=create_post`, {
+          method: 'POST',
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.error) throw new Error(json.error);
+
+        alert("Yazı eklendi!");
+        setForm({ title: '', content: '' });
         setImage(null);
       }
-    } catch (err: unknown) { 
-      // Hata tipini unknown'dan Error'a çevirerek message'a güvenli erişim sağlanır.
+    } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : "Bilinmeyen bir hata oluştu.";
-      alert("Hata: " + errorMessage); 
+      alert("Hata: " + errorMessage);
     }
     setUploading(false);
   };
@@ -81,13 +94,13 @@ export const Admin = ({ editingPost, setEditingPost, setView, handleLogout }: Ad
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-20">
-      <div className="flex justify-between items-center mb-8"><h2 className="font-heading text-3xl font-bold text-slate-900">Yönetim Paneli</h2><button onClick={handleLogout} className="flex items-center gap-2 text-sm font-bold text-red-600 hover:bg-red-50 px-4 py-2 rounded-lg transition-colors"><LogOut size={16}/> Çıkış Yap</button></div>
+      <div className="flex justify-between items-center mb-8"><h2 className="font-heading text-3xl font-bold text-slate-900">Yönetim Paneli</h2><button onClick={handleLogout} className="flex items-center gap-2 text-sm font-bold text-red-600 hover:bg-red-50 px-4 py-2 rounded-lg transition-colors"><LogOut size={16} /> Çıkış Yap</button></div>
       <div className="bg-white p-10 rounded-3xl shadow-xl border border-slate-200">
-        <div className="flex justify-between items-center mb-10"><div><h2 className="font-heading text-2xl font-bold text-slate-900">{editingPost ? 'Yazıyı Düzenle' : 'Yeni Yazı Ekle'}</h2><p className="text-slate-500">Markdown formatında içerik girebilirsiniz.</p></div>{editingPost && <button onClick={() => {setEditingPost(null); setForm({title:'',content:''});}} className="text-sm text-rose-600 font-bold hover:underline">İptal Et</button>}</div>
+        <div className="flex justify-between items-center mb-10"><div><h2 className="font-heading text-2xl font-bold text-slate-900">{editingPost ? 'Yazıyı Düzenle' : 'Yeni Yazı Ekle'}</h2><p className="text-slate-500">Markdown formatında içerik girebilirsiniz.</p></div>{editingPost && <button onClick={() => { setEditingPost(null); setForm({ title: '', content: '' }); }} className="text-sm text-rose-600 font-bold hover:underline">İptal Et</button>}</div>
         <form onSubmit={handleSubmit} className="space-y-8">
-          <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">Başlık</label><input className="w-full p-4 border-2 border-slate-200 rounded-xl font-heading font-bold text-lg outline-none focus:border-rose-500" value={form.title} onChange={e=>setForm({...form, title:e.target.value})} required /></div>
-          <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">İçerik (Markdown)</label><textarea className="w-full p-4 border-2 border-slate-200 rounded-xl font-mono text-sm min-h-[300px] outline-none focus:border-rose-500" value={form.content} onChange={e=>setForm({...form, content:e.target.value})} required /></div>
-          <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">Görsel</label><div className="relative border-2 border-dashed border-slate-300 rounded-xl p-6 hover:bg-slate-50 transition-colors"><input type="file" onChange={handleFileChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"/><div className="flex flex-col items-center text-slate-400"><Upload size={24} className="mb-2"/><span className="text-sm font-medium">{image ? image.name : "Dosya seçmek için tıklayın"}</span></div></div></div>
+          <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">Başlık</label><input className="w-full p-4 border-2 border-slate-200 rounded-xl font-heading font-bold text-lg outline-none focus:border-rose-500" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} required /></div>
+          <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">İçerik (Markdown)</label><textarea className="w-full p-4 border-2 border-slate-200 rounded-xl font-mono text-sm min-h-[300px] outline-none focus:border-rose-500" value={form.content} onChange={e => setForm({ ...form, content: e.target.value })} required /></div>
+          <div><label className="block text-sm font-bold text-slate-700 mb-3 uppercase">Görsel</label><div className="relative border-2 border-dashed border-slate-300 rounded-xl p-6 hover:bg-slate-50 transition-colors"><input type="file" onChange={handleFileChange} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" /><div className="flex flex-col items-center text-slate-400"><Upload size={24} className="mb-2" /><span className="text-sm font-medium">{image ? image.name : "Dosya seçmek için tıklayın"}</span></div></div></div>
           <button disabled={uploading} type="submit" className="w-full bg-slate-900 text-white py-5 rounded-xl font-bold text-lg hover:bg-rose-600 transition-all">{uploading ? 'İşleniyor...' : (editingPost ? 'Güncelle' : 'Yayınla')}</button>
         </form>
       </div>
