@@ -28,32 +28,23 @@ jobs:
           export VITE_API_URL="https://ct.turp.health/api/index.php"
           npm run build
 
-      - name: 🚀 Sync Frontend to Plesk (FTP)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: /httpdocs/
-          state-name: .ftp-deploy-state-frontend
-          port: 21
-          protocol: ftp
-          # BU KRİTİK: uploads klasörünü senkronizasyondan çıkar (zaten sunucuda varlar)
-          exclude: |
-            **/uploads/**
-            **/.ftp-deploy-state*
+      - name: 🚀 Deploy to Plesk (via lftp)
+        run: |
+          sudo apt-get install -y lftp
+          lftp -e "
+            set ftp:passive-mode true;
+            set ftp:ssl-allow no;  # Plesk'in SSL sertifikası sorunlarını atlamak için
+            set net:timeout 10;
+            set net:max-retries 3;
+            set net:reconnect-interval-base 5;
+            open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ${{ secrets.FTP_SERVER }};
+            
+            echo 'Uploading Frontend...';
+            mirror -R ./dist/ /httpdocs/ --exclude uploads/ --exclude .git/ --delete-first;
+            
+            echo 'Uploading API...';
+            mirror -R ./api/ /httpdocs/api/ --exclude .git/;
+            
+            quit;
+          "
 
-      - name: 🔌 Sync Backend API to Plesk (FTP)
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./api/
-          server-dir: /httpdocs/api/
-          state-name: .ftp-deploy-state-backend
-          port: 21
-          protocol: ftp
-          exclude: |
-             **/.ftp-deploy-state*
