@@ -1,3 +1,4 @@
+# Triggering deployment after firewall update
 name: Deploy to Plesk
 
 on:
