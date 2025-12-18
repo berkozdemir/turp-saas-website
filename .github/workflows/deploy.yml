@@ -36,6 +36,9 @@ jobs:
           local-dir: ./dist/
           server-dir: /httpdocs/
           state-name: .ftp-deploy-state-frontend
+          port: 21
+          # Bazı sunucular için protokolü zorlayalım
+          protocol: ftp
 
       - name: 🔌 Sync Backend API to Plesk (FTP)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -46,3 +49,5 @@ jobs:
           local-dir: ./api/
           server-dir: /httpdocs/api/
           state-name: .ftp-deploy-state-backend
+          port: 21
+          protocol: ftp
