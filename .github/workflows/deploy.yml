@@ -38,8 +38,11 @@ jobs:
           server-dir: /httpdocs/
           state-name: .ftp-deploy-state-frontend
           port: 21
-          # Bazı sunucular için protokolü zorlayalım
           protocol: ftp
+          # BU KRİTİK: uploads klasörünü senkronizasyondan çıkar (zaten sunucuda varlar)
+          exclude: |
+            **/uploads/**
+            **/.ftp-deploy-state*
 
       - name: 🔌 Sync Backend API to Plesk (FTP)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.4
@@ -52,3 +55,5 @@ jobs:
           state-name: .ftp-deploy-state-backend
           port: 21
           protocol: ftp
+          exclude: |
+             **/.ftp-deploy-state*
