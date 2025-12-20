@@ -39,9 +39,6 @@ jobs:
             set net:reconnect-interval-base 5;
             open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ${{ secrets.FTP_SERVER }};
             
-            echo 'Listing Remote Directory (Debug)...';
-            ls -R;
-            
             echo 'Uploading Frontend...';
             mirror -R ./dist/ / --exclude uploads/ --exclude api/ --exclude .git/ --delete-first;
             
