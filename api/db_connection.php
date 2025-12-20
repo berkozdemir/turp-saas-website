@@ -41,8 +41,14 @@ function get_db_connection()
         ]);
         return $conn;
     } catch (PDOException $e) {
+        // DEBUG: detailed error
+        $debug = "Host: $db_host | EnvFound: " . (file_exists($env_file) ? 'YES' : 'NO') . " | Docker: " . ($is_docker ? 'YES' : 'NO');
+        if (isset($config) && is_array($config)) {
+            $debug .= " | ConfigHost: " . ($config['DB_HOST'] ?? 'NULL');
+        }
+
         http_response_code(500);
-        echo json_encode(["error" => "Veritabanı bağlantı hatası"]);
+        echo json_encode(['error' => "Veritabanı bağlantı hatası [$debug]: " . $e->getMessage()]);
         exit;
     }
 }
