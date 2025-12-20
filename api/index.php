@@ -14,6 +14,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Load env.php for production (if exists)
+// This allows credentials to be stored securely outside of git
+$env_config_file = __DIR__ . '/env.php';
+if (file_exists($env_config_file)) {
+    $env_config = include $env_config_file;
+    if (is_array($env_config)) {
+        foreach ($env_config as $key => $value) {
+            putenv("$key=$value");
+            $_ENV[$key] = $value;
+            $_SERVER[$key] = $value;
+        }
+    }
+}
+
 // Ortam değişkenlerini okuyan yardımcı fonksiyon
 function get_env_strict($key)
 {
