@@ -122,11 +122,11 @@ export const Home: React.FC<HomeProps> = ({ setView }) => {
             <section className="py-10 bg-white border-b border-slate-100">
                 <div className="max-w-7xl mx-auto px-6 text-center">
                     <p className="text-center text-xs font-bold text-slate-400 uppercase tracking-widest mb-8">{t("partners_title")}</p>
-                    <div className="flex flex-wrap justify-center items-center gap-12 md:gap-20 opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
-                        <span className="text-2xl font-heading font-bold text-slate-800">PharmaCo</span>
-                        <span className="text-2xl font-heading font-bold text-slate-800">NovusBio</span>
-                        <span className="text-2xl font-heading font-bold text-slate-800">MED-DATA</span>
-                        <span className="text-2xl font-heading font-bold text-slate-800">GenHealth</span>
+                    <div className="flex flex-wrap justify-center items-center gap-12 md:gap-16 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+                        <img src="/partner_turkbic.png" alt="TURKBIC" className="h-12 w-auto object-contain hover:scale-105 transition-transform" />
+                        <img src="/partner_hacettepe.png" alt="Hacettepe Romatoloji" className="h-12 w-auto object-contain hover:scale-105 transition-transform" />
+                        <img src="/partner_tihud.png" alt="TIHUD" className="h-16 w-auto object-contain hover:scale-105 transition-transform" />
+                        <img src="/partner_sinovac.png" alt="Sinovac" className="h-8 w-auto object-contain hover:scale-105 transition-transform" />
                     </div>
                 </div>
             </section>
