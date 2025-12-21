@@ -15,6 +15,16 @@ export interface LandingConfig {
     hero_image_url: string;
     background_style: string;
     is_active: number;
+    // Gradient text
+    hero_use_gradient_text: number;
+    hero_gradient_text_from: string;
+    hero_gradient_text_to: string;
+    hero_gradient_text_angle: number;
+    // Gradient background
+    hero_use_gradient_background: number;
+    hero_gradient_bg_from: string;
+    hero_gradient_bg_to: string;
+    hero_gradient_bg_angle: number;
 }
 
 export const useLandingConfig = () => {

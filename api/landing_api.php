@@ -117,6 +117,18 @@ if ($action == 'save_landing_config' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $background_style = $data['background_style'] ?? 'default';
     $is_active = isset($data['is_active']) ? ($data['is_active'] ? 1 : 0) : 1;
 
+    // Gradient text fields
+    $hero_use_gradient_text = isset($data['hero_use_gradient_text']) ? ($data['hero_use_gradient_text'] ? 1 : 0) : 0;
+    $hero_gradient_text_from = trim($data['hero_gradient_text_from'] ?? '#4F46E5');
+    $hero_gradient_text_to = trim($data['hero_gradient_text_to'] ?? '#22C55E');
+    $hero_gradient_text_angle = (int) ($data['hero_gradient_text_angle'] ?? 90);
+
+    // Gradient background fields
+    $hero_use_gradient_background = isset($data['hero_use_gradient_background']) ? ($data['hero_use_gradient_background'] ? 1 : 0) : 0;
+    $hero_gradient_bg_from = trim($data['hero_gradient_bg_from'] ?? '#1E293B');
+    $hero_gradient_bg_to = trim($data['hero_gradient_bg_to'] ?? '#0F172A');
+    $hero_gradient_bg_angle = (int) ($data['hero_gradient_bg_angle'] ?? 180);
+
     if (empty($hero_title)) {
         echo json_encode(['error' => 'Hero title is required']);
         exit;
@@ -142,7 +154,9 @@ if ($action == 'save_landing_config' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 language=?, hero_title=?, hero_subtitle=?, hero_badge=?,
                 primary_cta_label=?, primary_cta_url=?,
                 secondary_cta_label=?, secondary_cta_url=?,
-                hero_image_url=?, background_style=?, is_active=?, updated_by=?
+                hero_image_url=?, background_style=?, is_active=?, updated_by=?,
+                hero_use_gradient_text=?, hero_gradient_text_from=?, hero_gradient_text_to=?, hero_gradient_text_angle=?,
+                hero_use_gradient_background=?, hero_gradient_bg_from=?, hero_gradient_bg_to=?, hero_gradient_bg_angle=?
                 WHERE id=? AND tenant_id=?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([
@@ -158,6 +172,14 @@ if ($action == 'save_landing_config' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 $background_style,
                 $is_active,
                 $user_id,
+                $hero_use_gradient_text,
+                $hero_gradient_text_from,
+                $hero_gradient_text_to,
+                $hero_gradient_text_angle,
+                $hero_use_gradient_background,
+                $hero_gradient_bg_from,
+                $hero_gradient_bg_to,
+                $hero_gradient_bg_angle,
                 $id,
                 $tenant_id
             ]);
@@ -168,8 +190,10 @@ if ($action == 'save_landing_config' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 tenant_id, language, hero_title, hero_subtitle, hero_badge,
                 primary_cta_label, primary_cta_url,
                 secondary_cta_label, secondary_cta_url,
-                hero_image_url, background_style, is_active, updated_by
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                hero_image_url, background_style, is_active, updated_by,
+                hero_use_gradient_text, hero_gradient_text_from, hero_gradient_text_to, hero_gradient_text_angle,
+                hero_use_gradient_background, hero_gradient_bg_from, hero_gradient_bg_to, hero_gradient_bg_angle
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             $stmt->execute([
                 $tenant_id,
@@ -184,7 +208,15 @@ if ($action == 'save_landing_config' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 $hero_image_url,
                 $background_style,
                 $is_active,
-                $user_id
+                $user_id,
+                $hero_use_gradient_text,
+                $hero_gradient_text_from,
+                $hero_gradient_text_to,
+                $hero_gradient_text_angle,
+                $hero_use_gradient_background,
+                $hero_gradient_bg_from,
+                $hero_gradient_bg_to,
+                $hero_gradient_bg_angle
             ]);
             echo json_encode(['success' => true, 'id' => $conn->lastInsertId()]);
         }

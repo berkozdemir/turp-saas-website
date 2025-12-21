@@ -101,19 +101,34 @@ export const Home: React.FC<HomeProps> = ({ setView }) => {
         <div className="min-h-screen bg-slate-50 text-slate-900 overflow-hidden">
 
             {/* 1. HERO SECTION */}
-            <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
-                <div className="absolute inset-0 z-0 bg-slate-900 overflow-hidden">
+            <section
+                className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6"
+                style={landingConfig?.hero_use_gradient_background ? {
+                    background: `linear-gradient(${landingConfig.hero_gradient_bg_angle || 180}deg, ${landingConfig.hero_gradient_bg_from || '#1E293B'}, ${landingConfig.hero_gradient_bg_to || '#0F172A'})`,
+                } : undefined}
+            >
+                <div className={`absolute inset-0 z-0 ${landingConfig?.hero_use_gradient_background ? '' : 'bg-slate-900'} overflow-hidden`}>
                     <img src={landingConfig?.hero_image_url || "https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=2070&auto=format&fit=crop"} className="w-full h-full object-cover opacity-20 blur-sm scale-105 animate-pulse-slow" />
-                    <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/80 to-slate-50"></div>
+                    {!landingConfig?.hero_use_gradient_background && (
+                        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/80 to-slate-50"></div>
+                    )}
                 </div>
 
                 <div className="relative z-10 max-w-6xl mx-auto text-center">
                     <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-green-400 px-4 py-1.5 rounded-full text-xs font-bold mb-8 shadow-2xl tracking-wide uppercase">
                         <ShieldCheck size={14} /> {heroBadge}
                     </div>
-                    <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-extrabold text-slate-900 mb-8 leading-tight tracking-tight">
+                    <h1
+                        className="font-heading text-5xl md:text-7xl lg:text-8xl font-extrabold text-slate-900 mb-8 leading-tight tracking-tight"
+                        style={landingConfig?.hero_use_gradient_text ? {
+                            background: `linear-gradient(${landingConfig.hero_gradient_text_angle || 90}deg, ${landingConfig.hero_gradient_text_from || '#4F46E5'}, ${landingConfig.hero_gradient_text_to || '#22C55E'})`,
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text',
+                        } : undefined}
+                    >
                         {landingConfig?.hero_title ? (
-                            <span className="text-white">{heroTitle}</span>
+                            <span className={landingConfig?.hero_use_gradient_text ? '' : 'text-white'}>{heroTitle}</span>
                         ) : (
                             <>
                                 <span className="text-white">{t("hero_title_1")}</span> <br />
