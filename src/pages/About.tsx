@@ -1,8 +1,8 @@
 // @ts-nocheck
 import React, { useEffect } from 'react';
 import {
-    ArrowLeft, History, Microscope, Stethoscope, Activity,
-    Cpu, Signal, Database, Dna, ExternalLink
+    ArrowLeft, History, Microscope, Activity,
+    Cpu, Signal, Database, ExternalLink
 } from 'lucide-react';
 
 export const About = ({ setView }) => {
@@ -80,8 +80,8 @@ export const About = ({ setView }) => {
                         {/* 2. OMEGA CARE (LİNK EKLENDİ) */}
                         <a href="https://omegacare.com.tr" target="_blank" rel="noopener noreferrer" className="bg-white p-8 rounded-3xl shadow-lg hover:-translate-y-2 transition-all group border border-slate-100 relative block">
                             <ExternalLink size={16} className="absolute top-6 right-6 text-slate-300 group-hover:text-rose-600 transition-colors" />
-                            <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-6 text-slate-700 group-hover:bg-rose-600 group-hover:text-white transition-colors">
-                                <Stethoscope size={32} />
+                            <div className="h-12 mb-6 flex items-center">
+                                <img src="/omega_care_logo.png" alt="Omega Care" className="h-full w-auto object-contain" />
                             </div>
                             <h3 className="font-heading text-xl font-bold text-slate-900 mb-2">Omega Care</h3>
                             <p className="text-xs font-bold text-rose-600 uppercase tracking-wide mb-4">Saha Gücü • Evde Sağlık</p>
@@ -91,8 +91,8 @@ export const About = ({ setView }) => {
                         {/* 3. OMEGA GENETİK (YENİ EKLENDİ) */}
                         <a href="https://omegagenetik.com" target="_blank" rel="noopener noreferrer" className="bg-white p-8 rounded-3xl shadow-lg hover:-translate-y-2 transition-all group border border-slate-100 relative block">
                             <ExternalLink size={16} className="absolute top-6 right-6 text-slate-300 group-hover:text-rose-600 transition-colors" />
-                            <div className="w-16 h-16 bg-slate-100 rounded-2xl flex items-center justify-center mb-6 text-slate-700 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                                <Dna size={32} />
+                            <div className="h-12 mb-6 flex items-center">
+                                <img src="/omega_genetik_logo.png" alt="Omega Genetik" className="h-full w-auto object-contain" />
                             </div>
                             <h3 className="font-heading text-xl font-bold text-slate-900 mb-2">Omega Genetik</h3>
                             <p className="text-xs font-bold text-rose-600 uppercase tracking-wide mb-4">Laboratuvar • Ar-Ge</p>
