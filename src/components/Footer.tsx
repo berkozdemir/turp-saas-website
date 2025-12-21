@@ -165,7 +165,7 @@ export const Footer: FC<FooterProps> = ({ setView }) => {
             <button onClick={() => setView({ type: 'legal', key: 'terms_of_use' })} className="hover:text-white">
               {t("footer_terms")}
             </button>
-            <button onClick={() => setView({ type: 'legal', key: 'kvkk' })} className="hover:text-white">
+            <button onClick={() => setView({ type: 'legal', key: 'personal_data_privacy' })} className="hover:text-white">
               {t("footer_kvkk")}
             </button>
           </div>
