@@ -205,16 +205,36 @@ if ($action == 'get_faqs_showcase' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $language = $_GET['language'] ?? 'tr';
     $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 4;
 
+    // Determine columns based on language
+    $q_col = 'question';
+    $a_col = 'answer';
+
+    if ($language === 'en') {
+        $q_col = 'question_en';
+        $a_col = 'answer_en';
+    } elseif ($language === 'zh') {
+        $q_col = 'question_zh';
+        $a_col = 'answer_zh';
+    }
+
     try {
-        $stmt = $conn->prepare("SELECT id, question, answer, category FROM faqs WHERE is_active = 1 AND is_showcased = 1 AND language = ? ORDER BY sort_order ASC, created_at DESC LIMIT ?");
-        $stmt->bindValue(1, $language, PDO::PARAM_STR);
-        $stmt->bindValue(2, $limit, PDO::PARAM_INT);
+        // Fallback logic: If translation is empty, use default (TR) - controlled by COALESCE
+        $query = "SELECT id, 
+                         COALESCE(NULLIF($q_col, ''), question) as question, 
+                         COALESCE(NULLIF($a_col, ''), answer) as answer, 
+                         category 
+                  FROM faqs 
+                  WHERE is_active = 1 AND is_showcased = 1 
+                  ORDER BY sort_order ASC, created_at DESC LIMIT ?";
+
+        $stmt = $conn->prepare($query);
+        $stmt->bindValue(1, $limit, PDO::PARAM_INT);
         $stmt->execute();
         $faqs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         echo json_encode(['success' => true, 'data' => $faqs]);
     } catch (Exception $e) {
-        echo json_encode(['error' => 'Veri alınamadı']);
+        echo json_encode(['error' => 'Veri alınamadı: ' . $e->getMessage()]);
     }
     exit;
 }
@@ -224,8 +244,27 @@ if ($action == 'get_faqs_public' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $language = $_GET['language'] ?? 'tr';
     $category = $_GET['category'] ?? 'all';
 
-    $query = "SELECT id, question, answer, category FROM faqs WHERE is_active = 1 AND language = ?";
-    $params = [$language];
+    // Determine columns based on language
+    $q_col = 'question';
+    $a_col = 'answer';
+
+    if ($language === 'en') {
+        $q_col = 'question_en';
+        $a_col = 'answer_en';
+    } elseif ($language === 'zh') {
+        $q_col = 'question_zh';
+        $a_col = 'answer_zh';
+    }
+
+    // Prepare Query
+    // We remove "AND language = ?" because rows are now language-agnostic
+    $query = "SELECT id, 
+                     COALESCE(NULLIF($q_col, ''), question) as question, 
+                     COALESCE(NULLIF($a_col, ''), answer) as answer, 
+                     category 
+              FROM faqs 
+              WHERE is_active = 1";
+    $params = [];
 
     if ($category !== 'all') {
         $query .= " AND category = ?";
@@ -239,14 +278,15 @@ if ($action == 'get_faqs_public' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt->execute($params);
         $faqs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Get categories
-        $stmt = $conn->prepare("SELECT DISTINCT category FROM faqs WHERE is_active = 1 AND language = ? ORDER BY category ASC");
-        $stmt->execute([$language]);
+        // Get categories (Distinct categories from ALL active FAQs, typically categories are language neutral or stored in TR)
+        // If categories essentially need translation, that is a different issue, but usually category tokens are fixed or TR.
+        $stmt = $conn->prepare("SELECT DISTINCT category FROM faqs WHERE is_active = 1 ORDER BY category ASC");
+        $stmt->execute([]);
         $categories = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
         echo json_encode(['success' => true, 'data' => $faqs, 'categories' => $categories]);
     } catch (Exception $e) {
-        echo json_encode(['error' => 'Veri alınamadı']);
+        echo json_encode(['error' => 'Veri alınamadı: ' . $e->getMessage()]);
     }
     exit;
 }
