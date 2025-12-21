@@ -4,7 +4,9 @@ import { ArrowLeft, Save, Sparkles, RotateCcw } from "lucide-react";
 interface LandingConfig {
     id?: number;
     language: string;
-    hero_title: string;
+    hero_title: string; // Legacy
+    hero_title_line1: string;
+    hero_title_line2: string;
     hero_subtitle: string;
     hero_badge: string;
     primary_cta_label: string;
@@ -14,11 +16,18 @@ interface LandingConfig {
     hero_image_url: string;
     background_style: string;
     is_active: boolean;
-    // Gradient text fields
-    hero_use_gradient_text: boolean;
-    hero_gradient_text_from: string;
-    hero_gradient_text_to: string;
-    hero_gradient_text_angle: number;
+    // Line 1 styling
+    hero_line1_use_gradient_text: boolean;
+    hero_line1_solid_color: string;
+    hero_line1_gradient_from: string;
+    hero_line1_gradient_to: string;
+    hero_line1_gradient_angle: number;
+    // Line 2 styling
+    hero_line2_use_gradient_text: boolean;
+    hero_line2_solid_color: string;
+    hero_line2_gradient_from: string;
+    hero_line2_gradient_to: string;
+    hero_line2_gradient_angle: number;
     // Gradient background fields
     hero_use_gradient_background: boolean;
     hero_gradient_bg_from: string;
@@ -34,6 +43,8 @@ interface AdminLandingEditorProps {
 const defaultConfig: LandingConfig = {
     language: "tr",
     hero_title: "",
+    hero_title_line1: "",
+    hero_title_line2: "",
     hero_subtitle: "",
     hero_badge: "",
     primary_cta_label: "",
@@ -43,11 +54,18 @@ const defaultConfig: LandingConfig = {
     hero_image_url: "",
     background_style: "default",
     is_active: true,
-    // Gradient text defaults
-    hero_use_gradient_text: false,
-    hero_gradient_text_from: "#4F46E5",
-    hero_gradient_text_to: "#22C55E",
-    hero_gradient_text_angle: 90,
+    // Line 1 defaults (solid white)
+    hero_line1_use_gradient_text: false,
+    hero_line1_solid_color: "#FFFFFF",
+    hero_line1_gradient_from: "#4F46E5",
+    hero_line1_gradient_to: "#22C55E",
+    hero_line1_gradient_angle: 90,
+    // Line 2 defaults (gradient)
+    hero_line2_use_gradient_text: true,
+    hero_line2_solid_color: "#EC4899",
+    hero_line2_gradient_from: "#EC4899",
+    hero_line2_gradient_to: "#8B5CF6",
+    hero_line2_gradient_angle: 90,
     // Gradient background defaults
     hero_use_gradient_background: false,
     hero_gradient_bg_from: "#1E293B",
@@ -277,12 +295,22 @@ export const AdminLandingEditor = ({ editId, onBack }: AdminLandingEditorProps) 
                                 />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-slate-600 mb-1">Başlık *</label>
+                                <label className="block text-sm font-medium text-slate-600 mb-1">Başlık - Satır 1 *</label>
                                 <input
                                     type="text"
-                                    value={config.hero_title}
-                                    onChange={(e) => setConfig({ ...config, hero_title: e.target.value })}
-                                    placeholder="Ana başlık"
+                                    value={config.hero_title_line1}
+                                    onChange={(e) => setConfig({ ...config, hero_title_line1: e.target.value, hero_title: e.target.value })}
+                                    placeholder="Ana başlık - birinci satır"
+                                    className="w-full px-3 py-2 border border-slate-200 rounded-lg"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-600 mb-1">Başlık - Satır 2</label>
+                                <input
+                                    type="text"
+                                    value={config.hero_title_line2}
+                                    onChange={(e) => setConfig({ ...config, hero_title_line2: e.target.value })}
+                                    placeholder="Ana başlık - ikinci satır (opsiyonel)"
                                     className="w-full px-3 py-2 border border-slate-200 rounded-lg"
                                 />
                             </div>
@@ -367,10 +395,16 @@ export const AdminLandingEditor = ({ editId, onBack }: AdminLandingEditorProps) 
                             <button
                                 onClick={() => setConfig({
                                     ...config,
-                                    hero_use_gradient_text: false,
-                                    hero_gradient_text_from: "#4F46E5",
-                                    hero_gradient_text_to: "#22C55E",
-                                    hero_gradient_text_angle: 90,
+                                    hero_line1_use_gradient_text: false,
+                                    hero_line1_solid_color: "#FFFFFF",
+                                    hero_line1_gradient_from: "#4F46E5",
+                                    hero_line1_gradient_to: "#22C55E",
+                                    hero_line1_gradient_angle: 90,
+                                    hero_line2_use_gradient_text: true,
+                                    hero_line2_solid_color: "#EC4899",
+                                    hero_line2_gradient_from: "#EC4899",
+                                    hero_line2_gradient_to: "#8B5CF6",
+                                    hero_line2_gradient_angle: 90,
                                     hero_use_gradient_background: false,
                                     hero_gradient_bg_from: "#1E293B",
                                     hero_gradient_bg_to: "#0F172A",
@@ -383,54 +417,94 @@ export const AdminLandingEditor = ({ editId, onBack }: AdminLandingEditorProps) 
                             </button>
                         </div>
 
-                        {/* Gradient Text */}
-                        <div className="mb-6">
+                        {/* Line 1 Styling */}
+                        <div className="mb-6 p-4 bg-slate-50 rounded-lg">
+                            <h4 className="font-medium text-slate-700 mb-3">Satır 1 Stili</h4>
                             <label className="flex items-center gap-2 mb-3">
                                 <input
                                     type="checkbox"
-                                    checked={config.hero_use_gradient_text}
-                                    onChange={(e) => setConfig({ ...config, hero_use_gradient_text: e.target.checked })}
+                                    checked={config.hero_line1_use_gradient_text}
+                                    onChange={(e) => setConfig({ ...config, hero_line1_use_gradient_text: e.target.checked })}
                                     className="w-4 h-4 text-rose-500 rounded"
                                 />
-                                <span className="text-sm font-medium text-slate-700">Gradient Metin Kullan</span>
+                                <span className="text-sm text-slate-600">Gradient Kullan</span>
                             </label>
-                            {config.hero_use_gradient_text && (
-                                <div className="grid grid-cols-3 gap-3 pl-6">
+                            {config.hero_line1_use_gradient_text ? (
+                                <div className="grid grid-cols-3 gap-3">
                                     <div>
-                                        <label className="block text-xs text-slate-500 mb-1">Başlangıç Rengi</label>
-                                        <input
-                                            type="color"
-                                            value={config.hero_gradient_text_from}
-                                            onChange={(e) => setConfig({ ...config, hero_gradient_text_from: e.target.value })}
-                                            className="w-full h-10 rounded border border-slate-200 cursor-pointer"
-                                        />
+                                        <label className="block text-xs text-slate-500 mb-1">Başlangıç</label>
+                                        <input type="color" value={config.hero_line1_gradient_from}
+                                            onChange={(e) => setConfig({ ...config, hero_line1_gradient_from: e.target.value })}
+                                            className="w-full h-10 rounded border border-slate-200 cursor-pointer" />
                                     </div>
                                     <div>
-                                        <label className="block text-xs text-slate-500 mb-1">Bitiş Rengi</label>
-                                        <input
-                                            type="color"
-                                            value={config.hero_gradient_text_to}
-                                            onChange={(e) => setConfig({ ...config, hero_gradient_text_to: e.target.value })}
-                                            className="w-full h-10 rounded border border-slate-200 cursor-pointer"
-                                        />
+                                        <label className="block text-xs text-slate-500 mb-1">Bitiş</label>
+                                        <input type="color" value={config.hero_line1_gradient_to}
+                                            onChange={(e) => setConfig({ ...config, hero_line1_gradient_to: e.target.value })}
+                                            className="w-full h-10 rounded border border-slate-200 cursor-pointer" />
                                     </div>
                                     <div>
-                                        <label className="block text-xs text-slate-500 mb-1">Açı ({config.hero_gradient_text_angle}°)</label>
-                                        <input
-                                            type="range"
-                                            min="0"
-                                            max="360"
-                                            value={config.hero_gradient_text_angle}
-                                            onChange={(e) => setConfig({ ...config, hero_gradient_text_angle: parseInt(e.target.value) })}
-                                            className="w-full h-10"
-                                        />
+                                        <label className="block text-xs text-slate-500 mb-1">Açı ({config.hero_line1_gradient_angle}°)</label>
+                                        <input type="range" min="0" max="360" value={config.hero_line1_gradient_angle}
+                                            onChange={(e) => setConfig({ ...config, hero_line1_gradient_angle: parseInt(e.target.value) })}
+                                            className="w-full h-10" />
                                     </div>
+                                </div>
+                            ) : (
+                                <div className="max-w-[150px]">
+                                    <label className="block text-xs text-slate-500 mb-1">Düz Renk</label>
+                                    <input type="color" value={config.hero_line1_solid_color}
+                                        onChange={(e) => setConfig({ ...config, hero_line1_solid_color: e.target.value })}
+                                        className="w-full h-10 rounded border border-slate-200 cursor-pointer" />
                                 </div>
                             )}
                         </div>
 
-                        {/* Gradient Background */}
-                        <div>
+                        {/* Line 2 Styling */}
+                        <div className="mb-6 p-4 bg-slate-50 rounded-lg">
+                            <h4 className="font-medium text-slate-700 mb-3">Satır 2 Stili</h4>
+                            <label className="flex items-center gap-2 mb-3">
+                                <input
+                                    type="checkbox"
+                                    checked={config.hero_line2_use_gradient_text}
+                                    onChange={(e) => setConfig({ ...config, hero_line2_use_gradient_text: e.target.checked })}
+                                    className="w-4 h-4 text-rose-500 rounded"
+                                />
+                                <span className="text-sm text-slate-600">Gradient Kullan</span>
+                            </label>
+                            {config.hero_line2_use_gradient_text ? (
+                                <div className="grid grid-cols-3 gap-3">
+                                    <div>
+                                        <label className="block text-xs text-slate-500 mb-1">Başlangıç</label>
+                                        <input type="color" value={config.hero_line2_gradient_from}
+                                            onChange={(e) => setConfig({ ...config, hero_line2_gradient_from: e.target.value })}
+                                            className="w-full h-10 rounded border border-slate-200 cursor-pointer" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs text-slate-500 mb-1">Bitiş</label>
+                                        <input type="color" value={config.hero_line2_gradient_to}
+                                            onChange={(e) => setConfig({ ...config, hero_line2_gradient_to: e.target.value })}
+                                            className="w-full h-10 rounded border border-slate-200 cursor-pointer" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs text-slate-500 mb-1">Açı ({config.hero_line2_gradient_angle}°)</label>
+                                        <input type="range" min="0" max="360" value={config.hero_line2_gradient_angle}
+                                            onChange={(e) => setConfig({ ...config, hero_line2_gradient_angle: parseInt(e.target.value) })}
+                                            className="w-full h-10" />
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="max-w-[150px]">
+                                    <label className="block text-xs text-slate-500 mb-1">Düz Renk</label>
+                                    <input type="color" value={config.hero_line2_solid_color}
+                                        onChange={(e) => setConfig({ ...config, hero_line2_solid_color: e.target.value })}
+                                        className="w-full h-10 rounded border border-slate-200 cursor-pointer" />
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Background Styling */}
+                        <div className="p-4 bg-slate-50 rounded-lg">
                             <label className="flex items-center gap-2 mb-3">
                                 <input
                                     type="checkbox"
@@ -438,38 +512,27 @@ export const AdminLandingEditor = ({ editId, onBack }: AdminLandingEditorProps) 
                                     onChange={(e) => setConfig({ ...config, hero_use_gradient_background: e.target.checked })}
                                     className="w-4 h-4 text-rose-500 rounded"
                                 />
-                                <span className="text-sm font-medium text-slate-700">Gradient Arka Plan Kullan</span>
+                                <span className="font-medium text-slate-700">Gradient Arka Plan</span>
                             </label>
                             {config.hero_use_gradient_background && (
-                                <div className="grid grid-cols-3 gap-3 pl-6">
+                                <div className="grid grid-cols-3 gap-3">
                                     <div>
-                                        <label className="block text-xs text-slate-500 mb-1">Başlangıç Rengi</label>
-                                        <input
-                                            type="color"
-                                            value={config.hero_gradient_bg_from}
+                                        <label className="block text-xs text-slate-500 mb-1">Başlangıç</label>
+                                        <input type="color" value={config.hero_gradient_bg_from}
                                             onChange={(e) => setConfig({ ...config, hero_gradient_bg_from: e.target.value })}
-                                            className="w-full h-10 rounded border border-slate-200 cursor-pointer"
-                                        />
+                                            className="w-full h-10 rounded border border-slate-200 cursor-pointer" />
                                     </div>
                                     <div>
-                                        <label className="block text-xs text-slate-500 mb-1">Bitiş Rengi</label>
-                                        <input
-                                            type="color"
-                                            value={config.hero_gradient_bg_to}
+                                        <label className="block text-xs text-slate-500 mb-1">Bitiş</label>
+                                        <input type="color" value={config.hero_gradient_bg_to}
                                             onChange={(e) => setConfig({ ...config, hero_gradient_bg_to: e.target.value })}
-                                            className="w-full h-10 rounded border border-slate-200 cursor-pointer"
-                                        />
+                                            className="w-full h-10 rounded border border-slate-200 cursor-pointer" />
                                     </div>
                                     <div>
                                         <label className="block text-xs text-slate-500 mb-1">Açı ({config.hero_gradient_bg_angle}°)</label>
-                                        <input
-                                            type="range"
-                                            min="0"
-                                            max="360"
-                                            value={config.hero_gradient_bg_angle}
+                                        <input type="range" min="0" max="360" value={config.hero_gradient_bg_angle}
                                             onChange={(e) => setConfig({ ...config, hero_gradient_bg_angle: parseInt(e.target.value) })}
-                                            className="w-full h-10"
-                                        />
+                                            className="w-full h-10" />
                                     </div>
                                 </div>
                             )}
@@ -495,16 +558,34 @@ export const AdminLandingEditor = ({ editId, onBack }: AdminLandingEditorProps) 
                                     {config.hero_badge}
                                 </div>
                             )}
-                            <h1
-                                className="text-3xl font-bold mb-4 leading-tight"
-                                style={config.hero_use_gradient_text ? {
-                                    background: `linear-gradient(${config.hero_gradient_text_angle}deg, ${config.hero_gradient_text_from}, ${config.hero_gradient_text_to})`,
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent',
-                                    backgroundClip: 'text',
-                                } : undefined}
-                            >
-                                {config.hero_title || "Hero Başlığı"}
+                            <h1 className="text-3xl font-bold mb-4 leading-tight">
+                                {/* Line 1 */}
+                                <span
+                                    style={config.hero_line1_use_gradient_text ? {
+                                        background: `linear-gradient(${config.hero_line1_gradient_angle}deg, ${config.hero_line1_gradient_from}, ${config.hero_line1_gradient_to})`,
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent',
+                                        backgroundClip: 'text',
+                                    } : { color: config.hero_line1_solid_color }}
+                                >
+                                    {config.hero_title_line1 || "Hero Başlığı - Satır 1"}
+                                </span>
+                                {config.hero_title_line2 && (
+                                    <>
+                                        <br />
+                                        {/* Line 2 */}
+                                        <span
+                                            style={config.hero_line2_use_gradient_text ? {
+                                                background: `linear-gradient(${config.hero_line2_gradient_angle}deg, ${config.hero_line2_gradient_from}, ${config.hero_line2_gradient_to})`,
+                                                WebkitBackgroundClip: 'text',
+                                                WebkitTextFillColor: 'transparent',
+                                                backgroundClip: 'text',
+                                            } : { color: config.hero_line2_solid_color }}
+                                        >
+                                            {config.hero_title_line2}
+                                        </span>
+                                    </>
+                                )}
                             </h1>
                             <p className="text-lg opacity-80 mb-6">
                                 {config.hero_subtitle || "Alt başlık buraya gelecek"}

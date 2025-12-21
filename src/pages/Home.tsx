@@ -120,17 +120,37 @@ export const Home: React.FC<HomeProps> = ({ setView }) => {
                     <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-green-400 px-4 py-1.5 rounded-full text-xs font-bold mb-8 shadow-2xl tracking-wide uppercase">
                         <ShieldCheck size={14} /> {heroBadge}
                     </div>
-                    <h1
-                        className="font-heading text-5xl md:text-7xl lg:text-8xl font-extrabold text-slate-900 mb-8 leading-tight tracking-tight"
-                        style={landingConfig?.hero_use_gradient_text ? {
-                            background: `linear-gradient(${landingConfig.hero_gradient_text_angle || 90}deg, ${landingConfig.hero_gradient_text_from || '#4F46E5'}, ${landingConfig.hero_gradient_text_to || '#22C55E'})`,
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            backgroundClip: 'text',
-                        } : undefined}
-                    >
-                        {landingConfig?.hero_title ? (
-                            <span className={landingConfig?.hero_use_gradient_text ? '' : 'text-white'}>{heroTitle}</span>
+                    <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-extrabold text-slate-900 mb-8 leading-tight tracking-tight">
+                        {landingConfig?.hero_title_line1 ? (
+                            <>
+                                {/* Line 1 */}
+                                <span
+                                    style={landingConfig.hero_line1_use_gradient_text ? {
+                                        background: `linear-gradient(${landingConfig.hero_line1_gradient_angle || 90}deg, ${landingConfig.hero_line1_gradient_from || '#4F46E5'}, ${landingConfig.hero_line1_gradient_to || '#22C55E'})`,
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent',
+                                        backgroundClip: 'text',
+                                    } : { color: landingConfig.hero_line1_solid_color || '#FFFFFF' }}
+                                >
+                                    {landingConfig.hero_title_line1}
+                                </span>
+                                {landingConfig.hero_title_line2 && (
+                                    <>
+                                        <br />
+                                        {/* Line 2 */}
+                                        <span
+                                            style={landingConfig.hero_line2_use_gradient_text ? {
+                                                background: `linear-gradient(${landingConfig.hero_line2_gradient_angle || 90}deg, ${landingConfig.hero_line2_gradient_from || '#EC4899'}, ${landingConfig.hero_line2_gradient_to || '#8B5CF6'})`,
+                                                WebkitBackgroundClip: 'text',
+                                                WebkitTextFillColor: 'transparent',
+                                                backgroundClip: 'text',
+                                            } : { color: landingConfig.hero_line2_solid_color || '#EC4899' }}
+                                        >
+                                            {landingConfig.hero_title_line2}
+                                        </span>
+                                    </>
+                                )}
+                            </>
                         ) : (
                             <>
                                 <span className="text-white">{t("hero_title_1")}</span> <br />

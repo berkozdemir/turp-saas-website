@@ -106,7 +106,12 @@ if ($action == 'save_landing_config' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $id = $data['id'] ?? null;
     $language = $data['language'] ?? 'tr';
-    $hero_title = trim($data['hero_title'] ?? '');
+
+    // Two-line hero title
+    $hero_title = trim($data['hero_title'] ?? ''); // Legacy support
+    $hero_title_line1 = trim($data['hero_title_line1'] ?? $hero_title);
+    $hero_title_line2 = trim($data['hero_title_line2'] ?? '');
+
     $hero_subtitle = trim($data['hero_subtitle'] ?? '');
     $hero_badge = trim($data['hero_badge'] ?? '');
     $primary_cta_label = trim($data['primary_cta_label'] ?? '');
@@ -117,11 +122,19 @@ if ($action == 'save_landing_config' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $background_style = $data['background_style'] ?? 'default';
     $is_active = isset($data['is_active']) ? ($data['is_active'] ? 1 : 0) : 1;
 
-    // Gradient text fields
-    $hero_use_gradient_text = isset($data['hero_use_gradient_text']) ? ($data['hero_use_gradient_text'] ? 1 : 0) : 0;
-    $hero_gradient_text_from = trim($data['hero_gradient_text_from'] ?? '#4F46E5');
-    $hero_gradient_text_to = trim($data['hero_gradient_text_to'] ?? '#22C55E');
-    $hero_gradient_text_angle = (int) ($data['hero_gradient_text_angle'] ?? 90);
+    // Line 1 styling
+    $hero_line1_use_gradient_text = isset($data['hero_line1_use_gradient_text']) ? ($data['hero_line1_use_gradient_text'] ? 1 : 0) : 0;
+    $hero_line1_solid_color = trim($data['hero_line1_solid_color'] ?? '#FFFFFF');
+    $hero_line1_gradient_from = trim($data['hero_line1_gradient_from'] ?? '#4F46E5');
+    $hero_line1_gradient_to = trim($data['hero_line1_gradient_to'] ?? '#22C55E');
+    $hero_line1_gradient_angle = (int) ($data['hero_line1_gradient_angle'] ?? 90);
+
+    // Line 2 styling
+    $hero_line2_use_gradient_text = isset($data['hero_line2_use_gradient_text']) ? ($data['hero_line2_use_gradient_text'] ? 1 : 0) : 1;
+    $hero_line2_solid_color = trim($data['hero_line2_solid_color'] ?? '#EC4899');
+    $hero_line2_gradient_from = trim($data['hero_line2_gradient_from'] ?? '#EC4899');
+    $hero_line2_gradient_to = trim($data['hero_line2_gradient_to'] ?? '#8B5CF6');
+    $hero_line2_gradient_angle = (int) ($data['hero_line2_gradient_angle'] ?? 90);
 
     // Gradient background fields
     $hero_use_gradient_background = isset($data['hero_use_gradient_background']) ? ($data['hero_use_gradient_background'] ? 1 : 0) : 0;
@@ -129,8 +142,8 @@ if ($action == 'save_landing_config' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $hero_gradient_bg_to = trim($data['hero_gradient_bg_to'] ?? '#0F172A');
     $hero_gradient_bg_angle = (int) ($data['hero_gradient_bg_angle'] ?? 180);
 
-    if (empty($hero_title)) {
-        echo json_encode(['error' => 'Hero title is required']);
+    if (empty($hero_title_line1)) {
+        echo json_encode(['error' => 'Hero title line 1 is required']);
         exit;
     }
 
@@ -151,17 +164,20 @@ if ($action == 'save_landing_config' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($id) {
             // Update
             $sql = "UPDATE landing_configs SET 
-                language=?, hero_title=?, hero_subtitle=?, hero_badge=?,
+                language=?, hero_title=?, hero_title_line1=?, hero_title_line2=?, hero_subtitle=?, hero_badge=?,
                 primary_cta_label=?, primary_cta_url=?,
                 secondary_cta_label=?, secondary_cta_url=?,
                 hero_image_url=?, background_style=?, is_active=?, updated_by=?,
-                hero_use_gradient_text=?, hero_gradient_text_from=?, hero_gradient_text_to=?, hero_gradient_text_angle=?,
+                hero_line1_use_gradient_text=?, hero_line1_solid_color=?, hero_line1_gradient_from=?, hero_line1_gradient_to=?, hero_line1_gradient_angle=?,
+                hero_line2_use_gradient_text=?, hero_line2_solid_color=?, hero_line2_gradient_from=?, hero_line2_gradient_to=?, hero_line2_gradient_angle=?,
                 hero_use_gradient_background=?, hero_gradient_bg_from=?, hero_gradient_bg_to=?, hero_gradient_bg_angle=?
                 WHERE id=? AND tenant_id=?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([
                 $language,
-                $hero_title,
+                $hero_title_line1,
+                $hero_title_line1,
+                $hero_title_line2,
                 $hero_subtitle,
                 $hero_badge,
                 $primary_cta_label,
@@ -172,10 +188,16 @@ if ($action == 'save_landing_config' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 $background_style,
                 $is_active,
                 $user_id,
-                $hero_use_gradient_text,
-                $hero_gradient_text_from,
-                $hero_gradient_text_to,
-                $hero_gradient_text_angle,
+                $hero_line1_use_gradient_text,
+                $hero_line1_solid_color,
+                $hero_line1_gradient_from,
+                $hero_line1_gradient_to,
+                $hero_line1_gradient_angle,
+                $hero_line2_use_gradient_text,
+                $hero_line2_solid_color,
+                $hero_line2_gradient_from,
+                $hero_line2_gradient_to,
+                $hero_line2_gradient_angle,
                 $hero_use_gradient_background,
                 $hero_gradient_bg_from,
                 $hero_gradient_bg_to,
@@ -187,18 +209,21 @@ if ($action == 'save_landing_config' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Create
             $sql = "INSERT INTO landing_configs (
-                tenant_id, language, hero_title, hero_subtitle, hero_badge,
+                tenant_id, language, hero_title, hero_title_line1, hero_title_line2, hero_subtitle, hero_badge,
                 primary_cta_label, primary_cta_url,
                 secondary_cta_label, secondary_cta_url,
                 hero_image_url, background_style, is_active, updated_by,
-                hero_use_gradient_text, hero_gradient_text_from, hero_gradient_text_to, hero_gradient_text_angle,
+                hero_line1_use_gradient_text, hero_line1_solid_color, hero_line1_gradient_from, hero_line1_gradient_to, hero_line1_gradient_angle,
+                hero_line2_use_gradient_text, hero_line2_solid_color, hero_line2_gradient_from, hero_line2_gradient_to, hero_line2_gradient_angle,
                 hero_use_gradient_background, hero_gradient_bg_from, hero_gradient_bg_to, hero_gradient_bg_angle
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             $stmt->execute([
                 $tenant_id,
                 $language,
-                $hero_title,
+                $hero_title_line1,
+                $hero_title_line1,
+                $hero_title_line2,
                 $hero_subtitle,
                 $hero_badge,
                 $primary_cta_label,
@@ -209,10 +234,16 @@ if ($action == 'save_landing_config' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 $background_style,
                 $is_active,
                 $user_id,
-                $hero_use_gradient_text,
-                $hero_gradient_text_from,
-                $hero_gradient_text_to,
-                $hero_gradient_text_angle,
+                $hero_line1_use_gradient_text,
+                $hero_line1_solid_color,
+                $hero_line1_gradient_from,
+                $hero_line1_gradient_to,
+                $hero_line1_gradient_angle,
+                $hero_line2_use_gradient_text,
+                $hero_line2_solid_color,
+                $hero_line2_gradient_from,
+                $hero_line2_gradient_to,
+                $hero_line2_gradient_angle,
                 $hero_use_gradient_background,
                 $hero_gradient_bg_from,
                 $hero_gradient_bg_to,

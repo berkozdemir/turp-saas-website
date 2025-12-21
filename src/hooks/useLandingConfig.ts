@@ -5,7 +5,9 @@ export interface LandingConfig {
     id: number;
     tenant_id: string;
     language: string;
-    hero_title: string;
+    hero_title: string; // Legacy
+    hero_title_line1: string;
+    hero_title_line2: string;
     hero_subtitle: string;
     hero_badge: string;
     primary_cta_label: string;
@@ -15,11 +17,18 @@ export interface LandingConfig {
     hero_image_url: string;
     background_style: string;
     is_active: number;
-    // Gradient text
-    hero_use_gradient_text: number;
-    hero_gradient_text_from: string;
-    hero_gradient_text_to: string;
-    hero_gradient_text_angle: number;
+    // Line 1 styling
+    hero_line1_use_gradient_text: number;
+    hero_line1_solid_color: string;
+    hero_line1_gradient_from: string;
+    hero_line1_gradient_to: string;
+    hero_line1_gradient_angle: number;
+    // Line 2 styling
+    hero_line2_use_gradient_text: number;
+    hero_line2_solid_color: string;
+    hero_line2_gradient_from: string;
+    hero_line2_gradient_to: string;
+    hero_line2_gradient_angle: number;
     // Gradient background
     hero_use_gradient_background: number;
     hero_gradient_bg_from: string;
