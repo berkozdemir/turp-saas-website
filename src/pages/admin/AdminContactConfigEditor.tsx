@@ -293,9 +293,30 @@ export const AdminContactConfigEditor = ({ editId, onBack }: AdminContactConfigE
                                 value={config.map_embed_url}
                                 onChange={(e) => setConfig({ ...config, map_embed_url: e.target.value })}
                                 placeholder="https://www.google.com/maps/embed?pb=..."
-                                className="w-full px-3 py-2 border border-slate-200 rounded-lg"
+                                className={`w-full px-3 py-2 border rounded-lg ${config.map_embed_url && !config.map_embed_url.includes('google.com/maps/embed')
+                                    ? 'border-amber-400 bg-amber-50'
+                                    : 'border-slate-200'
+                                    }`}
                             />
-                            <p className="text-xs text-slate-400 mt-1">Google Maps'ten "Paylaş" → "Haritayı yerleştir" linkini kopyalayın.</p>
+                            {config.map_embed_url && !config.map_embed_url.includes('google.com/maps/embed') && (
+                                <p className="text-xs text-amber-600 mt-1 font-medium">
+                                    ⚠️ URL doğru formatta değil! Kısaltılmış linkler (maps.app.goo.gl) çalışmaz.
+                                </p>
+                            )}
+                            <p className="text-xs text-slate-400 mt-1">
+                                Google Maps'te konumu açın → "Paylaş" → "Haritayı yerleştir" → iframe kodundaki <code className="bg-slate-100 px-1 rounded">src="..."</code> değerini kopyalayın.
+                            </p>
+                            {/* Step by step instructions */}
+                            <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                                <p className="text-xs font-semibold text-blue-800 mb-2">📍 Harita URL'si Nasıl Alınır?</p>
+                                <ol className="text-xs text-blue-700 space-y-1 list-decimal list-inside">
+                                    <li>Google Maps'te konumunuzu açın</li>
+                                    <li><strong>"Paylaş"</strong> butonuna tıklayın</li>
+                                    <li><strong>"Haritayı yerleştir"</strong> (Embed a map) sekmesine geçin</li>
+                                    <li>"HTML'yi kopyala" yerine, <code className="bg-white/50 px-1 rounded">src="..."</code> içindeki URL'yi kopyalayın</li>
+                                    <li>URL şöyle görünmeli: <code className="bg-white/50 px-1 rounded text-[10px]">https://www.google.com/maps/embed?pb=!1m18...</code></li>
+                                </ol>
+                            </div>
                         </div>
                     </div>
 

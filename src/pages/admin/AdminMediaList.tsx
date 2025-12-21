@@ -37,7 +37,6 @@ export const AdminMediaList = ({ onBack }: AdminMediaListProps) => {
     const [categories, setCategories] = useState<string[]>([]);
     const [selectedAsset, setSelectedAsset] = useState<MediaAsset | null>(null);
     const [uploading, setUploading] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({});
     const [dragOver, setDragOver] = useState(false);
     const [copiedUrl, setCopiedUrl] = useState<number | null>(null);
 
@@ -116,7 +115,6 @@ export const AdminMediaList = ({ onBack }: AdminMediaListProps) => {
             console.error("Upload failed:", err);
         } finally {
             setUploading(false);
-            setUploadProgress({});
         }
     };
 

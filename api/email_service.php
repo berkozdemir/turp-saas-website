@@ -4,7 +4,8 @@
  * Sends password reset emails via Brevo API
  */
 
-function send_password_reset_email($to_email, $to_name, $reset_token) {
+function send_password_reset_email($to_email, $to_name, $reset_token)
+{
     $brevo_api_key = getenv('BREVO_API_KEY');
     if (!$brevo_api_key) {
         error_log('BREVO_API_KEY not configured');
@@ -54,7 +55,9 @@ function send_password_reset_email($to_email, $to_name, $reset_token) {
     }
 }
 
-function generate_reset_email_html($reset_url, $name) {
+function generate_reset_email_html($reset_url, $name)
+{
+    $greeting_name = $name ? ' ' . htmlspecialchars($name) : '';
     return <<<HTML
 <!DOCTYPE html>
 <html>
@@ -79,7 +82,7 @@ function generate_reset_email_html($reset_url, $name) {
             <p style="margin: 10px 0 0 0; opacity: 0.9;">Turp Admin Panel</p>
         </div>
         <div class="content">
-            <p><strong>Merhaba{$name ? ' ' . htmlspecialchars($name) : ''},</strong></p>
+            <p><strong>Merhaba{$greeting_name},</strong></p>
             
             <p>Turp Admin Panel hesabınız için bir şifre sıfırlama talebi aldık.</p>
             
