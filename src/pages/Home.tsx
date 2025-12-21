@@ -4,8 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getModuleContentTranslated } from '../data/content';
 import { useLandingConfig } from '../hooks/useLandingConfig';
+import { useContactConfig } from '../hooks/useContactConfig';
 // Calculator ikonunu ekledik
-import { ShieldCheck, ArrowRight, XCircle, CheckCircle, Loader2, Send, Calculator } from 'lucide-react';
+import { ShieldCheck, ArrowRight, XCircle, CheckCircle, Loader2, Send, Calculator, MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { FAQItem } from '../components/FAQItem';
 import { useNotification } from '../components/NotificationProvider';
 
@@ -20,6 +21,7 @@ export const Home: React.FC<HomeProps> = ({ setView }) => {
     const { t, i18n } = useTranslation();
     const notify = useNotification();
     const { config: landingConfig } = useLandingConfig();
+    const { config: contactConfig } = useContactConfig();
 
     // Dil değiştiğinde modül içeriklerini yeniden hesapla
     const modules = getModuleContentTranslated(t);
@@ -273,80 +275,161 @@ export const Home: React.FC<HomeProps> = ({ setView }) => {
 
             {/* 7. FAQ & İLETİŞİM FORMU (ÇEVİRİ UYUMLU) */}
             <section id="contact" className="py-24 px-6 bg-slate-50">
-                <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16">
-                    <div>
-                        <h2 className="font-heading text-3xl font-bold text-slate-900 mb-8">{t("faq_title")}</h2>
-                        <div className="space-y-2">
-                            {showcaseFaqs.length > 0
-                                ? showcaseFaqs.map(faq => <FAQItem key={faq.id} question={faq.question} answer={faq.answer} />)
-                                : ['1', '2', '3'].map(num => <FAQItem key={num} question={t(`faq_${num}_q`)} answer={t(`faq_${num}_a`)} />)
-                            }
+                <div className="max-w-6xl mx-auto">
+                    {/* Section Header */}
+                    <div className="text-center mb-12">
+                        <h2 className="font-heading text-4xl font-bold text-slate-900 mb-4">
+                            {contactConfig?.contact_title || t("contact_title")}
+                        </h2>
+                        {contactConfig?.contact_subtitle && (
+                            <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+                                {contactConfig.contact_subtitle}
+                            </p>
+                        )}
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-16">
+                        {/* Left: Contact Info + FAQ */}
+                        <div>
+                            {/* Contact Information Card */}
+                            {contactConfig && (
+                                <div className="bg-white p-6 rounded-2xl shadow-lg border border-slate-200 mb-8">
+                                    <h3 className="font-semibold text-slate-900 mb-4">İletişim Bilgileri</h3>
+                                    <div className="space-y-4">
+                                        {(contactConfig.address_line1 || contactConfig.city) && (
+                                            <div className="flex items-start gap-3">
+                                                <div className="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center flex-shrink-0">
+                                                    <MapPin size={18} className="text-rose-600" />
+                                                </div>
+                                                <div className="text-sm text-slate-600">
+                                                    {contactConfig.address_line1 && <div>{contactConfig.address_line1}</div>}
+                                                    {contactConfig.address_line2 && <div>{contactConfig.address_line2}</div>}
+                                                    <div>{contactConfig.city}{contactConfig.country && `, ${contactConfig.country}`}</div>
+                                                </div>
+                                            </div>
+                                        )}
+                                        {contactConfig.phone && (
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                                                    <Phone size={18} className="text-blue-600" />
+                                                </div>
+                                                <a href={`tel:${contactConfig.phone}`} className="text-sm text-slate-600 hover:text-rose-600">
+                                                    {contactConfig.phone}
+                                                </a>
+                                            </div>
+                                        )}
+                                        {contactConfig.email && (
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0">
+                                                    <Mail size={18} className="text-emerald-600" />
+                                                </div>
+                                                <a href={`mailto:${contactConfig.email}`} className="text-sm text-slate-600 hover:text-rose-600">
+                                                    {contactConfig.email}
+                                                </a>
+                                            </div>
+                                        )}
+                                        {contactConfig.working_hours && (
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center flex-shrink-0">
+                                                    <Clock size={18} className="text-purple-600" />
+                                                </div>
+                                                <span className="text-sm text-slate-600">{contactConfig.working_hours}</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* FAQ */}
+                            <h3 className="font-heading text-2xl font-bold text-slate-900 mb-6">{t("faq_title")}</h3>
+                            <div className="space-y-2">
+                                {showcaseFaqs.length > 0
+                                    ? showcaseFaqs.map(faq => <FAQItem key={faq.id} question={faq.question} answer={faq.answer} />)
+                                    : ['1', '2', '3'].map(num => <FAQItem key={num} question={t(`faq_${num}_q`)} answer={t(`faq_${num}_a`)} />)
+                                }
+                            </div>
+                        </div>
+
+                        {/* Right: Contact Form */}
+                        <div className="bg-white p-8 rounded-3xl shadow-xl border border-slate-200 relative overflow-hidden">
+                            {contactStatus === 'success' ? (
+                                <div className="absolute inset-0 bg-white z-20 flex flex-col items-center justify-center text-center p-8 animate-in fade-in zoom-in duration-500">
+                                    <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6"><CheckCircle size={48} /></div>
+                                    <h3 className="font-heading text-3xl font-bold text-slate-900 mb-2">{contactConfig?.success_message || t("form_success_title")}</h3>
+                                    <p className="text-slate-500 mb-8">{t("form_success_desc")}</p>
+                                    <button onClick={() => setContactStatus('idle')} className="text-rose-600 font-bold hover:underline">{t("form_new")}</button>
+                                </div>
+                            ) : (
+                                <>
+                                    <h3 className="font-heading text-2xl font-bold text-slate-900 mb-2">İletişim Formu</h3>
+                                    <p className="text-slate-500 mb-8 text-sm">{t("contact_desc")}</p>
+
+                                    <form className="space-y-4" onSubmit={handleContactSubmit}>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <input type="text" placeholder={t("form_name")} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all font-medium text-slate-900"
+                                                value={contactForm.full_name} onChange={e => setContactForm({ ...contactForm, full_name: e.target.value })} required />
+                                            <input type="text" placeholder={t("form_company")} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all font-medium text-slate-900"
+                                                value={contactForm.organization} onChange={e => setContactForm({ ...contactForm, organization: e.target.value })} />
+                                        </div>
+                                        <input type="email" placeholder={t("form_email")} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all font-medium text-slate-900"
+                                            value={contactForm.email} onChange={e => setContactForm({ ...contactForm, email: e.target.value })} required />
+
+                                        <select
+                                            className={`w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all font-medium ${contactForm.subject === "" ? "text-slate-400" : "text-slate-900"}`}
+                                            value={contactForm.subject}
+                                            onChange={e => setContactForm({ ...contactForm, subject: e.target.value })}
+                                            required
+                                        >
+                                            <option value="" disabled>{t("form_select")}</option>
+                                            <option value="RWE - Real World Evidence">RWE - Real World Evidence</option>
+                                            <option value="Phase III/IV Studies">Phase III/IV Studies</option>
+                                            <option value="Medical Device Registries">Medical Device Registries</option>
+                                            <option value="Other / General Inquiry">Diğer / Genel İletişim</option>
+                                        </select>
+
+                                        <textarea
+                                            placeholder={t("form_message") || "Mesajınız..."}
+                                            className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all h-32 resize-none font-medium text-slate-900"
+                                            value={contactForm.message_body}
+                                            onChange={e => setContactForm({ ...contactForm, message_body: e.target.value })}
+                                            required
+                                        ></textarea>
+
+                                        <label className="flex items-start gap-3 cursor-pointer group">
+                                            <input
+                                                type="checkbox"
+                                                className="mt-1 w-4 h-4 rounded border-slate-300 text-rose-600 focus:ring-rose-500 transition-all"
+                                                checked={contactForm.consent}
+                                                onChange={e => setContactForm({ ...contactForm, consent: e.target.checked })}
+                                            />
+                                            <span className="text-xs text-slate-500 group-hover:text-slate-700 transition-colors leading-snug">
+                                                {t("form_consent_text") || "Kişisel verilerimin KVKK kapsamında işlenmesini ve tarafıma geri dönüş yapılmasını kabul ediyorum."}
+                                            </span>
+                                        </label>
+
+                                        <button disabled={contactStatus === 'loading'} type="submit" className="w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-rose-600 flex justify-center gap-2 shadow-lg shadow-slate-200 hover:shadow-rose-200 transition-all">
+                                            {contactStatus === 'loading' ? <Loader2 className="animate-spin" /> : <> {t("form_send")} <Send size={18} /></>}
+                                        </button>
+                                    </form>
+                                </>
+                            )}
                         </div>
                     </div>
 
-                    <div className="bg-white p-8 rounded-3xl shadow-xl border border-slate-200 relative overflow-hidden">
-                        {contactStatus === 'success' ? (
-                            <div className="absolute inset-0 bg-white z-20 flex flex-col items-center justify-center text-center p-8 animate-in fade-in zoom-in duration-500">
-                                <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-6"><CheckCircle size={48} /></div>
-                                <h3 className="font-heading text-3xl font-bold text-slate-900 mb-2">{t("form_success_title")}</h3>
-                                <p className="text-slate-500 mb-8">{t("form_success_desc")}</p>
-                                <button onClick={() => setContactStatus('idle')} className="text-rose-600 font-bold hover:underline">{t("form_new")}</button>
-                            </div>
-                        ) : (
-                            <>
-                                <h3 className="font-heading text-2xl font-bold text-slate-900 mb-2">{t("contact_title")}</h3>
-                                <p className="text-slate-500 mb-8 text-sm">{t("contact_desc")}</p>
-
-                                <form className="space-y-4" onSubmit={handleContactSubmit}>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <input type="text" placeholder={t("form_name")} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all font-medium text-slate-900"
-                                            value={contactForm.full_name} onChange={e => setContactForm({ ...contactForm, full_name: e.target.value })} required />
-                                        <input type="text" placeholder={t("form_company")} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all font-medium text-slate-900"
-                                            value={contactForm.organization} onChange={e => setContactForm({ ...contactForm, organization: e.target.value })} />
-                                    </div>
-                                    <input type="email" placeholder={t("form_email")} className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all font-medium text-slate-900"
-                                        value={contactForm.email} onChange={e => setContactForm({ ...contactForm, email: e.target.value })} required />
-
-                                    <select
-                                        className={`w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all font-medium ${contactForm.subject === "" ? "text-slate-400" : "text-slate-900"}`}
-                                        value={contactForm.subject}
-                                        onChange={e => setContactForm({ ...contactForm, subject: e.target.value })}
-                                        required
-                                    >
-                                        <option value="" disabled>{t("form_select")}</option>
-                                        <option value="RWE - Real World Evidence">RWE - Real World Evidence</option>
-                                        <option value="Phase III/IV Studies">Phase III/IV Studies</option>
-                                        <option value="Medical Device Registries">Medical Device Registries</option>
-                                        <option value="Other / General Inquiry">Diğer / Genel İletişim</option>
-                                    </select>
-
-                                    <textarea
-                                        placeholder={t("form_message") || "Mesajınız..."}
-                                        className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-all h-32 resize-none font-medium text-slate-900"
-                                        value={contactForm.message_body}
-                                        onChange={e => setContactForm({ ...contactForm, message_body: e.target.value })}
-                                        required
-                                    ></textarea>
-
-                                    <label className="flex items-start gap-3 cursor-pointer group">
-                                        <input
-                                            type="checkbox"
-                                            className="mt-1 w-4 h-4 rounded border-slate-300 text-rose-600 focus:ring-rose-500 transition-all"
-                                            checked={contactForm.consent}
-                                            onChange={e => setContactForm({ ...contactForm, consent: e.target.checked })}
-                                        />
-                                        <span className="text-xs text-slate-500 group-hover:text-slate-700 transition-colors leading-snug">
-                                            {t("form_consent_text") || "Kişisel verilerimin KVKK kapsamında işlenmesini ve tarafıma geri dönüş yapılmasını kabul ediyorum."}
-                                        </span>
-                                    </label>
-
-                                    <button disabled={contactStatus === 'loading'} type="submit" className="w-full py-4 bg-slate-900 text-white font-bold rounded-xl hover:bg-rose-600 flex justify-center gap-2 shadow-lg shadow-slate-200 hover:shadow-rose-200 transition-all">
-                                        {contactStatus === 'loading' ? <Loader2 className="animate-spin" /> : <> {t("form_send")} <Send size={18} /></>}
-                                    </button>
-                                </form>
-                            </>
-                        )}
-                    </div>
+                    {/* Map Embed */}
+                    {contactConfig?.map_embed_url && (
+                        <div className="mt-12 rounded-2xl overflow-hidden shadow-lg border border-slate-200">
+                            <iframe
+                                src={contactConfig.map_embed_url}
+                                width="100%"
+                                height="300"
+                                style={{ border: 0 }}
+                                allowFullScreen
+                                loading="lazy"
+                                referrerPolicy="no-referrer-when-downgrade"
+                            ></iframe>
+                        </div>
+                    )}
                 </div>
             </section>
         </div>
