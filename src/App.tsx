@@ -17,6 +17,7 @@ import { ResetPassword } from "./pages/ResetPassword";
 import { ROICalculator } from "./pages/ROICalculator";
 import { RheumaCaseStudy } from "./pages/RheumaCaseStudy";
 import { FaqPage } from "./pages/FaqPage";
+import { LegalPage } from "./pages/LegalPage";
 import { useNotification } from "./components/NotificationProvider";
 import useAnalytics from "./lib/analytics";
 
@@ -151,6 +152,9 @@ export default function App() {
       }
       if (view.type === "reset-password") {
         return <ResetPassword token={view.token} setView={setView} />;
+      }
+      if (view.type === "legal") {
+        return <LegalPage docKey={view.key} setView={setView} />;
       }
     }
 

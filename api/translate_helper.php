@@ -181,3 +181,76 @@ if (isset($action) && $action == 'translate_faq_all' && $_SERVER['REQUEST_METHOD
     ]);
     exit;
 }
+
+// Translate Legal Document (title + content)
+function translate_legal_doc($title_tr, $content_tr, $target_language, $api_key)
+{
+    // Translate title
+    $title_result = translate_with_deepseek($title_tr, $target_language, $api_key);
+    if (isset($title_result['error'])) {
+        return $title_result;
+    }
+
+    // Translate content (Handling HTML/Markdown preservation in prompt would be better but basic text is ok for now. 
+    // DeepSeek is usually smart enough. We will append a small instruction to prompt inside translate_with_deepseek if we could, 
+    // but reusing it is fine.)
+    $content_result = translate_with_deepseek($content_tr, $target_language, $api_key);
+    if (isset($content_result['error'])) {
+        return $content_result;
+    }
+
+    return [
+        'success' => true,
+        'title' => $title_result['translation'],
+        'content' => $content_result['translation']
+    ];
+}
+
+// Endpoint for Legal Doc Translation
+if (isset($action) && $action == 'translate_legal' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_once __DIR__ . '/auth_helper.php';
+    $user = require_admin_auth($conn);
+
+    if (!in_array($user['role'], ['admin', 'editor'])) {
+        http_response_code(403);
+        echo json_encode(['error' => 'Yetkiniz yok']);
+        exit;
+    }
+
+    $data = json_decode(file_get_contents('php://input'), true) ?? [];
+    $title_tr = $data['title_tr'] ?? '';
+    $content_tr = $data['content_tr'] ?? '';
+
+    // Optional: target_language specific or 'all'
+    // The requirement says "TR'den EN/ZH çeviri oluştur". 
+    // We can implement 'all' behavior or single. Let's support 'all' for one-click.
+
+    global $deepseek_api_key;
+    if (empty($deepseek_api_key)) {
+        echo json_encode(['error' => 'DeepSeek API key yapılandırılmamış']);
+        exit;
+    }
+
+    // Translate to English
+    $en_result = translate_legal_doc($title_tr, $content_tr, 'en', $deepseek_api_key);
+    if (isset($en_result['error'])) {
+        echo json_encode(['error' => 'EN çeviri hatası: ' . $en_result['error']]);
+        exit;
+    }
+
+    // Translate to Chinese
+    $zh_result = translate_legal_doc($title_tr, $content_tr, 'zh', $deepseek_api_key);
+    if (isset($zh_result['error'])) {
+        echo json_encode(['error' => 'ZH çeviri hatası: ' . $zh_result['error']]);
+        exit;
+    }
+
+    echo json_encode([
+        'success' => true,
+        'translations' => [
+            'en' => $en_result,
+            'zh' => $zh_result
+        ]
+    ]);
+    exit;
+}

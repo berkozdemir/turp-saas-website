@@ -9,6 +9,8 @@ import { AdminFaqEditor } from "./admin/AdminFaqEditor";
 import { AdminUserList } from "./admin/AdminUserList";
 import { AdminUserEditor } from "./admin/AdminUserEditor";
 import { AdminAnalyticsSeo } from "./admin/AdminAnalyticsSeo";
+import { AdminLegalList } from "./admin/AdminLegalList";
+import { AdminLegalEditor } from "./admin/AdminLegalEditor";
 import {
   Mail,
   FileText,
@@ -35,6 +37,7 @@ export const Admin = () => {
   });
   const [editingFaq, setEditingFaq] = useState<any | null>(null);
   const [editingUser, setEditingUser] = useState<any | null>(null);
+  const [editingLegalDoc, setEditingLegalDoc] = useState<any | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const userRole = session?.user?.role || 'viewer';
@@ -151,6 +154,29 @@ export const Admin = () => {
         );
       case "analytics_seo":
         return <AdminAnalyticsSeo token={session.token} />;
+      case "legal_list":
+        return (
+          <AdminLegalList
+            token={session.token}
+            onEdit={(doc) => {
+              setEditingLegalDoc(doc);
+              setActiveTab("legal_edit");
+            }}
+            onCreate={() => {
+              setEditingLegalDoc(null);
+              setActiveTab("legal_edit");
+            }}
+          />
+        );
+      case "legal_edit":
+        return (
+          <AdminLegalEditor
+            token={session.token}
+            doc={editingLegalDoc}
+            onCancel={() => setActiveTab("legal_list")}
+            onSave={() => setActiveTab("legal_list")}
+          />
+        );
       default:
         return <AdminMessages token={session.token} />;
     }
@@ -237,6 +263,19 @@ export const Admin = () => {
               </button>
             )}
 
+            {(userRole === 'admin' || userRole === 'editor') && (
+              <button
+                onClick={() => { setActiveTab("legal_list"); setMobileMenuOpen(false); }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab.startsWith("legal")
+                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  }`}
+              >
+                <FileText size={20} />
+                <span className="font-medium">Hukuki Dokümanlar</span>
+              </button>
+            )}
+
             {userRole === 'admin' && (
               <button
                 onClick={() => { setActiveTab("settings"); setMobileMenuOpen(false); }}
@@ -277,6 +316,8 @@ export const Admin = () => {
               {activeTab === 'user_list' && "Kullanıcı Yönetimi"}
               {activeTab === 'user_edit' && "Kullanıcı Düzenleyici"}
               {activeTab === 'analytics_seo' && "Analytics & SEO"}
+              {activeTab === 'legal_list' && "Hukuki Dokümanlar"}
+              {activeTab === 'legal_edit' && "Doküman Düzenleyici"}
               {activeTab === 'settings' && "Hesap Ayarları"}
             </h1>
             <p className="text-slate-500 text-sm mt-1">Hoşgeldin, {session.user.name}</p>

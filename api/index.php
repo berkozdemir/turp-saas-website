@@ -146,6 +146,9 @@ require_once __DIR__ . '/user_api.php';
 // Include Translation API
 require_once __DIR__ . '/translate_helper.php';
 
+// Include Legal API
+require_once __DIR__ . '/legal_api.php';
+
 // =================================================================
 // ACTIONS
 // =================================================================

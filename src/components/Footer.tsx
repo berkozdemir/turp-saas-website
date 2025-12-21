@@ -159,12 +159,15 @@ export const Footer: FC<FooterProps> = ({ setView }) => {
         <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500">
           <p>{COMPANY_INFO.copyright}</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-white">
-              Gizlilik Politikası
-            </a>
-            <a href="#" className="hover:text-white">
-              Kullanım Koşulları
-            </a>
+            <button onClick={() => setView({ type: 'legal', key: 'privacy_policy' })} className="hover:text-white">
+              {t("footer_privacy") || "Gizlilik Politikası"}
+            </button>
+            <button onClick={() => setView({ type: 'legal', key: 'terms_of_use' })} className="hover:text-white">
+              {t("footer_terms") || "Kullanım Koşulları"}
+            </button>
+            <button onClick={() => setView({ type: 'legal', key: 'kvkk' })} className="hover:text-white">
+              KVKK
+            </button>
           </div>
         </div>
       </div>
