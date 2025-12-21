@@ -715,7 +715,7 @@ i18n
     fallbackLng: "tr",
     ns: ["translation"],
     defaultNS: "translation",
-    keySeparator: false,
+
     interpolation: { escapeValue: false }
   });
 
