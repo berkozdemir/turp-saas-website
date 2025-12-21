@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
-import { Search, Plus, Edit2, Trash2, Globe, Clock, FileText, Loader2, ChevronLeft, ChevronRight, Eye } from "lucide-react";
+import { Search, Plus, Edit2, Trash2, Globe, Clock, FileText, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { useNotification } from "../../components/NotificationProvider";
+import { useConfirm } from "../../components/ConfirmProvider";
 
 interface AdminBlogListProps {
     token: string;
@@ -10,6 +12,8 @@ interface AdminBlogListProps {
 export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) => {
     const [posts, setPosts] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const notify = useNotification();
+    const confirm = useConfirm();
     const [filterLang, setFilterLang] = useState("all");
     const [filterStatus, setFilterStatus] = useState("all");
     const [search, setSearch] = useState("");
@@ -32,10 +36,10 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
                 setPosts(data.data);
                 setTotalPages(data.pagination.pages);
             } else {
-                alert("Hata: " + (data.error || "Blog yazıları alınamadı"));
+                notify.error(data.error || "Blog yazıları alınamadı");
             }
         } catch (err) {
-            alert("Bağlantı hatası");
+            notify.error("Bağlantı hatası");
         } finally {
             setLoading(false);
         }
@@ -49,7 +53,15 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
     }, [filterLang, filterStatus, search, page]);
 
     const handleDelete = async (id: number) => {
-        if (!confirm("Bu içeriği silmek istediğinize emin misiniz? Bu işlem geri alınamaz.")) return;
+        const isConfirmed = await confirm({
+            title: 'İçerik Sil',
+            message: "Bu içeriği silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
+            confirmLabel: 'Sil',
+            cancelLabel: 'İptal',
+            type: 'danger'
+        });
+
+        if (!isConfirmed) return;
 
         try {
             const response = await fetch(`${API_URL}/index.php?action=delete_blog_post`, {
@@ -63,11 +75,12 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
             const data = await response.json();
             if (data.success) {
                 setPosts(posts.filter(p => p.id !== id));
+                notify.success("İçerik başarıyla silindi");
             } else {
-                alert("Silme hatası");
+                notify.error("Silme hatası");
             }
         } catch (err) {
-            alert("Bağlantı hatası");
+            notify.error("Bağlantı hatası");
         }
     };
 

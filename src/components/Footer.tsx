@@ -1,7 +1,6 @@
 import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Activity,
   Linkedin,
   Twitter,
   Instagram,
@@ -26,7 +25,7 @@ export const Footer: FC<FooterProps> = ({ setView }) => {
           {/* Logo ve Slogan */}
           <div className="col-span-1 md:col-span-1">
             <div className="flex items-center gap-2 font-heading font-bold text-2xl text-white mb-6">
-              <Activity size={24} className="text-rose-500" /> Turp
+              <img src="/logo.png" alt="Turp" className="h-8 w-auto mb-2" />
             </div>
             <p className="text-slate-400 text-sm leading-relaxed mb-6">
               Klinik araştırmalarda veriyi kaynağından doğrulayan, USBS onaylı

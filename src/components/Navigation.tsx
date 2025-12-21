@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Activity, Globe, ChevronDown, FileText, Lock, Menu, X } from "lucide-react";
+import { Globe, ChevronDown, FileText, Lock, Menu, X } from "lucide-react";
 
 interface NavigationProps {
     view: any;
@@ -83,10 +83,9 @@ export function Navigation({
                         {/* Logo */}
                         <button
                             onClick={() => handleNavigation("home")}
-                            className="flex items-center gap-2 text-xl font-black text-slate-900 hover:text-rose-600 transition-colors"
+                            className="flex items-center gap-2 text-xl font-black text-slate-900 hover:opacity-80 transition-opacity"
                         >
-                            <Activity className="text-rose-600" size={28} />
-                            <span>TURP</span>
+                            <img src="/logo.png" alt="TURP" className="h-10 w-auto" />
                         </button>
 
                         {/* Desktop Menu (hidden on mobile) */}
@@ -123,8 +122,8 @@ export function Navigation({
                             <button
                                 onClick={() => handleNavigation("roi")}
                                 className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${view === "roi" || (typeof view === "object" && view.type === "roi")
-                                        ? "bg-slate-900 text-white shadow-md"
-                                        : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                                    ? "bg-slate-900 text-white shadow-md"
+                                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
                                     }`}
                             >
                                 ROI
@@ -134,8 +133,8 @@ export function Navigation({
                             <button
                                 onClick={() => handleNavigation("case-rheuma")}
                                 className={`hidden lg:flex items-center gap-1 px-4 py-2 rounded-full text-sm font-bold transition-all ${view === "case-rheuma"
-                                        ? "bg-slate-900 text-white shadow-md"
-                                        : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                                    ? "bg-slate-900 text-white shadow-md"
+                                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
                                     }`}
                             >
                                 <FileText size={14} /> {t("nav_solutions")}
@@ -145,8 +144,8 @@ export function Navigation({
                             <button
                                 onClick={() => handleNavigation("blog")}
                                 className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${view === "blog"
-                                        ? "bg-slate-900 text-white shadow-md"
-                                        : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                                    ? "bg-slate-900 text-white shadow-md"
+                                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
                                     }`}
                             >
                                 {t("nav_blog")}
@@ -156,8 +155,8 @@ export function Navigation({
                             <button
                                 onClick={() => handleNavigation("about")}
                                 className={`hidden md:block px-4 py-2 rounded-full text-sm font-bold transition-all ${view === "about"
-                                        ? "bg-slate-900 text-white shadow-md"
-                                        : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                                    ? "bg-slate-900 text-white shadow-md"
+                                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
                                     }`}
                             >
                                 {t("nav_about")}
@@ -181,8 +180,8 @@ export function Navigation({
                                     key={lang.code}
                                     onClick={() => changeLanguage(lang.code)}
                                     className={`w-8 h-8 rounded-full text-xs font-bold flex items-center justify-center transition-all ${i18n.language === lang.code
-                                            ? "bg-rose-600 text-white shadow-md"
-                                            : "text-slate-400 hover:bg-slate-200"
+                                        ? "bg-rose-600 text-white shadow-md"
+                                        : "text-slate-400 hover:bg-slate-200"
                                         }`}
                                 >
                                     {lang.label}
@@ -200,15 +199,17 @@ export function Navigation({
                         </button>
                     </div>
                 </div>
-            </nav>
+            </nav >
 
             {/* Mobile Menu Overlay */}
-            {isMobileMenuOpen && (
-                <div
-                    className="fixed inset-0 bg-black/50 z-40 md:hidden animate-in fade-in duration-200"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                />
-            )}
+            {
+                isMobileMenuOpen && (
+                    <div
+                        className="fixed inset-0 bg-black/50 z-40 md:hidden animate-in fade-in duration-200"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    />
+                )
+            }
 
             {/* Mobile Menu Slide-in Panel */}
             <div
@@ -219,8 +220,7 @@ export function Navigation({
                 {/* Mobile Menu Header */}
                 <div className="flex items-center justify-between p-4 border-b border-slate-200">
                     <div className="flex items-center gap-2 text-xl font-black text-slate-900">
-                        <Activity className="text-rose-600" size={24} />
-                        <span>TURP</span>
+                        <img src="/logo.png" alt="TURP" className="h-8 w-auto" />
                     </div>
                     <button
                         onClick={() => setIsMobileMenuOpen(false)}
@@ -319,8 +319,8 @@ export function Navigation({
                                 key={lang.code}
                                 onClick={() => changeLanguage(lang.code)}
                                 className={`w-12 h-12 rounded-full text-sm font-bold flex items-center justify-center transition-all ${i18n.language === lang.code
-                                        ? "bg-rose-600 text-white shadow-lg"
-                                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                    ? "bg-rose-600 text-white shadow-lg"
+                                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                                     }`}
                             >
                                 {lang.label}

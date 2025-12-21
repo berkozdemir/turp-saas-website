@@ -4,6 +4,8 @@ import App from "./App.tsx";
 import "./index.css";
 import "./i18n.ts";
 import { HelmetProvider } from "react-helmet-async";
+import { NotificationProvider } from "./components/NotificationProvider";
+import { ConfirmProvider } from "./components/ConfirmProvider";
 
 // Basit ErrorBoundary
 class ErrorBoundary extends React.Component<
@@ -63,9 +65,13 @@ if (!rootElement) {
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <HelmetProvider>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
+      <NotificationProvider>
+        <ConfirmProvider>
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
+        </ConfirmProvider>
+      </NotificationProvider>
     </HelmetProvider>
   </React.StrictMode>
 );

@@ -6,6 +6,7 @@ import { getModuleContentTranslated } from '../data/content';
 // Calculator ikonunu ekledik
 import { ShieldCheck, ArrowRight, XCircle, CheckCircle, Loader2, Send, Calculator } from 'lucide-react';
 import { FAQItem } from '../components/FAQItem';
+import { useNotification } from '../components/NotificationProvider';
 
 // ---> 1. EmailJS import edildi
 import emailjs from '@emailjs/browser';
@@ -16,6 +17,7 @@ interface HomeProps {
 
 export const Home: React.FC<HomeProps> = ({ setView }) => {
     const { t, i18n } = useTranslation();
+    const notify = useNotification();
 
     // Dil değiştiğinde modül içeriklerini yeniden hesapla
     const modules = getModuleContentTranslated(t);
@@ -54,7 +56,7 @@ export const Home: React.FC<HomeProps> = ({ setView }) => {
         e.preventDefault();
 
         if (!contactForm.consent) {
-            alert(t("form_consent_error") || "Lütfen KVKK metnini onaylayınız.");
+            notify.error(t("form_consent_error") || "Lütfen KVKK metnini onaylayınız.");
             return;
         }
 
@@ -74,12 +76,12 @@ export const Home: React.FC<HomeProps> = ({ setView }) => {
                 setContactForm({ full_name: '', email: '', organization: '', subject: '', message_body: '', consent: false });
             } else {
                 console.error("API Error:", data.error);
-                alert(data.error || "Bir hata oluştu.");
+                notify.error(data.error || "Bir hata oluştu.");
                 setContactStatus('error');
             }
         } catch (err) {
             console.error("Network Error:", err);
-            alert("Bağlantı hatası.");
+            notify.error("Bağlantı hatası.");
             setContactStatus('error');
         }
     };

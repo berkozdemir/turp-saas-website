@@ -17,6 +17,7 @@ import { ResetPassword } from "./pages/ResetPassword";
 import { ROICalculator } from "./pages/ROICalculator";
 import { RheumaCaseStudy } from "./pages/RheumaCaseStudy";
 import { FaqPage } from "./pages/FaqPage";
+import { useNotification } from "./components/NotificationProvider";
 import useAnalytics from "./lib/analytics";
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
   const [session, setSession] = useState<any | null>(null);
   const [globalCurrency, setGlobalCurrency] = useState("TRY");
   const [isScrolled, setIsScrolled] = useState(false);
+  const notify = useNotification();
 
   // i18n (Çeviri) Kurulumu
   const { t, i18n } = useTranslation();
@@ -93,7 +95,7 @@ export default function App() {
 
   const startEdit = (post: any) => {
     if (!session) {
-      alert("Giriş yapmalısınız!");
+      notify.error("Giriş yapmalısınız!");
       setView("admin");
       return;
     }

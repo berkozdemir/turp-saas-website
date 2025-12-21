@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Mail, Search, Filter, Eye, CheckCircle, Archive, X, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Mail, Eye, CheckCircle, Archive, X, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { useNotification } from "../../components/NotificationProvider";
 
 interface AdminMessagesProps {
     token: string;
@@ -8,6 +9,7 @@ interface AdminMessagesProps {
 export const AdminMessages = ({ token }: AdminMessagesProps) => {
     const [messages, setMessages] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const notify = useNotification();
     const [filter, setFilter] = useState("all"); // all, new, read, archived
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -33,11 +35,11 @@ export const AdminMessages = ({ token }: AdminMessagesProps) => {
                 setMessages(data.data);
                 setTotalPages(data.pagination.pages);
             } else {
-                alert("Mesajlar yüklenirken hata oluştu: " + (data.error || "Bilinmeyen hata"));
+                notify.error("Mesajlar yüklenirken hata oluştu: " + (data.error || "Bilinmeyen hata"));
             }
         } catch (err) {
             console.error(err);
-            alert("Bağlantı hatası");
+            notify.error("Bağlantı hatası");
         } finally {
             setLoading(false);
         }
@@ -66,11 +68,12 @@ export const AdminMessages = ({ token }: AdminMessagesProps) => {
                 if (selectedMessage?.id === id) {
                     setSelectedMessage({ ...selectedMessage, status });
                 }
+                notify.success(status === 'read' ? 'Mesaj okundu olarak işaretlendi' : status === 'archived' ? 'Mesaj arşivlendi' : 'Durum güncellendi');
             } else {
-                alert("Güncelleme hatası");
+                notify.error("Güncelleme hatası");
             }
         } catch (err) {
-            alert("Bağlantı hatası");
+            notify.error("Bağlantı hatası");
         } finally {
             setActionLoading(false);
         }
@@ -90,8 +93,8 @@ export const AdminMessages = ({ token }: AdminMessagesProps) => {
                             key={f}
                             onClick={() => { setFilter(f); setPage(1); }}
                             className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${filter === f
-                                    ? "bg-white text-cyan-700 shadow-sm border border-slate-100"
-                                    : "text-slate-500 hover:text-slate-700"
+                                ? "bg-white text-cyan-700 shadow-sm border border-slate-100"
+                                : "text-slate-500 hover:text-slate-700"
                                 }`}
                         >
                             {f === "all" ? "Tümü" : f === "new" ? "Yeni" : f === "read" ? "Okunmuş" : "Arşiv"}
@@ -134,7 +137,7 @@ export const AdminMessages = ({ token }: AdminMessagesProps) => {
                                 >
                                     <td className="p-4">
                                         <span className={`inline-block w-2.5 h-2.5 rounded-full ${msg.status === 'new' ? 'bg-green-500' :
-                                                msg.status === 'read' ? 'bg-slate-300' : 'bg-orange-300'
+                                            msg.status === 'read' ? 'bg-slate-300' : 'bg-orange-300'
                                             }`}></span>
                                         <span className="ml-2 text-xs font-medium text-slate-500 uppercase">{msg.status}</span>
                                     </td>

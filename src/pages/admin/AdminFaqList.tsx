@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Search, Plus, Edit2, Trash2, Globe, Star, StarOff, Eye, EyeOff, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { useNotification } from "../../components/NotificationProvider";
+import { useConfirm } from "../../components/ConfirmProvider";
 
 interface AdminFaqListProps {
     token: string;
@@ -10,6 +12,8 @@ interface AdminFaqListProps {
 export const AdminFaqList = ({ token, onEdit, onCreate }: AdminFaqListProps) => {
     const [faqs, setFaqs] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const notify = useNotification();
+    const confirm = useConfirm();
     const [filterLang, setFilterLang] = useState("all");
     const [filterShowcased, setFilterShowcased] = useState("all");
     const [filterActive, setFilterActive] = useState("all");
@@ -39,10 +43,10 @@ export const AdminFaqList = ({ token, onEdit, onCreate }: AdminFaqListProps) => 
                 setFaqs(data.data);
                 setTotalPages(data.pagination.pages);
             } else {
-                alert("Hata: " + (data.error || "SSS listesi alınamadı"));
+                notify.error(data.error || "SSS listesi alınamadı");
             }
         } catch (err) {
-            alert("Bağlantı hatası");
+            notify.error("Bağlantı hatası");
         } finally {
             setLoading(false);
         }
@@ -54,7 +58,15 @@ export const AdminFaqList = ({ token, onEdit, onCreate }: AdminFaqListProps) => 
     }, [filterLang, filterShowcased, filterActive, search, page]);
 
     const handleDelete = async (id: number) => {
-        if (!confirm("Bu SSS'yi silmek istediğinize emin misiniz?")) return;
+        const isConfirmed = await confirm({
+            title: 'SSS Sil',
+            message: "Bu SSS'yi silmek istediğinize emin misiniz?",
+            confirmLabel: 'Sil',
+            cancelLabel: 'İptal',
+            type: 'danger'
+        });
+
+        if (!isConfirmed) return;
 
         try {
             const response = await fetch(`${API_URL}/index.php?action=delete_faq`, {
@@ -68,11 +80,12 @@ export const AdminFaqList = ({ token, onEdit, onCreate }: AdminFaqListProps) => 
             const data = await response.json();
             if (data.success) {
                 setFaqs(faqs.filter(f => f.id !== id));
+                notify.success("SSS başarıyla silindi");
             } else {
-                alert("Silme hatası");
+                notify.error("Silme hatası");
             }
         } catch (err) {
-            alert("Bağlantı hatası");
+            notify.error("Bağlantı hatası");
         }
     };
 

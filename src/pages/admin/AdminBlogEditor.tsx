@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, Save, Loader2, Globe, Calendar, User, CheckCircle } from "lucide-react";
 import { ImageUploader } from "../../components/ImageUploader";
+import { useNotification } from "../../components/NotificationProvider";
 
 interface AdminBlogEditorProps {
     token: string;
@@ -11,6 +12,7 @@ interface AdminBlogEditorProps {
 
 export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEditorProps) => {
     const [loading, setLoading] = useState(false);
+    const notify = useNotification();
     const [loadingPost, setLoadingPost] = useState(false);
     const [formData, setFormData] = useState({
         title: "",
@@ -52,7 +54,7 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                 })
                 .catch(err => {
                     console.error("Post detail fetch error:", err);
-                    alert("İçerik detayları yüklenemedi");
+                    notify.error("İçerik detayları yüklenemedi");
                 })
                 .finally(() => setLoadingPost(false));
         } else if (!post) {
@@ -108,12 +110,13 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
             const data = await response.json();
 
             if (data.success) {
+                notify.success(post ? "İçerik başarıyla güncellendi" : "İçerik başarıyla oluşturuldu");
                 onSave();
             } else {
-                alert("Hata: " + (data.error || "Kaydedilemedi"));
+                notify.error("Hata: " + (data.error || "Kaydedilemedi"));
             }
         } catch (err) {
-            alert("Bağlantı hatası");
+            notify.error("Bağlantı hatası");
         } finally {
             setLoading(false);
         }
@@ -175,7 +178,7 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                                 existingImageUrl={formData.image_url}
                                 preset="blogCover"
                                 onUploadSuccess={(url) => handleChange('image_url', url)}
-                                onUploadError={(error) => alert("Görsel yükleme hatası: " + error)}
+                                onUploadError={(error) => notify.error("Görsel yükleme hatası: " + error)}
                                 onRemove={() => handleChange('image_url', '')}
                                 helperText="Otomatik olarak optimize edilir (maks 1600×900, ~400KB)"
                             />

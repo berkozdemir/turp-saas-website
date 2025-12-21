@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { Search, Plus, Edit, Trash2, UserCheck, UserX, Loader2, Shield, Users, Eye } from "lucide-react";
+import { useConfirm } from "../../components/ConfirmProvider";
+import { useNotification } from "../../components/NotificationProvider";
 
 interface AdminUser {
     id: number;
@@ -43,6 +45,9 @@ export const AdminUserList = ({ token, userRole, onEdit, onCreate }: AdminUserLi
     const [statusFilter, setStatusFilter] = useState("all");
     const [searchQuery, setSearchQuery] = useState("");
 
+    const confirm = useConfirm();
+    const notify = useNotification();
+
     const API_URL = import.meta.env.VITE_API_URL || "/api";
 
     const fetchUsers = async () => {
@@ -70,7 +75,15 @@ export const AdminUserList = ({ token, userRole, onEdit, onCreate }: AdminUserLi
     }, [roleFilter, statusFilter, searchQuery]);
 
     const handleDelete = async (user: AdminUser) => {
-        if (!confirm(`"${user.name}" kullanıcısını silmek istediğinize emin misiniz?`)) return;
+        const confirmed = await confirm({
+            title: 'Kullanıcı Sil',
+            message: `"${user.name}" kullanıcısını silmek istediğinize emin misiniz?`,
+            confirmLabel: 'Sil',
+            cancelLabel: 'İptal',
+            type: 'danger'
+        });
+
+        if (!confirmed) return;
 
         try {
             const response = await fetch(`${API_URL}/index.php?action=delete_admin_user`, {
@@ -83,12 +96,13 @@ export const AdminUserList = ({ token, userRole, onEdit, onCreate }: AdminUserLi
             });
             const data = await response.json();
             if (data.success) {
+                notify.success('Kullanıcı başarıyla silindi');
                 fetchUsers();
             } else {
-                alert(data.error || "Silme işlemi başarısız");
+                notify.error(data.error || "Silme işlemi başarısız");
             }
         } catch (err) {
-            alert("Bağlantı hatası");
+            notify.error("Bağlantı hatası");
         }
     };
 
