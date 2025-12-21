@@ -11,8 +11,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Production security: Disable error display
+$is_production = file_exists(__DIR__ . '/env.php');
+if ($is_production) {
+    error_reporting(0);
+    ini_set('display_errors', 0);
+} else {
+    // Local development: Show errors
+    error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+}
 
 // Load env.php for production (if exists)
 // This allows credentials to be stored securely outside of git
@@ -45,10 +53,28 @@ $server_secret = get_env_strict('VITE_API_SECRET');
 $brevo_api_key = get_env_strict('BREVO_API_KEY');
 $deepseek_api_key = get_env_strict('DEEPSEEK_API_KEY');
 
-$db_host = get_env_strict('DB_HOST') ?? 'db';
-$db_name = get_env_strict('DB_NAME') ?? 'turp_saas';
-$db_user = get_env_strict('DB_USER') ?? 'turp_user';
-$db_pass = get_env_strict('DB_PASS') ?? 'turp_password';
+// Database credentials - MUST be set in env.php for production
+$db_host = get_env_strict('DB_HOST');
+$db_name = get_env_strict('DB_NAME');
+$db_user = get_env_strict('DB_USER');
+$db_pass = get_env_strict('DB_PASS');
+
+// Fallback only for local Docker development
+if (!$db_host)
+    $db_host = 'db';
+if (!$db_name)
+    $db_name = 'turp_saas';
+if (!$db_user)
+    $db_user = 'turp_user';
+if (!$db_pass)
+    $db_pass = 'turp_password';
+
+// Safety check: In production, credentials MUST come from env.php
+if ($is_production && (!get_env_strict('DB_HOST') || !get_env_strict('DB_PASS'))) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Sunucu yapılandırma hatası']);
+    exit();
+}
 
 // =================================================================
 // CORS
