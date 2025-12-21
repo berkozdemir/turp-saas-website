@@ -42,9 +42,11 @@ jobs:
             echo 'Uploading Frontend...';
             mirror -R ./dist/ / --exclude uploads/ --exclude api/ --exclude .git/ --delete-first;
             
+            echo 'Uploading Uploads (optimized images)...';
+            mirror -R ./public/uploads/ /uploads/;
+            
             echo 'Uploading API...';
             mirror -R ./api/ /api/ --exclude .git/;
             
             quit;
           "
-
