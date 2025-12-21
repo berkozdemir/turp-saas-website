@@ -143,6 +143,9 @@ require_once __DIR__ . '/faq_api.php';
 // Include User Management API
 require_once __DIR__ . '/user_api.php';
 
+// Include Translation API
+require_once __DIR__ . '/translate_helper.php';
+
 // =================================================================
 // ACTIONS
 // =================================================================

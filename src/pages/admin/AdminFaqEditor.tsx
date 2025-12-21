@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Save, Loader2, Globe, Star, Eye, Hash, Plus } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Globe, Star, Eye, Hash, Plus, Languages, Sparkles } from "lucide-react";
 
 interface AdminFaqEditorProps {
     token: string;
@@ -9,18 +9,29 @@ interface AdminFaqEditorProps {
 }
 
 export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorProps) => {
+    // Turkish (primary)
     const [question, setQuestion] = useState(faq?.question || "");
     const [answer, setAnswer] = useState(faq?.answer || "");
+
+    // English translations
+    const [questionEn, setQuestionEn] = useState(faq?.question_en || "");
+    const [answerEn, setAnswerEn] = useState(faq?.answer_en || "");
+
+    // Chinese translations
+    const [questionZh, setQuestionZh] = useState(faq?.question_zh || "");
+    const [answerZh, setAnswerZh] = useState(faq?.answer_zh || "");
+
     const [category, setCategory] = useState(faq?.category || "Genel");
     const [newCategory, setNewCategory] = useState("");
     const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
     const [categories, setCategories] = useState<string[]>(["Genel", "Hastalar", "Araştırıcılar", "Teknik", "Fiyatlandırma"]);
-    const [language, setLanguage] = useState(faq?.language || "tr");
     const [isShowcased, setIsShowcased] = useState(Boolean(Number(faq?.is_showcased)));
     const [isActive, setIsActive] = useState(faq ? Boolean(Number(faq.is_active)) : true);
     const [sortOrder, setSortOrder] = useState(faq?.sort_order || 0);
     const [saving, setSaving] = useState(false);
+    const [translating, setTranslating] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [translateSuccess, setTranslateSuccess] = useState(false);
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
     const isEditing = Boolean(faq?.id);
@@ -37,7 +48,6 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
                     const cats = data.data.faq_categories.split(',').map((c: string) => c.trim()).filter((c: string) => c);
                     if (cats.length > 0) {
                         setCategories(cats);
-                        // If current category not in list, add it
                         if (faq?.category && !cats.includes(faq.category)) {
                             setCategories([...cats, faq.category]);
                         }
@@ -58,7 +68,6 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
             setNewCategory("");
             setShowNewCategoryInput(false);
 
-            // Save to settings
             fetch(`${API_URL}/index.php?action=update_settings`, {
                 method: "POST",
                 headers: {
@@ -67,6 +76,49 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
                 },
                 body: JSON.stringify({ faq_categories: updatedCategories.join(', ') }),
             }).catch(err => console.error("Category save error:", err));
+        }
+    };
+
+    // AI Translation
+    const handleTranslate = async () => {
+        if (!question.trim() || !answer.trim()) {
+            setError("Çeviri için önce Türkçe soru ve cevap girin.");
+            return;
+        }
+
+        setTranslating(true);
+        setError(null);
+        setTranslateSuccess(false);
+
+        try {
+            const response = await fetch(`${API_URL}/index.php?action=translate_faq_all`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    question_tr: question,
+                    answer_tr: answer
+                }),
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.translations) {
+                setQuestionEn(data.translations.en.question);
+                setAnswerEn(data.translations.en.answer);
+                setQuestionZh(data.translations.zh.question);
+                setAnswerZh(data.translations.zh.answer);
+                setTranslateSuccess(true);
+                setTimeout(() => setTranslateSuccess(false), 3000);
+            } else {
+                setError(data.error || "Çeviri başarısız");
+            }
+        } catch (err) {
+            setError("Çeviri bağlantı hatası");
+        } finally {
+            setTranslating(false);
         }
     };
 
@@ -86,8 +138,11 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
             const payload: any = {
                 question,
                 answer,
+                question_en: questionEn,
+                answer_en: answerEn,
+                question_zh: questionZh,
+                answer_zh: answerZh,
                 category,
-                language,
                 is_showcased: isShowcased,
                 is_active: isActive,
                 sort_order: sortOrder
@@ -139,44 +194,136 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="p-8 max-w-3xl space-y-6">
+            <form onSubmit={handleSubmit} className="p-8 max-w-4xl space-y-6">
                 {error && (
                     <div className="p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl font-medium">
                         {error}
                     </div>
                 )}
 
-                {/* Question */}
-                <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">
-                        Soru <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        className="w-full p-3 border border-slate-200 rounded-xl focus:border-rose-500 outline-none"
-                        value={question}
-                        onChange={e => setQuestion(e.target.value)}
-                        placeholder="Örn: e-Nabız entegrasyonu nasıl çalışır?"
-                        required
-                    />
+                {translateSuccess && (
+                    <div className="p-4 bg-green-50 border border-green-200 text-green-700 rounded-xl font-medium flex items-center gap-2">
+                        <Sparkles size={18} /> Çeviriler başarıyla oluşturuldu!
+                    </div>
+                )}
+
+                {/* Turkish (Primary) */}
+                <div className="bg-rose-50 p-6 rounded-xl border border-rose-100">
+                    <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <Globe size={18} className="text-rose-600" /> Türkçe (Ana İçerik)
+                    </h3>
+
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-2">
+                                Soru <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                className="w-full p-3 border border-slate-200 rounded-xl focus:border-rose-500 outline-none bg-white"
+                                value={question}
+                                onChange={e => setQuestion(e.target.value)}
+                                placeholder="Örn: e-Nabız entegrasyonu nasıl çalışır?"
+                                required
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-2">
+                                Cevap <span className="text-red-500">*</span>
+                            </label>
+                            <textarea
+                                className="w-full p-3 border border-slate-200 rounded-xl focus:border-rose-500 outline-none resize-none h-32 bg-white"
+                                value={answer}
+                                onChange={e => setAnswer(e.target.value)}
+                                placeholder="Sorunun cevabını buraya yazın..."
+                                required
+                            />
+                        </div>
+                    </div>
                 </div>
 
-                {/* Answer */}
-                <div>
-                    <label className="block text-sm font-bold text-slate-700 mb-2">
-                        Cevap <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                        className="w-full p-3 border border-slate-200 rounded-xl focus:border-rose-500 outline-none resize-none h-40"
-                        value={answer}
-                        onChange={e => setAnswer(e.target.value)}
-                        placeholder="Sorunun cevabını buraya yazın..."
-                        required
-                    />
-                    <p className="text-xs text-slate-400 mt-1">Markdown desteklenir.</p>
+                {/* AI Translate Button */}
+                <div className="flex justify-center">
+                    <button
+                        type="button"
+                        onClick={handleTranslate}
+                        disabled={translating || !question.trim() || !answer.trim()}
+                        className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold rounded-xl hover:from-purple-700 hover:to-blue-700 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                    >
+                        {translating ? (
+                            <>
+                                <Loader2 className="animate-spin" size={20} />
+                                Çeviriliyor...
+                            </>
+                        ) : (
+                            <>
+                                <Languages size={20} />
+                                🤖 AI ile Çevir (EN + ZH)
+                            </>
+                        )}
+                    </button>
                 </div>
 
-                {/* Category & Language */}
+                {/* English */}
+                <div className="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                    <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <Globe size={18} className="text-blue-600" /> English
+                    </h3>
+
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-2">Question</label>
+                            <input
+                                type="text"
+                                className="w-full p-3 border border-slate-200 rounded-xl focus:border-blue-500 outline-none bg-white"
+                                value={questionEn}
+                                onChange={e => setQuestionEn(e.target.value)}
+                                placeholder="English question..."
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-2">Answer</label>
+                            <textarea
+                                className="w-full p-3 border border-slate-200 rounded-xl focus:border-blue-500 outline-none resize-none h-24 bg-white"
+                                value={answerEn}
+                                onChange={e => setAnswerEn(e.target.value)}
+                                placeholder="English answer..."
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Chinese */}
+                <div className="bg-amber-50 p-6 rounded-xl border border-amber-100">
+                    <h3 className="font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <Globe size={18} className="text-amber-600" /> 中文
+                    </h3>
+
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-2">问题</label>
+                            <input
+                                type="text"
+                                className="w-full p-3 border border-slate-200 rounded-xl focus:border-amber-500 outline-none bg-white"
+                                value={questionZh}
+                                onChange={e => setQuestionZh(e.target.value)}
+                                placeholder="Chinese question..."
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-bold text-slate-700 mb-2">回答</label>
+                            <textarea
+                                className="w-full p-3 border border-slate-200 rounded-xl focus:border-amber-500 outline-none resize-none h-24 bg-white"
+                                value={answerZh}
+                                onChange={e => setAnswerZh(e.target.value)}
+                                placeholder="Chinese answer..."
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Category & Settings */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <label className="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
@@ -231,23 +378,19 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
                     </div>
 
                     <div>
-                        <label className="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-2">
-                            <Globe size={14} /> Dil
-                        </label>
-                        <select
-                            className="w-full p-3 border border-slate-200 rounded-xl focus:border-rose-500 outline-none bg-white"
-                            value={language}
-                            onChange={e => setLanguage(e.target.value)}
-                        >
-                            <option value="tr">Türkçe</option>
-                            <option value="en">English</option>
-                            <option value="zh">中文</option>
-                        </select>
+                        <label className="block text-sm font-bold text-slate-700 mb-2">Sıralama</label>
+                        <input
+                            type="number"
+                            className="w-full p-3 border border-slate-200 rounded-xl focus:border-rose-500 outline-none"
+                            value={sortOrder}
+                            onChange={e => setSortOrder(Number(e.target.value))}
+                            min={0}
+                        />
                     </div>
                 </div>
 
-                {/* Toggles & Sort Order */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {/* Toggles */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="flex items-center gap-3 p-4 bg-amber-50 rounded-xl border border-amber-100">
                         <input
                             type="checkbox"
@@ -274,17 +417,6 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
                             <Eye size={18} className="text-green-500" />
                             <span className="font-medium text-slate-700">Aktif</span>
                         </label>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-bold text-slate-700 mb-2">Sıralama</label>
-                        <input
-                            type="number"
-                            className="w-full p-3 border border-slate-200 rounded-xl focus:border-rose-500 outline-none"
-                            value={sortOrder}
-                            onChange={e => setSortOrder(Number(e.target.value))}
-                            min={0}
-                        />
                     </div>
                 </div>
 

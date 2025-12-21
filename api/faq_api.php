@@ -120,8 +120,11 @@ if ($action == 'create_faq' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $question = trim($data['question'] ?? '');
     $answer = trim($data['answer'] ?? '');
+    $question_en = trim($data['question_en'] ?? '');
+    $answer_en = trim($data['answer_en'] ?? '');
+    $question_zh = trim($data['question_zh'] ?? '');
+    $answer_zh = trim($data['answer_zh'] ?? '');
     $category = $data['category'] ?? 'Genel';
-    $language = $data['language'] ?? 'tr';
     $is_showcased = !empty($data['is_showcased']) ? 1 : 0;
     $is_active = isset($data['is_active']) ? ($data['is_active'] ? 1 : 0) : 1;
     $sort_order = (int) ($data['sort_order'] ?? 0);
@@ -132,11 +135,11 @@ if ($action == 'create_faq' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $stmt = $conn->prepare("INSERT INTO faqs (question, answer, category, language, is_showcased, is_active, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$question, $answer, $category, $language, $is_showcased, $is_active, $sort_order]);
+        $stmt = $conn->prepare("INSERT INTO faqs (question, answer, question_en, answer_en, question_zh, answer_zh, category, is_showcased, is_active, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$question, $answer, $question_en, $answer_en, $question_zh, $answer_zh, $category, $is_showcased, $is_active, $sort_order]);
         echo json_encode(['success' => true, 'id' => $conn->lastInsertId()]);
     } catch (Exception $e) {
-        echo json_encode(['error' => 'Kayıt oluşturulamadı']);
+        echo json_encode(['error' => 'Kayıt oluşturulamadı: ' . $e->getMessage()]);
     }
     exit;
 }
@@ -151,8 +154,11 @@ if ($action == 'update_faq' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $data['id'] ?? 0;
     $question = trim($data['question'] ?? '');
     $answer = trim($data['answer'] ?? '');
+    $question_en = trim($data['question_en'] ?? '');
+    $answer_en = trim($data['answer_en'] ?? '');
+    $question_zh = trim($data['question_zh'] ?? '');
+    $answer_zh = trim($data['answer_zh'] ?? '');
     $category = $data['category'] ?? 'Genel';
-    $language = $data['language'] ?? 'tr';
     $is_showcased = !empty($data['is_showcased']) ? 1 : 0;
     $is_active = isset($data['is_active']) ? ($data['is_active'] ? 1 : 0) : 1;
     $sort_order = (int) ($data['sort_order'] ?? 0);
@@ -163,11 +169,11 @@ if ($action == 'update_faq' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $stmt = $conn->prepare("UPDATE faqs SET question=?, answer=?, category=?, language=?, is_showcased=?, is_active=?, sort_order=? WHERE id=?");
-        $stmt->execute([$question, $answer, $category, $language, $is_showcased, $is_active, $sort_order, $id]);
+        $stmt = $conn->prepare("UPDATE faqs SET question=?, answer=?, question_en=?, answer_en=?, question_zh=?, answer_zh=?, category=?, is_showcased=?, is_active=?, sort_order=? WHERE id=?");
+        $stmt->execute([$question, $answer, $question_en, $answer_en, $question_zh, $answer_zh, $category, $is_showcased, $is_active, $sort_order, $id]);
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
-        echo json_encode(['error' => 'Güncelleme başarısız']);
+        echo json_encode(['error' => 'Güncelleme başarısız: ' . $e->getMessage()]);
     }
     exit;
 }
