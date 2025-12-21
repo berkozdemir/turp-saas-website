@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://turp.health/sitemap.xml
+
+# Disallow admin
+User-agent: *
+Disallow: /admin
