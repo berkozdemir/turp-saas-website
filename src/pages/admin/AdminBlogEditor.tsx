@@ -11,6 +11,7 @@ interface AdminBlogEditorProps {
 
 export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEditorProps) => {
     const [loading, setLoading] = useState(false);
+    const [loadingPost, setLoadingPost] = useState(false);
     const [formData, setFormData] = useState({
         title: "",
         slug: "",
@@ -25,23 +26,50 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
 
+    // Fetch full post details when editing (list API only returns partial data)
     useEffect(() => {
-        if (post) {
+        if (post?.id) {
+            setLoadingPost(true);
+            fetch(`${API_URL}/index.php?action=get_blog_post_detail&id=${post.id}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.data) {
+                        const p = data.data;
+                        setFormData({
+                            title: p.title || "",
+                            slug: p.slug || "",
+                            image_url: p.image_url || "",
+                            language: p.language || "tr",
+                            author: p.author || "",
+                            excerpt: p.excerpt || "",
+                            content: p.content || "",
+                            status: p.status || "draft",
+                            publish_at: p.publish_at ? p.publish_at.slice(0, 16) : "",
+                        });
+                    }
+                })
+                .catch(err => {
+                    console.error("Post detail fetch error:", err);
+                    alert("İçerik detayları yüklenemedi");
+                })
+                .finally(() => setLoadingPost(false));
+        } else if (!post) {
+            // New post - reset form
             setFormData({
-                title: post.title || "",
-                slug: post.slug || "",
-                image_url: post.image_url || "",
-                language: post.language || "tr",
-                author: post.author || "",
-                excerpt: post.excerpt || "",
-                content: post.content || "",
-                status: post.status || "draft",
-                publish_at: post.publish_at ? post.publish_at.slice(0, 16) : "",
+                title: "",
+                slug: "",
+                image_url: "",
+                language: "tr",
+                author: "Admin",
+                excerpt: "",
+                content: "",
+                status: "draft",
+                publish_at: "",
             });
-        } else {
-            setFormData(prev => ({ ...prev, author: 'Admin' }));
         }
-    }, [post]);
+    }, [post, token, API_URL]);
 
     const generateSlug = (text: string) => {
         return text.toLowerCase()
@@ -92,7 +120,15 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
     };
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden relative">
+            {loadingPost && (
+                <div className="absolute inset-0 bg-white/80 z-50 flex items-center justify-center">
+                    <div className="flex items-center gap-3 text-cyan-600">
+                        <Loader2 className="w-8 h-8 animate-spin" />
+                        <span className="font-medium">İçerik yükleniyor...</span>
+                    </div>
+                </div>
+            )}
             <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                 <button onClick={onCancel} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-medium transition-colors">
                     <ArrowLeft size={18} /> Listeye Dön
