@@ -431,5 +431,8 @@ if ($action == 'update_settings' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
+// Include Landing API
+include_once __DIR__ . '/landing_api.php';
+
 echo json_encode(["error" => "Geçersiz işlem"]);
 ?>

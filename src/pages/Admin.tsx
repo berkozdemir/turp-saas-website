@@ -11,6 +11,8 @@ import { AdminUserEditor } from "./admin/AdminUserEditor";
 import { AdminAnalyticsSeo } from "./admin/AdminAnalyticsSeo";
 import { AdminLegalList } from "./admin/AdminLegalList";
 import { AdminLegalEditor } from "./admin/AdminLegalEditor";
+import { AdminLandingList } from "./admin/AdminLandingList";
+import { AdminLandingEditor } from "./admin/AdminLandingEditor";
 import {
   Mail,
   FileText,
@@ -21,7 +23,8 @@ import {
   Settings,
   HelpCircle,
   Users,
-  BarChart3
+  BarChart3,
+  Layout
 } from "lucide-react";
 
 export const Admin = () => {
@@ -38,6 +41,7 @@ export const Admin = () => {
   const [editingFaq, setEditingFaq] = useState<any | null>(null);
   const [editingUser, setEditingUser] = useState<any | null>(null);
   const [editingLegalDoc, setEditingLegalDoc] = useState<any | null>(null);
+  const [editingLandingId, setEditingLandingId] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const userRole = session?.user?.role || 'viewer';
@@ -177,6 +181,22 @@ export const Admin = () => {
             onSave={() => setActiveTab("legal_list")}
           />
         );
+      case "landing_list":
+        return (
+          <AdminLandingList
+            onEdit={(id) => {
+              setEditingLandingId(id);
+              setActiveTab("landing_edit");
+            }}
+          />
+        );
+      case "landing_edit":
+        return (
+          <AdminLandingEditor
+            editId={editingLandingId}
+            onBack={() => setActiveTab("landing_list")}
+          />
+        );
       default:
         return <AdminMessages token={session.token} />;
     }
@@ -273,6 +293,19 @@ export const Admin = () => {
               >
                 <FileText size={20} />
                 <span className="font-medium">Hukuki Dokümanlar</span>
+              </button>
+            )}
+
+            {userRole === 'admin' && (
+              <button
+                onClick={() => { setActiveTab("landing_list"); setMobileMenuOpen(false); }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab.startsWith("landing")
+                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  }`}
+              >
+                <Layout size={20} />
+                <span className="font-medium">Landing Builder</span>
               </button>
             )}
 
