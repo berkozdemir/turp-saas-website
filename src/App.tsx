@@ -6,6 +6,9 @@ import { Footer } from "./components/Footer";
 import { detectLocationSettings } from "./utils/geo";
 import { SEO } from "./components/SEO";
 
+// IWRS App Import
+
+
 // SAYFALARI IMPORT ET
 import { Home } from "./pages/Home";
 import { About } from "./pages/About";
@@ -19,15 +22,19 @@ import { RheumaCaseStudy } from "./pages/RheumaCaseStudy";
 import { FaqPage } from "./pages/FaqPage";
 import { LegalPage } from "./pages/LegalPage";
 import { useNotification } from "./components/NotificationProvider";
-import useAnalytics from "./lib/analytics";
+import useAnalytics, { trackLanguageChange } from "./lib/analytics";
 
 export default function App() {
+
+
+  // --- TURP APP LOGIC BELOW ---
+
   // --- STATE YÖNETİMİ ---
   const [view, setView] = useState<any>("home");
-  const [editingPost, setEditingPost] = useState<any | null>(null);
+  // const [editingPost, setEditingPost] = useState<any | null>(null);
   const [session, setSession] = useState<any | null>(null);
   const [globalCurrency, setGlobalCurrency] = useState("TRY");
-  const [isScrolled, setIsScrolled] = useState(false);
+  // const [isScrolled, setIsScrolled] = useState(false);
   const notify = useNotification();
 
   // i18n (Çeviri) Kurulumu
@@ -58,9 +65,9 @@ export default function App() {
 
   // --- BAŞLANGIÇ AYARLARI (EFFECTS) ---
   useEffect(() => {
-    // 1. Scroll Dinleyicisi
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
+    // 1. Scroll Dinleyicisi (Removed unused)
+    // const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    // window.addEventListener("scroll", handleScroll);
 
     // 2. Konum ve Dil Algılama
     const initLocalization = async () => {
@@ -83,7 +90,7 @@ export default function App() {
     initLocalization();
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      // window.removeEventListener("scroll", handleScroll);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -94,6 +101,7 @@ export default function App() {
     setView("home");
   };
 
+  /*
   const startEdit = (post: any) => {
     if (!session) {
       notify.error("Giriş yapmalısınız!");
@@ -103,6 +111,7 @@ export default function App() {
     setEditingPost(post);
     setView("admin");
   };
+  */
 
   const changeLanguage = (lng: string) => {
     const oldLang = i18n.language;
@@ -110,7 +119,6 @@ export default function App() {
 
     // Track language change
     if (window.gtag) {
-      const { trackLanguageChange } = require('./lib/analytics');
       trackLanguageChange(oldLang, lng);
     }
   };
@@ -144,7 +152,7 @@ export default function App() {
       }
       if (view.type === "detail") {
         return (
-          <PostDetail post={view.post} setView={setView} onEdit={startEdit} />
+          <PostDetail post={view.post} setView={setView} />
         );
       }
       if (view.type === "roi") {

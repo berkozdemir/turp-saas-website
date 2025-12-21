@@ -1,0 +1,1107 @@
+{
+  "header": {
+    "brand": "Omega CRO",
+    "platform": "Platform",
+    "modules": "Modules",
+    "resources": "Resources",
+    "randomizationBot": "Randomization Bot",
+    "iwrsInterface": "Randomization System (IWRS)",
+    "iwrsInterfaceDesc": "Patient randomization and treatment arm assignment",
+    "emergencyUnblinding": "Emergency Unblinding",
+    "emergencyUnblindingDesc": "Secure emergency unblinding procedure",
+    "inventorySystem": "Inventory & Drug Tracking",
+    "inventorySystemDesc": "Advanced inventory and cold chain management",
+    "dataSecurity": "Data Security",
+    "dataSecurityDesc": "KVKK/GDPR compliant patient information",
+    "adverseEvents": "Adverse Events Reporting",
+    "adverseEventsDesc": "Automated adverse event tracking via phone",
+    "medicationReminder": "Medication Reminder",
+    "medicationReminderDesc": "Automatic medication intake reminders",
+    "appointmentReminder": "Appointment Reminder",
+    "appointmentReminderDesc": "Clinical visit and follow-up reminders",
+    "patientSurvey": "Patient Surveys",
+    "patientSurveyDesc": "Scheduled survey applications via phone",
+    "references": "References",
+    "faq": "FAQ",
+    "blog": "Blog",
+    "demo": "Demo",
+    "login": "Sign In",
+    "requestDemo": "Request Demo",
+    "contact": "Contact"
+  },
+  "hero": {
+    "badge": "AI-Powered IWRS Platform",
+    "title": "Transform Clinical Trial",
+    "titleHighlight": "Randomization with AI",
+    "description": "Omega CRO turns IWRS into a decision-driving tool. Our platform uses AI to design and optimize your randomization and dosing strategies. It learns from historical data, simulates trial scenarios, and analyzes operational metrics to ensure balanced patient groups, uninterrupted IMP supply, and maximized trial efficiency.",
+    "getStarted": "Get Started",
+    "watchDemo": "Watch Demo",
+    "fdaCompliant": "Compliant",
+    "emaCompliant": "Compliant",
+    "support247": "Support",
+    "imageAlt": "AI-powered randomization visualization"
+  },
+  "features": {
+    "title": "Intelligent Features",
+    "subtitle": "AI-powered solutions to optimize your clinical trials",
+    "mainTitle": "Intelligent Features for",
+    "mainTitleHighlight": "Smarter Trials",
+    "mainSubtitle": "Everything you need to run efficient, compliant clinical trials with AI-powered insights at every step.",
+    "aiDrivenOptimization": {
+      "title": "AI-Driven Optimization",
+      "description": "Machine learning algorithms analyze historical trial data to recommend optimal randomization strategies and predict supply needs."
+    },
+    "balancedRandomization": {
+      "title": "Balanced Randomization",
+      "description": "Ensure perfectly balanced patient groups across treatment arms with intelligent stratification factor analysis."
+    },
+    "supplyChainIntelligence": {
+      "title": "Supply Chain Intelligence",
+      "description": "Real-time IMP supply forecasting prevents stockouts and minimizes waste with predictive analytics."
+    },
+    "scenarioSimulation": {
+      "title": "Scenario Simulation",
+      "description": "Model different trial scenarios before launch to identify potential bottlenecks and optimize resource allocation."
+    },
+    "regulatoryCompliance": {
+      "title": "Regulatory Compliance",
+      "description": "Built-in FDA 21 CFR Part 11 and EMA compliance with full audit trails and validation documentation."
+    },
+    "rapidDeployment": {
+      "title": "Rapid Deployment",
+      "description": "Launch your study in days, not months, with pre-configured templates and automated study setup."
+    }
+  },
+  "platform": {
+    "badge": "Platform Interface",
+    "title": "AI-Powered",
+    "titleHighlight": "Decision Support",
+    "description": "Our IWRS platform provides real-time AI recommendations directly in your workflow. From randomization stratification to supply forecasting, every decision is backed by intelligent analysis.",
+    "smartRecommendations": {
+      "title": "Smart Recommendations",
+      "description": "Get AI-powered suggestions for optimal stratification factors based on your trial parameters."
+    },
+    "predictiveAnalytics": {
+      "title": "Predictive Analytics",
+      "description": "Forecast IMP requirements for each site with precision, reducing waste and preventing shortages."
+    },
+    "realTimeMonitoring": {
+      "title": "Real-Time Monitoring",
+      "description": "Track randomization balance and supply levels with live dashboards and instant alerts."
+    }
+  },
+  "aiModule": {
+    "badge": "AI Core Module",
+    "title": "Advanced AI Integration",
+    "titleHighlight": "Strengthening IWRS",
+    "description": "Omega CRO's new AI module strengthens the IWRS platform with adaptive randomization, predictive dosing, and real-time clinical operations monitoring. The AI core learns from evolving trial data, refines operational strategies, and supports decision-making to deliver faster, more reliable results in every clinical study.",
+    "adaptiveRandomization": {
+      "title": "Adaptive Randomization",
+      "description": "AI continuously adjusts randomization strategies based on real-time trial data and enrollment patterns."
+    },
+    "predictiveDosing": {
+      "title": "Predictive Dosing",
+      "description": "Advanced algorithms forecast optimal dosing requirements, preventing supply shortages and waste."
+    },
+    "realTimeMonitoring": {
+      "title": "Real-Time Monitoring",
+      "description": "Monitor clinical operations with instant insights and early detection of potential issues."
+    }
+  },
+  "compliance": {
+    "title": "Built for",
+    "titleHighlight": "Regulatory Confidence",
+    "subtitle": "Launch and run your study seamlessly with our FDA/EMA-compliant intelligent system.",
+    "fda": {
+      "title": "FDA 21 CFR Part 11",
+      "description": "Full compliance with electronic records and signatures requirements"
+    },
+    "ema": {
+      "title": "EMA Guidelines",
+      "description": "Meets all European Medicines Agency standards for clinical trials"
+    },
+    "dataSecurity": {
+      "title": "Data Security",
+      "description": "SOC 2 certified with end-to-end encryption and secure data centers"
+    },
+    "auditTrails": {
+      "title": "Complete Audit Trails",
+      "description": "Every action logged with timestamp, user ID, and change history"
+    },
+    "cta": {
+      "title": "Ready to transform your clinical trials?",
+      "description": "Join leading pharmaceutical and biotech companies using Omega CRO to accelerate their research."
+    }
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "Have questions? We'd be happy to help",
+    "name": "Your Name",
+    "email": "Email",
+    "message": "Your Message",
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "Your message has been sent successfully!",
+    "successDescription": "We'll get back to you as soon as possible.",
+    "error": "Failed to send message. Please try again.",
+    "errorTitle": "Error",
+    "emailLabel": "Email",
+    "phoneLabel": "Phone",
+    "addressLabel": "Address",
+    "addressValue": "Piri Reis Caddesi, No:2/4 Beytepe Çankaya Ankara Turkey",
+    "phoneOptional": "Phone (Optional)",
+    "phonePlaceholder": "+1 (555) 123-4567",
+    "validation": {
+      "name": "Name is required",
+      "nameMax": "Name must be less than 100 characters",
+      "email": "Invalid email address",
+      "emailMax": "Email must be less than 255 characters",
+      "phoneMax": "Phone must be less than 20 characters",
+      "message": "Message is required",
+      "messageMax": "Message must be less than 1000 characters"
+    }
+  },
+  "phoneServices": {
+    "badge": "Phone-Assisted Services",
+    "title": "Phone-Assisted",
+    "titleHighlight": "Clinical Services",
+    "description": "Intelligent call and SMS services supporting clinical trial participants via phone",
+    "adverseEvents": {
+      "title": "Adverse Events Reporting",
+      "description": "Regular reminders and automated queries about potential drug side effects via call or SMS.",
+      "learnMore": "Learn More"
+    },
+    "medicationReminder": {
+      "title": "Medication Reminder",
+      "description": "Automatic reminders for medication intake time via call or message to patients in treatment program.",
+      "learnMore": "Learn More"
+    },
+    "appointmentReminder": {
+      "title": "Appointment Reminder",
+      "description": "Automatic reminders for clinical visits, laboratory and follow-up appointments to participants.",
+      "learnMore": "Learn More"
+    },
+    "patientSurvey": {
+      "title": "Patient Surveys",
+      "description": "Scheduled delivery of surveys regarding satisfaction, therapy response and treatment compliance.",
+      "learnMore": "Learn More"
+    }
+  },
+  "footer": {
+    "cta_title": "Looking for the Right Partner for Your Project?",
+    "cta_description": "Discover our innovative clinical research solutions dedicated to transforming human health. Contact us and let's take your project to the next level.",
+    "cta_button": "Get in Touch",
+    "slogan": "Your reliable partner in clinical research.",
+    "quick_links": "Quick Links",
+    "legal_help": "Legal & Help",
+    "newsletter": "Subscribe to Our Newsletter",
+    "newsletter_description": "Don't miss out on our latest news and innovations.",
+    "email_placeholder": "Your email address...",
+    "subscribe_button": "Subscribe",
+    "contact_info": "Contact Information",
+    "all_rights_reserved": "All Rights Reserved.",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service",
+    "security_policy": "Security Policy",
+    "personal_data_notice": "Personal Data Notice"
+  },
+  "modules": {
+    "title": "Our Core Modules",
+    "subtitle": "Clinical Trial Management",
+    "description": "Omega CRO platform includes all essential modules to manage your clinical trials end-to-end.",
+    "iwrs": {
+      "title": "Randomization System (IWRS)",
+      "description": "AI-powered intelligent randomization and patient allocation system. Creates balanced patient groups according to study protocols.",
+      "button": "View Details"
+    },
+    "unblinding": {
+      "title": "Emergency Unblinding",
+      "description": "Safe and controlled unblinding system for emergency situations. Ensures regulatory compliance with automatic logging and reporting.",
+      "button": "View Details"
+    },
+    "inventory": {
+      "title": "Inventory Management System",
+      "description": "Track IMP stocks, monitor cold chain, and receive automatic alerts. Real-time inventory control.",
+      "button": "View Details"
+    },
+    "security": {
+      "title": "Data Security and Compliance",
+      "description": "GDPR/KVKK compliant data protection, encryption and access control. Security standards according to 21 CFR Part 11.",
+      "button": "View Details"
+    }
+  },
+  "auth": {
+    "title": "Account",
+    "description": "Sign in or create an account to access the AI Randomization Assistant",
+    "login": "Sign In",
+    "signup": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "fullName": "Full Name",
+    "loginButton": "Sign In",
+    "signupButton": "Sign Up",
+    "switchToSignup": "Don't have an account? Sign up",
+    "switchToLogin": "Already have an account? Sign in",
+    "verifyEmail": "Please check your email and verify your account.",
+    "loginSuccess": "Welcome.",
+    "error": "An error occurred. Please try again.",
+    "signupSuccess": "Sign up successful!",
+    "errorTitle": "Error",
+    "signupErrorTitle": "Sign up error",
+    "loginSuccessTitle": "Login successful!",
+    "loginErrorTitle": "Login error",
+    "backToHome": "Back to Home",
+    "benefitsTitle": "Register to access these benefits:",
+    "benefit1": "AI-powered Randomization Bot consultancy",
+    "benefit2": "Save and manage your study forms",
+    "benefit3": "Full access to demo IWRS system",
+    "benefit4": "Personalized recommendations and reports",
+    "validation": {
+    "email": "Please enter a valid email address",
+    "password": "Password must be at least 6 characters",
+    "fullName": "Name must be at least 2 characters",
+    "institution": "Institution / Company",
+    "confirmPassword": "Confirm Password",
+    "passwordsDoNotMatch": "Passwords do not match.",
+    "institutionRequired": "Institution is required.",
+    "checkEmail": "Registration successful! Please check your email to verify your account before logging in.",
+    "verifyEmailAlert": "Email Verification",
+    "verifyEmailDesc": "Please check your email and click the verification link to activate your account.",
+    "backToHome": "Back to Home"
+    }
+  },
+  "index": {
+    "welcome": "Welcome, {{name}}! 👋",
+    "welcomeDescription": "You can access the AI Randomization Assistant. Click the chat icon in the bottom right corner to get started.",
+    "signOut": "Sign Out",
+    "aiAssistantTitle": "AI Randomization Assistant",
+    "aiAssistantDescription": "Please sign in or create an account to use our AI assistant.",
+    "loginSignup": "Sign In / Sign Up",
+    "loading": "Loading..."
+  },
+  "randomizationBot": {
+    "title": "AI Randomization Assistant",
+    "placeholder": "Ask about randomization...",
+    "send": "Send",
+    "error": "Error sending message",
+    "authRequired": "Please sign in first"
+  },
+  "randomizationForm": {
+    "title": "Randomization Form",
+    "description": "Define randomization parameters for your study",
+    "basicInfo": "Basic Information",
+    "studyName": "Study Name",
+    "studyType": "Study Type",
+    "totalParticipants": "Total Participants",
+    "treatmentArms": "Treatment Arms",
+    "randomizationSettings": "Randomization Settings",
+    "randomizationMethod": "Randomization Method",
+    "blockSize": "Block Size",
+    "stratification": "Has Stratification?",
+    "stratificationFactors": "Stratification Factors",
+    "blinding": "Has Blinding?",
+    "blindingDetails": "Blinding Details",
+    "additionalOptions": "Additional Options",
+    "emergencyCodeOpening": "Emergency Code Opening",
+    "inventoryIntegration": "Inventory Integration",
+    "reportingPreferences": "Reporting Preferences",
+    "contactInfo": "Contact Information",
+    "fullName": "Full Name",
+    "email": "Email",
+    "phone": "Phone",
+    "institution": "Institution",
+    "testRun": "Test Run",
+    "submit": "Submit Form",
+    "submitting": "Submitting...",
+    "success": "Form submitted successfully",
+    "error": "Error submitting form",
+    "fullNamePlaceholder": "Full Name",
+    "institutionPlaceholder": "Institution or company name",
+    "studyNameLabel": "1. Study Name or Brief Description",
+    "studyNamePlaceholder": "e.g., Comparison of drug A vs drug B in hypertension treatment",
+    "studyTypeLabel": "2. Study Type",
+    "studyTypeRCT": "Randomized Controlled Trial (RCT)",
+    "studyTypeObservational": "Observational",
+    "studyTypeOther": "Other",
+    "studyTypeOtherPlaceholder": "Please explain",
+    "treatmentArmsLabel": "3. How Many Different Treatment or Experimental Arms?",
+    "stratificationLabel": "5. Are There Stratification Factors?",
+    "stratificationFactorsPlaceholder": "e.g., Age group (18-50, 51+), Gender",
+    "randomizationMethodLabel": "6. Randomization Method",
+    "methodSimple": "Simple Randomization",
+    "methodBlock": "Block Randomization",
+    "methodStratified": "Stratified Randomization",
+    "methodAdaptive": "Adaptive Randomization",
+    "methodHelp": "I Need Help Deciding",
+    "blockSizeLabel": "Block Size",
+    "blockSizePlaceholder": "e.g., 4, 6 or 8",
+    "blindingLabel": "7. Is There Blinding?",
+    "blindingDetailsPlaceholder": "e.g., Double-blind, Single-blind",
+    "reportingPreferencesLabel": "Reporting Preferences",
+    "reportingDaily": "Daily",
+    "reportingWeekly": "Weekly",
+    "reportingMonthly": "Monthly",
+    "reportingOnDemand": "On Demand",
+    "testRunLabel": "This is a Test Run (Not Real Data)",
+    "authError": "Error",
+    "authErrorDesc": "You need to sign in",
+    "successTitle": "Success",
+    "errorTitle": "Error",
+    "validation": {
+      "contactPerson": "Contact person name is required",
+      "institution": "Institution/Company information is required",
+      "phone": "Mobile phone is required",
+      "email": "Please enter a valid email address",
+      "studyName": "Study name is required",
+      "studyType": "You must select a study type",
+      "treatmentArms": "At least 2 arms required",
+      "totalParticipants": "At least 1 participant required",
+      "randomizationMethod": "You must select a randomization method",
+      "reportingPreferences": "At least one reporting preference must be selected"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "subtitle": "Latest insights on clinical research technologies and IWRS systems",
+    "loading": "Loading...",
+    "noPosts": "No blog posts available yet."
+  },
+  "notFound": {
+    "code": "404",
+    "title": "Page Not Found",
+    "description": "Oops! The page you are looking for does not exist.",
+    "backHome": "Return to Home"
+  },
+  "seo": {
+    "title": "Omega CRO - AI-Powered IWRS Platform for Clinical Trials",
+    "description": "Transform clinical trial randomization with AI. Omega CRO's intelligent IWRS platform optimizes randomization strategies, ensures balanced patient groups, and maximizes trial efficiency with FDA/EMA compliance."
+  },
+  "blogPost": {
+    "loading": "Loading...",
+    "notFound": "Blog post not found",
+    "backToBlog": "Back to Blog"
+  },
+  "iwrsMockup": {
+    "header": "Interactive Web Response System",
+    "studyId": "Study ID",
+    "signOut": "Sign Out",
+    "stats": {
+      "totalPatients": "Total Patients",
+      "randomizedToday": "Randomized Today",
+      "activeSites": "Active Sites",
+      "ipsInventory": "IPS Inventory"
+    },
+    "tabs": {
+      "randomize": "Randomize Patient",
+      "inventory": "Inventory",
+      "reports": "Reports",
+      "aiAssistant": "AI Assistant"
+    },
+    "randomizeForm": {
+      "title": "New Patient Randomization",
+      "description": "Enter patient information to randomize a new patient",
+      "patientId": "Patient ID",
+      "patientIdPlaceholder": "e.g. PT-XXX",
+      "site": "Site",
+      "selectSite": "Select a Site",
+      "stratificationFactor": "Stratification Factor",
+      "selectFactor": "Select a Factor",
+      "randomizeButton": "Randomize Patient",
+      "result": "Randomization Result",
+      "assignedTo": "Assigned to:",
+      "kitNumber": "Kit Number:",
+      "confirmationCode": "Confirmation Code:",
+      "printLabel": "Print Label"
+    },
+    "recentRandomizations": {
+      "title": "Recent Randomizations",
+      "patientId": "Patient ID",
+      "date": "Date",
+      "group": "Group",
+      "site": "Site",
+      "status": "Status"
+    },
+    "inventory": {
+      "title": "Inventory Management",
+      "description": "Manage kit inventory across sites",
+      "site": "Site",
+      "treatmentA": "Treatment A",
+      "treatmentB": "Treatment B",
+      "placebo": "Placebo",
+      "total": "Total",
+      "status": "Status",
+      "actions": "Actions",
+      "restock": "Restock"
+    },
+    "reports": {
+      "title": "Reports",
+      "description": "View study statistics and analytics",
+      "enrollmentProgress": "Enrollment Progress",
+      "target": "Target: 500 patients",
+      "groupDistribution": "Group Distribution",
+      "generateReport": "Generate Report"
+    },
+    "aiAssistant": {
+      "title": "AI Assistant",
+      "description": "Get AI-powered help for randomization recommendations and predictions",
+      "placeholder": "Ask the AI assistant a question...",
+      "send": "Send",
+      "suggestions": "AI Suggestions",
+      "balanceWarning": "⚠️ Imbalance detected at Site 002. Consider increasing enrollment at Sites 001 or 003.",
+      "inventoryAlert": "📦 Treatment A kits at Site 001 may run out in 2 weeks. Restocking recommended.",
+      "enrollmentTrend": "📈 Based on current enrollment rate, target enrollment expected in 8 weeks."
+    },
+    "statusBadges": {
+      "active": "Active",
+      "completed": "Completed",
+      "lowStock": "Low Stock",
+      "adequate": "Adequate",
+      "critical": "Critical"
+    }
+  },
+  "adminDashboard": {
+    "title": "Admin Dashboard",
+    "blogManagement": "Blog Management",
+    "backToHome": "Back to Home",
+    "accessDenied": "Access denied",
+    "accessDeniedDesc": "You don't have permission to access this page.",
+    "loading": "Loading...",
+    "createPost": "Create New Post",
+    "allPosts": "All Blog Posts",
+    "table": {
+      "title": "Title",
+      "slug": "Slug",
+      "status": "Status",
+      "publishedAt": "Published At",
+      "actions": "Actions"
+    },
+    "status": {
+      "draft": "Draft",
+      "published": "Published"
+    },
+    "form": {
+      "createTitle": "Create New Blog Post",
+      "editTitle": "Edit Blog Post",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Blog post title",
+      "slugLabel": "Slug (for URL)",
+      "slugPlaceholder": "blog-post-slug",
+      "statusLabel": "Status",
+      "contentLabel": "Content (Markdown)",
+      "contentPlaceholder": "Write your content in Markdown format...",
+      "excerptLabel": "Excerpt (Optional)",
+      "excerptPlaceholder": "Short excerpt",
+      "featuredImageLabel": "Featured Image URL (Optional)",
+      "featuredImagePlaceholder": "https://example.com/image.jpg",
+      "seoTitle": "SEO Title (Optional)",
+      "seoTitlePlaceholder": "Title for search engines",
+      "seoDescription": "SEO Description (Optional)",
+      "seoDescriptionPlaceholder": "Description for search engines",
+      "seoKeywords": "SEO Keywords (Optional)",
+      "seoKeywordsPlaceholder": "keyword1, keyword2, keyword3",
+      "cancel": "Cancel",
+      "create": "Create",
+      "update": "Update",
+      "creating": "Creating...",
+      "updating": "Updating..."
+    },
+    "messages": {
+      "loadError": "Could not load blog posts.",
+      "createSuccess": "Blog post created successfully!",
+      "createError": "Could not create blog post.",
+      "updateSuccess": "Blog post updated successfully!",
+      "updateError": "Could not update blog post.",
+      "deleteSuccess": "Blog post deleted successfully!",
+      "deleteError": "Could not delete blog post.",
+      "validationError": "Form validation error"
+    }
+  },
+  "inventorySystem": {
+    "seo": {
+      "title": "Inventory & Drug Tracking Systems | Omega CRO",
+      "description": "Advanced warehouse management, drug tracking, and cold chain monitoring solutions for clinical trials. Automated inventory control and reporting.",
+      "keywords": "warehouse management, drug tracking, cold chain, inventory control, clinical trial"
+    },
+    "hero": {
+      "title": "Inventory & Drug Tracking Systems",
+      "subtitle": "Complete control with our intelligent solutions for secure storage, tracking, and management of drugs and medical supplies in your clinical trials.",
+      "cta": "Get More Information"
+    },
+    "features": {
+      "title": "System Features",
+      "subtitle": "Comprehensive features meeting all your needs for modern warehouse management and drug tracking",
+      "autoStock": {
+        "title": "Automated Inventory Management",
+        "description": "Never experience stockouts with real-time inventory tracking, minimum stock alerts, and automatic order suggestions."
+      },
+      "coldChain": {
+        "title": "Cold Chain Tracking",
+        "description": "GCP-compliant storage conditions with 24/7 temperature and humidity monitoring, instant alarm system, and detailed temperature logs."
+      },
+      "reporting": {
+        "title": "Advanced Reporting",
+        "description": "Customizable reports, audit trails, and ready documentation system for regulatory authorities."
+      },
+      "alerts": {
+        "title": "Smart Alert System",
+        "description": "Automatic notifications for drugs approaching expiration, critical stock levels, and temperature deviations."
+      },
+      "compliance": {
+        "title": "Compliance and Security",
+        "description": "System architecture fully compliant with FDA 21 CFR Part 11, EMA GCP, and local regulatory requirements."
+      },
+      "optimization": {
+        "title": "Inventory Optimization",
+        "description": "Optimize stock levels with AI-powered demand forecasting, minimize waste and losses."
+      }
+    },
+    "benefits": {
+      "title": "System Benefits",
+      "efficiency": {
+        "title": "Operational Efficiency",
+        "description": "Save time by automating manual processes. Fast and error-free operations with barcode and RFID integration. Control all warehouses from a single point with centralized management."
+      },
+      "accuracy": {
+        "title": "Accuracy and Reliability",
+        "description": "Automatic recording system minimizing human error. Keep records of every transaction with full audit trail. Access consistent information with real-time data synchronization."
+      },
+      "transparency": {
+        "title": "Transparency and Traceability",
+        "description": "Track the entire life cycle of drugs from supply to consumption. Be prepared for audit and inspection processes with detailed reporting. Ensure data security with user-based authorization."
+      }
+    }
+  },
+  "dataSecurity": {
+    "seo": {
+      "title": "Patient Information & Data Security | Omega CRO",
+      "description": "KVKK and GDPR compliant patient information system. Data security, encryption, and access control solutions for clinical trials.",
+      "keywords": "data security, KVKK, GDPR, patient information, clinical data, encryption"
+    },
+    "hero": {
+      "title": "Patient Information & Data Security",
+      "subtitle": "Full compliance in your clinical trials with our KVKK and GDPR compliant, secure and transparent data management solutions that prioritize patient privacy.",
+      "cta": "Get More Information"
+    },
+    "features": {
+      "title": "Security Features",
+      "subtitle": "Comprehensive security infrastructure for patient data protection and legal compliance",
+      "gdpr": {
+        "title": "KVKK / GDPR Compliance",
+        "description": "System architecture and processes fully compliant with Turkish Personal Data Protection Law and European GDPR requirements."
+      },
+      "encryption": {
+        "title": "End-to-End Encryption",
+        "description": "Your data is protected both at rest and in transit with 256-bit AES encryption. Multi-layer security protocols."
+      },
+      "access": {
+        "title": "Access Control",
+        "description": "Role-based access management, multi-factor authentication, and detailed user authorization system."
+      },
+      "audit": {
+        "title": "Audit Trail",
+        "description": "Automatic recording of all system activities, immutable log system, and detailed audit reports."
+      },
+      "consent": {
+        "title": "Information and Consent Management",
+        "description": "Digital information texts, electronic consent processes, and consent status tracking system."
+      },
+      "backup": {
+        "title": "Backup and Recovery",
+        "description": "Automatic backups, geographically distributed data centers, and rapid recovery plans."
+      }
+    },
+    "patientInfo": {
+      "title": "Patient Information Process",
+      "transparency": {
+        "title": "Transparent Information",
+        "description": "Information texts prepared in plain language for patients. Clear and explicit information at all stages of the study process. Access to every patient group with multilingual support."
+      },
+      "rights": {
+        "title": "Patient Rights",
+        "description": "Management of rights to access, correct, and delete their data. Easy management of study withdrawal processes. Full protection and traceability of patient rights."
+      },
+      "communication": {
+        "title": "Communication and Support",
+        "description": "Secure communication channels for patient questions. Privacy-protected messaging system. 24/7 technical support and consultancy service."
+      }
+    },
+    "compliance": {
+      "title": "Compliance and Certifications",
+      "description1": "Omega CRO's data security infrastructure is designed in accordance with international standards and regularly undergoes independent audits.",
+      "description2": "The security of our systems is guaranteed with ISO 27001 information security management system certification. Our operational security processes are verified with SOC 2 Type II compliance.",
+      "description3": "As KVKK Data Controller, we fulfill our legal obligations and conduct regular reporting and audits. We provide full support for your European studies with GDPR representation."
+    }
+  },
+  "faq": {
+    "seo": {
+      "title": "Frequently Asked Questions | Omega CRO IWRS",
+      "description": "Frequently asked questions and answers about clinical trial randomization, IWRS, warehouse management, and data security.",
+      "keywords": "FAQ, randomization, IWRS, clinical trial, Q&A"
+    },
+    "hero": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about Omega CRO IWRS platform and our services"
+    },
+    "categories": {
+      "randomization": "About Randomization",
+      "iwrs": "IWRS System",
+      "inventory": "Warehouse & Drug Tracking",
+      "security": "Security and Compliance"
+    },
+    "questions": {
+      "q1": {
+        "question": "What is randomization and why is it important?",
+        "answer": "Randomization is the process of randomly assigning patients to treatment arms in clinical trials. This method ensures comparability between study groups and eliminates selection bias. Omega CRO IWRS platform supports simple randomization, block randomization, stratified randomization, and adaptive randomization methods. Our AI-powered system recommends optimal randomization strategies and monitors balance in real-time."
+      },
+      "q2": {
+        "question": "What is the difference between block randomization and stratified randomization?",
+        "answer": "Block randomization ensures balanced allocation within blocks of a certain number of patients and maintains numerical balance between treatment groups. Stratified randomization divides patients into subgroups based on important prognostic factors (such as age, gender, disease stage) and applies separate randomization within each subgroup. Omega CRO IWRS supports both methods and even allows you to combine them for 'stratified block randomization'."
+      },
+      "q3": {
+        "question": "How does adaptive randomization work?",
+        "answer": "Adaptive randomization learns from data collected as the study progresses and dynamically adjusts randomization ratios. For example, if better results are seen in one treatment arm than expected, the system can assign more patients to that arm. Omega CRO's AI-powered module suggests adaptive strategies through real-time data analysis, implements these strategies after ethics committee approval, and documents all changes in detail."
+      },
+      "q4": {
+        "question": "What are the main features of the IWRS system?",
+        "answer": "Omega CRO IWRS (Interactive Web Response System) offers central randomization, drug supply management, patient enrollment tracking, site management, real-time reporting, and GCP-compliant audit trail features. The system is accessible 24/7, has multilingual support, and can be used from all devices (computer, tablet, phone). It is fully compliant with FDA 21 CFR Part 11 and EMA requirements."
+      },
+      "q5": {
+        "question": "How is IMP (Investigational Medicinal Product) supply management done with IWRS?",
+        "answer": "The IWRS system tracks each site's drug inventory in real-time, predicts future needs based on patient randomization rate, and automatically generates resupply alerts. Our AI module analyzes historical study data to suggest optimal stock levels, applies FEFO (First Expired, First Out) principle based on expiration dates, and minimizes waste. Additionally, special tracking and alarm systems are available for drugs requiring cold chain."
+      },
+      "q6": {
+        "question": "What happens if a protocol amendment is needed during the study?",
+        "answer": "Omega CRO IWRS has a flexible structure to manage protocol amendments. When changes are needed in critical parameters such as randomization algorithm, number of treatment arms, stratification factors, the system maintains full data integrity before and after the change. All changes are recorded in the audit trail and detailed documentation is provided for submission to regulatory authorities. Validation tests are performed automatically."
+      },
+      "q7": {
+        "question": "What features does the warehouse module include?",
+        "answer": "The warehouse module offers real-time inventory tracking, barcode/RFID integration, expiration date management, cold chain monitoring (2-8°C, -20°C, -80°C), automatic stock alerts, drug dispensing according to FEFO principle, detailed inventory reports, and GCP-compliant audit trail. In multi-center studies, central warehouse and site-based stock management is available."
+      },
+      "q8": {
+        "question": "How is cold chain tracking done?",
+        "answer": "Our system provides 24/7 temperature and humidity monitoring with IoT sensors. When specified limits are exceeded, automatic SMS, email, and mobile app notifications are sent. All temperature data is recorded and reported on a second-by-second basis. Emergency action plans are activated in critical situations such as power outages or freezer failures. All required documentation for regulatory audits can be presented ready."
+      },
+      "q9": {
+        "question": "What is done in case of a drug recall?",
+        "answer": "In case of a recall, the IWRS system immediately identifies all drugs with the relevant lot/batch number and shows which sites they are at. The system automatically sends notifications to all relevant sites, marks the drugs in question as 'unusable', and provides a list for patient communication. All transactions are recorded in the audit trail and documentation required for regulatory reporting is automatically generated."
+      },
+      "q10": {
+        "question": "How is data security ensured?",
+        "answer": "Omega CRO has an ISO 27001 certified information security management system. Data is protected with 256-bit AES encryption, encryption is applied both in the database (at rest) and during transmission (in transit). Multi-factor authentication (MFA), role-based access control (RBAC), and regular penetration tests are performed. All servers are hosted in secure, geographically distributed data centers."
+      },
+      "q11": {
+        "question": "How is KVKK and GDPR compliance ensured?",
+        "answer": "Our system is fully compliant with KVKK and GDPR requirements for personal data protection. Patient information texts, explicit consent management, data subject rights (access, correction, deletion, data portability), data processing inventory, data breach notification mechanisms are integrated. Regular KVKK/GDPR compliance audits are conducted and all necessary documentation is provided."
+      },
+      "q12": {
+        "question": "What is FDA 21 CFR Part 11 compliance?",
+        "answer": "FDA 21 CFR Part 11 is the US regulation for electronic records and electronic signatures. Omega CRO IWRS is fully compliant with this regulation: immutable audit trail, electronic signature validation, user access control, data integrity, system validation, and regular backups are performed. All critical transactions are approved with electronic signatures and system validation documentation is kept ready."
+      }
+    },
+    "cta": {
+      "title": "Do you have other questions?",
+      "description": "Omega CRO team is ready to help you. Contact us.",
+      "button": "Contact Us"
+    }
+  },
+  "references": {
+    "seo": {
+      "title": "References and Success Stories | Omega CRO",
+      "description": "Omega CRO IWRS usage examples in different phases of clinical trials, customer references, and success stories.",
+      "keywords": "references, case studies, customers, success stories, clinical trial"
+    },
+    "hero": {
+      "title": "References and Success Stories",
+      "subtitle": "Omega CRO IWRS platform trusted by dozens of CROs, sponsor companies, and research centers worldwide"
+    },
+    "stats": {
+      "clients": {
+        "value": "50+",
+        "label": "Active Clients"
+      },
+      "patients": {
+        "value": "25,000+",
+        "label": "Randomized Patients"
+      },
+      "trials": {
+        "value": "200+",
+        "label": "Completed Trials"
+      }
+    },
+    "phases": {
+      "title": "IWRS Experience in All Phases",
+      "subtitle": "Successful study management at every stage from Phase 1 to Phase 4",
+      "phase1": {
+        "badge": "Phase 1",
+        "title": "Early Phase Studies",
+        "description": "Fast setup and adaptive randomization support in Phase 1 studies requiring small patient groups, intensive follow-up, and flexibility.",
+        "feature1": "Dose escalation tracking and safety assessment",
+        "feature2": "Cohort-based randomization and real-time data analysis"
+      },
+      "phase2": {
+        "badge": "Phase 2",
+        "title": "Dose Finding Studies",
+        "description": "Stratified randomization and interim analysis support for optimal dose determination and early efficacy signals.",
+        "feature1": "Multiple dose group management and comparative analysis",
+        "feature2": "Adaptive design support and futility analyses"
+      },
+      "phase3": {
+        "badge": "Phase 3",
+        "title": "Pivotal Studies",
+        "description": "Central randomization, IMP management, and GCP compliance in multi-center, large patient population Phase 3 studies.",
+        "feature1": "International multi-center study management",
+        "feature2": "Complex stratification and block randomization"
+      },
+      "phase4": {
+        "badge": "Phase 4",
+        "title": "Post-Marketing Studies",
+        "description": "Long-term follow-up and real-world data collection capability in large patient populations.",
+        "feature1": "Pragmatic study designs and simplified procedures",
+        "feature2": "Electronic health records (EHR) integration"
+      }
+    },
+    "caseStudies": {
+      "title": "Success Stories",
+      "subtitle": "Examples from real studies and achieved results",
+      "labels": {
+        "sites": "Sites",
+        "patients": "Patients",
+        "duration": "Duration"
+      },
+      "case1": {
+        "type": "Phase 3 - Oncology",
+        "year": "2023-2024",
+        "title": "Advanced Stage Lung Cancer Study",
+        "description": "In a multi-center, international Phase 3 study, 850 patients were successfully randomized using the Omega CRO IWRS platform. Complex stratification factors (EGFR mutation, disease stage, ECOG score) were perfectly managed. Thanks to the AI-powered IMP prediction module, no stock shortages occurred at any site.",
+        "sites": "45",
+        "patients": "850",
+        "duration": "18 months"
+      },
+      "case2": {
+        "type": "Phase 2 - Cardiology",
+        "year": "2023",
+        "title": "New Anticoagulant Dose Finding Study",
+        "description": "In a Phase 2 study requiring adaptive design, randomization ratios were successfully updated based on interim analysis results. The system documented all changes in accordance with regulatory requirements and managed validation processes automatically.",
+        "sites": "12",
+        "patients": "240",
+        "duration": "14 months"
+      },
+      "case3": {
+        "type": "Phase 1 - Biotechnology",
+        "year": "2024",
+        "title": "New Immunotherapy Drug First-in-Human Study",
+        "description": "Cohort-based randomization and real-time safety tracking were performed in the dose escalation study. Fast setup (3 days) and flexible structure allowed seamless management of protocol modifications. Critical IMP safety was ensured with cold chain tracking.",
+        "sites": "3",
+        "patients": "48",
+        "duration": "10 months"
+      }
+    },
+    "cta": {
+      "title": "Create your own success story",
+      "description": "Take your clinical trial to the next level with Omega CRO",
+      "button": "Request Demo"
+    }
+  },
+  "adverseEventsCall": {
+    "seo": {
+      "title": "Adverse Events Reporting | Phone-Assisted Clinical Services | Omega CRO",
+      "description": "Automated adverse event tracking and secure recording system via regular calls and SMS to clinical trial participants."
+    },
+    "hero": {
+      "title": "Adverse Events Reporting",
+      "subtitle": "Automated Tracking and Reporting via Phone",
+      "description": "Regular reminders and secure recording system for potential drug side effects via call or SMS to participants"
+    },
+    "features": {
+      "title": "Service Features",
+      "automaticCalls": {
+        "title": "Automatic Call System",
+        "description": "Adverse event queries are conducted through automatic calls to participants at specified periods. Responses are instantly recorded in the system."
+      },
+      "smsReminders": {
+        "title": "SMS Reminders",
+        "description": "SMS reminders are sent to participants to report adverse events. Quick feedback is received with easy response options."
+      },
+      "secureRecording": {
+        "title": "Secure Recording",
+        "description": "All reports are encrypted and recorded in compliance with KVKK/GDPR and shared securely with the research team."
+      },
+      "realTimeAlerts": {
+        "title": "Real-Time Alerts",
+        "description": "Serious adverse event reports are instantly communicated to the research team, enabling rapid intervention."
+      }
+    },
+    "workflow": {
+      "title": "Workflow Process",
+      "step1": {
+        "title": "Scheduled Calls",
+        "description": "The system automatically calls participants at specified times and asks questions like 'Have you experienced any unexpected side effects in the last three days?'"
+      },
+      "step2": {
+        "title": "Response Recording",
+        "description": "Participant responses are recorded in the system via voice or keypad. Detailed questions are triggered upon receiving a 'yes' answer."
+      },
+      "step3": {
+        "title": "Team Notification",
+        "description": "Adverse event reports are instantly communicated to the research team. Serious cases are marked as urgent alerts."
+      },
+      "step4": {
+        "title": "Follow-up and Reporting",
+        "description": "All reports are documented and archived in accordance with regulatory reporting requirements."
+      }
+    },
+    "security": {
+      "title": "Security and Privacy",
+      "description": "All patient data is processed in accordance with KVKK/GDPR standards. Calls are conducted over encrypted lines. Participant consent and confidentiality agreements are meticulously followed."
+    },
+    "cta": {
+      "title": "Contact Us for Adverse Event Tracking",
+      "description": "Get detailed information about phone-assisted adverse event tracking in your clinical trial",
+      "button": "Contact Us"
+    }
+  },
+  "medicationReminder": {
+    "seo": {
+      "title": "Medication Reminder | Phone-Assisted Clinical Services | Omega CRO",
+      "description": "Automatic medication intake reminder system via call or message for patients in treatment program."
+    },
+    "hero": {
+      "title": "Medication Reminder",
+      "subtitle": "Automated System to Improve Treatment Adherence",
+      "description": "Automatic reminders for medication intake time via call or message to patients in treatment program"
+    },
+    "features": {
+      "title": "Service Features",
+      "scheduledReminders": {
+        "title": "Scheduled Reminders",
+        "description": "Automatic reminder calls or SMS are sent at personalized medication intake times for each participant."
+      },
+      "doseInformation": {
+        "title": "Dose Information",
+        "description": "Reminder messages include dose amount, administration method, and special instructions."
+      },
+      "confirmationTracking": {
+        "title": "Confirmation Tracking",
+        "description": "Participants are asked to confirm that they have taken their medication and adherence rates are automatically recorded."
+      },
+      "missedDoseAlerts": {
+        "title": "Missed Dose Alerts",
+        "description": "When medication is not taken, a notification is sent to the research team and necessary follow-up action is taken."
+      }
+    },
+    "workflow": {
+      "title": "Workflow Process",
+      "step1": {
+        "title": "Time Setting",
+        "description": "Medication intake times are defined in the system for each participant according to the study protocol."
+      },
+      "step2": {
+        "title": "Automatic Reminder",
+        "description": "A call or SMS is sent to the participant at the specified time: 'Time to take your medication - 2 tablets with breakfast'."
+      },
+      "step3": {
+        "title": "Confirmation",
+        "description": "The participant is asked to confirm that they have taken the medication. If no confirmation is given, the reminder is repeated."
+      },
+      "step4": {
+        "title": "Adherence Reporting",
+        "description": "All medication intake records and adherence rates are automatically reported and monitored."
+      }
+    },
+    "benefits": {
+      "title": "Benefits",
+      "description": "The medication reminder system increases treatment adherence by up to 40%, reduces protocol violations, and improves study quality."
+    },
+    "cta": {
+      "title": "Learn About Medication Reminder System",
+      "description": "Contact us to improve treatment adherence in your clinical trial",
+      "button": "Request Demo"
+    }
+  },
+  "appointmentReminder": {
+    "seo": {
+      "title": "Appointment Reminder | Phone-Assisted Clinical Services | Omega CRO",
+      "description": "Automatic reminder system for clinical visits, laboratory and follow-up appointments to participants."
+    },
+    "hero": {
+      "title": "Appointment Reminder",
+      "subtitle": "Smart System to Increase Participation Rates",
+      "description": "Automatic reminders for clinical visits, laboratory, control or follow-up appointments via call/SMS to participants"
+    },
+    "features": {
+      "title": "Service Features",
+      "multipleReminders": {
+        "title": "Multiple Reminders",
+        "description": "Automatic reminders are sent 7 days, 3 days, and 1 day before the appointment."
+      },
+      "calendarIntegration": {
+        "title": "Calendar Integration",
+        "description": "Participants can automatically add appointment information to their own calendars."
+      },
+      "confirmationRequest": {
+        "title": "Attendance Confirmation",
+        "description": "Participants are asked to confirm that they will attend the appointment, reducing no-show rates."
+      },
+      "reschedulingSupport": {
+        "title": "Rescheduling Support",
+        "description": "Participants can easily reschedule their appointments with the automatic system, and empty slots are immediately filled."
+      }
+    },
+    "workflow": {
+      "title": "Workflow Process",
+      "step1": {
+        "title": "Appointment Definition",
+        "description": "Clinical visits, laboratory tests, or control appointments are entered into the system."
+      },
+      "step2": {
+        "title": "Reminder Delivery",
+        "description": "Participants are notified at specified times: 'You have an appointment with Dr. Yılmaz on Friday at 2:00 PM'."
+      },
+      "step3": {
+        "title": "Confirmation Tracking",
+        "description": "Participants respond with options 'Yes, I will come' or 'I want to reschedule'."
+      },
+      "step4": {
+        "title": "Team Notification",
+        "description": "Unconfirmed or rescheduled appointments are notified to the research team and necessary actions are taken."
+      }
+    },
+    "statistics": {
+      "title": "Effectiveness",
+      "showUpRate": {
+        "label": "Show-Up Rate",
+        "value": "+35%"
+      },
+      "noShowReduction": {
+        "label": "No-Show Reduction",
+        "value": "-60%"
+      },
+      "satisfaction": {
+        "label": "Participant Satisfaction",
+        "value": "4.8/5"
+      }
+    },
+    "cta": {
+      "title": "Set Up Appointment Reminder System",
+      "description": "Contact us to increase participation rates and reduce no-shows",
+      "button": "Contact Us"
+    }
+  },
+  "emergencyUnblinding": {
+    "title": "Emergency Unblinding",
+    "description": "Secure disclosure of treatment assignment in emergency situations for patient safety. All procedures are logged with complete audit trail.",
+    "step1Title": "Secure Request",
+    "step1Desc": "Authorized personnel creates request with patient information and justification",
+    "step2Title": "Approval Process",
+    "step2Desc": "Request is automatically sent to principal investigator and sponsor for approval",
+    "step3Title": "Code Breaking",
+    "step3Desc": "After approval, treatment information is revealed and entire process is recorded",
+    "featuresTitle": "Features Available in IWRS System",
+    "feature1Title": "Multi-Layer Security",
+    "feature1Desc": "Maximum security with authorized personnel verification, two-stage approval process, and encrypted code breaking mechanism",
+    "feature2Title": "Automatic Documentation",
+    "feature2Desc": "All unblinding procedures are automatically documented, PDF reports are generated instantly",
+    "feature3Title": "Instant Notification",
+    "feature3Desc": "When unblinding request is created, principal investigator, sponsor, and regulatory authority are immediately notified",
+    "feature4Title": "Approval Tracking",
+    "feature4Desc": "Every stage of approval process can be tracked in real-time, process kept transparent with email and SMS notifications",
+    "ctaTitle": "Available in Our IWRS Platform",
+    "ctaDesc": "Emergency unblinding module is available in our fully integrated IWRS platform. You can experience all features by requesting a demo.",
+    "viewDemo": "View Demo",
+    "contactUs": "Contact Us",
+    "complianceTitle": "Compliance and Security",
+    "auditTitle": "Complete Audit Trail",
+    "auditDesc": "Every unblinding procedure is recorded with timestamp, user ID, justification and approval information. Full compliance with FDA 21 CFR Part 11 and EMA standards is ensured.",
+    "privacyTitle": "Data Privacy",
+    "privacyDesc": "Treatment assignment information is stored encrypted. Only authorized and approved personnel can access this information in emergency situations. Full compliance with KVKK and GDPR requirements is ensured."
+  },
+  "patientSurvey": {
+    "seo": {
+      "title": "Patient Surveys | Phone-Assisted Clinical Services | Omega CRO",
+      "description": "Scheduled delivery of surveys regarding satisfaction, therapy response and treatment compliance via phone."
+    },
+    "hero": {
+      "title": "Patient Surveys",
+      "subtitle": "Data Collection and Analysis via Phone",
+      "description": "Scheduled delivery of surveys regarding periodic satisfaction, therapy response, quality of life or treatment compliance via phone call or SMS"
+    },
+    "features": {
+      "title": "Service Features",
+      "automatedSurveys": {
+        "title": "Automated Survey Delivery",
+        "description": "Surveys are automatically sent to participants via phone or SMS at specified periods."
+      },
+      "multipleFormats": {
+        "title": "Multiple Formats",
+        "description": "Voice response, keypad (DTMF) or SMS response options are available."
+      },
+      "realTimeData": {
+        "title": "Real-Time Data",
+        "description": "Survey responses are instantly transferred to the system and made available to the research team."
+      },
+      "privacyCompliant": {
+        "title": "Privacy Compliant",
+        "description": "All survey data is processed with participant consent and in accordance with KVKK/GDPR standards."
+      }
+    },
+    "surveyTypes": {
+      "title": "Survey Types",
+      "satisfaction": {
+        "title": "Satisfaction Survey",
+        "description": "Measurement of satisfaction with the treatment process and participation experience in the study"
+      },
+      "therapyResponse": {
+        "title": "Therapy Response Survey",
+        "description": "Assessment of treatment response, symptom reduction and overall improvement"
+      },
+      "qualityOfLife": {
+        "title": "Quality of Life Survey",
+        "description": "Impact of treatment on daily life activities and overall quality of life"
+      },
+      "adherence": {
+        "title": "Treatment Adherence Survey",
+        "description": "Measurement of medication intake frequency, side effect experience and protocol adherence"
+      }
+    },
+    "workflow": {
+      "title": "Workflow Process",
+      "step1": {
+        "title": "Survey Design",
+        "description": "Survey questions appropriate to research objectives are determined and uploaded to the system."
+      },
+      "step2": {
+        "title": "Scheduled Delivery",
+        "description": "Surveys are sent to participants via phone call or SMS at specified times."
+      },
+      "step3": {
+        "title": "Response Collection",
+        "description": "Participants respond to questions via voice, keypad or SMS. The system automatically records."
+      },
+      "step4": {
+        "title": "Analysis and Reporting",
+        "description": "Collected data is analyzed, reports are automatically generated and shared with the research team."
+      }
+    },
+    "benefits": {
+      "title": "Benefits",
+      "responseRate": {
+        "title": "High Response Rate",
+        "description": "Phone-assisted surveys provide 50% higher response rates compared to traditional methods"
+      },
+      "realTimeInsights": {
+        "title": "Real-Time Insights",
+        "description": "Data is collected instantly, research team can make quick decisions"
+      },
+      "reducedBurden": {
+        "title": "Reduced Burden",
+        "description": "Thanks to the automatic system, manual survey administration and data entry become unnecessary"
+      }
+    },
+    "cta": {
+      "title": "Set Up Patient Survey System",
+      "description": "Contact us for phone-assisted survey applications in your clinical trial",
+      "button": "Request Demo"
+    }
+  }
+}
+

@@ -1,0 +1,1740 @@
+{
+  "header": {
+    "brand": "Omega CRO",
+    "platform": "平台",
+    "modules": "模块",
+    "resources": "资源",
+    "randomizationBot": "随机化机器人",
+    "iwrsInterface": "随机化系统 (IWRS)",
+    "iwrsInterfaceDesc": "患者随机化和治疗组分配",
+    "emergencyUnblinding": "紧急揭盲",
+    "emergencyUnblindingDesc": "安全的紧急揭盲程序",
+    "inventorySystem": "库存与药物追踪",
+    "inventorySystemDesc": "高级库存和冷链管理",
+    "dataSecurity": "数据安全",
+    "dataSecurityDesc": "符合KVKK/GDPR的患者信息",
+    "adverseEvents": "不良事件报告",
+    "adverseEventsDesc": "通过电话自动追踪不良事件",
+    "medicationReminder": "用药提醒",
+    "medicationReminderDesc": "自动用药提醒",
+    "appointmentReminder": "预约提醒",
+    "appointmentReminderDesc": "临床访问和随访提醒",
+    "patientSurvey": "患者调查",
+    "patientSurveyDesc": "通过电话进行预定调查",
+    "references": "参考资料",
+    "faq": "常见问题",
+    "blog": "博客",
+    "demo": "演示",
+    "login": "登录",
+    "requestDemo": "申请演示",
+    "contact": "联系"
+  },
+  "hero": {
+    "badge": "AI驱动的IWRS平台",
+    "title": "用AI改变",
+    "titleHighlight": "临床试验随机化",
+    "description": "Omega CRO将IWRS转变为决策驱动工具。我们的平台使用AI设计和优化您的随机化和给药策略。它从历史数据中学习，模拟试验场景，分析运营指标，确保平衡的患者组、不间断的IMP供应和最大化的试验效率。",
+    "getStarted": "开始使用",
+    "watchDemo": "观看演示",
+    "fdaCompliant": "符合FDA标准",
+    "emaCompliant": "符合EMA标准",
+    "support247": "全天候支持",
+    "imageAlt": "AI驱动的随机化可视化"
+  },
+  "features": {
+    "title": "智能功能",
+    "subtitle": "优化临床试验的AI驱动解决方案",
+    "mainTitle": "智能功能用于",
+    "mainTitleHighlight": "更智能的试验",
+    "mainSubtitle": "在每一步都提供AI驱动的洞察，运行高效、合规的临床试验所需的一切。",
+    "aiDrivenOptimization": {
+      "title": "AI驱动的优化",
+      "description": "机器学习算法分析历史试验数据，推荐最优随机化策略并预测供应需求。"
+    },
+    "balancedRandomization": {
+      "title": "平衡随机化",
+      "description": "通过智能分层因子分析，确保治疗组之间患者组完美平衡。"
+    },
+    "supplyChainIntelligence": {
+      "title": "供应链智能",
+      "description": "实时IMP供应预测通过预测分析防止缺货并最小化浪费。"
+    },
+    "scenarioSimulation": {
+      "title": "场景模拟",
+      "description": "在启动前模拟不同的试验场景，以识别潜在瓶颈并优化资源分配。"
+    },
+    "regulatoryCompliance": {
+      "title": "法规合规",
+      "description": "内置FDA 21 CFR Part 11和EMA合规性，具有完整的审计追踪和验证文档。"
+    },
+    "rapidDeployment": {
+      "title": "快速部署",
+      "description": "使用预配置模板和自动研究设置，在几天而非几个月内启动您的研究。"
+    }
+  },
+  "platform": {
+    "badge": "平台界面",
+    "title": "AI驱动的",
+    "titleHighlight": "决策支持",
+    "description": "我们的IWRS平台在您的工作流程中直接提供实时AI建议。从随机化分层到供应预测，每个决策都有智能分析支持。",
+    "smartRecommendations": {
+      "title": "智能推荐",
+      "description": "根据您的试验参数获得AI驱动的最优分层因子建议。"
+    },
+    "predictiveAnalytics": {
+      "title": "预测分析",
+      "description": "通过机器学习预测药物供应需求并优化库存水平。"
+    },
+    "realtimeMonitoring": {
+      "title": "实时监控",
+      "description": "追踪关键指标并在出现潜在问题时收到警报。"
+    },
+    "imageAlt": "IWRS平台界面预览",
+    "realTimeMonitoring": {
+      "title": "Real-Time Monitoring",
+      "description": "Track randomization balance and supply levels with live dashboards and instant alerts."
+    }
+  },
+  "aiModule": {
+    "badge": "AI核心",
+    "title": "适应性学习",
+    "titleHighlight": "AI引擎",
+    "description": "我们的专有AI模块从您不断发展的试验数据中学习，完善运营策略并支持关键决策。",
+    "adaptiveRandomization": {
+      "title": "适应性随机化",
+      "description": "AI在研究进行时调整随机化策略以保持平衡。"
+    },
+    "predictiveDosing": {
+      "title": "预测性给药",
+      "description": "基于患者特征和反应数据优化给药方案。"
+    },
+    "operationalInsights": {
+      "title": "运营洞察",
+      "description": "获得关于研究性能和资源利用的可操作洞察。"
+    },
+    "imageAlt": "AI模块核心架构",
+    "realTimeMonitoring": {
+      "title": "Real-Time Monitoring",
+      "description": "Monitor clinical operations with instant insights and early detection of potential issues."
+    }
+  },
+  "compliance": {
+    "badge": "合规与安全",
+    "title": "企业级",
+    "titleHighlight": "安全与合规",
+    "description": "使用行业领先的安全标准和全面的法规合规性保护您的试验数据。",
+    "gdprCompliance": {
+      "title": "GDPR/KVKK合规",
+      "description": "完全符合欧洲和土耳其数据保护法规。"
+    },
+    "fdaCompliance": {
+      "title": "FDA 21 CFR Part 11",
+      "description": "满足所有FDA电子记录和电子签名要求。"
+    },
+    "dataEncryption": {
+      "title": "数据加密",
+      "description": "所有静止和传输中的数据使用AES-256加密。"
+    },
+    "auditTrails": {
+      "title": "完整审计追踪",
+      "description": "每个操作都记录有时间戳和用户识别。"
+    },
+    "accessControl": {
+      "title": "基于角色的访问",
+      "description": "细粒度的权限控制敏感数据访问。"
+    },
+    "backupRecovery": {
+      "title": "备份与恢复",
+      "description": "自动备份和灾难恢复能力。"
+    },
+    "subtitle": "Launch and run your study seamlessly with our FDA/EMA-compliant intelligent system.",
+    "fda": {
+      "title": "FDA 21 CFR Part 11",
+      "description": "Full compliance with electronic records and signatures requirements"
+    },
+    "ema": {
+      "title": "EMA Guidelines",
+      "description": "Meets all European Medicines Agency standards for clinical trials"
+    },
+    "dataSecurity": {
+      "title": "Data Security",
+      "description": "SOC 2 certified with end-to-end encryption and secure data centers"
+    },
+    "cta": {
+      "title": "Ready to transform your clinical trials?",
+      "description": "Join leading pharmaceutical and biotech companies using Omega CRO to accelerate their research."
+    }
+  },
+  "phoneServices": {
+    "badge": "电话支持服务",
+    "title": "电话辅助",
+    "titleHighlight": "临床服务",
+    "description": "通过自动电话和短信系统增强患者参与度和数据收集。所有服务都符合GDPR/KVKK标准并集成到您的IWRS平台中。",
+    "adverseEvents": {
+      "title": "不良事件报告",
+      "description": "通过电话/短信自动收集参与者的副作用数据。结构化响应确保一致的数据质量。",
+      "learnMore": "Learn More"
+    },
+    "medicationReminder": {
+      "title": "用药提醒",
+      "description": "自动提醒包括剂量、时间和说明。减少错过的剂量并提高依从性。",
+      "learnMore": "Learn More"
+    },
+    "appointmentReminder": {
+      "title": "预约提醒",
+      "description": "诊所访问、实验室和随访的自动通知。日历集成和确认追踪。",
+      "learnMore": "Learn More"
+    },
+    "patientSurvey": {
+      "title": "患者调查",
+      "description": "通过电话/短信自动调查满意度、治疗反应和生活质量。预定交付和即时数据访问。",
+      "learnMore": "Learn More"
+    },
+    "viewDetails": "查看详情"
+  },
+  "modules": {
+    "title": "我们的核心模块",
+    "subtitle": "临床试验管理",
+    "description": "Omega CRO平台包含端到端管理临床试验所需的所有基本模块。",
+    "iwrs": {
+      "title": "随机化系统 (IWRS)",
+      "description": "AI驱动的智能随机化和患者分配系统。根据研究方案创建平衡的患者组。",
+      "button": "查看详情"
+    },
+    "unblinding": {
+      "title": "紧急揭盲",
+      "description": "紧急情况下安全且受控的揭盲系统。通过自动记录和报告确保法规合规性。",
+      "button": "查看详情"
+    },
+    "inventory": {
+      "title": "库存管理系统",
+      "description": "跟踪IMP库存，监控冷链，并接收自动警报。实时库存控制。",
+      "button": "查看详情"
+    },
+    "security": {
+      "title": "数据安全与合规",
+      "description": "符合GDPR/KVKK的数据保护、加密和访问控制。符合21 CFR Part 11标准的安全性。",
+      "button": "查看详情"
+    }
+  },
+  "cta": {
+    "badge": "开始使用",
+    "title": "准备好转变您的",
+    "titleHighlight": "临床试验了吗？",
+    "description": "加入已经利用AI驱动的IWRS提高试验效率和合规性的领先CRO。",
+    "requestDemo": "申请演示",
+    "contactSales": "联系销售"
+  },
+  "footer": {
+    "cta_title": "为您的项目寻找合适的合作伙伴吗？",
+    "cta_description": "探索我们致力于改善人类健康的创新临床研究解决方案。联系我们，让您的项目更上一层楼。",
+    "cta_button": "联系我们",
+    "slogan": "您在临床研究中可靠的合作伙伴。",
+    "quick_links": "快速链接",
+    "legal_help": "法律与帮助",
+    "newsletter": "订阅我们的电子报",
+    "newsletter_description": "不要错过我们的最新消息和创新。",
+    "email_placeholder": "您的电子邮件地址...",
+    "subscribe_button": "订阅",
+    "contact_info": "联系信息",
+    "all_rights_reserved": "版权所有。",
+    "privacy_policy": "隐私政策",
+    "terms_of_service": "服务条款",
+    "security_policy": "安全政策",
+    "personal_data_notice": "个人数据信息声明"
+  },
+  "contact": {
+    "badge": "联系我们",
+    "title": "开始使用",
+    "titleHighlight": "Omega CRO",
+    "description": "填写表格，我们的团队将尽快与您联系，讨论您的临床试验需求。",
+    "name": "姓名",
+    "email": "电子邮件",
+    "message": "留言",
+    "send": "发送消息",
+    "sending": "发送中...",
+    "success": "您的消息已成功发送！",
+    "successDescription": "我们会尽快回复您。",
+    "error": "发送消息失败。请重试。",
+    "errorTitle": "错误",
+    "emailLabel": "电子邮件",
+    "phoneLabel": "电话",
+    "addressLabel": "地址",
+    "addressValue": "Piri Reis Caddesi, No:2/4 Beytepe Çankaya Ankara Turkey",
+    "phoneOptional": "电话（可选）",
+    "phonePlaceholder": "+90 (555) 123-4567",
+    "validation": {
+      "name": "姓名为必填项",
+      "nameMax": "姓名不得超过100个字符",
+      "email": "无效的电子邮件地址",
+      "emailMax": "电子邮件不得超过255个字符",
+      "phoneMax": "电话不得超过20个字符",
+      "message": "留言为必填项",
+      "messageMax": "留言不得超过1000个字符"
+    },
+    "form": {
+      "name": "全名",
+      "namePlaceholder": "张三",
+      "email": "电子邮件",
+      "emailPlaceholder": "you@example.com",
+      "company": "公司",
+      "companyPlaceholder": "您的公司名称",
+      "message": "留言",
+      "messagePlaceholder": "告诉我们您的项目...",
+      "submit": "发送消息",
+      "submitting": "发送中..."
+    },
+    "info": {
+      "title": "联系信息",
+      "description": "有问题吗？随时联系我们。",
+      "email": "info@omegacro.com",
+      "phone": "+90 (555) 123-4567",
+      "address": "伊斯坦布尔，土耳其"
+    },
+    "subtitle": "Have questions? We'd be happy to help"
+  },
+  "randomizationBot": {
+    "seo": {
+      "title": "AI随机化机器人 | Omega CRO",
+      "description": "获得有关临床试验随机化策略、统计方法和IWRS最佳实践的AI驱动专家建议。"
+    },
+    "title": "AI随机化",
+    "titleHighlight": "专家机器人",
+    "description": "关于随机化方法论、统计设计和IWRS最佳实践的智能指导。",
+    "placeholder": "询问有关随机化策略的问题...",
+    "send": "发送",
+    "examples": {
+      "title": "示例问题：",
+      "question1": "临床试验中的分层随机化是什么？",
+      "question2": "如何计算最佳样本量？",
+      "question3": "块随机化何时使用？"
+    },
+    "authRequired": {
+      "title": "需要身份验证",
+      "description": "您必须登录才能使用AI随机化机器人。",
+      "login": "登录",
+      "signup": "注册",
+      "institution": "机构 / 公司",
+      "confirmPassword": "确认密码",
+      "passwordsDoNotMatch": "密码不匹配。",
+      "institutionRequired": "必须填写机构信息。",
+      "verifyEmailAlert": "电子邮件验证",
+      "verifyEmailDesc": "为了您的安全，请检查您的收件箱并点击链接以验证您的帐户。"
+    },
+    "error": "Error sending message"
+  },
+  "auth": {
+    "seo": {
+      "title": "登录 | Omega CRO",
+      "description": "登录您的Omega CRO账户以访问AI驱动的IWRS平台和临床试验管理工具。"
+    },
+    "title": "账户",
+    "description": "登录或创建账户以访问AI随机化助手",
+    "login": "登录",
+    "signup": "注册",
+    "email": "电子邮件",
+    "password": "密码",
+    "fullName": "全名",
+    "loginButton": "登录",
+    "signupButton": "注册",
+    "switchToSignup": "没有账户？注册",
+    "switchToLogin": "已有账户？登录",
+    "verifyEmail": "请检查您的电子邮件并验证您的账户。",
+    "loginSuccess": "欢迎。",
+    "error": "发生错误。请重试。",
+    "signupSuccess": "注册成功！",
+    "errorTitle": "错误",
+    "signupErrorTitle": "注册错误",
+    "loginSuccessTitle": "登录成功！",
+    "loginErrorTitle": "登录错误",
+    "backToHome": "返回首页",
+    "benefitsTitle": "注册后享受以下优势：",
+    "benefit1": "AI驱动的随机化机器人咨询",
+    "benefit2": "保存和管理您的研究表单",
+    "benefit3": "完全访问演示IWRS系统",
+    "benefit4": "个性化建议和报告",
+    "validation": {
+      "email": "请输入有效的电子邮件地址",
+      "password": "密码至少需要6个字符",
+      "fullName": "姓名至少需要2个字符",
+      "backToHome": "返回首页",
+      "institution": "机构/公司",
+      "confirmPassword": "确认密码",
+      "passwordsDoNotMatch": "密码不匹配。",
+      "institutionRequired": "机构为必填项。",
+      "checkEmail": "注册成功！请在登录前检查您的邮箱以验证账户。",
+      "verifyEmailAlert": "邮箱验证",
+      "verifyEmailDesc": "请检查您的邮箱并点击验证链接以激活账户。"
+    }
+  },
+  "randomizationForm": {
+    "seo": {
+      "title": "随机化表单 | Omega CRO",
+      "description": "为您的临床试验定义随机化参数。获得AI驱动的建议和专家支持。"
+    },
+    "title": "随机化表单",
+    "description": "为您的研究定义随机化参数",
+    "basicInfo": "基本信息",
+    "studyName": "研究名称",
+    "studyType": "研究类型",
+    "totalParticipants": "总参与者",
+    "treatmentArms": "治疗组",
+    "randomizationSettings": "随机化设置",
+    "randomizationMethod": "随机化方法",
+    "blockSize": "块大小",
+    "stratification": "有分层吗？",
+    "stratificationFactors": "分层因素",
+    "blinding": "有盲法吗？",
+    "blindingDetails": "盲法详情",
+    "additionalOptions": "附加选项",
+    "emergencyCodeOpening": "紧急代码开放",
+    "inventoryIntegration": "库存集成",
+    "reportingPreferences": "报告偏好",
+    "contactInfo": "联系信息",
+    "fullName": "全名",
+    "email": "电子邮件",
+    "phone": "电话",
+    "institution": "机构",
+    "testRun": "测试运行",
+    "submit": "提交表单",
+    "submitting": "提交中...",
+    "success": "表单提交成功",
+    "error": "提交表单时出错",
+    "fullNamePlaceholder": "全名",
+    "institutionPlaceholder": "机构或公司名称",
+    "studyNameLabel": "1. 研究名称或简要描述",
+    "studyNamePlaceholder": "例如：药物A与药物B在高血压治疗中的比较",
+    "studyTypeLabel": "2. 研究类型",
+    "studyTypeRCT": "随机对照试验 (RCT)",
+    "studyTypeObservational": "观察性",
+    "studyTypeOther": "其他",
+    "studyTypeOtherPlaceholder": "请说明",
+    "treatmentArmsLabel": "3. 有多少不同的治疗或实验组？",
+    "stratificationLabel": "5. 有分层因素吗？",
+    "stratificationFactorsPlaceholder": "例如：年龄组（18-50，51+），性别",
+    "randomizationMethodLabel": "6. 随机化方法",
+    "methodSimple": "简单随机化",
+    "methodBlock": "块随机化",
+    "methodStratified": "分层随机化",
+    "methodAdaptive": "适应性随机化",
+    "methodHelp": "我需要帮助决定",
+    "blockSizeLabel": "块大小",
+    "blockSizePlaceholder": "例如：4、6或8",
+    "blindingLabel": "7. 有盲法吗？",
+    "blindingDetailsPlaceholder": "例如：双盲、单盲",
+    "reportingPreferencesLabel": "报告偏好",
+    "reportingDaily": "每日",
+    "reportingWeekly": "每周",
+    "reportingMonthly": "每月",
+    "reportingOnDemand": "按需",
+    "testRunLabel": "这是测试运行（非真实数据）",
+    "authError": "错误",
+    "authErrorDesc": "您需要登录",
+    "successTitle": "成功",
+    "errorTitle": "错误",
+    "validation": {
+      "contactPerson": "联系人姓名必填",
+      "institution": "机构/公司信息必填",
+      "phone": "手机号码必填",
+      "email": "请输入有效的电子邮件地址",
+      "studyName": "研究名称必填",
+      "studyType": "您必须选择研究类型",
+      "treatmentArms": "至少需要2个治疗组",
+      "totalParticipants": "至少需要1名参与者",
+      "randomizationMethod": "您必须选择随机化方法",
+      "reportingPreferences": "必须至少选择一个报告偏好"
+    }
+  },
+  "iwrs": {
+    "seo": {
+      "title": "IWRS演示 | 交互式网络响应系统 | Omega CRO",
+      "description": "体验我们的AI驱动IWRS平台，用于临床试验患者随机化、治疗分配和盲法管理。"
+    },
+    "title": "IWRS平台",
+    "titleHighlight": "演示",
+    "description": "体验我们的AI驱动随机化系统进行患者注册和治疗分配。",
+    "patientEnrollment": {
+      "title": "患者注册",
+      "patientId": "患者ID",
+      "patientIdPlaceholder": "输入患者ID",
+      "siteId": "站点ID",
+      "siteIdPlaceholder": "选择站点",
+      "age": "年龄",
+      "agePlaceholder": "输入年龄",
+      "gender": "性别",
+      "male": "男性",
+      "female": "女性",
+      "other": "其他",
+      "stratificationFactors": "分层因子",
+      "factor": "因子",
+      "value": "值",
+      "randomize": "随机化患者",
+      "randomizing": "随机化中..."
+    },
+    "result": {
+      "title": "随机化结果",
+      "patientId": "患者ID",
+      "treatmentArm": "治疗组",
+      "stratumId": "分层ID",
+      "kitNumber": "试剂盒编号",
+      "timestamp": "时间戳",
+      "aiRecommendation": "AI建议",
+      "downloadPdf": "下载PDF"
+    }
+  },
+  "adverseEventsCall": {
+    "seo": {
+      "title": "不良事件报告 | 电话辅助临床服务 | Omega CRO",
+      "description": "通过自动电话和短信系统收集和管理临床试验不良事件数据。符合GDPR/KVKK标准。"
+    },
+    "title": "不良事件报告",
+    "description": "通过自动电话/短信收集参与者的副作用数据。所有数据都加密存储，研究人员可以立即访问。",
+    "howItWorks": {
+      "title": "如何运作",
+      "step1": {
+        "title": "自动呼叫",
+        "description": "系统在预定时间呼叫参与者或参与者可以呼入报告副作用。"
+      },
+      "step2": {
+        "title": "结构化数据收集",
+        "description": "通过语音响应或短信收集副作用信息。标准化问题确保数据质量。"
+      },
+      "step3": {
+        "title": "即时研究人员访问",
+        "description": "收集的数据立即在IWRS仪表板中可用。严重事件触发即时警报。"
+      }
+    },
+    "features": {
+      "title": "功能",
+      "multiLanguage": {
+        "title": "多语言支持",
+        "description": "以参与者的首选语言收集数据。"
+      },
+      "realTimeAlerts": {
+        "title": "实时警报",
+        "description": "严重不良事件通过短信/电子邮件立即通知研究人员。"
+      },
+      "dataValidation": {
+        "title": "自动验证",
+        "description": "内置验证规则确保数据完整性和准确性。"
+      },
+      "complianceReady": {
+        "title": "合规就绪",
+        "description": "满足所有法规报告要求和时间线。"
+      },
+      "automaticCalls": {
+        "title": "Automatic Call System",
+        "description": "Adverse event queries are conducted through automatic calls to participants at specified periods. Responses are instantly recorded in the system."
+      },
+      "smsReminders": {
+        "title": "SMS Reminders",
+        "description": "SMS reminders are sent to participants to report adverse events. Quick feedback is received with easy response options."
+      },
+      "secureRecording": {
+        "title": "Secure Recording",
+        "description": "All reports are encrypted and recorded in compliance with KVKK/GDPR and shared securely with the research team."
+      }
+    },
+    "dataCollection": {
+      "title": "数据收集",
+      "eventType": "事件类型和严重程度",
+      "timing": "发生时间和持续时间",
+      "symptoms": "详细症状描述",
+      "medications": "伴随用药",
+      "outcome": "事件结果和解决方案"
+    },
+    "compliance": {
+      "title": "合规与安全",
+      "consent": {
+        "title": "参与者同意",
+        "description": "所有参与者在注册期间提供明确的电话联系和数据收集同意。"
+      },
+      "dataProtection": {
+        "title": "数据保护",
+        "description": "所有通话记录和数据都加密存储。完全符合GDPR/KVKK要求。"
+      },
+      "auditTrail": {
+        "title": "审计追踪",
+        "description": "每个呼叫和数据条目都记录有完整的时间戳和用户追踪。"
+      }
+    },
+    "cta": {
+      "title": "集成到您的IWRS中",
+      "description": "不良事件报告作为我们完整IWRS平台的一部分提供。",
+      "button": "联系我们"
+    },
+    "hero": {
+      "title": "Adverse Events Reporting",
+      "subtitle": "Automated Tracking and Reporting via Phone",
+      "description": "Regular reminders and secure recording system for potential drug side effects via call or SMS to participants"
+    },
+    "workflow": {
+      "title": "Workflow Process",
+      "step1": {
+        "title": "Scheduled Calls",
+        "description": "The system automatically calls participants at specified times and asks questions like 'Have you experienced any unexpected side effects in the last three days?'"
+      },
+      "step2": {
+        "title": "Response Recording",
+        "description": "Participant responses are recorded in the system via voice or keypad. Detailed questions are triggered upon receiving a 'yes' answer."
+      },
+      "step3": {
+        "title": "Team Notification",
+        "description": "Adverse event reports are instantly communicated to the research team. Serious cases are marked as urgent alerts."
+      },
+      "step4": {
+        "title": "Follow-up and Reporting",
+        "description": "All reports are documented and archived in accordance with regulatory reporting requirements."
+      }
+    },
+    "security": {
+      "title": "Security and Privacy",
+      "description": "All patient data is processed in accordance with KVKK/GDPR standards. Calls are conducted over encrypted lines. Participant consent and confidentiality agreements are meticulously followed."
+    }
+  },
+  "medicationReminder": {
+    "seo": {
+      "title": "用药提醒 | 电话辅助临床服务 | Omega CRO",
+      "description": "通过自动电话和短信提醒提高临床试验中的患者依从性。改善依从性和数据收集。"
+    },
+    "title": "用药提醒",
+    "description": "自动提醒帮助参与者遵守用药计划。包括剂量、时间和说明，提高依从性和试验数据质量。",
+    "howItWorks": {
+      "title": "如何运作",
+      "step1": {
+        "title": "方案设置",
+        "description": "在IWRS中定义每个治疗组的用药计划、时间和剂量。"
+      },
+      "step2": {
+        "title": "自动提醒",
+        "description": "系统在预定时间通过电话或短信呼叫/发送消息给参与者。"
+      },
+      "step3": {
+        "title": "确认追踪",
+        "description": "参与者确认摄入。错过的剂量触发随访并记录以供依从性分析。"
+      }
+    },
+    "features": {
+      "title": "功能",
+      "flexibleScheduling": {
+        "title": "灵活的时间安排",
+        "description": "支持复杂的给药方案，包括多次每日剂量和变化的时间表。"
+      },
+      "personalization": {
+        "title": "个性化消息",
+        "description": "提醒可以个性化包括参与者姓名、具体剂量和说明。"
+      },
+      "complianceTracking": {
+        "title": "依从性追踪",
+        "description": "详细的依从性指标和报告集成到您的IWRS仪表板中。"
+      },
+      "missedDoseAlerts": {
+        "title": "错过剂量警报",
+        "description": "当参与者错过剂量时，自动升级到站点协调员。"
+      },
+      "scheduledReminders": {
+        "title": "Scheduled Reminders",
+        "description": "Automatic reminder calls or SMS are sent at personalized medication intake times for each participant."
+      },
+      "doseInformation": {
+        "title": "Dose Information",
+        "description": "Reminder messages include dose amount, administration method, and special instructions."
+      },
+      "confirmationTracking": {
+        "title": "Confirmation Tracking",
+        "description": "Participants are asked to confirm that they have taken their medication and adherence rates are automatically recorded."
+      }
+    },
+    "reminderContent": {
+      "title": "提醒内容",
+      "greeting": "个性化问候语",
+      "medication": "药物名称和剂量",
+      "timing": "具体时间说明",
+      "instructions": "特殊说明（例如，与食物一起服用）",
+      "confirmation": "确认请求"
+    },
+    "benefits": {
+      "title": "益处",
+      "improvedCompliance": {
+        "title": "提高依从性",
+        "description": "研究显示定期提醒可将依从性提高40%。"
+      },
+      "dataQuality": {
+        "title": "更好的数据质量",
+        "description": "减少因错过剂量而导致的协议偏差和数据差距。"
+      },
+      "patientEngagement": {
+        "title": "增强参与度",
+        "description": "定期沟通使参与者参与并致力于研究。"
+      },
+      "description": "The medication reminder system increases treatment adherence by up to 40%, reduces protocol violations, and improves study quality."
+    },
+    "cta": {
+      "title": "集成到您的IWRS中",
+      "description": "用药提醒作为我们完整IWRS平台的一部分提供。",
+      "button": "联系我们"
+    },
+    "hero": {
+      "title": "Medication Reminder",
+      "subtitle": "Automated System to Improve Treatment Adherence",
+      "description": "Automatic reminders for medication intake time via call or message to patients in treatment program"
+    },
+    "workflow": {
+      "title": "Workflow Process",
+      "step1": {
+        "title": "Time Setting",
+        "description": "Medication intake times are defined in the system for each participant according to the study protocol."
+      },
+      "step2": {
+        "title": "Automatic Reminder",
+        "description": "A call or SMS is sent to the participant at the specified time: 'Time to take your medication - 2 tablets with breakfast'."
+      },
+      "step3": {
+        "title": "Confirmation",
+        "description": "The participant is asked to confirm that they have taken the medication. If no confirmation is given, the reminder is repeated."
+      },
+      "step4": {
+        "title": "Adherence Reporting",
+        "description": "All medication intake records and adherence rates are automatically reported and monitored."
+      }
+    }
+  },
+  "appointmentReminder": {
+    "seo": {
+      "title": "预约提醒 | 电话辅助临床服务 | Omega CRO",
+      "description": "减少临床试验中的缺席。通过电话和短信自动提醒诊所访问、实验室和随访。"
+    },
+    "title": "预约提醒",
+    "description": "确保参与者不会错过重要的诊所访问、实验室预约和随访。自动通知具有日历集成和确认追踪。",
+    "howItWorks": {
+      "title": "如何运作",
+      "step1": {
+        "title": "访问安排",
+        "description": "在IWRS中安排访问并定义提醒时间线（例如，7天，1天，1小时前）。"
+      },
+      "step2": {
+        "title": "自动通知",
+        "description": "系统根据您的时间线通过电话和短信发送提醒。"
+      },
+      "step3": {
+        "title": "确认与重新安排",
+        "description": "参与者可以确认或要求重新安排。站点协调员在仪表板中收到更新。"
+      }
+    },
+    "features": {
+      "title": "功能",
+      "multipleReminders": {
+        "title": "多次提醒",
+        "description": "在预约前的不同时间间隔发送多次提醒。"
+      },
+      "calendarIntegration": {
+        "title": "日历集成",
+        "description": "参与者可以通过链接将预约添加到他们的个人日历。"
+      },
+      "visitDetails": {
+        "title": "详细访问信息",
+        "description": "包括访问类型、位置、停车说明和所需的禁食/准备。"
+      },
+      "confirmationTracking": {
+        "title": "确认追踪",
+        "description": "实时追踪谁已确认、谁需要随访以及谁要求重新安排。"
+      },
+      "confirmationRequest": {
+        "title": "Attendance Confirmation",
+        "description": "Participants are asked to confirm that they will attend the appointment, reducing no-show rates."
+      },
+      "reschedulingSupport": {
+        "title": "Rescheduling Support",
+        "description": "Participants can easily reschedule their appointments with the automatic system, and empty slots are immediately filled."
+      }
+    },
+    "reminderTypes": {
+      "title": "提醒类型",
+      "clinicVisits": "诊所访问和评估",
+      "labTests": "实验室检测和样本收集",
+      "imaging": "影像学预约",
+      "procedures": "程序和干预",
+      "followUps": "随访和电话访问"
+    },
+    "benefits": {
+      "title": "益处",
+      "reducedNoShows": {
+        "title": "减少缺席",
+        "description": "自动提醒可将缺席率降低多达60%。"
+      },
+      "betterCoordination": {
+        "title": "改善协调",
+        "description": "站点工作人员提前知道预期出席情况，可以更好地计划。"
+      },
+      "costSavings": {
+        "title": "成本节约",
+        "description": "减少因错过访问和必要的重新安排而浪费的时间和资源。"
+      }
+    },
+    "cta": {
+      "title": "集成到您的IWRS中",
+      "description": "预约提醒作为我们完整IWRS平台的一部分提供。",
+      "button": "联系我们"
+    },
+    "hero": {
+      "title": "Appointment Reminder",
+      "subtitle": "Smart System to Increase Participation Rates",
+      "description": "Automatic reminders for clinical visits, laboratory, control or follow-up appointments via call/SMS to participants"
+    },
+    "workflow": {
+      "title": "Workflow Process",
+      "step1": {
+        "title": "Appointment Definition",
+        "description": "Clinical visits, laboratory tests, or control appointments are entered into the system."
+      },
+      "step2": {
+        "title": "Reminder Delivery",
+        "description": "Participants are notified at specified times: 'You have an appointment with Dr. Yılmaz on Friday at 2:00 PM'."
+      },
+      "step3": {
+        "title": "Confirmation Tracking",
+        "description": "Participants respond with options 'Yes, I will come' or 'I want to reschedule'."
+      },
+      "step4": {
+        "title": "Team Notification",
+        "description": "Unconfirmed or rescheduled appointments are notified to the research team and necessary actions are taken."
+      }
+    },
+    "statistics": {
+      "title": "Effectiveness",
+      "showUpRate": {
+        "label": "Show-Up Rate",
+        "value": "+35%"
+      },
+      "noShowReduction": {
+        "label": "No-Show Reduction",
+        "value": "-60%"
+      },
+      "satisfaction": {
+        "label": "Participant Satisfaction",
+        "value": "4.8/5"
+      }
+    }
+  },
+  "patientSurvey": {
+    "seo": {
+      "title": "患者调查 | 电话辅助临床服务 | Omega CRO",
+      "description": "通过自动电话和短信调查收集临床试验结果数据。评估满意度、治疗反应和生活质量。"
+    },
+    "title": "患者调查",
+    "description": "通过电话和短信自动调查参与者的满意度、治疗反应和生活质量。预定交付和即时数据访问。",
+    "howItWorks": {
+      "title": "如何运作",
+      "step1": {
+        "title": "调查设计",
+        "description": "在IWRS中创建自定义调查或使用验证的工具（例如，SF-36，EQ-5D）。"
+      },
+      "step2": {
+        "title": "自动交付",
+        "description": "系统根据您的方案时间线通过电话或短信呼叫参与者。"
+      },
+      "step3": {
+        "title": "数据收集",
+        "description": "响应自动记录、验证并在您的IWRS仪表板中可用。"
+      }
+    },
+    "features": {
+      "title": "功能",
+      "validatedInstruments": {
+        "title": "验证的工具",
+        "description": "支持标准调查和自定义问卷的库。"
+      },
+      "adaptiveSurveys": {
+        "title": "适应性调查",
+        "description": "问题可以根据先前的响应进行分支和适应。"
+      },
+      "multipleFormats": {
+        "title": "多种格式",
+        "description": "通过语音响应、短信或电子邮件链接收集响应。"
+      },
+      "realTimeData": {
+        "title": "实时数据",
+        "description": "响应立即集成到您的试验数据库中以供分析。"
+      },
+      "automatedSurveys": {
+        "title": "Automated Survey Delivery",
+        "description": "Surveys are automatically sent to participants via phone or SMS at specified periods."
+      },
+      "privacyCompliant": {
+        "title": "Privacy Compliant",
+        "description": "All survey data is processed with participant consent and in accordance with KVKK/GDPR standards."
+      }
+    },
+    "surveyTypes": {
+      "title": "调查类型",
+      "satisfaction": {
+        "0": "治",
+        "1": "疗",
+        "2": "满",
+        "3": "意",
+        "4": "度",
+        "title": "满意度调查",
+        "description": "衡量对治疗过程及参与研究体验的满意度"
+      },
+      "qol": "生活质量评估",
+      "symptoms": "症状追踪和严重程度",
+      "sideEffects": "副作用监测",
+      "adherence": {
+        "0": "依",
+        "1": "从",
+        "2": "性",
+        "3": "和",
+        "4": "治",
+        "5": "疗",
+        "6": "体",
+        "7": "验",
+        "title": "治疗依从性调查",
+        "description": "衡量服药频率、副作用体验及方案依从性"
+      },
+      "therapyResponse": {
+        "title": "Therapy Response Survey",
+        "description": "Assessment of treatment response, symptom reduction and overall improvement"
+      },
+      "qualityOfLife": {
+        "title": "Quality of Life Survey",
+        "description": "Impact of treatment on daily life activities and overall quality of life"
+      }
+    },
+    "benefits": {
+      "title": "益处",
+      "higherResponse": {
+        "title": "更高的响应率",
+        "description": "电话和短信调查比邮寄或电子邮件达到更高的响应率。"
+      },
+      "betterData": {
+        "title": "更好的数据质量",
+        "description": "实时验证减少错误和缺失数据。"
+      },
+      "patientCentric": {
+        "title": "以患者为中心",
+        "description": "参与者可以在方便的时间完成调查。"
+      },
+      "responseRate": {
+        "title": "High Response Rate",
+        "description": "Phone-assisted surveys provide 50% higher response rates compared to traditional methods"
+      },
+      "realTimeInsights": {
+        "title": "Real-Time Insights",
+        "description": "Data is collected instantly, research team can make quick decisions"
+      },
+      "reducedBurden": {
+        "title": "Reduced Burden",
+        "description": "Thanks to the automatic system, manual survey administration and data entry become unnecessary"
+      }
+    },
+    "cta": {
+      "title": "集成到您的IWRS中",
+      "description": "患者调查作为我们完整IWRS平台的一部分提供。",
+      "button": "联系我们"
+    },
+    "hero": {
+      "title": "Patient Surveys",
+      "subtitle": "Data Collection and Analysis via Phone",
+      "description": "Scheduled delivery of surveys regarding periodic satisfaction, therapy response, quality of life or treatment compliance via phone call or SMS"
+    },
+    "workflow": {
+      "title": "Workflow Process",
+      "step1": {
+        "title": "Survey Design",
+        "description": "Survey questions appropriate to research objectives are determined and uploaded to the system."
+      },
+      "step2": {
+        "title": "Scheduled Delivery",
+        "description": "Surveys are sent to participants via phone call or SMS at specified times."
+      },
+      "step3": {
+        "title": "Response Collection",
+        "description": "Participants respond to questions via voice, keypad or SMS. The system automatically records."
+      },
+      "step4": {
+        "title": "Analysis and Reporting",
+        "description": "Collected data is analyzed, reports are automatically generated and shared with the research team."
+      }
+    }
+  },
+  "emergencyUnblinding": {
+    "title": "紧急揭盲",
+    "description": "紧急情况下安全的治疗分配披露。所有程序都记录有完整的审计追踪。",
+    "step1Title": "安全请求",
+    "step1Desc": "授权人员使用患者信息和理由创建请求",
+    "step2Title": "批准流程",
+    "step2Desc": "请求自动发送给主要研究者和赞助商审批",
+    "step3Title": "代码解密",
+    "step3Desc": "批准后，揭示治疗信息并记录整个过程",
+    "featuresTitle": "IWRS系统中提供的功能",
+    "feature1Title": "多层安全",
+    "feature1Desc": "通过授权人员验证、两阶段批准流程和加密代码解密机制实现最大安全性",
+    "feature2Title": "自动文档",
+    "feature2Desc": "所有揭盲程序都自动记录，PDF报告立即生成",
+    "feature3Title": "即时通知",
+    "feature3Desc": "创建揭盲请求时，立即通知主要研究者、赞助商和监管机构",
+    "feature4Title": "批准追踪",
+    "feature4Desc": "可以实时追踪批准流程的每个阶段，通过电子邮件和短信通知保持流程透明",
+    "ctaTitle": "在我们的IWRS平台中提供",
+    "ctaDesc": "紧急揭盲模块在我们完全集成的IWRS平台中提供。您可以通过申请演示体验所有功能。",
+    "viewDemo": "查看演示",
+    "contactUs": "联系我们",
+    "complianceTitle": "合规与安全",
+    "auditTitle": "完整审计追踪",
+    "auditDesc": "每个揭盲程序都记录有时间戳、用户ID、理由和批准信息。确保完全符合FDA 21 CFR Part 11和EMA标准。",
+    "privacyTitle": "数据隐私",
+    "privacyDesc": "治疗分配信息加密存储。只有授权和批准的人员可以在紧急情况下访问此信息。确保完全符合KVKK和GDPR要求。"
+  },
+  "inventorySystem": {
+    "seo": {
+      "title": "库存系统 | 药物追踪与冷链 | Omega CRO",
+      "description": "管理临床试验药物库存、冷链监控和自动补货警报。实时追踪和合规报告。",
+      "keywords": "warehouse management, drug tracking, cold chain, inventory control, clinical trial"
+    },
+    "title": "库存与药物追踪",
+    "description": "综合系统用于管理试验药物库存、冷链监控和自动补货。与IWRS集成以实现无缝治疗分配。",
+    "features": {
+      "title": "关键功能",
+      "realTimeTracking": {
+        "title": "实时追踪",
+        "description": "从制造到分配到处置的完整药物生命周期可见性。"
+      },
+      "coldChain": {
+        "title": "冷链监控",
+        "description": "温度敏感产品的自动温度记录，具有即时偏差警报。"
+      },
+      "expiryManagement": {
+        "title": "有效期管理",
+        "description": "自动警报即将过期的药物和FEFO（先到期先出）分配逻辑。"
+      },
+      "reconciliation": {
+        "title": "库存对账",
+        "description": "自动对账报告具有完整的审计追踪以实现合规性。"
+      },
+      "subtitle": "Comprehensive features meeting all your needs for modern warehouse management and drug tracking",
+      "autoStock": {
+        "title": "Automated Inventory Management",
+        "description": "Never experience stockouts with real-time inventory tracking, minimum stock alerts, and automatic order suggestions."
+      },
+      "reporting": {
+        "title": "Advanced Reporting",
+        "description": "Customizable reports, audit trails, and ready documentation system for regulatory authorities."
+      },
+      "alerts": {
+        "title": "Smart Alert System",
+        "description": "Automatic notifications for drugs approaching expiration, critical stock levels, and temperature deviations."
+      },
+      "compliance": {
+        "title": "Compliance and Security",
+        "description": "System architecture fully compliant with FDA 21 CFR Part 11, EMA GCP, and local regulatory requirements."
+      },
+      "optimization": {
+        "title": "Inventory Optimization",
+        "description": "Optimize stock levels with AI-powered demand forecasting, minimize waste and losses."
+      }
+    },
+    "process": {
+      "title": "库存流程",
+      "step1": {
+        "title": "接收与记录",
+        "description": "扫描条形码并在系统中记录包括批号、有效期和存储条件。"
+      },
+      "step2": {
+        "title": "存储监控",
+        "description": "温度和湿度传感器的连续监控。记录任何偏差。"
+      },
+      "step3": {
+        "title": "分配与追踪",
+        "description": "IWRS根据随机化和可用性自动分配药物试剂盒。"
+      },
+      "step4": {
+        "title": "返回与处置",
+        "description": "追踪未使用药物的返回，记录处置，并维护完整的监管链。"
+      }
+    },
+    "coldChainMonitoring": {
+      "title": "冷链监控",
+      "temperature": {
+        "title": "温度记录",
+        "description": "具有云备份的连续数字温度监控"
+      },
+      "alerts": {
+        "title": "即时警报",
+        "description": "温度偏差时通过短信/电子邮件立即通知"
+      },
+      "compliance": {
+        "title": "合规报告",
+        "description": "自动生成符合监管要求的温度报告"
+      },
+      "validation": {
+        "title": "设备验证",
+        "description": "所有监控设备的定期校准和验证"
+      }
+    },
+    "reporting": {
+      "title": "报告与分析",
+      "inventoryLevels": "各站点的实时库存水平",
+      "usagePatterns": "使用模式和预测分析",
+      "expiryReports": "即将过期的药物和行动项目",
+      "temperatureLogs": "完整的温度历史和偏差报告",
+      "reconciliation": "定期对账报告用于审计"
+    },
+    "cta": {
+      "title": "集成到您的IWRS中",
+      "description": "库存系统作为我们完整IWRS平台的一部分提供，与随机化和治疗分配无缝集成。",
+      "button": "联系我们"
+    },
+    "hero": {
+      "title": "Inventory &amp; Drug Tracking Systems",
+      "subtitle": "Complete control with our intelligent solutions for secure storage, tracking, and management of drugs and medical supplies in your clinical trials.",
+      "cta": "Get More Information"
+    },
+    "benefits": {
+      "title": "System Benefits",
+      "efficiency": {
+        "title": "Operational Efficiency",
+        "description": "Save time by automating manual processes. Fast and error-free operations with barcode and RFID integration. Control all warehouses from a single point with centralized management."
+      },
+      "accuracy": {
+        "title": "Accuracy and Reliability",
+        "description": "Automatic recording system minimizing human error. Keep records of every transaction with full audit trail. Access consistent information with real-time data synchronization."
+      },
+      "transparency": {
+        "title": "Transparency and Traceability",
+        "description": "Track the entire life cycle of drugs from supply to consumption. Be prepared for audit and inspection processes with detailed reporting. Ensure data security with user-based authorization."
+      }
+    }
+  },
+  "dataSecurity": {
+    "seo": {
+      "title": "数据安全 | KVKK/GDPR合规 | Omega CRO",
+      "description": "符合KVKK和GDPR的临床试验患者信息管理。安全的知情同意流程和数据保护。",
+      "keywords": "data security, KVKK, GDPR, patient information, clinical data, encryption"
+    },
+    "title": "数据安全与合规",
+    "description": "全面的患者信息管理系统，符合KVKK和GDPR要求。安全的知情同意流程、数据保护和审计能力。",
+    "compliance": {
+      "title": "法规合规",
+      "kvkk": {
+        "title": "KVKK合规",
+        "description": "完全符合土耳其个人数据保护法（KVKK）。包括数据处理同意、访问权限和删除程序。"
+      },
+      "gdpr": {
+        "title": "GDPR合规",
+        "description": "符合欧盟一般数据保护条例（GDPR）。确保适当的数据处理、存储和参与者权利。"
+      },
+      "fda": {
+        "title": "FDA 21 CFR Part 11",
+        "description": "满足所有FDA电子记录和电子签名要求，具有完整的审计追踪和验证。"
+      },
+      "description1": "Omega CRO's data security infrastructure is designed in accordance with international standards and regularly undergoes independent audits.",
+      "description2": "The security of our systems is guaranteed with ISO 27001 information security management system certification. Our operational security processes are verified with SOC 2 Type II compliance.",
+      "description3": "As KVKK Data Controller, we fulfill our legal obligations and conduct regular reporting and audits. We provide full support for your European studies with GDPR representation."
+    },
+    "features": {
+      "title": "安全功能",
+      "encryption": {
+        "title": "端到端加密",
+        "description": "所有患者数据都使用AES-256加密在静止和传输中。"
+      },
+      "accessControl": {
+        "title": "基于角色的访问",
+        "description": "细粒度权限确保只有授权人员可以访问敏感数据。"
+      },
+      "auditTrails": {
+        "title": "完整审计追踪",
+        "description": "每次数据访问和修改都记录有时间戳和用户标识。"
+      },
+      "backup": {
+        "title": "安全备份",
+        "description": "自动加密备份具有灾难恢复能力和点时间恢复。"
+      },
+      "subtitle": "Comprehensive security infrastructure for patient data protection and legal compliance",
+      "gdpr": {
+        "title": "KVKK / GDPR Compliance",
+        "description": "System architecture and processes fully compliant with Turkish Personal Data Protection Law and European GDPR requirements."
+      },
+      "access": {
+        "title": "Access Control",
+        "description": "Role-based access management, multi-factor authentication, and detailed user authorization system."
+      },
+      "audit": {
+        "title": "Audit Trail",
+        "description": "Automatic recording of all system activities, immutable log system, and detailed audit reports."
+      },
+      "consent": {
+        "title": "Information and Consent Management",
+        "description": "Digital information texts, electronic consent processes, and consent status tracking system."
+      }
+    },
+    "informedConsent": {
+      "title": "知情同意管理",
+      "digital": {
+        "title": "数字同意",
+        "description": "安全的电子同意流程，具有电子签名和时间戳验证"
+      },
+      "version": {
+        "title": "版本控制",
+        "description": "追踪同意表版本更改并管理重新同意流程"
+      },
+      "language": {
+        "title": "多语言",
+        "description": "以参与者的首选语言提供同意文件"
+      },
+      "storage": {
+        "title": "安全存储",
+        "description": "加密存储所有同意文件具有防篡改保护"
+      }
+    },
+    "dataRights": {
+      "title": "参与者数据权利",
+      "access": "访问：参与者可以请求访问其个人数据副本",
+      "rectification": "更正：参与者可以请求更正不准确的数据",
+      "erasure": "删除：试验后数据删除请求（受法规要求限制）",
+      "portability": "可移植性：以机器可读格式提供数据",
+      "objection": "反对：参与者可以反对某些数据处理活动"
+    },
+    "security": {
+      "title": "安全措施",
+      "network": {
+        "title": "网络安全",
+        "description": "防火墙、入侵检测和定期安全审计"
+      },
+      "physical": {
+        "title": "物理安全",
+        "description": "安全的数据中心，具有受控访问和监控"
+      },
+      "personnel": {
+        "title": "人员培训",
+        "description": "所有工作人员的强制性数据保护和安全培训"
+      },
+      "incident": {
+        "title": "事件响应",
+        "description": "用于检测、响应和报告安全事件的既定程序"
+      }
+    },
+    "cta": {
+      "title": "集成到您的IWRS中",
+      "description": "数据安全和合规功能内置于我们的IWRS平台中。",
+      "button": "联系我们"
+    },
+    "hero": {
+      "title": "Patient Information &amp; Data Security",
+      "subtitle": "Full compliance in your clinical trials with our KVKK and GDPR compliant, secure and transparent data management solutions that prioritize patient privacy.",
+      "cta": "Get More Information"
+    },
+    "patientInfo": {
+      "title": "Patient Information Process",
+      "transparency": {
+        "title": "Transparent Information",
+        "description": "Information texts prepared in plain language for patients. Clear and explicit information at all stages of the study process. Access to every patient group with multilingual support."
+      },
+      "rights": {
+        "title": "Patient Rights",
+        "description": "Management of rights to access, correct, and delete their data. Easy management of study withdrawal processes. Full protection and traceability of patient rights."
+      },
+      "communication": {
+        "title": "Communication and Support",
+        "description": "Secure communication channels for patient questions. Privacy-protected messaging system. 24/7 technical support and consultancy service."
+      }
+    }
+  },
+  "references": {
+    "seo": {
+      "title": "参考资料 | 客户成功案例 | Omega CRO",
+      "description": "查看成功的临床试验和满意的客户使用Omega CRO的AI驱动IWRS平台。案例研究和推荐。",
+      "keywords": "references, case studies, customers, success stories, clinical trial"
+    },
+    "title": "客户",
+    "titleHighlight": "成功案例",
+    "description": "查看领先的制药公司和CRO如何使用我们的AI驱动IWRS平台改变他们的临床试验。",
+    "stats": {
+      "trials": {
+        "number": "500+",
+        "label": "已完成的试验",
+        "value": "200+"
+      },
+      "patients": {
+        "number": "50,000+",
+        "label": "随机化的患者",
+        "value": "25,000+"
+      },
+      "satisfaction": {
+        "number": "98%",
+        "label": "客户满意度"
+      },
+      "countries": {
+        "number": "45",
+        "label": "国家"
+      },
+      "clients": {
+        "value": "50+",
+        "label": "Active Clients"
+      }
+    },
+    "testimonials": {
+      "title": "客户感言",
+      "testimonial1": {
+        "quote": "Omega CRO的AI驱动IWRS将我们的试验设置时间减少了60%。预测分析帮助我们避免了多次供应短缺。",
+        "author": "Dr. Sarah Johnson",
+        "role": "临床运营总监",
+        "company": "全球制药公司"
+      },
+      "testimonial2": {
+        "quote": "平台直观，支持团队反应迅速。适应性随机化功能确保了我们罕见病试验中的完美平衡。",
+        "author": "Michael Chen",
+        "role": "高级临床研究经理",
+        "company": "生物技术公司"
+      },
+      "testimonial3": {
+        "quote": "我们在多个试验中使用Omega CRO。法规合规功能和审计追踪使检查准备变得轻而易举。",
+        "author": "Dr. Emma Williams",
+        "role": "质量保证主管",
+        "company": "领先的CRO"
+      }
+    },
+    "caseStudies": {
+      "title": "案例研究",
+      "study1": {
+        "title": "全球III期肿瘤学试验",
+        "description": "在30个国家的500名患者中使用AI优化的分层随机化",
+        "results": "完美平衡的治疗组；零供应短缺；提前6个月完成"
+      },
+      "study2": {
+        "title": "罕见病研究",
+        "description": "针对超罕见病小样本适应性随机化",
+        "results": "最优组分配；最小化站点变异性；成功的监管批准"
+      },
+      "study3": {
+        "title": "多臂多阶段试验",
+        "description": "在进行的试验中具有响应适应性随机化的复杂设计",
+        "results": "实时组调整；改进的效率；在预算内完成"
+      },
+      "subtitle": "Examples from real studies and achieved results",
+      "labels": {
+        "sites": "Sites",
+        "patients": "Patients",
+        "duration": "Duration"
+      },
+      "case1": {
+        "type": "Phase 3 - Oncology",
+        "year": "2023-2024",
+        "title": "Advanced Stage Lung Cancer Study",
+        "description": "In a multi-center, international Phase 3 study, 850 patients were successfully randomized using the Omega CRO IWRS platform. Complex stratification factors (EGFR mutation, disease stage, ECOG score) were perfectly managed. Thanks to the AI-powered IMP prediction module, no stock shortages occurred at any site.",
+        "sites": "45",
+        "patients": "850",
+        "duration": "18 months"
+      },
+      "case2": {
+        "type": "Phase 2 - Cardiology",
+        "year": "2023",
+        "title": "New Anticoagulant Dose Finding Study",
+        "description": "In a Phase 2 study requiring adaptive design, randomization ratios were successfully updated based on interim analysis results. The system documented all changes in accordance with regulatory requirements and managed validation processes automatically.",
+        "sites": "12",
+        "patients": "240",
+        "duration": "14 months"
+      },
+      "case3": {
+        "type": "Phase 1 - Biotechnology",
+        "year": "2024",
+        "title": "New Immunotherapy Drug First-in-Human Study",
+        "description": "Cohort-based randomization and real-time safety tracking were performed in the dose escalation study. Fast setup (3 days) and flexible structure allowed seamless management of protocol modifications. Critical IMP safety was ensured with cold chain tracking.",
+        "sites": "3",
+        "patients": "48",
+        "duration": "10 months"
+      }
+    },
+    "industries": {
+      "title": "服务的行业",
+      "pharma": "制药公司",
+      "biotech": "生物技术初创公司",
+      "cro": "合同研究组织",
+      "academic": "学术研究机构",
+      "medical": "医疗器械公司"
+    },
+    "cta": {
+      "title": "加入我们的成功客户",
+      "description": "准备好改变您的临床试验了吗？让我们讨论您的需求。",
+      "button": "联系我们"
+    },
+    "hero": {
+      "title": "References and Success Stories",
+      "subtitle": "Omega CRO IWRS platform trusted by dozens of CROs, sponsor companies, and research centers worldwide"
+    },
+    "phases": {
+      "title": "IWRS Experience in All Phases",
+      "subtitle": "Successful study management at every stage from Phase 1 to Phase 4",
+      "phase1": {
+        "badge": "Phase 1",
+        "title": "Early Phase Studies",
+        "description": "Fast setup and adaptive randomization support in Phase 1 studies requiring small patient groups, intensive follow-up, and flexibility.",
+        "feature1": "Dose escalation tracking and safety assessment",
+        "feature2": "Cohort-based randomization and real-time data analysis"
+      },
+      "phase2": {
+        "badge": "Phase 2",
+        "title": "Dose Finding Studies",
+        "description": "Stratified randomization and interim analysis support for optimal dose determination and early efficacy signals.",
+        "feature1": "Multiple dose group management and comparative analysis",
+        "feature2": "Adaptive design support and futility analyses"
+      },
+      "phase3": {
+        "badge": "Phase 3",
+        "title": "Pivotal Studies",
+        "description": "Central randomization, IMP management, and GCP compliance in multi-center, large patient population Phase 3 studies.",
+        "feature1": "International multi-center study management",
+        "feature2": "Complex stratification and block randomization"
+      },
+      "phase4": {
+        "badge": "Phase 4",
+        "title": "Post-Marketing Studies",
+        "description": "Long-term follow-up and real-world data collection capability in large patient populations.",
+        "feature1": "Pragmatic study designs and simplified procedures",
+        "feature2": "Electronic health records (EHR) integration"
+      }
+    }
+  },
+  "faq": {
+    "seo": {
+      "title": "常见问题 | Omega CRO IWRS平台",
+      "description": "查找有关Omega CRO的AI驱动IWRS平台、定价、实施和支持的常见问题的答案。",
+      "keywords": "FAQ, randomization, IWRS, clinical trial, Q&amp;A"
+    },
+    "title": "常见",
+    "titleHighlight": "问题",
+    "description": "查找有关我们的AI驱动IWRS平台的常见问题的答案。",
+    "general": {
+      "title": "一般问题",
+      "q1": {
+        "question": "什么是IWRS？",
+        "answer": "IWRS（交互式网络响应系统）是临床试验中用于患者随机化、治疗分配和药物管理的网络系统。我们的AI驱动平台通过预测分析和自动化增强了传统IWRS。"
+      },
+      "q2": {
+        "question": "您的AI如何改进随机化？",
+        "answer": "我们的AI分析历史试验数据以推荐最优随机化策略，预测入组模式，识别潜在的平衡问题，并在研究进行时建议调整以维持平衡。"
+      },
+      "q3": {
+        "question": "该平台是否符合FDA和EMA法规？",
+        "answer": "是的，我们的平台完全符合FDA 21 CFR Part 11、EMA指南、GDPR和KVKK。我们提供完整的验证文档和审计追踪。"
+      }
+    },
+    "implementation": {
+      "title": "实施",
+      "q1": {
+        "question": "设置一项研究需要多长时间？",
+        "answer": "使用我们的预配置模板和自动化工作流程，大多数研究可以在2-3周内设置完成，而传统IWRS需要2-3个月。"
+      },
+      "q2": {
+        "question": "您提供哪些支持？",
+        "answer": "我们提供全天候技术支持、专门的项目经理、综合培训和关于随机化策略和统计设计的持续咨询。"
+      },
+      "q3": {
+        "question": "该平台能否与其他系统集成？",
+        "answer": "是的，我们提供与主要EDC系统、eTMF平台、安全数据库和EHR系统的API集成。"
+      }
+    },
+    "pricing": {
+      "title": "定价",
+      "q1": {
+        "question": "您如何收费？",
+        "answer": "定价基于研究复杂性、患者数量和所需功能。我们提供灵活的每次研究和企业许可模式。联系我们获取自定义报价。"
+      },
+      "q2": {
+        "question": "是否有设置费用？",
+        "answer": "设置费用取决于研究复杂性和定制要求。我们提供标准研究设计的打包价格。"
+      },
+      "q3": {
+        "question": "我可以在提交前试用该平台吗？",
+        "answer": "是的，我们提供全功能演示和可选的试点项目，让您在完全实施前体验该平台。"
+      }
+    },
+    "technical": {
+      "title": "技术",
+      "q1": {
+        "question": "数据存储在哪里？",
+        "answer": "数据存储在符合SOC 2、HIPAA和ISO 27001的安全云服务器上。我们可以根据要求提供本地或特定地区的托管。"
+      },
+      "q2": {
+        "question": "您使用什么安全措施？",
+        "answer": "我们使用AES-256加密、多因素认证、基于角色的访问控制、定期安全审计和渗透测试。"
+      },
+      "q3": {
+        "question": "该平台是否支持盲法研究？",
+        "answer": "是的，我们支持单盲、双盲和三盲研究，具有安全的盲法维护、紧急揭盲程序和完整的审计追踪。"
+      }
+    },
+    "cta": {
+      "title": "还有问题吗？",
+      "description": "我们的团队在这里帮助您。联系我们获取详细信息。",
+      "button": "联系支持"
+    },
+    "hero": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about Omega CRO IWRS platform and our services"
+    },
+    "categories": {
+      "randomization": "About Randomization",
+      "iwrs": "IWRS System",
+      "inventory": "Warehouse &amp; Drug Tracking",
+      "security": "Security and Compliance"
+    },
+    "questions": {
+      "q1": {
+        "question": "What is randomization and why is it important?",
+        "answer": "Randomization is the process of randomly assigning patients to treatment arms in clinical trials. This method ensures comparability between study groups and eliminates selection bias. Omega CRO IWRS platform supports simple randomization, block randomization, stratified randomization, and adaptive randomization methods. Our AI-powered system recommends optimal randomization strategies and monitors balance in real-time."
+      },
+      "q2": {
+        "question": "What is the difference between block randomization and stratified randomization?",
+        "answer": "Block randomization ensures balanced allocation within blocks of a certain number of patients and maintains numerical balance between treatment groups. Stratified randomization divides patients into subgroups based on important prognostic factors (such as age, gender, disease stage) and applies separate randomization within each subgroup. Omega CRO IWRS supports both methods and even allows you to combine them for 'stratified block randomization'."
+      },
+      "q3": {
+        "question": "How does adaptive randomization work?",
+        "answer": "Adaptive randomization learns from data collected as the study progresses and dynamically adjusts randomization ratios. For example, if better results are seen in one treatment arm than expected, the system can assign more patients to that arm. Omega CRO's AI-powered module suggests adaptive strategies through real-time data analysis, implements these strategies after ethics committee approval, and documents all changes in detail."
+      },
+      "q4": {
+        "question": "What are the main features of the IWRS system?",
+        "answer": "Omega CRO IWRS (Interactive Web Response System) offers central randomization, drug supply management, patient enrollment tracking, site management, real-time reporting, and GCP-compliant audit trail features. The system is accessible 24/7, has multilingual support, and can be used from all devices (computer, tablet, phone). It is fully compliant with FDA 21 CFR Part 11 and EMA requirements."
+      },
+      "q5": {
+        "question": "How is IMP (Investigational Medicinal Product) supply management done with IWRS?",
+        "answer": "The IWRS system tracks each site's drug inventory in real-time, predicts future needs based on patient randomization rate, and automatically generates resupply alerts. Our AI module analyzes historical study data to suggest optimal stock levels, applies FEFO (First Expired, First Out) principle based on expiration dates, and minimizes waste. Additionally, special tracking and alarm systems are available for drugs requiring cold chain."
+      },
+      "q6": {
+        "question": "What happens if a protocol amendment is needed during the study?",
+        "answer": "Omega CRO IWRS has a flexible structure to manage protocol amendments. When changes are needed in critical parameters such as randomization algorithm, number of treatment arms, stratification factors, the system maintains full data integrity before and after the change. All changes are recorded in the audit trail and detailed documentation is provided for submission to regulatory authorities. Validation tests are performed automatically."
+      },
+      "q7": {
+        "question": "What features does the warehouse module include?",
+        "answer": "The warehouse module offers real-time inventory tracking, barcode/RFID integration, expiration date management, cold chain monitoring (2-8°C, -20°C, -80°C), automatic stock alerts, drug dispensing according to FEFO principle, detailed inventory reports, and GCP-compliant audit trail. In multi-center studies, central warehouse and site-based stock management is available."
+      },
+      "q8": {
+        "question": "How is cold chain tracking done?",
+        "answer": "Our system provides 24/7 temperature and humidity monitoring with IoT sensors. When specified limits are exceeded, automatic SMS, email, and mobile app notifications are sent. All temperature data is recorded and reported on a second-by-second basis. Emergency action plans are activated in critical situations such as power outages or freezer failures. All required documentation for regulatory audits can be presented ready."
+      },
+      "q9": {
+        "question": "What is done in case of a drug recall?",
+        "answer": "In case of a recall, the IWRS system immediately identifies all drugs with the relevant lot/batch number and shows which sites they are at. The system automatically sends notifications to all relevant sites, marks the drugs in question as 'unusable', and provides a list for patient communication. All transactions are recorded in the audit trail and documentation required for regulatory reporting is automatically generated."
+      },
+      "q10": {
+        "question": "How is data security ensured?",
+        "answer": "Omega CRO has an ISO 27001 certified information security management system. Data is protected with 256-bit AES encryption, encryption is applied both in the database (at rest) and during transmission (in transit). Multi-factor authentication (MFA), role-based access control (RBAC), and regular penetration tests are performed. All servers are hosted in secure, geographically distributed data centers."
+      },
+      "q11": {
+        "question": "How is KVKK and GDPR compliance ensured?",
+        "answer": "Our system is fully compliant with KVKK and GDPR requirements for personal data protection. Patient information texts, explicit consent management, data subject rights (access, correction, deletion, data portability), data processing inventory, data breach notification mechanisms are integrated. Regular KVKK/GDPR compliance audits are conducted and all necessary documentation is provided."
+      },
+      "q12": {
+        "question": "What is FDA 21 CFR Part 11 compliance?",
+        "answer": "FDA 21 CFR Part 11 is the US regulation for electronic records and electronic signatures. Omega CRO IWRS is fully compliant with this regulation: immutable audit trail, electronic signature validation, user access control, data integrity, system validation, and regular backups are performed. All critical transactions are approved with electronic signatures and system validation documentation is kept ready."
+      }
+    }
+  },
+  "blog": {
+    "seo": {
+      "title": "博客 | 临床试验见解 | Omega CRO",
+      "description": "阅读关于临床试验管理、AI在研究中、法规合规和IWRS最佳实践的最新见解和文章。"
+    },
+    "title": "博客",
+    "subtitle": "有关临床研究技术和IWRS系统的最新见解",
+    "loading": "加载中...",
+    "noPosts": "暂无博客文章",
+    "titleHighlight": "见解",
+    "description": "来自临床研究世界的最新见解、趋势和最佳实践。",
+    "categories": {
+      "all": "全部",
+      "ai": "AI与技术",
+      "regulatory": "法规合规",
+      "bestPractices": "最佳实践",
+      "caseStudies": "案例研究"
+    },
+    "readMore": "阅读更多",
+    "readTime": "分钟阅读",
+    "featured": "精选文章",
+    "latest": "最新文章",
+    "author": "作者",
+    "publishedOn": "发布于",
+    "share": "分享文章",
+    "relatedPosts": "相关文章"
+  },
+  "adminDashboard": {
+    "title": "管理员仪表板",
+    "blogPosts": "博客文章",
+    "createPost": "创建新文章",
+    "editPost": "编辑文章",
+    "title_label": "标题",
+    "slug": "URL Slug",
+    "excerpt": "摘录",
+    "content": "内容",
+    "featuredImage": "特色图片URL",
+    "status": {
+      "0": "状",
+      "1": "态",
+      "draft": "草稿",
+      "published": "已发布"
+    },
+    "draft": "草稿",
+    "published": "已发布",
+    "seoTitle": "SEO标题",
+    "seoDescription": "SEO描述",
+    "seoKeywords": "SEO关键词（逗号分隔）",
+    "save": "保存文章",
+    "saving": "保存中...",
+    "cancel": "取消",
+    "edit": "编辑",
+    "delete": "删除",
+    "confirmDelete": "您确定要删除此文章吗？",
+    "noAccess": "访问被拒绝",
+    "adminOnly": "此页面仅限管理员访问。",
+    "blogManagement": "Blog Management",
+    "backToHome": "Back to Home",
+    "accessDenied": "Access denied",
+    "accessDeniedDesc": "You don't have permission to access this page.",
+    "loading": "Loading...",
+    "allPosts": "All Blog Posts",
+    "table": {
+      "title": "Title",
+      "slug": "Slug",
+      "status": "Status",
+      "publishedAt": "Published At",
+      "actions": "Actions"
+    },
+    "form": {
+      "createTitle": "Create New Blog Post",
+      "editTitle": "Edit Blog Post",
+      "titleLabel": "Title",
+      "titlePlaceholder": "Blog post title",
+      "slugLabel": "Slug (for URL)",
+      "slugPlaceholder": "blog-post-slug",
+      "statusLabel": "Status",
+      "contentLabel": "Content (Markdown)",
+      "contentPlaceholder": "Write your content in Markdown format...",
+      "excerptLabel": "Excerpt (Optional)",
+      "excerptPlaceholder": "Short excerpt",
+      "featuredImageLabel": "Featured Image URL (Optional)",
+      "featuredImagePlaceholder": "https://example.com/image.jpg",
+      "seoTitle": "SEO Title (Optional)",
+      "seoTitlePlaceholder": "Title for search engines",
+      "seoDescription": "SEO Description (Optional)",
+      "seoDescriptionPlaceholder": "Description for search engines",
+      "seoKeywords": "SEO Keywords (Optional)",
+      "seoKeywordsPlaceholder": "keyword1, keyword2, keyword3",
+      "cancel": "Cancel",
+      "create": "Create",
+      "update": "Update",
+      "creating": "Creating...",
+      "updating": "Updating..."
+    },
+    "messages": {
+      "loadError": "Could not load blog posts.",
+      "createSuccess": "Blog post created successfully!",
+      "createError": "Could not create blog post.",
+      "updateSuccess": "Blog post updated successfully!",
+      "updateError": "Could not update blog post.",
+      "deleteSuccess": "Blog post deleted successfully!",
+      "deleteError": "Could not delete blog post.",
+      "validationError": "Form validation error"
+    }
+  },
+  "notFound": {
+    "title": "404 - 未找到页面",
+    "description": "抱歉，您要找的页面不存在。",
+    "backHome": "返回首页",
+    "code": "404"
+  },
+  "index": {
+    "welcome": "Welcome, {{name}}! 👋",
+    "welcomeDescription": "You can access the AI Randomization Assistant. Click the chat icon in the bottom right corner to get started.",
+    "signOut": "Sign Out",
+    "aiAssistantTitle": "AI Randomization Assistant",
+    "aiAssistantDescription": "Please sign in or create an account to use our AI assistant.",
+    "loginSignup": "Sign In / Sign Up",
+    "loading": "Loading..."
+  },
+  "seo": {
+    "title": "Omega CRO - AI-Powered IWRS Platform for Clinical Trials",
+    "description": "Transform clinical trial randomization with AI. Omega CRO's intelligent IWRS platform optimizes randomization strategies, ensures balanced patient groups, and maximizes trial efficiency with FDA/EMA compliance."
+  },
+  "blogPost": {
+    "loading": "Loading...",
+    "notFound": "Blog post not found",
+    "backToBlog": "Back to Blog"
+  },
+  "iwrsMockup": {
+    "header": "Interactive Web Response System",
+    "studyId": "Study ID",
+    "signOut": "Sign Out",
+    "stats": {
+      "totalPatients": "Total Patients",
+      "randomizedToday": "Randomized Today",
+      "activeSites": "Active Sites",
+      "ipsInventory": "IPS Inventory"
+    },
+    "tabs": {
+      "randomize": "Randomize Patient",
+      "inventory": "Inventory",
+      "reports": "Reports",
+      "aiAssistant": "AI Assistant"
+    },
+    "randomizeForm": {
+      "title": "New Patient Randomization",
+      "description": "Enter patient information to randomize a new patient",
+      "patientId": "Patient ID",
+      "patientIdPlaceholder": "e.g. PT-XXX",
+      "site": "Site",
+      "selectSite": "Select a Site",
+      "stratificationFactor": "Stratification Factor",
+      "selectFactor": "Select a Factor",
+      "randomizeButton": "Randomize Patient",
+      "result": "Randomization Result",
+      "assignedTo": "Assigned to:",
+      "kitNumber": "Kit Number:",
+      "confirmationCode": "Confirmation Code:",
+      "printLabel": "Print Label"
+    },
+    "recentRandomizations": {
+      "title": "Recent Randomizations",
+      "patientId": "Patient ID",
+      "date": "Date",
+      "group": "Group",
+      "site": "Site",
+      "status": "Status"
+    },
+    "inventory": {
+      "title": "Inventory Management",
+      "description": "Manage kit inventory across sites",
+      "site": "Site",
+      "treatmentA": "Treatment A",
+      "treatmentB": "Treatment B",
+      "placebo": "Placebo",
+      "total": "Total",
+      "status": "Status",
+      "actions": "Actions",
+      "restock": "Restock"
+    },
+    "reports": {
+      "title": "Reports",
+      "description": "View study statistics and analytics",
+      "enrollmentProgress": "Enrollment Progress",
+      "target": "Target: 500 patients",
+      "groupDistribution": "Group Distribution",
+      "generateReport": "Generate Report"
+    },
+    "aiAssistant": {
+      "title": "AI Assistant",
+      "description": "Get AI-powered help for randomization recommendations and predictions",
+      "placeholder": "Ask the AI assistant a question...",
+      "send": "Send",
+      "suggestions": "AI Suggestions",
+      "balanceWarning": "⚠️ Imbalance detected at Site 002. Consider increasing enrollment at Sites 001 or 003.",
+      "inventoryAlert": "📦 Treatment A kits at Site 001 may run out in 2 weeks. Restocking recommended.",
+      "enrollmentTrend": "📈 Based on current enrollment rate, target enrollment expected in 8 weeks."
+    },
+    "statusBadges": {
+      "active": "Active",
+      "completed": "Completed",
+      "lowStock": "Low Stock",
+      "adequate": "Adequate",
+      "critical": "Critical"
+    }
+  }
+}

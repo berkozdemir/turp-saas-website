@@ -1,6 +1,6 @@
 import React from "react";
 import { OptimizedImage } from "../components/OptimizedImage";
-import { ArrowRight, Calendar, Edit3, ImageIcon } from "lucide-react";
+import { ArrowRight, Calendar, ImageIcon } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useEffect } from "react";
@@ -15,10 +15,10 @@ interface PostDetailProps {
     [key: string]: any;
   } | null;
   setView: (view: any) => void;
-  onEdit: (post: any) => void;
+  // onEdit: (post: any) => void; // Removed
 }
 
-export const PostDetail: React.FC<PostDetailProps> = ({ post, setView, onEdit }) => {
+export const PostDetail: React.FC<PostDetailProps> = ({ post, setView }) => {
   if (!post) return null;
 
   // Track blog view
@@ -35,12 +35,12 @@ export const PostDetail: React.FC<PostDetailProps> = ({ post, setView, onEdit })
         >
           <ArrowRight size={18} className="rotate-180" /> Listeye Dön
         </button>
-        <button
+        {/* <button
           onClick={() => onEdit(post)}
           className="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-bold transition-colors"
         >
           <Edit3 size={16} /> Düzenle
-        </button>
+        </button> */}
       </div>
 
       <article className="bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden">

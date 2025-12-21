@@ -707,16 +707,21 @@ const resources = {
   }
 };
 
-i18n
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    resources,
-    fallbackLng: "tr",
-    ns: ["translation"],
-    defaultNS: "translation",
+export const initTurpI18n = () => {
+  if (!i18n.isInitialized) {
+    i18n
+      .use(LanguageDetector)
+      .use(initReactI18next)
+      .init({
+        resources,
+        fallbackLng: "tr",
+        ns: ["translation"],
+        defaultNS: "translation",
 
-    interpolation: { escapeValue: false }
-  });
+        interpolation: { escapeValue: false }
+      });
+  }
+  return i18n;
+};
 
 export default i18n;

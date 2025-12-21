@@ -22,13 +22,15 @@ if ($action == 'get_admin_users' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $status = $_GET['status'] ?? 'all';
     $search = $_GET['search'] ?? '';
 
-    $query = "SELECT id, name, email, role, is_active, last_login_at, created_at FROM admin_users WHERE 1=1";
+    $query = "SELECT id, name, email, is_active, last_login_at, created_at FROM admin_users WHERE 1=1";
     $params = [];
 
+    /* Role column missing from DB
     if ($role !== 'all') {
         $query .= " AND role = ?";
         $params[] = $role;
     }
+    */
 
     if ($status !== 'all') {
         $query .= " AND is_active = ?";
@@ -47,6 +49,10 @@ if ($action == 'get_admin_users' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = $conn->prepare($query);
         $stmt->execute($params);
         $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        // Inject fake role
+        foreach ($users as &$u) {
+            $u['role'] = 'admin';
+        }
         echo json_encode(['success' => true, 'data' => $users]);
     } catch (Exception $e) {
         echo json_encode(['error' => 'Veritabanı hatası']);
@@ -68,9 +74,11 @@ if ($action == 'get_admin_user' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $id = $_GET['id'] ?? 0;
 
     try {
-        $stmt = $conn->prepare("SELECT id, name, email, role, is_active, last_login_at, created_at FROM admin_users WHERE id = ?");
+        $stmt = $conn->prepare("SELECT id, name, email, is_active, last_login_at, created_at FROM admin_users WHERE id = ?");
         $stmt->execute([$id]);
         $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($userData)
+            $userData['role'] = 'admin';
 
         if ($userData) {
             echo json_encode(['success' => true, 'data' => $userData]);
@@ -132,8 +140,8 @@ if ($action == 'create_admin_user' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-        $stmt = $conn->prepare("INSERT INTO admin_users (name, email, password_hash, role, is_active) VALUES (?, ?, ?, ?, ?)");
-        $stmt->execute([$name, $email, $password_hash, $role, $is_active]);
+        $stmt = $conn->prepare("INSERT INTO admin_users (name, email, password_hash, is_active) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$name, $email, $password_hash, $is_active]);
 
         echo json_encode(['success' => true, 'id' => $conn->lastInsertId()]);
     } catch (Exception $e) {
@@ -179,8 +187,8 @@ if ($action == 'update_admin_user' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        $stmt = $conn->prepare("UPDATE admin_users SET name=?, email=?, role=?, is_active=? WHERE id=?");
-        $stmt->execute([$name, $email, $role, $is_active, $id]);
+        $stmt = $conn->prepare("UPDATE admin_users SET name=?, email=?, is_active=? WHERE id=?");
+        $stmt->execute([$name, $email, $is_active, $id]);
 
         echo json_encode(['success' => true]);
     } catch (Exception $e) {

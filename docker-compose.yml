@@ -1,72 +1,33 @@
 version: '3.8'
 
 services:
-  # 1. Veritabanı (MySQL)
   db:
     image: mysql:8.0
-    container_name: turp-db
+    container_name: turp_db
     restart: always
     environment:
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: turp_saas
       MYSQL_USER: turp_user
       MYSQL_PASSWORD: turp_password
-      MYSQL_ROOT_PASSWORD: root_password
-    volumes:
-      - db_data:/var/lib/mysql
-      - ./api/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./api/init.sql:/docker-entrypoint-initdb.d/00_init.sql
+      - ./api/iwrs_schema.sql:/docker-entrypoint-initdb.d/01_iwrs_schema.sql
 
-  # 2. Backend (PHP API)
-  api:
-    build:
-      context: ./api
-      dockerfile: Dockerfile
-    container_name: turp-api
-    restart: always
-    ports:
-      - "8000:80"
-    environment:
-      DB_HOST: db
-      DB_NAME: turp_saas
-      DB_USER: turp_user
-      DB_PASS: turp_password
-      # Diğer API keyleri .env dosyasından alır
-      VITE_API_SECRET: ${VITE_API_SECRET}
-      BREVO_API_KEY: ${BREVO_API_KEY}
-      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
-    depends_on:
+  pma:
+    image: phpmyadmin/phpmyadmin
+    container_name: turp_pma
+    links:
       - db
-    volumes:
-      - ./api:/var/www/html
-
-
-  # 3. Frontend Geliştirme (Vite)
-  app-dev:
-    image: node:20-alpine
-    container_name: turp-saas-dev
-    working_dir: /app
-    volumes:
-      - ./:/app
-      - /app/node_modules
-    ports:
-      - "5173:5173"
-    command: sh -c "npm install && npm run dev -- --host"
     environment:
-      # Browser'dan erişim için localhost:8000
-      - VITE_API_URL=http://localhost:8000/index.php
-      - VITE_API_SECRET=${VITE_API_SECRET}
-    depends_on:
-      - api
-
-  # 4. Production Build Test (Opsiyonel)
-  app-prod:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: turp-saas-prod
+      PMA_HOST: db
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
     ports:
-      - "8080:80"
+      - "8081:80"
 
 volumes:
   db_data:

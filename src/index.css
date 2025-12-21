@@ -5,7 +5,111 @@
 @tailwind utilities;
 
 img { max-width: 100%; height: auto; }
-/* Blog İçeriği İçin Özel Stiller */
+
+/* IWRS / Shadcn UI Variables */
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 220 15% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 15%;
+
+    --primary: 356 79% 57%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 198 67% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 198 67% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 356 79% 57%;
+
+    --radius: 0.75rem;
+    
+    /* Brand specific colors */
+    --omega-red: 356 79% 57%;
+    --omega-blue: 198 67% 45%;
+    --omega-gray: 220 15% 96%;
+    
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(var(--omega-red)) 0%, hsl(var(--omega-blue)) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(var(--omega-gray)) 100%);
+    
+    /* Animations */
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 220 20% 8%;
+    --foreground: 0 0% 98%;
+
+    --card: 220 20% 10%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 220 20% 10%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 356 79% 57%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 198 67% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 220 20% 15%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 198 67% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 20% 20%;
+    --input: 220 20% 20%;
+    --ring: 356 79% 57%;
+    
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+}
+
+
+/* Blog İçeriği İçin Özel Stiller (Existing Turp Styles) */
 .blog-content h1 { @apply text-3xl font-bold mt-8 mb-4 text-slate-900; }
 .blog-content h2 { @apply text-2xl font-bold mt-6 mb-3 text-slate-800; }
 .blog-content h3 { @apply text-xl font-bold mt-4 mb-2 text-slate-800; }

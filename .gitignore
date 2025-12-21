@@ -35,6 +35,7 @@ desktop.ini
 
 # API Credentials (If you create a separate config file)
 api/config.php
+api/env.php
 scripts/secrets/
 uploads/
 site.zip

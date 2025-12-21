@@ -2,10 +2,13 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
-
     /* Çözünürlük ve Birlikte Çalışma Ayarları (Bu Kısım Hataları Çözer) */
     "moduleResolution": "node",
     "allowImportingTsExtensions": true,
@@ -13,25 +16,32 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-
     // BU İKİ AYAR ZORUNLUDUR: Modüller arası uyumluluğu sağlar.
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-
     /* Linter (Kod Kalitesi) Ayarları */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-
     /* JavaScript / JSDoc Kontrolü */
     "allowJs": true,
-    "checkJs": true
+    "checkJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
   },
   "include": [
     "src",
     "vite-env.d.ts",
     "vite.config.ts"
   ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [
+    {
+      "path": "./tsconfig.node.json"
+    }
+  ]
 }
