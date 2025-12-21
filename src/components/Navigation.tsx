@@ -151,6 +151,17 @@ export function Navigation({
                                 {t("nav_blog")}
                             </button>
 
+                            {/* FAQ (SSS) */}
+                            <button
+                                onClick={() => handleNavigation("sss")}
+                                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${view === "sss"
+                                    ? "bg-slate-900 text-white shadow-md"
+                                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                                    }`}
+                            >
+                                {t("nav_faq")}
+                            </button>
+
                             {/* Hakkımızda */}
                             <button
                                 onClick={() => handleNavigation("about")}
@@ -291,6 +302,14 @@ export function Navigation({
                         className="text-left px-4 py-3 rounded-lg text-base font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
                     >
                         📝 {t("nav_blog")}
+                    </button>
+
+                    {/* FAQ (SSS) */}
+                    <button
+                        onClick={() => handleNavigation("sss")}
+                        className="text-left px-4 py-3 rounded-lg text-base font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
+                    >
+                        ❓ {t("nav_faq")}
                     </button>
 
                     {/* Hakkımızda */}

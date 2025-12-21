@@ -12,6 +12,7 @@ const resources = {
       "nav_admin": "Yönetim",
       "nav_modules": "Modüller",
       "nav_solutions": "Senaryolar",
+      "nav_faq": "SSS",
       "nav_about": "Hakkımızda",
 
       // --- HERO ---
@@ -200,6 +201,7 @@ const resources = {
       "nav_admin": "Admin",
       "nav_modules": "Modules",
       "nav_solutions": "Solutions",
+      "nav_faq": "FAQ",
       "nav_about": "About",
 
       // HERO
@@ -389,6 +391,7 @@ const resources = {
       "nav_admin": "管理",
       "nav_modules": "模块",
       "nav_solutions": "解决方案",
+      "nav_faq": "常见问题",
       "nav_about": "关于我们",
 
       // HERO
