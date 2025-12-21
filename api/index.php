@@ -434,5 +434,8 @@ if ($action == 'update_settings' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 // Include Landing API
 include_once __DIR__ . '/landing_api.php';
 
+// Include Contact Config API
+include_once __DIR__ . '/contact_config_api.php';
+
 echo json_encode(["error" => "Geçersiz işlem"]);
 ?>

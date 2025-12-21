@@ -13,6 +13,8 @@ import { AdminLegalList } from "./admin/AdminLegalList";
 import { AdminLegalEditor } from "./admin/AdminLegalEditor";
 import { AdminLandingList } from "./admin/AdminLandingList";
 import { AdminLandingEditor } from "./admin/AdminLandingEditor";
+import { AdminContactConfigList } from "./admin/AdminContactConfigList";
+import { AdminContactConfigEditor } from "./admin/AdminContactConfigEditor";
 import {
   Mail,
   FileText,
@@ -24,7 +26,8 @@ import {
   HelpCircle,
   Users,
   BarChart3,
-  Layout
+  Layout,
+  Phone
 } from "lucide-react";
 
 export const Admin = () => {
@@ -42,6 +45,7 @@ export const Admin = () => {
   const [editingUser, setEditingUser] = useState<any | null>(null);
   const [editingLegalDoc, setEditingLegalDoc] = useState<any | null>(null);
   const [editingLandingId, setEditingLandingId] = useState<number | null>(null);
+  const [editingContactConfigId, setEditingContactConfigId] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const userRole = session?.user?.role || 'viewer';
@@ -197,6 +201,22 @@ export const Admin = () => {
             onBack={() => setActiveTab("landing_list")}
           />
         );
+      case "contact_config_list":
+        return (
+          <AdminContactConfigList
+            onEdit={(id) => {
+              setEditingContactConfigId(id);
+              setActiveTab("contact_config_edit");
+            }}
+          />
+        );
+      case "contact_config_edit":
+        return (
+          <AdminContactConfigEditor
+            editId={editingContactConfigId}
+            onBack={() => setActiveTab("contact_config_list")}
+          />
+        );
       default:
         return <AdminMessages token={session.token} />;
     }
@@ -306,6 +326,19 @@ export const Admin = () => {
               >
                 <Layout size={20} />
                 <span className="font-medium">Landing Builder</span>
+              </button>
+            )}
+
+            {userRole === 'admin' && (
+              <button
+                onClick={() => { setActiveTab("contact_config_list"); setMobileMenuOpen(false); }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab.startsWith("contact_config")
+                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  }`}
+              >
+                <Phone size={20} />
+                <span className="font-medium">İletişim Ayarları</span>
               </button>
             )}
 
