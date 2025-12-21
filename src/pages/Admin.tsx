@@ -15,6 +15,7 @@ import { AdminLandingList } from "./admin/AdminLandingList";
 import { AdminLandingEditor } from "./admin/AdminLandingEditor";
 import { AdminContactConfigList } from "./admin/AdminContactConfigList";
 import { AdminContactConfigEditor } from "./admin/AdminContactConfigEditor";
+import { AdminMediaList } from "./admin/AdminMediaList";
 import {
   Mail,
   FileText,
@@ -27,7 +28,8 @@ import {
   Users,
   BarChart3,
   Layout,
-  Phone
+  Phone,
+  Image
 } from "lucide-react";
 
 export const Admin = () => {
@@ -217,6 +219,8 @@ export const Admin = () => {
             onBack={() => setActiveTab("contact_config_list")}
           />
         );
+      case "media":
+        return <AdminMediaList />;
       default:
         return <AdminMessages token={session.token} />;
     }
@@ -339,6 +343,19 @@ export const Admin = () => {
               >
                 <Phone size={20} />
                 <span className="font-medium">İletişim Ayarları</span>
+              </button>
+            )}
+
+            {userRole === 'admin' && (
+              <button
+                onClick={() => { setActiveTab("media"); setMobileMenuOpen(false); }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "media"
+                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  }`}
+              >
+                <Image size={20} />
+                <span className="font-medium">Medya</span>
               </button>
             )}
 

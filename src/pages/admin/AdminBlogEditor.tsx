@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Save, Loader2, Globe, Calendar, User, CheckCircle } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Globe, Calendar, User, CheckCircle, FolderOpen } from "lucide-react";
 import { ImageUploader } from "../../components/ImageUploader";
 import { useNotification } from "../../components/NotificationProvider";
+import { MediaPickerDialog } from "../../components/MediaPickerDialog";
 
 interface AdminBlogEditorProps {
     token: string;
@@ -14,6 +15,7 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
     const [loading, setLoading] = useState(false);
     const notify = useNotification();
     const [loadingPost, setLoadingPost] = useState(false);
+    const [showMediaPicker, setShowMediaPicker] = useState(false);
     const [formData, setFormData] = useState({
         title: "",
         slug: "",
@@ -123,162 +125,183 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
     };
 
     return (
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden relative">
-            {loadingPost && (
-                <div className="absolute inset-0 bg-white/80 z-50 flex items-center justify-center">
-                    <div className="flex items-center gap-3 text-cyan-600">
-                        <Loader2 className="w-8 h-8 animate-spin" />
-                        <span className="font-medium">İçerik yükleniyor...</span>
+        <>
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden relative">
+                {loadingPost && (
+                    <div className="absolute inset-0 bg-white/80 z-50 flex items-center justify-center">
+                        <div className="flex items-center gap-3 text-cyan-600">
+                            <Loader2 className="w-8 h-8 animate-spin" />
+                            <span className="font-medium">İçerik yükleniyor...</span>
+                        </div>
                     </div>
+                )}
+                <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
+                    <button onClick={onCancel} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-medium transition-colors">
+                        <ArrowLeft size={18} /> Listeye Dön
+                    </button>
+                    <h2 className="text-xl font-bold text-slate-900">{post ? 'İçeriği Düzenle' : 'Yeni İçerik Ekle'}</h2>
+                    <div className="w-24"></div>
                 </div>
-            )}
-            <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
-                <button onClick={onCancel} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-medium transition-colors">
-                    <ArrowLeft size={18} /> Listeye Dön
-                </button>
-                <h2 className="text-xl font-bold text-slate-900">{post ? 'İçeriği Düzenle' : 'Yeni İçerik Ekle'}</h2>
-                <div className="w-24"></div>
+
+                <form onSubmit={handleSubmit} className="p-8 max-w-5xl mx-auto">
+                    <div className="grid md:grid-cols-3 gap-8">
+
+                        {/* Left: Main Content */}
+                        <div className="md:col-span-2 space-y-6">
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">Başlık</label>
+                                <input
+                                    type="text"
+                                    className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none text-lg font-bold"
+                                    value={formData.title}
+                                    onChange={e => handleChange('title', e.target.value)}
+                                    placeholder="Blog başlığı..."
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">Slug (URL)</label>
+                                <div className="flex items-center gap-1 text-slate-400 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                    <span className="text-xs">turp.health/blog/</span>
+                                    <input
+                                        type="text"
+                                        className="flex-1 bg-transparent outline-none text-slate-700 font-medium"
+                                        value={formData.slug}
+                                        onChange={e => handleChange('slug', e.target.value)}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <ImageUploader
+                                    label="Kapak Görseli"
+                                    uploadEndpoint={`${API_URL}/index.php?action=upload_image`}
+                                    token={token}
+                                    existingImageUrl={formData.image_url}
+                                    preset="blogCover"
+                                    onUploadSuccess={(url) => handleChange('image_url', url)}
+                                    onUploadError={(error) => notify.error("Görsel yükleme hatası: " + error)}
+                                    onRemove={() => handleChange('image_url', '')}
+                                    helperText="Otomatik olarak optimize edilir (maks 1600×900, ~400KB)"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowMediaPicker(true)}
+                                    className="mt-2 w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                                >
+                                    <FolderOpen size={16} />
+                                    Medya Kütüphanesinden Seç
+                                </button>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">Kısa Özet (Excerpt)</label>
+                                <textarea
+                                    className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none h-24 resize-none"
+                                    value={formData.excerpt}
+                                    onChange={e => handleChange('excerpt', e.target.value)}
+                                    placeholder="Liste görünümünde çıkacak kısa açıklama..."
+                                ></textarea>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">İçerik (HTML/Markdown)</label>
+                                <textarea
+                                    className="w-full p-4 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none h-[500px] font-mono text-sm leading-relaxed"
+                                    value={formData.content}
+                                    onChange={e => handleChange('content', e.target.value)}
+                                    placeholder="İçeriğinizi buraya yazın..."
+                                ></textarea>
+                                <p className="text-xs text-slate-400 mt-2 text-right">HTML etiketleri desteklenir.</p>
+                            </div>
+                        </div>
+
+                        {/* Right: Sidebar Options */}
+                        <div className="space-y-6">
+                            <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4">
+                                <h3 className="font-bold text-slate-900 border-b border-slate-200 pb-2 mb-4">Yayın Ayarları</h3>
+
+                                <div>
+                                    <label className="flex items-center gap-2 text-sm font-bold text-slate-700 mb-2">
+                                        <CheckCircle size={16} className="text-slate-400" /> Durum
+                                    </label>
+                                    <select
+                                        className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none bg-white"
+                                        value={formData.status}
+                                        onChange={e => handleChange('status', e.target.value)}
+                                    >
+                                        <option value="draft">Taslak</option>
+                                        <option value="published">Yayında</option>
+                                        <option value="archived">Arşiv</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="flex items-center gap-2 text-sm font-bold text-slate-700 mb-2">
+                                        <Globe size={16} className="text-slate-400" /> Dil
+                                    </label>
+                                    <select
+                                        className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none bg-white"
+                                        value={formData.language}
+                                        onChange={e => handleChange('language', e.target.value)}
+                                    >
+                                        <option value="tr">🇹🇷 Türkçe</option>
+                                        <option value="en">🇬🇧 English</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label className="flex items-center gap-2 text-sm font-bold text-slate-700 mb-2">
+                                        <User size={16} className="text-slate-400" /> Yazar
+                                    </label>
+                                    <input
+                                        type="text"
+                                        className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none bg-white"
+                                        value={formData.author}
+                                        onChange={e => handleChange('author', e.target.value)}
+                                        placeholder="Yazar adı"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="flex items-center gap-2 text-sm font-bold text-slate-700 mb-2">
+                                        <Calendar size={16} className="text-slate-400" /> Yayın Tarihi
+                                    </label>
+                                    <input
+                                        type="datetime-local"
+                                        className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none bg-white"
+                                        value={formData.publish_at}
+                                        onChange={e => handleChange('publish_at', e.target.value)}
+                                    />
+                                </div>
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="w-full py-4 bg-gradient-to-r from-cyan-500 to-teal-500 text-white font-bold rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                            >
+                                {loading ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
+                                {loading ? 'Kaydediliyor...' : (post ? 'Güncelle' : 'Kaydet')}
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-8 max-w-5xl mx-auto">
-                <div className="grid md:grid-cols-3 gap-8">
-
-                    {/* Left: Main Content */}
-                    <div className="md:col-span-2 space-y-6">
-                        <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2">Başlık</label>
-                            <input
-                                type="text"
-                                className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none text-lg font-bold"
-                                value={formData.title}
-                                onChange={e => handleChange('title', e.target.value)}
-                                placeholder="Blog başlığı..."
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2">Slug (URL)</label>
-                            <div className="flex items-center gap-1 text-slate-400 bg-slate-50 p-3 rounded-xl border border-slate-200">
-                                <span className="text-xs">turp.health/blog/</span>
-                                <input
-                                    type="text"
-                                    className="flex-1 bg-transparent outline-none text-slate-700 font-medium"
-                                    value={formData.slug}
-                                    onChange={e => handleChange('slug', e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        <div>
-                            <ImageUploader
-                                label="Kapak Görseli"
-                                uploadEndpoint={`${API_URL}/index.php?action=upload_image`}
-                                token={token}
-                                existingImageUrl={formData.image_url}
-                                preset="blogCover"
-                                onUploadSuccess={(url) => handleChange('image_url', url)}
-                                onUploadError={(error) => notify.error("Görsel yükleme hatası: " + error)}
-                                onRemove={() => handleChange('image_url', '')}
-                                helperText="Otomatik olarak optimize edilir (maks 1600×900, ~400KB)"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2">Kısa Özet (Excerpt)</label>
-                            <textarea
-                                className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none h-24 resize-none"
-                                value={formData.excerpt}
-                                onChange={e => handleChange('excerpt', e.target.value)}
-                                placeholder="Liste görünümünde çıkacak kısa açıklama..."
-                            ></textarea>
-                        </div>
-
-                        <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2">İçerik (HTML/Markdown)</label>
-                            <textarea
-                                className="w-full p-4 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none h-[500px] font-mono text-sm leading-relaxed"
-                                value={formData.content}
-                                onChange={e => handleChange('content', e.target.value)}
-                                placeholder="İçeriğinizi buraya yazın..."
-                            ></textarea>
-                            <p className="text-xs text-slate-400 mt-2 text-right">HTML etiketleri desteklenir.</p>
-                        </div>
-                    </div>
-
-                    {/* Right: Sidebar Options */}
-                    <div className="space-y-6">
-                        <div className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4">
-                            <h3 className="font-bold text-slate-900 border-b border-slate-200 pb-2 mb-4">Yayın Ayarları</h3>
-
-                            <div>
-                                <label className="flex items-center gap-2 text-sm font-bold text-slate-700 mb-2">
-                                    <CheckCircle size={16} className="text-slate-400" /> Durum
-                                </label>
-                                <select
-                                    className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none bg-white"
-                                    value={formData.status}
-                                    onChange={e => handleChange('status', e.target.value)}
-                                >
-                                    <option value="draft">Taslak</option>
-                                    <option value="published">Yayında</option>
-                                    <option value="archived">Arşiv</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label className="flex items-center gap-2 text-sm font-bold text-slate-700 mb-2">
-                                    <Globe size={16} className="text-slate-400" /> Dil
-                                </label>
-                                <select
-                                    className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none bg-white"
-                                    value={formData.language}
-                                    onChange={e => handleChange('language', e.target.value)}
-                                >
-                                    <option value="tr">🇹🇷 Türkçe</option>
-                                    <option value="en">🇬🇧 English</option>
-                                </select>
-                            </div>
-
-                            <div>
-                                <label className="flex items-center gap-2 text-sm font-bold text-slate-700 mb-2">
-                                    <User size={16} className="text-slate-400" /> Yazar
-                                </label>
-                                <input
-                                    type="text"
-                                    className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none bg-white"
-                                    value={formData.author}
-                                    onChange={e => handleChange('author', e.target.value)}
-                                    placeholder="Yazar adı"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="flex items-center gap-2 text-sm font-bold text-slate-700 mb-2">
-                                    <Calendar size={16} className="text-slate-400" /> Yayın Tarihi
-                                </label>
-                                <input
-                                    type="datetime-local"
-                                    className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none bg-white"
-                                    value={formData.publish_at}
-                                    onChange={e => handleChange('publish_at', e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full py-4 bg-gradient-to-r from-cyan-500 to-teal-500 text-white font-bold rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
-                        >
-                            {loading ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
-                            {loading ? 'Kaydediliyor...' : (post ? 'Güncelle' : 'Kaydet')}
-                        </button>
-                    </div>
-
-                </div>
-            </form>
-        </div>
+            {/* Media Picker Dialog */}
+            <MediaPickerDialog
+                isOpen={showMediaPicker}
+                onClose={() => setShowMediaPicker(false)}
+                onSelect={(asset) => {
+                    handleChange('image_url', asset.url);
+                    setShowMediaPicker(false);
+                }}
+                category="blog"
+            />
+        </>
     );
 };
 

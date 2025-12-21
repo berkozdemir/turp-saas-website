@@ -437,5 +437,8 @@ include_once __DIR__ . '/landing_api.php';
 // Include Contact Config API
 include_once __DIR__ . '/contact_config_api.php';
 
+// Include Media API
+include_once __DIR__ . '/media_api.php';
+
 echo json_encode(["error" => "Geçersiz işlem"]);
 ?>
