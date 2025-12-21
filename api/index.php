@@ -140,6 +140,9 @@ require_once __DIR__ . '/blog_api.php';
 // Include FAQ API
 require_once __DIR__ . '/faq_api.php';
 
+// Include User Management API
+require_once __DIR__ . '/user_api.php';
+
 // =================================================================
 // ACTIONS
 // =================================================================
@@ -196,7 +199,7 @@ if ($action == 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $stmt = $conn->prepare("SELECT id, email, password_hash, name FROM admin_users WHERE email = ?");
+        $stmt = $conn->prepare("SELECT id, email, password_hash, name, role FROM admin_users WHERE email = ? AND is_active = 1");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -214,10 +217,10 @@ if ($action == 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare("INSERT INTO admin_sessions (user_id, token, ip_address, user_agent, expires_at) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$user['id'], $token, $ip_address, $user_agent, $expires_at]);
 
-        $stmt = $conn->prepare("UPDATE admin_users SET last_login = NOW() WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE admin_users SET last_login_at = NOW() WHERE id = ?");
         $stmt->execute([$user['id']]);
 
-        echo json_encode(['success' => true, 'token' => $token, 'user' => ['id' => $user['id'], 'email' => $user['email'], 'name' => $user['name']]]);
+        echo json_encode(['success' => true, 'token' => $token, 'user' => ['id' => $user['id'], 'email' => $user['email'], 'name' => $user['name'], 'role' => $user['role']]]);
     } catch (Exception $e) {
         echo json_encode(['error' => 'Bir hata oluştu: ' . $e->getMessage()]);
     }

@@ -6,6 +6,8 @@ import { AdminBlogEditor } from "./admin/AdminBlogEditor";
 import { AdminSettings } from "./admin/AdminSettings";
 import { AdminFaqList } from "./admin/AdminFaqList";
 import { AdminFaqEditor } from "./admin/AdminFaqEditor";
+import { AdminUserList } from "./admin/AdminUserList";
+import { AdminUserEditor } from "./admin/AdminUserEditor";
 import {
   Mail,
   FileText,
@@ -14,7 +16,8 @@ import {
   Menu,
   X,
   Settings,
-  HelpCircle
+  HelpCircle,
+  Users
 } from "lucide-react";
 
 export const Admin = () => {
@@ -29,7 +32,10 @@ export const Admin = () => {
     return saved ? JSON.parse(saved) : null;
   });
   const [editingFaq, setEditingFaq] = useState<any | null>(null);
+  const [editingUser, setEditingUser] = useState<any | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const userRole = session?.user?.role || 'viewer';
 
   // Persist active tab
   useEffect(() => {
@@ -117,6 +123,30 @@ export const Admin = () => {
             onSave={() => setActiveTab("faq_list")}
           />
         );
+      case "user_list":
+        return (
+          <AdminUserList
+            token={session.token}
+            userRole={userRole}
+            onEdit={(user) => {
+              setEditingUser(user);
+              setActiveTab("user_edit");
+            }}
+            onCreate={() => {
+              setEditingUser(null);
+              setActiveTab("user_edit");
+            }}
+          />
+        );
+      case "user_edit":
+        return (
+          <AdminUserEditor
+            token={session.token}
+            user={editingUser}
+            onCancel={() => setActiveTab("user_list")}
+            onSave={() => setActiveTab("user_list")}
+          />
+        );
       default:
         return <AdminMessages token={session.token} />;
     }
@@ -177,16 +207,31 @@ export const Admin = () => {
               <span className="font-medium">SSS</span>
             </button>
 
-            <button
-              onClick={() => { setActiveTab("settings"); setMobileMenuOpen(false); }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "settings"
-                ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                : "text-slate-400 hover:bg-white/5 hover:text-white"
-                }`}
-            >
-              <Settings size={20} />
-              <span className="font-medium">Ayarlar</span>
-            </button>
+            {userRole === 'admin' && (
+              <button
+                onClick={() => { setActiveTab("user_list"); setMobileMenuOpen(false); }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab.startsWith("user")
+                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  }`}
+              >
+                <Users size={20} />
+                <span className="font-medium">Kullanıcılar</span>
+              </button>
+            )}
+
+            {userRole === 'admin' && (
+              <button
+                onClick={() => { setActiveTab("settings"); setMobileMenuOpen(false); }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "settings"
+                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  }`}
+              >
+                <Settings size={20} />
+                <span className="font-medium">Ayarlar</span>
+              </button>
+            )}
           </nav>
         </div>
 
@@ -212,6 +257,8 @@ export const Admin = () => {
               {activeTab === 'blog_edit' && "İçerik Düzenleyici"}
               {activeTab === 'faq_list' && "SSS Yönetimi"}
               {activeTab === 'faq_edit' && "SSS Düzenleyici"}
+              {activeTab === 'user_list' && "Kullanıcı Yönetimi"}
+              {activeTab === 'user_edit' && "Kullanıcı Düzenleyici"}
               {activeTab === 'settings' && "Hesap Ayarları"}
             </h1>
             <p className="text-slate-500 text-sm mt-1">Hoşgeldin, {session.user.name}</p>

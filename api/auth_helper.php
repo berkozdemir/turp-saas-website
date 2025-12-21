@@ -75,7 +75,26 @@ function require_admin_auth($conn)
         exit;
     }
 
-    // Update last activity? Optional. 
-    // For now just return user_id
-    return $session['user_id'];
+    // Get user with role
+    $stmt = $conn->prepare("SELECT id, name, email, role, is_active FROM admin_users WHERE id = ?");
+    $stmt->execute([$session['user_id']]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user || !$user['is_active']) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Kullanıcı bulunamadı veya devre dışı']);
+        exit;
+    }
+
+    return $user;
+}
+
+// Role check helper
+function require_role($user, $allowed_roles)
+{
+    if (!in_array($user['role'], $allowed_roles)) {
+        http_response_code(403);
+        echo json_encode(['error' => 'Bu işlem için yetkiniz yok']);
+        exit;
+    }
 }
