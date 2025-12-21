@@ -14,7 +14,7 @@ interface FaqPageProps {
 }
 
 export const FaqPage = ({ setView: _setView }: FaqPageProps) => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
     const [faqs, setFaqs] = useState<FAQ[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
@@ -86,13 +86,13 @@ export const FaqPage = ({ setView: _setView }: FaqPageProps) => {
 
                 <div className="max-w-4xl mx-auto text-center relative z-10">
                     <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/30 text-white rounded-full font-bold text-sm mb-6 shadow-xl">
-                        <HelpCircle size={16} /> Yardım Merkezi
+                        <HelpCircle size={16} /> {t("faq_page.help_center")}
                     </div>
                     <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 font-heading drop-shadow-lg">
-                        Sıkça Sorulan Sorular
+                        {t("faq_page.title")}
                     </h1>
                     <p className="text-xl text-slate-200 leading-relaxed max-w-2xl mx-auto font-light">
-                        TURP platformu hakkında merak ettiklerinizi burada bulabilirsiniz.
+                        {t("faq_page.subtitle")}
                     </p>
                 </div>
             </section>
@@ -104,7 +104,7 @@ export const FaqPage = ({ setView: _setView }: FaqPageProps) => {
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
                         <input
                             type="text"
-                            placeholder="Soru ara..."
+                            placeholder={t("faq_page.search_placeholder")}
                             className="w-full pl-12 pr-4 py-3 border border-slate-200 rounded-xl outline-none focus:border-rose-500 transition-colors"
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
@@ -116,7 +116,7 @@ export const FaqPage = ({ setView: _setView }: FaqPageProps) => {
                             value={selectedCategory}
                             onChange={e => setSelectedCategory(e.target.value)}
                         >
-                            <option value="all">Tüm Kategoriler</option>
+                            <option value="all">{t("faq_page.all_categories")}</option>
                             {categories.map(cat => (
                                 <option key={cat} value={cat}>{cat}</option>
                             ))}
@@ -129,10 +129,10 @@ export const FaqPage = ({ setView: _setView }: FaqPageProps) => {
             <section className="py-16 px-6">
                 <div className="max-w-4xl mx-auto">
                     {loading ? (
-                        <div className="text-center py-12 text-slate-500">Yükleniyor...</div>
+                        <div className="text-center py-12 text-slate-500">{t("faq_page.loading")}</div>
                     ) : filteredFaqs.length === 0 ? (
                         <div className="text-center py-12 text-slate-500">
-                            {searchQuery ? "Aramanızla eşleşen soru bulunamadı." : "Henüz SSS eklenmemiş."}
+                            {searchQuery ? t("faq_page.no_results") : t("faq_page.no_faqs")}
                         </div>
                     ) : (
                         Object.entries(groupedFaqs).map(([category, items]) => (

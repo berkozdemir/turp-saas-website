@@ -135,7 +135,7 @@ const resources = {
         card_care_sub: "Saha Gücü • Evde Sağlık",
         card_care_desc: "Araştırma hemşireleri ile hastayı evinde ziyaret eden, numune alan ve ilacı uygulayan operasyonel güç.",
         card_gene_sub: "Laboratuvar • Ar-Ge",
-        card_gene_desc: "Kişiselleştirilmiş tıp, farmakogenetik analizler ve biyobelirteç takibi ile tedavinin genetik altyapısını çözümlüyoruz.",
+        card_gene_desc: "Kişiselleştirilmiş tıp, sitogenetik, moleküler ve farmakogenetik analizler ve biyobelirteç takibi ile tedavinin genetik altyapısını çözümlüyoruz.",
         card_turp_sub: "Dijital Köprü",
         card_turp_desc: "Veriyi, hastayı ve araştırmacıyı birbirine bağlayan dijital platform. e-Nabız entegrasyonu ve yapay zeka destekli analiz.",
         method_title: "Metodolojimiz: Veriden Sinyale",
@@ -188,7 +188,51 @@ const resources = {
       "roi_trad_sub": "Mevcut Durum",
       "roi_turp_label": "Turp Yöntemi",
       "roi_turp_sub": "Yeni Nesil",
-      "roi_total": "Toplam"
+      "roi_total": "Toplam",
+
+      // --- FAQ SAYFASI ---
+      "faq_page": {
+        "help_center": "Yardım Merkezi",
+        "title": "Sıkça Sorulan Sorular",
+        "subtitle": "TURP platformu hakkında merak ettiklerinizi burada bulabilirsiniz.",
+        "search_placeholder": "Soru ara...",
+        "all_categories": "Tüm Kategoriler",
+        "loading": "Yükleniyor...",
+        "no_results": "Aramanızla eşleşen soru bulunamadı.",
+        "no_faqs": "Henüz SSS eklenmemiş."
+      },
+
+      // --- RHEUMA CASE STUDY ---
+      "case_rheuma": {
+        "back_home": "Ana Sayfaya Dön",
+        "badge": "Romatoloji Hibrit Model",
+        "title": "Romatoloji Kayıt Sistemi Projesi",
+        "desc": "Romatoid Artrit (RA) ve Ankilozan Spondilit (AS) hastalarında, hastane vizitlerini dijitalleştirerek hekim zamanından %45 tasarruf sağlayan hibrit izlem modeli.",
+        "problem_title": "Mevcut Sorun",
+        "problem_1_t": "Kısıtlı Poliklinik Süresi",
+        "problem_1_d": "Hekimler, 45 dakikalık vizit süresinin büyük kısmını anket doldurmaya harcıyor.",
+        "problem_2_t": "Recall Bias (Hatırlama Yanılgısı)",
+        "problem_2_d": "Hasta, doktora o anki durumunu anlatıyor; iki hafta önceki ağrısını hatırlayamıyor.",
+        "solution_badge": "Turp Çözümü",
+        "solution_title": "Dijital Entegrasyon",
+        "solution_desc": "Hasta hastaneye gelmeden 48 saat önce tüm ölçekleri evinden doldurur. Hekim, hasta odaya girdiğinde veriyi hazır bulur.",
+        "solution_metric": "%75 Daha Hızlı",
+        "flow_title": "Hibrit Vizit Akışı",
+        "flow_1_t": "1. Evde Başlangıç", "flow_1_d": "T-48 Saat kala hastaya anket bildirimi gider.",
+        "flow_2_t": "2. ePRO Veri Girişi", "flow_2_d": "Hasta HAQ, BASDAI gibi ölçekleri evinde doldurur.",
+        "flow_3_t": "3. Sinyal Analizi", "flow_3_d": "Sistem skorları hesaplar, risk varsa hekimi uyarır.",
+        "flow_4_t": "4. Odaklı Vizit", "flow_4_d": "Hekim sadece fizik muayeneye odaklanır.",
+        "stats_title": "Ölçümlenen Değer",
+        "stat_time_title": "Hekim Zaman Kullanımı",
+        "stat_time_trad": "Geleneksel (40 dk)", "stat_time_trad_input": "Veri Girişi: 20dk",
+        "stat_time_turp": "Turp Modeli (15 dk)", "stat_time_turp_input": "Veri Girişi: 0dk",
+        "stat_time_desc": "Anket yükü kalktığı için vizit süresi %65 azalır.",
+        "stat_data_title": "Veri Doğruluğu",
+        "stat_data_paper": "Kağıt (%70)", "stat_data_turp": "Turp (%98)",
+        "stat_data_desc": "Dijital validasyon sayesinde hatalı veri girişi engellenir.",
+        "cta_title": "Bu Modeli Çalışmanızda Uygulayın",
+        "cta_btn": "Maliyet Analizi Yap"
+      }
     }
   },
 
@@ -378,7 +422,51 @@ const resources = {
       "roi_result_desc": "Digitization reduces field staff time by 90%, covering license costs.",
       "roi_trad_label": "Traditional", "roi_trad_sub": "Current State",
       "roi_turp_label": "Turp Method", "roi_turp_sub": "Next Generation",
-      "roi_total": "Total"
+      "roi_total": "Total",
+
+      // --- FAQ PAGE ---
+      "faq_page": {
+        "help_center": "Help Center",
+        "title": "Frequently Asked Questions",
+        "subtitle": "Find answers to your questions about the TURP platform here.",
+        "search_placeholder": "Search questions...",
+        "all_categories": "All Categories",
+        "loading": "Loading...",
+        "no_results": "No questions found matching your search.",
+        "no_faqs": "No FAQs added yet."
+      },
+
+      // --- RHEUMA CASE STUDY ---
+      "case_rheuma": {
+        "back_home": "Back to Home",
+        "badge": "Rheumatology Hybrid Model",
+        "title": "Rheumatology Registry System Project",
+        "desc": "A hybrid monitoring model for Rheumatoid Arthritis (RA) and Ankylosing Spondylitis (AS) patients that saves 45% of physician time by digitizing hospital visits.",
+        "problem_title": "Current Problem",
+        "problem_1_t": "Limited Outpatient Time",
+        "problem_1_d": "Physicians spend most of the 45-minute visit filling out surveys.",
+        "problem_2_t": "Recall Bias",
+        "problem_2_d": "Patients describe their current state but cannot remember pain from two weeks ago.",
+        "solution_badge": "Turp Solution",
+        "solution_title": "Digital Integration",
+        "solution_desc": "Patients fill out all scales from home 48 hours before coming to the hospital. Data is ready when the patient enters the room.",
+        "solution_metric": "75% Faster",
+        "flow_title": "Hybrid Visit Flow",
+        "flow_1_t": "1. Start at Home", "flow_1_d": "Patient receives notification 48H prior.",
+        "flow_2_t": "2. ePRO Entry", "flow_2_d": "Patient fills HAQ, BASDAI scales at home.",
+        "flow_3_t": "3. Signal Analysis", "flow_3_d": "System calculates scores, alerts physician if risk exists.",
+        "flow_4_t": "4. Focused Visit", "flow_4_d": "Physician focuses only on physical examination.",
+        "stats_title": "Measured Value",
+        "stat_time_title": "Physician Time Usage",
+        "stat_time_trad": "Traditional (40 min)", "stat_time_trad_input": "Data Entry: 20min",
+        "stat_time_turp": "Turp Model (15 min)", "stat_time_turp_input": "Data Entry: 0min",
+        "stat_time_desc": "Visit time reduced by 65% as survey burden is removed.",
+        "stat_data_title": "Data Accuracy",
+        "stat_data_paper": "Paper (70%)", "stat_data_turp": "Turp (98%)",
+        "stat_data_desc": "Incorrect data entry is prevented thanks to digital validation.",
+        "cta_title": "Apply This Model to Your Study",
+        "cta_btn": "Run Cost Analysis"
+      }
     }
   },
 
@@ -561,7 +649,51 @@ const resources = {
       "roi_result_desc": "数字化释放 90% 时间。",
       "roi_trad_label": "传统", "roi_trad_sub": "当前",
       "roi_turp_label": "Turp 方法", "roi_turp_sub": "新一代",
-      "roi_total": "总计"
+      "roi_total": "总计",
+
+      // --- FAQ PAGE ---
+      "faq_page": {
+        "help_center": "帮助中心",
+        "title": "常见问题",
+        "subtitle": "在此处找到有关 TURP 平台的问题的答案。",
+        "search_placeholder": "搜索问题...",
+        "all_categories": "所有类别",
+        "loading": "加载中...",
+        "no_results": "未找到匹配的问题。",
+        "no_faqs": "尚未添加常见问题解答。"
+      },
+
+      // --- RHEUMA CASE STUDY ---
+      "case_rheuma": {
+        "back_home": "返回主页",
+        "badge": "风湿病混合模型",
+        "title": "风湿病登记系统项目",
+        "desc": "一种针对类风湿性关节炎 (RA) 和强直性脊柱炎 (AS) 患者的混合监测模型，通过数字化医院就诊节省 45% 的医生时间。",
+        "problem_title": "当前问题",
+        "problem_1_t": "门诊时间有限",
+        "problem_1_d": "医生将 45 分钟就诊时间的大部分用于填写问卷。",
+        "problem_2_t": "回忆偏差",
+        "problem_2_d": "患者描述当前的状况，但无法回忆两周前的疼痛。",
+        "solution_badge": "Turp 解决方案",
+        "solution_title": "数字集成",
+        "solution_desc": "患者在来医院前 48 小时在家填写所有量表。患者进入房间时数据已准备就绪。",
+        "solution_metric": "快 75%",
+        "flow_title": "混合就诊流程",
+        "flow_1_t": "1. 在家开始", "flow_1_d": "患者提前 48 小时收到通知。",
+        "flow_2_t": "2. ePRO 输入", "flow_2_d": "患者在家填写 HAQ, BASDAI 量表。",
+        "flow_3_t": "3. 信号分析", "flow_3_d": "系统计算分数，如果有风险则提醒医生。",
+        "flow_4_t": "4. 专注就诊", "flow_4_d": "医生只专注于体检。",
+        "stats_title": "测量价值",
+        "stat_time_title": "医生时间使用",
+        "stat_time_trad": "传统 (40 分钟)", "stat_time_trad_input": "数据输入: 20分钟",
+        "stat_time_turp": "Turp 模型 (15 分钟)", "stat_time_turp_input": "数据输入: 0分钟",
+        "stat_time_desc": "由于消除了调查负担，就诊时间减少了 65%。",
+        "stat_data_title": "数据准确性",
+        "stat_data_paper": "纸质 (70%)", "stat_data_turp": "Turp (98%)",
+        "stat_data_desc": "通过数字验证防止错误的数据输入。",
+        "cta_title": "将此模型应用于您的研究",
+        "cta_btn": "运行成本分析"
+      }
     }
   }
 };

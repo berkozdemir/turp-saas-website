@@ -1,11 +1,13 @@
 // @ts-nocheck
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
     ArrowLeft, History, Microscope, Activity,
     Cpu, Signal, Database, ExternalLink
 } from 'lucide-react';
 
 export const About = ({ setView }) => {
+    const { t } = useTranslation();
     useEffect(() => { window.scrollTo(0, 0); }, []);
 
     return (
@@ -15,7 +17,7 @@ export const About = ({ setView }) => {
             <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-100 px-6 py-4">
                 <div className="max-w-7xl mx-auto flex justify-between items-center">
                     <button onClick={() => setView('home')} className="flex items-center gap-2 text-slate-600 hover:text-slate-900 font-bold transition-colors">
-                        <ArrowLeft size={20} /> Ana Sayfaya Dön
+                        <ArrowLeft size={20} /> {t("about.back_home")}
                     </button>
                 </div>
             </div>
@@ -27,13 +29,13 @@ export const About = ({ setView }) => {
                 </div>
                 <div className="max-w-4xl mx-auto text-center relative z-10">
                     <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur border border-white/20 text-white px-4 py-1.5 rounded-full text-xs font-bold mb-8 uppercase tracking-wider">
-                        <History size={14} className="text-rose-500" /> 1997'den Beri
+                        <History size={14} className="text-rose-500" /> {t("about.since")}
                     </div>
                     <h1 className="font-heading text-4xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
-                        Türkiye'nin İlk CRO'su Olarak,<br /> <span className="text-rose-500">Geleceğin Kanıtını İnşa Ediyoruz.</span>
+                        {t("about.hero_title_1")}<br /> <span className="text-rose-500">{t("about.hero_title_2")}</span>
                     </h1>
                     <p className="text-xl text-slate-400 leading-relaxed max-w-2xl mx-auto">
-                        Omega Araştırma deneyimiyle doğan Turp; yazılımı amaç olarak değil, bilimsel hakikate ulaşmak için bir araç olarak kullanır.
+                        {t("about.hero_desc")}
                     </p>
                 </div>
             </section>
@@ -42,10 +44,10 @@ export const About = ({ setView }) => {
             <section className="py-24 px-6 max-w-5xl mx-auto">
                 <div className="grid md:grid-cols-2 gap-16 items-center">
                     <div>
-                        <h2 className="font-heading text-3xl font-bold text-slate-900 mb-6">Yazılım Odaklı Değil, <br /><span className="text-rose-600">Gönüllü Odaklıyız.</span></h2>
-                        <p className="text-slate-600 leading-relaxed mb-6 text-lg font-medium border-l-4 border-slate-900 pl-4">"Kaliteli veri toplamak, kanıt düzeyini güçlendirir."</p>
+                        <h2 className="font-heading text-3xl font-bold text-slate-900 mb-6">{t("about.manifesto_head_1")} <br /><span className="text-rose-600">{t("about.manifesto_head_2")}</span></h2>
+                        <p className="text-slate-600 leading-relaxed mb-6 text-lg font-medium border-l-4 border-slate-900 pl-4">"{t("about.manifesto_quote")}"</p>
                         <p className="text-slate-600 leading-relaxed mb-6">
-                            Pek çok teknoloji firması klinik araştırmayı "öğrenmeye" çalışırken; biz <strong>1997'den beri</strong> bu süreçleri planlayan, yöneten ve dönüştüren ekibiz. Dijitalleşme ve IoT, <strong>ICH-GCP</strong> standartlarında veri toplamak için birer araçtır.
+                            {t("about.manifesto_text")}
                         </p>
                     </div>
                     <div className="relative">
@@ -59,8 +61,8 @@ export const About = ({ setView }) => {
             <section className="py-24 bg-slate-50 px-6">
                 <div className="max-w-7xl mx-auto">
                     <div className="text-center mb-16">
-                        <h2 className="font-heading text-3xl font-bold text-slate-900">Gücümüzü Aldığımız Ekosistem</h2>
-                        <p className="text-slate-500 mt-4">Klinik araştırmanın her adımında, uçtan uca uzmanlık.</p>
+                        <h2 className="font-heading text-3xl font-bold text-slate-900">{t("about.eco_title")}</h2>
+                        <p className="text-slate-500 mt-4">{t("about.eco_sub")}</p>
                     </div>
 
                     {/* 4'lü Grid Yapısı: CRO, Care, Genetik, Turp */}
@@ -73,8 +75,8 @@ export const About = ({ setView }) => {
                                 <img src="/omega_logo.png" alt="Omega CRO" className="h-full w-auto object-contain" />
                             </div>
                             <h3 className="font-heading text-xl font-bold text-slate-900 mb-2">Omega CRO</h3>
-                            <p className="text-xs font-bold text-rose-600 uppercase tracking-wide mb-4">Stratejik Akıl • 1997</p>
-                            <p className="text-slate-600 text-sm leading-relaxed">Protokol tasarımı, etik kurul ve regülasyon yönetimi. Türkiye'nin ilk CRO'su olarak projenin yasal ve bilimsel omurgasını kuruyoruz.</p>
+                            <p className="text-xs font-bold text-rose-600 uppercase tracking-wide mb-4">{t("about.card_cro_sub")}</p>
+                            <p className="text-slate-600 text-sm leading-relaxed">{t("about.card_cro_desc")}</p>
                         </a>
 
                         {/* 2. OMEGA CARE (LİNK EKLENDİ) */}
@@ -84,8 +86,8 @@ export const About = ({ setView }) => {
                                 <img src="/omega_care_logo.png" alt="Omega Care" className="h-full w-auto object-contain" />
                             </div>
                             <h3 className="font-heading text-xl font-bold text-slate-900 mb-2">Omega Care</h3>
-                            <p className="text-xs font-bold text-rose-600 uppercase tracking-wide mb-4">Saha Gücü • Evde Sağlık</p>
-                            <p className="text-slate-600 text-sm leading-relaxed">Araştırma hemşireleri ile hastayı evinde ziyaret eden, numune alan ve ilacı uygulayan operasyonel güç.</p>
+                            <p className="text-xs font-bold text-rose-600 uppercase tracking-wide mb-4">{t("about.card_care_sub")}</p>
+                            <p className="text-slate-600 text-sm leading-relaxed">{t("about.card_care_desc")}</p>
                         </a>
 
                         {/* 3. OMEGA GENETİK (YENİ EKLENDİ) */}
@@ -95,8 +97,8 @@ export const About = ({ setView }) => {
                                 <img src="/omega_genetik_logo.png" alt="Omega Genetik" className="h-full w-auto object-contain" />
                             </div>
                             <h3 className="font-heading text-xl font-bold text-slate-900 mb-2">Omega Genetik</h3>
-                            <p className="text-xs font-bold text-rose-600 uppercase tracking-wide mb-4">Laboratuvar • Ar-Ge</p>
-                            <p className="text-slate-600 text-sm leading-relaxed">Kişiselleştirilmiş tıp, sitogenetik, moleküler ve farmakogenetik analizler ve biyobelirteç takibi ile tedavinin genetik altyapısını çözümlüyoruz.</p>
+                            <p className="text-xs font-bold text-rose-600 uppercase tracking-wide mb-4">{t("about.card_gene_sub")}</p>
+                            <p className="text-slate-600 text-sm leading-relaxed">{t("about.card_gene_desc")}</p>
                         </a>
 
                         {/* 4. TURP (DIGITAL BRIDGE) */}
@@ -107,9 +109,9 @@ export const About = ({ setView }) => {
                                     <Activity size={32} />
                                 </div>
                                 <h3 className="font-heading text-xl font-bold text-white mb-2 relative z-10">Turp</h3>
-                                <p className="text-xs font-bold text-rose-400 uppercase tracking-wide mb-4 relative z-10">Dijital Köprü</p>
+                                <p className="text-xs font-bold text-rose-400 uppercase tracking-wide mb-4 relative z-10">{t("about.card_turp_sub")}</p>
                                 <p className="text-slate-400 text-sm leading-relaxed relative z-10">
-                                    Veriyi, hastayı ve araştırmacıyı birbirine bağlayan dijital platform. e-Nabız entegrasyonu ve yapay zeka destekli analiz.
+                                    {t("about.card_turp_desc")}
                                 </p>
                             </div>
                         </div>
@@ -120,9 +122,9 @@ export const About = ({ setView }) => {
 
             {/* METODOLOJİ & CTA */}
             <section className="py-20 px-6 max-w-5xl mx-auto text-center">
-                <h2 className="font-heading text-3xl font-bold text-slate-900 mb-10">Metodolojimiz: Veriden Sinyale</h2>
+                <h2 className="font-heading text-3xl font-bold text-slate-900 mb-10">{t("about.method_title")}</h2>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-                    {[{ i: Microscope, t: "ICH-GCP", d: "Uluslararası Standart" }, { i: Cpu, t: "Data Science", d: "Gelişmiş Veri Analitiği" }, { i: Signal, t: "Sinyal Üretme", d: "Anlık Klinik Uyarılar" }, { i: Database, t: "RWE", d: "Gerçek Yaşam Verisi" }].map((item, idx) => (
+                    {[{ i: Microscope, t: t("about.method_1_t"), d: t("about.method_1_d") }, { i: Cpu, t: t("about.method_2_t"), d: t("about.method_2_d") }, { i: Signal, t: t("about.method_3_t"), d: t("about.method_3_d") }, { i: Database, t: t("about.method_4_t"), d: t("about.method_4_d") }].map((item, idx) => (
                         <div key={idx} className="flex flex-col items-center group">
                             <div className="w-14 h-14 bg-rose-50 rounded-full flex items-center justify-center text-rose-600 mb-4">{React.createElement(item.i, { size: 24 })}</div>
                             <h4 className="font-bold text-slate-900">{item.t}</h4>
@@ -134,12 +136,12 @@ export const About = ({ setView }) => {
 
             <section className="py-20 bg-slate-900 text-center px-6">
                 <div className="max-w-3xl mx-auto">
-                    <h2 className="text-2xl md:text-4xl font-heading font-bold text-white mb-6">Projelerinizde Deneyimin Gücünü Kullanın</h2>
+                    <h2 className="text-2xl md:text-4xl font-heading font-bold text-white mb-6">{t("about.cta_title")}</h2>
                     <button onClick={() => {
                         setView('home');
                         setTimeout(() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' }), 100);
                     }} className="px-10 py-4 bg-white text-slate-900 font-bold rounded-xl hover:scale-105 transition-transform">
-                        Bize Ulaşın
+                        {t("about.cta_btn")}
                     </button>
                 </div>
             </section>
