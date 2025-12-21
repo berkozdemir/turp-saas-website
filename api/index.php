@@ -312,5 +312,53 @@ if ($action == 'reset-password' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
+// 5. CHANGE PASSWORD (Logged-in user)
+if ($action == 'change_password' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_once __DIR__ . '/auth_helper.php';
+    $user_id = require_admin_auth($conn);
+
+    $request_body = json_decode(file_get_contents('php://input'), true) ?? [];
+    $current_password = $request_body['current_password'] ?? '';
+    $new_password = $request_body['new_password'] ?? '';
+
+    if (empty($current_password) || empty($new_password)) {
+        echo json_encode(['error' => 'Mevcut şifre ve yeni şifre gereklidir']);
+        exit;
+    }
+
+    if (strlen($new_password) < 8) {
+        echo json_encode(['error' => 'Yeni şifre en az 8 karakter olmalıdır']);
+        exit;
+    }
+
+    try {
+        // Get current password hash
+        $stmt = $conn->prepare("SELECT password_hash FROM admin_users WHERE id = ?");
+        $stmt->execute([$user_id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user) {
+            echo json_encode(['error' => 'Kullanıcı bulunamadı']);
+            exit;
+        }
+
+        // Verify current password
+        if (!password_verify($current_password, $user['password_hash'])) {
+            echo json_encode(['error' => 'Mevcut şifre yanlış']);
+            exit;
+        }
+
+        // Update password
+        $new_hash = password_hash($new_password, PASSWORD_BCRYPT);
+        $stmt = $conn->prepare("UPDATE admin_users SET password_hash = ? WHERE id = ?");
+        $stmt->execute([$new_hash, $user_id]);
+
+        echo json_encode(['success' => true, 'message' => 'Şifreniz başarıyla güncellendi']);
+    } catch (Exception $e) {
+        echo json_encode(['error' => 'Bir hata oluştu']);
+    }
+    exit;
+}
+
 echo json_encode(["error" => "Geçersiz işlem"]);
 ?>

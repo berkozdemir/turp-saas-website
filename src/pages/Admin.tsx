@@ -3,13 +3,15 @@ import { Login } from "./Login";
 import { AdminMessages } from "./admin/AdminMessages";
 import { AdminBlogList } from "./admin/AdminBlogList";
 import { AdminBlogEditor } from "./admin/AdminBlogEditor";
+import { AdminSettings } from "./admin/AdminSettings";
 import {
   Mail,
   FileText,
   LogOut,
   ExternalLink,
   Menu,
-  X
+  X,
+  Settings
 } from "lucide-react";
 
 export const Admin = () => {
@@ -84,6 +86,14 @@ export const Admin = () => {
             onSave={() => setActiveTab("blog_list")}
           />
         );
+      case "settings":
+        return (
+          <AdminSettings
+            token={session.token}
+            userName={session.user.name}
+            userEmail={session.user.email}
+          />
+        );
       default:
         return <AdminMessages token={session.token} />;
     }
@@ -132,6 +142,17 @@ export const Admin = () => {
               <FileText size={20} />
               <span className="font-medium">İçerik / Blog</span>
             </button>
+
+            <button
+              onClick={() => { setActiveTab("settings"); setMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "settings"
+                ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                : "text-slate-400 hover:bg-white/5 hover:text-white"
+                }`}
+            >
+              <Settings size={20} />
+              <span className="font-medium">Ayarlar</span>
+            </button>
           </nav>
         </div>
 
@@ -155,6 +176,7 @@ export const Admin = () => {
               {activeTab === 'messages' && "Mesaj Yönetimi"}
               {activeTab === 'blog_list' && "İçerik Yönetimi"}
               {activeTab === 'blog_edit' && "İçerik Düzenleyici"}
+              {activeTab === 'settings' && "Hesap Ayarları"}
             </h1>
             <p className="text-slate-500 text-sm mt-1">Hoşgeldin, {session.user.name}</p>
           </div>
