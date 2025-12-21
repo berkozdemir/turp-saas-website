@@ -22,8 +22,8 @@ ALTER TABLE faqs ADD COLUMN IF NOT EXISTS tenant_id VARCHAR(50) NOT NULL DEFAULT
 CREATE INDEX IF NOT EXISTS idx_faqs_tenant ON faqs(tenant_id);
 
 -- Posts (Blog)
-ALTER TABLE posts ADD COLUMN IF NOT EXISTS tenant_id VARCHAR(50) NOT NULL DEFAULT 'turp';
-CREATE INDEX IF NOT EXISTS idx_posts_tenant ON posts(tenant_id);
+ALTER TABLE iwrs_saas_blog_posts ADD COLUMN IF NOT EXISTS tenant_id VARCHAR(50) NOT NULL DEFAULT 'turp';
+CREATE INDEX IF NOT EXISTS idx_iwrs_saas_blog_posts_tenant ON iwrs_saas_blog_posts(tenant_id);
 
 -- Contact Messages
 ALTER TABLE contact_messages ADD COLUMN IF NOT EXISTS tenant_id VARCHAR(50) NOT NULL DEFAULT 'turp';

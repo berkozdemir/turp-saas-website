@@ -18,7 +18,7 @@ if ($action == 'get_blog_posts_admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $limit = 20;
     $offset = ($page - 1) * $limit;
 
-    $query = "SELECT id, title, featured_image as image_url, 'Admin' as author, lang as language, status, created_at FROM posts WHERE tenant_id = ?";
+    $query = "SELECT id, title, featured_image as image_url, 'Admin' as author, lang as language, status, created_at FROM iwrs_saas_blog_posts WHERE tenant_id = ?";
     $params = [$tenant_id];
 
     if ($lang !== 'all') {
@@ -44,7 +44,7 @@ if ($action == 'get_blog_posts_admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Count total
-        $count_query = "SELECT COUNT(*) as total FROM posts WHERE tenant_id = ?";
+        $count_query = "SELECT COUNT(*) as total FROM iwrs_saas_blog_posts WHERE tenant_id = ?";
         $count_params = [$tenant_id];
         if ($lang !== 'all') {
             $count_query .= " AND lang = ?";
@@ -87,7 +87,7 @@ if ($action == 'get_blog_post_detail' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $id = $_GET['id'] ?? 0;
 
     try {
-        $stmt = $conn->prepare("SELECT id, title, slug, content, excerpt, featured_image as image_url, 'Admin' as author, lang as language, status, published_at as publish_at, created_at FROM posts WHERE id = ? AND tenant_id = ?");
+        $stmt = $conn->prepare("SELECT id, title, slug, content, excerpt, featured_image as image_url, 'Admin' as author, lang as language, status, published_at as publish_at, created_at FROM iwrs_saas_blog_posts WHERE id = ? AND tenant_id = ?");
         $stmt->execute([$id, $tenant_id]);
         $post = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -128,7 +128,7 @@ if (($action == 'create_blog_post' || $action == 'update_blog_post') && $_SERVER
 
     try {
         if ($action == 'create_blog_post') {
-            $stmt = $conn->prepare("INSERT INTO posts (title, slug, lang, excerpt, content, status, published_at, featured_image, tenant_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $conn->prepare("INSERT INTO iwrs_saas_blog_posts (title, slug, lang, excerpt, content, status, published_at, featured_image, tenant_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$title, $slug, $language, $excerpt, $content, $status, $publish_at, $image_url, $tenant_id]);
             echo json_encode(['success' => true, 'id' => $conn->lastInsertId()]);
         } else {
@@ -137,7 +137,7 @@ if (($action == 'create_blog_post' || $action == 'update_blog_post') && $_SERVER
                 echo json_encode(['error' => 'ID required for update']);
                 exit;
             }
-            $stmt = $conn->prepare("UPDATE posts SET title=?, slug=?, lang=?, excerpt=?, content=?, status=?, published_at=?, featured_image=? WHERE id=? AND tenant_id=?");
+            $stmt = $conn->prepare("UPDATE iwrs_saas_blog_posts SET title=?, slug=?, lang=?, excerpt=?, content=?, status=?, published_at=?, featured_image=? WHERE id=? AND tenant_id=?");
             $stmt->execute([$title, $slug, $language, $excerpt, $content, $status, $publish_at, $image_url, $id, $tenant_id]);
             echo json_encode(['success' => true]);
         }
@@ -158,7 +158,7 @@ if ($action == 'delete_blog_post' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $data['id'] ?? 0;
 
     try {
-        $stmt = $conn->prepare("DELETE FROM posts WHERE id = ? AND tenant_id = ?");
+        $stmt = $conn->prepare("DELETE FROM iwrs_saas_blog_posts WHERE id = ? AND tenant_id = ?");
         $stmt->execute([$id, $tenant_id]);
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
