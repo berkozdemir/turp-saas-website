@@ -34,10 +34,22 @@ if ($action == 'contact' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare("INSERT INTO contact_messages (full_name, email, organization, subject, message_body, consent) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->execute([$full_name, $email, $organization, $subject, $message_body, $consent ? 1 : 0]);
 
-        // Send Email Notification to Admin
+        // Get notification emails from settings (or use default)
+        $admin_emails = 'berko@omega-cro.com.tr'; // Default
+        try {
+            $stmt = $conn->prepare("SELECT setting_value FROM site_settings WHERE setting_key = 'notification_emails'");
+            $stmt->execute();
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($result && !empty($result['setting_value'])) {
+                $admin_emails = $result['setting_value'];
+            }
+        } catch (Exception $e) {
+            // Table might not exist, use default
+        }
+
+        // Send Email Notification to Admin(s)
         require_once __DIR__ . '/email_helper.php';
 
-        $admin_email = 'berko@omega-cro.com.tr'; // As requested
         $email_subject = "Yeni İletişim Mesajı: " . $subject;
         $html_content = "
             <h3>Yeni bir iletişim mesajı aldınız</h3>
@@ -49,8 +61,13 @@ if ($action == 'contact' && $_SERVER['REQUEST_METHOD'] === 'POST') {
             <p>" . nl2br(htmlspecialchars($message_body)) . "</p>
         ";
 
-        // Use background processing or send immediately (blocking for simplicity here)
-        send_email_via_brevo($brevo_api_key, $admin_email, 'Admin', $email_subject, $html_content);
+        // Send to each email address (comma-separated)
+        $email_list = array_map('trim', explode(',', $admin_emails));
+        foreach ($email_list as $admin_email) {
+            if (filter_var($admin_email, FILTER_VALIDATE_EMAIL)) {
+                send_email_via_brevo($brevo_api_key, $admin_email, 'Admin', $email_subject, $html_content);
+            }
+        }
 
         echo json_encode(['success' => true, 'message' => 'Mesajınız başarıyla iletildi.']);
     } catch (Exception $e) {

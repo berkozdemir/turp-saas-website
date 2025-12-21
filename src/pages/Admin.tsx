@@ -15,21 +15,17 @@ import {
 } from "lucide-react";
 
 export const Admin = () => {
-  const [session, setSession] = useState<any>(null);
+  // Initialize session from localStorage to prevent flash of login screen
+  const [session, setSession] = useState<any>(() => {
+    const storedSession = localStorage.getItem("admin_session");
+    return storedSession ? JSON.parse(storedSession) : null;
+  });
   const [activeTab, setActiveTab] = useState(() => localStorage.getItem("admin_active_tab") || "messages");
   const [editingPost, setEditingPost] = useState<any | null>(() => {
     const saved = localStorage.getItem("admin_editing_post");
     return saved ? JSON.parse(saved) : null;
   });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Check login status on mount
-  useEffect(() => {
-    const storedSession = localStorage.getItem("admin_session");
-    if (storedSession) {
-      setSession(JSON.parse(storedSession));
-    }
-  }, []);
 
   // Persist active tab
   useEffect(() => {

@@ -360,5 +360,64 @@ if ($action == 'change_password' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
+// 6. GET SETTINGS
+if ($action == 'get_settings' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+    require_once __DIR__ . '/auth_helper.php';
+    require_admin_auth($conn);
+
+    try {
+        $stmt = $conn->prepare("SELECT setting_key, setting_value FROM site_settings");
+        $stmt->execute();
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $settings = [];
+        foreach ($rows as $row) {
+            $settings[$row['setting_key']] = $row['setting_value'];
+        }
+
+        echo json_encode(['success' => true, 'data' => $settings]);
+    } catch (Exception $e) {
+        // Table might not exist, return defaults
+        echo json_encode([
+            'success' => true,
+            'data' => [
+                'notification_emails' => 'berko@omega-cro.com.tr'
+            ]
+        ]);
+    }
+    exit;
+}
+
+// 7. UPDATE SETTINGS
+if ($action == 'update_settings' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    require_once __DIR__ . '/auth_helper.php';
+    require_admin_auth($conn);
+
+    $request_body = json_decode(file_get_contents('php://input'), true) ?? [];
+
+    try {
+        // Create table if not exists
+        $conn->exec("CREATE TABLE IF NOT EXISTS site_settings (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            setting_key VARCHAR(100) NOT NULL UNIQUE,
+            setting_value TEXT,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+
+        // Update each setting
+        foreach ($request_body as $key => $value) {
+            $stmt = $conn->prepare("INSERT INTO site_settings (setting_key, setting_value) 
+                VALUES (?, ?) 
+                ON DUPLICATE KEY UPDATE setting_value = ?");
+            $stmt->execute([$key, $value, $value]);
+        }
+
+        echo json_encode(['success' => true, 'message' => 'Ayarlar kaydedildi']);
+    } catch (Exception $e) {
+        echo json_encode(['error' => 'Bir hata oluştu: ' . $e->getMessage()]);
+    }
+    exit;
+}
+
 echo json_encode(["error" => "Geçersiz işlem"]);
 ?>
