@@ -2,6 +2,8 @@
 // Legal Documents Management API
 // Requires: $conn, $action
 
+require_once __DIR__ . '/tenant_helper.php';
+
 // ========================================
 // SETUP / MIGRATION (Lazy Init)
 // ========================================
@@ -9,7 +11,7 @@ function ensure_legal_table_exists($conn)
 {
     $sql = "CREATE TABLE IF NOT EXISTS legal_documents (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        `key` VARCHAR(50) NOT NULL UNIQUE,
+        `key` VARCHAR(50) NOT NULL,
         title_tr VARCHAR(255) NOT NULL,
         content_tr TEXT,
         title_en VARCHAR(255),
@@ -19,9 +21,11 @@ function ensure_legal_table_exists($conn)
         is_active TINYINT(1) DEFAULT 1,
         sort_order INT DEFAULT 0,
         effective_date DATE NULL,
+        tenant_id VARCHAR(50) NOT NULL DEFAULT 'turp',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        last_updated_by INT NULL
+        last_updated_by INT NULL,
+        UNIQUE KEY unique_key_tenant (`key`, tenant_id)
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
 
     try {
@@ -40,9 +44,11 @@ if ($action == 'get_legal_docs_admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     require_once __DIR__ . '/auth_helper.php';
     require_admin_auth($conn);
     ensure_legal_table_exists($conn);
+    $tenant_id = get_current_tenant($conn);
 
     try {
-        $stmt = $conn->query("SELECT * FROM legal_documents ORDER BY sort_order ASC, created_at DESC");
+        $stmt = $conn->prepare("SELECT * FROM legal_documents WHERE tenant_id = ? ORDER BY sort_order ASC, created_at DESC");
+        $stmt->execute([$tenant_id]);
         $docs = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode(['success' => true, 'data' => $docs]);
     } catch (Exception $e) {
@@ -55,12 +61,13 @@ if ($action == 'get_legal_docs_admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
 if ($action == 'get_legal_doc_detail' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     require_once __DIR__ . '/auth_helper.php';
     require_admin_auth($conn);
+    $tenant_id = get_current_tenant($conn);
 
     $id = $_GET['id'] ?? 0;
 
     try {
-        $stmt = $conn->prepare("SELECT * FROM legal_documents WHERE id = ?");
-        $stmt->execute([$id]);
+        $stmt = $conn->prepare("SELECT * FROM legal_documents WHERE id = ? AND tenant_id = ?");
+        $stmt->execute([$id, $tenant_id]);
         $doc = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($doc) {
@@ -80,6 +87,7 @@ if (($action == 'save_legal_doc') && $_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once __DIR__ . '/auth_helper.php';
     $user_id = require_admin_auth($conn);
     ensure_legal_table_exists($conn);
+    $tenant_id = get_current_tenant($conn);
 
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
 
@@ -111,7 +119,7 @@ if (($action == 'save_legal_doc') && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 title_zh=?, content_zh=?, 
                 is_active=?, sort_order=?, effective_date=?, 
                 last_updated_by=? 
-                WHERE id=?";
+                WHERE id=? AND tenant_id=?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([
                 $key,
@@ -125,14 +133,15 @@ if (($action == 'save_legal_doc') && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 $sort_order,
                 $effective_date,
                 $user_id,
-                $id
+                $id,
+                $tenant_id
             ]);
             echo json_encode(['success' => true, 'message' => 'Updated']);
         } else {
             // Create
-            // Check if key exists
-            $check = $conn->prepare("SELECT id FROM legal_documents WHERE `key` = ?");
-            $check->execute([$key]);
+            // Check if key exists for this tenant
+            $check = $conn->prepare("SELECT id FROM legal_documents WHERE `key` = ? AND tenant_id = ?");
+            $check->execute([$key, $tenant_id]);
             if ($check->fetch()) {
                 echo json_encode(['error' => 'Bu Key (anahtar) zaten kullanılıyor.']);
                 exit;
@@ -143,8 +152,8 @@ if (($action == 'save_legal_doc') && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 title_en, content_en, 
                 title_zh, content_zh, 
                 is_active, sort_order, effective_date, 
-                last_updated_by
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                last_updated_by, tenant_id
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             $stmt->execute([
                 $key,
@@ -157,7 +166,8 @@ if (($action == 'save_legal_doc') && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 $is_active,
                 $sort_order,
                 $effective_date,
-                $user_id
+                $user_id,
+                $tenant_id
             ]);
             echo json_encode(['success' => true, 'id' => $conn->lastInsertId()]);
         }
@@ -171,13 +181,14 @@ if (($action == 'save_legal_doc') && $_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($action == 'delete_legal_doc' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once __DIR__ . '/auth_helper.php';
     require_admin_auth($conn);
+    $tenant_id = get_current_tenant($conn);
 
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
     $id = $data['id'] ?? 0;
 
     try {
-        $stmt = $conn->prepare("DELETE FROM legal_documents WHERE id = ?");
-        $stmt->execute([$id]);
+        $stmt = $conn->prepare("DELETE FROM legal_documents WHERE id = ? AND tenant_id = ?");
+        $stmt->execute([$id, $tenant_id]);
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
         echo json_encode(['error' => 'Delete failed']);
@@ -192,11 +203,9 @@ if ($action == 'delete_legal_doc' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 // 5. PUBLIC: Get Document by Key
 if ($action == 'get_legal_doc_public' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     ensure_legal_table_exists($conn);
+    $tenant_id = get_current_tenant($conn);
 
     $key = $_GET['key'] ?? '';
-    // $lang is handled by frontend mostly, but we return all langs so frontend switches instantly 
-    // OR we return specific lang. The prompt asks "Render title/content in the current site language... If translation missing fallback".
-    // Return ALL content, let frontend handle fallback logic to avoid extra requests when switching lang.
 
     if (empty($key)) {
         echo json_encode(['error' => 'Key required']);
@@ -204,8 +213,8 @@ if ($action == 'get_legal_doc_public' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     }
 
     try {
-        $stmt = $conn->prepare("SELECT * FROM legal_documents WHERE `key` = ? AND is_active = 1");
-        $stmt->execute([$key]);
+        $stmt = $conn->prepare("SELECT * FROM legal_documents WHERE `key` = ? AND is_active = 1 AND tenant_id = ?");
+        $stmt->execute([$key, $tenant_id]);
         $doc = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($doc) {

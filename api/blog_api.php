@@ -2,10 +2,13 @@
 // Blog Management API
 // Requires: $conn, $action
 
+require_once __DIR__ . '/tenant_helper.php';
+
 // 1. LIST BLOG POSTS
 if ($action == 'get_blog_posts_admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     require_once __DIR__ . '/auth_helper.php';
     $user_id = require_admin_auth($conn);
+    $tenant_id = get_current_tenant($conn);
 
     $lang = $_GET['lang'] ?? 'all';
     $status = $_GET['status'] ?? 'all';
@@ -15,8 +18,8 @@ if ($action == 'get_blog_posts_admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $limit = 20;
     $offset = ($page - 1) * $limit;
 
-    $query = "SELECT id, title, featured_image as image_url, 'Admin' as author, lang as language, status, created_at FROM iwrs_saas_blog_posts WHERE 1=1";
-    $params = [];
+    $query = "SELECT id, title, featured_image as image_url, 'Admin' as author, lang as language, status, created_at FROM posts WHERE tenant_id = ?";
+    $params = [$tenant_id];
 
     if ($lang !== 'all') {
         $query .= " AND lang = ?";
@@ -41,9 +44,8 @@ if ($action == 'get_blog_posts_admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Count total
-        $count_query = "SELECT COUNT(*) as total FROM iwrs_saas_blog_posts WHERE 1=1";
-        // Re-use params logic for count... simplified strictly for brevity here, normally split builder
-        $count_params = [];
+        $count_query = "SELECT COUNT(*) as total FROM posts WHERE tenant_id = ?";
+        $count_params = [$tenant_id];
         if ($lang !== 'all') {
             $count_query .= " AND lang = ?";
             $count_params[] = $lang;
@@ -80,12 +82,13 @@ if ($action == 'get_blog_posts_admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
 if ($action == 'get_blog_post_detail' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     require_once __DIR__ . '/auth_helper.php';
     $user_id = require_admin_auth($conn);
+    $tenant_id = get_current_tenant($conn);
 
     $id = $_GET['id'] ?? 0;
 
     try {
-        $stmt = $conn->prepare("SELECT id, title, slug, content, excerpt, featured_image as image_url, 'Admin' as author, lang as language, status, published_at as publish_at, created_at FROM iwrs_saas_blog_posts WHERE id = ?");
-        $stmt->execute([$id]);
+        $stmt = $conn->prepare("SELECT id, title, slug, content, excerpt, featured_image as image_url, 'Admin' as author, lang as language, status, published_at as publish_at, created_at FROM posts WHERE id = ? AND tenant_id = ?");
+        $stmt->execute([$id, $tenant_id]);
         $post = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($post) {
@@ -104,6 +107,7 @@ if ($action == 'get_blog_post_detail' && $_SERVER['REQUEST_METHOD'] === 'GET') {
 if (($action == 'create_blog_post' || $action == 'update_blog_post') && $_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once __DIR__ . '/auth_helper.php';
     $user_id = require_admin_auth($conn);
+    $tenant_id = get_current_tenant($conn);
 
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
 
@@ -124,8 +128,8 @@ if (($action == 'create_blog_post' || $action == 'update_blog_post') && $_SERVER
 
     try {
         if ($action == 'create_blog_post') {
-            $stmt = $conn->prepare("INSERT INTO iwrs_saas_blog_posts (title, slug, lang, excerpt, content, status, published_at, featured_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$title, $slug, $language, $excerpt, $content, $status, $publish_at, $image_url]);
+            $stmt = $conn->prepare("INSERT INTO posts (title, slug, lang, excerpt, content, status, published_at, featured_image, tenant_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$title, $slug, $language, $excerpt, $content, $status, $publish_at, $image_url, $tenant_id]);
             echo json_encode(['success' => true, 'id' => $conn->lastInsertId()]);
         } else {
             $id = $data['id'] ?? 0;
@@ -133,8 +137,8 @@ if (($action == 'create_blog_post' || $action == 'update_blog_post') && $_SERVER
                 echo json_encode(['error' => 'ID required for update']);
                 exit;
             }
-            $stmt = $conn->prepare("UPDATE iwrs_saas_blog_posts SET title=?, slug=?, lang=?, excerpt=?, content=?, status=?, published_at=?, featured_image=? WHERE id=?");
-            $stmt->execute([$title, $slug, $language, $excerpt, $content, $status, $publish_at, $image_url, $id]);
+            $stmt = $conn->prepare("UPDATE posts SET title=?, slug=?, lang=?, excerpt=?, content=?, status=?, published_at=?, featured_image=? WHERE id=? AND tenant_id=?");
+            $stmt->execute([$title, $slug, $language, $excerpt, $content, $status, $publish_at, $image_url, $id, $tenant_id]);
             echo json_encode(['success' => true]);
         }
     } catch (Exception $e) {
@@ -148,13 +152,14 @@ if (($action == 'create_blog_post' || $action == 'update_blog_post') && $_SERVER
 if ($action == 'delete_blog_post' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once __DIR__ . '/auth_helper.php';
     $user_id = require_admin_auth($conn);
+    $tenant_id = get_current_tenant($conn);
 
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
     $id = $data['id'] ?? 0;
 
     try {
-        $stmt = $conn->prepare("DELETE FROM iwrs_saas_blog_posts WHERE id = ?");
-        $stmt->execute([$id]);
+        $stmt = $conn->prepare("DELETE FROM posts WHERE id = ? AND tenant_id = ?");
+        $stmt->execute([$id, $tenant_id]);
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
         error_log("Database Error: " . $e->getMessage());

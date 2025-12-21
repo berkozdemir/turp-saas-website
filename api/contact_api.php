@@ -2,8 +2,11 @@
 // Contact Form & Admin Inbox API
 // Requires: $conn, $action, $brevo_api_key
 
+require_once __DIR__ . '/tenant_helper.php';
+
 // 1. PUBLIC: Submit Contact Form
 if ($action == 'contact' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $tenant_id = get_current_tenant($conn);
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
 
     $full_name = trim($data['full_name'] ?? '');
@@ -30,9 +33,9 @@ if ($action == 'contact' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Save to Database
-        $stmt = $conn->prepare("INSERT INTO contact_messages (full_name, email, organization, subject, message_body, consent) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$full_name, $email, $organization, $subject, $message_body, $consent ? 1 : 0]);
+        // Save to Database with tenant_id
+        $stmt = $conn->prepare("INSERT INTO contact_messages (full_name, email, organization, subject, message_body, consent, tenant_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$full_name, $email, $organization, $subject, $message_body, $consent ? 1 : 0, $tenant_id]);
 
         // Get notification emails from settings (or use default)
         $admin_emails = 'berko@omega-cro.com.tr'; // Default
@@ -81,17 +84,18 @@ if ($action == 'contact' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($action == 'get_messages' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     require_once __DIR__ . '/auth_helper.php';
     $user_id = require_admin_auth($conn);
+    $tenant_id = get_current_tenant($conn);
 
     $status = $_GET['status'] ?? 'all';
     $page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
     $limit = 20;
     $offset = ($page - 1) * $limit;
 
-    $query = "SELECT * FROM contact_messages";
-    $params = [];
+    $query = "SELECT * FROM contact_messages WHERE tenant_id = ?";
+    $params = [$tenant_id];
 
     if ($status !== 'all') {
-        $query .= " WHERE status = ?";
+        $query .= " AND status = ?";
         $params[] = $status;
     }
 
@@ -103,16 +107,14 @@ if ($action == 'get_messages' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Get total count for pagination
-        $count_query = "SELECT COUNT(*) as total FROM contact_messages";
+        $count_query = "SELECT COUNT(*) as total FROM contact_messages WHERE tenant_id = ?";
+        $count_params = [$tenant_id];
         if ($status !== 'all') {
-            $count_query .= " WHERE status = ?";
+            $count_query .= " AND status = ?";
+            $count_params[] = $status;
         }
         $stmt = $conn->prepare($count_query);
-        if ($status !== 'all') {
-            $stmt->execute([$status]);
-        } else {
-            $stmt->execute();
-        }
+        $stmt->execute($count_params);
         $total = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
         echo json_encode([
@@ -134,6 +136,7 @@ if ($action == 'get_messages' && $_SERVER['REQUEST_METHOD'] === 'GET') {
 if ($action == 'update_message_status' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once __DIR__ . '/auth_helper.php';
     $user_id = require_admin_auth($conn);
+    $tenant_id = get_current_tenant($conn);
 
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
     $id = $data['id'] ?? 0;
@@ -145,8 +148,8 @@ if ($action == 'update_message_status' && $_SERVER['REQUEST_METHOD'] === 'POST')
     }
 
     try {
-        $stmt = $conn->prepare("UPDATE contact_messages SET status = ? WHERE id = ?");
-        $stmt->execute([$status, $id]);
+        $stmt = $conn->prepare("UPDATE contact_messages SET status = ? WHERE id = ? AND tenant_id = ?");
+        $stmt->execute([$status, $id, $tenant_id]);
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
         echo json_encode(['error' => 'Güncelleme hatası']);

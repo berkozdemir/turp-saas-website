@@ -2,6 +2,8 @@
 // FAQ Management API
 // Requires: $conn, $action
 
+require_once __DIR__ . '/tenant_helper.php';
+
 // ========================================
 // ADMIN ENDPOINTS (Authenticated)
 // ========================================
@@ -11,6 +13,8 @@ if ($action == 'get_faqs_admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     require_once __DIR__ . '/auth_helper.php';
     require_admin_auth($conn);
 
+    $tenant_id = get_current_tenant($conn);
+
     $language = $_GET['language'] ?? 'all';
     $is_showcased = $_GET['is_showcased'] ?? 'all';
     $is_active = $_GET['is_active'] ?? 'all';
@@ -19,8 +23,8 @@ if ($action == 'get_faqs_admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     $limit = 20;
     $offset = ($page - 1) * $limit;
 
-    $query = "SELECT * FROM faqs WHERE 1=1";
-    $params = [];
+    $query = "SELECT * FROM faqs WHERE tenant_id = ?";
+    $params = [$tenant_id];
 
     if ($language !== 'all') {
         $query .= " AND language = ?";
@@ -50,8 +54,8 @@ if ($action == 'get_faqs_admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         $faqs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Count total
-        $count_query = "SELECT COUNT(*) as total FROM faqs WHERE 1=1";
-        $count_params = [];
+        $count_query = "SELECT COUNT(*) as total FROM faqs WHERE tenant_id = ?";
+        $count_params = [$tenant_id];
         if ($language !== 'all') {
             $count_query .= " AND language = ?";
             $count_params[] = $language;
@@ -116,6 +120,8 @@ if ($action == 'create_faq' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once __DIR__ . '/auth_helper.php';
     require_admin_auth($conn);
 
+    $tenant_id = get_current_tenant($conn);
+
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
 
     $question = trim($data['question'] ?? '');
@@ -135,8 +141,8 @@ if ($action == 'create_faq' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $stmt = $conn->prepare("INSERT INTO faqs (question, answer, question_en, answer_en, question_zh, answer_zh, category, is_showcased, is_active, sort_order) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$question, $answer, $question_en, $answer_en, $question_zh, $answer_zh, $category, $is_showcased, $is_active, $sort_order]);
+        $stmt = $conn->prepare("INSERT INTO faqs (question, answer, question_en, answer_en, question_zh, answer_zh, category, is_showcased, is_active, sort_order, tenant_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$question, $answer, $question_en, $answer_en, $question_zh, $answer_zh, $category, $is_showcased, $is_active, $sort_order, $tenant_id]);
         echo json_encode(['success' => true, 'id' => $conn->lastInsertId()]);
     } catch (Exception $e) {
         echo json_encode(['error' => 'Kayıt oluşturulamadı: ' . $e->getMessage()]);
@@ -148,6 +154,8 @@ if ($action == 'create_faq' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($action == 'update_faq' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once __DIR__ . '/auth_helper.php';
     require_admin_auth($conn);
+
+    $tenant_id = get_current_tenant($conn);
 
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
 
@@ -169,8 +177,8 @@ if ($action == 'update_faq' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $stmt = $conn->prepare("UPDATE faqs SET question=?, answer=?, question_en=?, answer_en=?, question_zh=?, answer_zh=?, category=?, is_showcased=?, is_active=?, sort_order=? WHERE id=?");
-        $stmt->execute([$question, $answer, $question_en, $answer_en, $question_zh, $answer_zh, $category, $is_showcased, $is_active, $sort_order, $id]);
+        $stmt = $conn->prepare("UPDATE faqs SET question=?, answer=?, question_en=?, answer_en=?, question_zh=?, answer_zh=?, category=?, is_showcased=?, is_active=?, sort_order=? WHERE id=? AND tenant_id=?");
+        $stmt->execute([$question, $answer, $question_en, $answer_en, $question_zh, $answer_zh, $category, $is_showcased, $is_active, $sort_order, $id, $tenant_id]);
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
         echo json_encode(['error' => 'Güncelleme başarısız: ' . $e->getMessage()]);
@@ -183,12 +191,14 @@ if ($action == 'delete_faq' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once __DIR__ . '/auth_helper.php';
     require_admin_auth($conn);
 
+    $tenant_id = get_current_tenant($conn);
+
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
     $id = $data['id'] ?? 0;
 
     try {
-        $stmt = $conn->prepare("DELETE FROM faqs WHERE id = ?");
-        $stmt->execute([$id]);
+        $stmt = $conn->prepare("DELETE FROM faqs WHERE id = ? AND tenant_id = ?");
+        $stmt->execute([$id, $tenant_id]);
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
         echo json_encode(['error' => 'Silme işlemi başarısız']);
@@ -202,6 +212,7 @@ if ($action == 'delete_faq' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // 6. PUBLIC: Get showcased FAQs for homepage
 if ($action == 'get_faqs_showcase' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+    $tenant_id = get_current_tenant($conn);
     $language = $_GET['language'] ?? 'tr';
     $limit = isset($_GET['limit']) ? (int) $_GET['limit'] : 4;
 
@@ -224,11 +235,12 @@ if ($action == 'get_faqs_showcase' && $_SERVER['REQUEST_METHOD'] === 'GET') {
                          COALESCE(NULLIF($a_col, ''), answer) as answer, 
                          category 
                   FROM faqs 
-                  WHERE is_active = 1 AND is_showcased = 1 
+                  WHERE is_active = 1 AND is_showcased = 1 AND tenant_id = ?
                   ORDER BY sort_order ASC, created_at DESC LIMIT ?";
 
         $stmt = $conn->prepare($query);
-        $stmt->bindValue(1, $limit, PDO::PARAM_INT);
+        $stmt->bindValue(1, $tenant_id, PDO::PARAM_STR);
+        $stmt->bindValue(2, $limit, PDO::PARAM_INT);
         $stmt->execute();
         $faqs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -241,6 +253,7 @@ if ($action == 'get_faqs_showcase' && $_SERVER['REQUEST_METHOD'] === 'GET') {
 
 // 7. PUBLIC: Get all active FAQs for FAQ page
 if ($action == 'get_faqs_public' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+    $tenant_id = get_current_tenant($conn);
     $language = $_GET['language'] ?? 'tr';
     $category = $_GET['category'] ?? 'all';
 
@@ -256,15 +269,14 @@ if ($action == 'get_faqs_public' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         $a_col = 'answer_zh';
     }
 
-    // Prepare Query
-    // We remove "AND language = ?" because rows are now language-agnostic
+    // Prepare Query with tenant filtering
     $query = "SELECT id, 
                      COALESCE(NULLIF($q_col, ''), question) as question, 
                      COALESCE(NULLIF($a_col, ''), answer) as answer, 
                      category 
               FROM faqs 
-              WHERE is_active = 1";
-    $params = [];
+              WHERE is_active = 1 AND tenant_id = ?";
+    $params = [$tenant_id];
 
     if ($category !== 'all') {
         $query .= " AND category = ?";
@@ -278,10 +290,9 @@ if ($action == 'get_faqs_public' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt->execute($params);
         $faqs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Get categories (Distinct categories from ALL active FAQs, typically categories are language neutral or stored in TR)
-        // If categories essentially need translation, that is a different issue, but usually category tokens are fixed or TR.
-        $stmt = $conn->prepare("SELECT DISTINCT category FROM faqs WHERE is_active = 1 ORDER BY category ASC");
-        $stmt->execute([]);
+        // Get categories for current tenant
+        $stmt = $conn->prepare("SELECT DISTINCT category FROM faqs WHERE is_active = 1 AND tenant_id = ? ORDER BY category ASC");
+        $stmt->execute([$tenant_id]);
         $categories = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
         echo json_encode(['success' => true, 'data' => $faqs, 'categories' => $categories]);
