@@ -3,19 +3,52 @@
 
 function require_admin_auth($conn)
 {
-    // Get headers (handle Apache/Nginx differences if needed, but getallheaders usually works in standard PHP setups)
-    if (!function_exists('getallheaders')) {
-        $headers = [];
-        foreach ($_SERVER as $name => $value) {
-            if (substr($name, 0, 5) == 'HTTP_') {
-                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+    // Get Authorization header with multiple fallback methods
+    // This handles Apache CGI, mod_php, Nginx, and various hosting environments
+
+    $auth_header = '';
+
+    // Method 1: Check $_SERVER directly (works in most cases)
+    if (isset($_SERVER['HTTP_AUTHORIZATION'])) {
+        $auth_header = $_SERVER['HTTP_AUTHORIZATION'];
+    }
+    // Method 2: Apache mod_rewrite sometimes uses REDIRECT_HTTP_AUTHORIZATION
+    elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
+        $auth_header = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+    }
+    // Method 3: Try getallheaders() function
+    elseif (function_exists('getallheaders')) {
+        $headers = getallheaders();
+        // Case-insensitive check
+        foreach ($headers as $key => $value) {
+            if (strtolower($key) === 'authorization') {
+                $auth_header = $value;
+                break;
             }
         }
-    } else {
-        $headers = getallheaders();
     }
-
-    $auth_header = $headers['Authorization'] ?? $headers['authorization'] ?? '';
+    // Method 4: Try apache_request_headers() 
+    elseif (function_exists('apache_request_headers')) {
+        $headers = apache_request_headers();
+        foreach ($headers as $key => $value) {
+            if (strtolower($key) === 'authorization') {
+                $auth_header = $value;
+                break;
+            }
+        }
+    }
+    // Method 5: Manual $_SERVER parsing for CGI environments
+    else {
+        foreach ($_SERVER as $name => $value) {
+            if (substr($name, 0, 5) == 'HTTP_') {
+                $header_name = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))));
+                if (strtolower($header_name) === 'authorization') {
+                    $auth_header = $value;
+                    break;
+                }
+            }
+        }
+    }
 
     if (!preg_match('/Bearer\s(\S+)/', $auth_header, $matches)) {
         http_response_code(401);

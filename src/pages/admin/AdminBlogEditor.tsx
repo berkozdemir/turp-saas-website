@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Save, Loader2, Globe, Calendar, User, CheckCircle, Image as ImageIcon, X } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Globe, Calendar, User, CheckCircle } from "lucide-react";
+import { ImageUploader } from "../../components/ImageUploader";
 
 interface AdminBlogEditorProps {
     token: string;
@@ -10,7 +11,6 @@ interface AdminBlogEditorProps {
 
 export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEditorProps) => {
     const [loading, setLoading] = useState(false);
-    const [uploading, setUploading] = useState(false);
     const [formData, setFormData] = useState({
         title: "",
         slug: "",
@@ -36,11 +36,10 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                 excerpt: post.excerpt || "",
                 content: post.content || "",
                 status: post.status || "draft",
-                publish_at: post.publish_at ? post.publish_at.slice(0, 16) : "", // Format for datetime-local
+                publish_at: post.publish_at ? post.publish_at.slice(0, 16) : "",
             });
         } else {
-            // Defaults for new post
-            setFormData(prev => ({ ...prev, author: 'Admin' })); // Or fetch current user name
+            setFormData(prev => ({ ...prev, author: 'Admin' }));
         }
     }, [post]);
 
@@ -56,38 +55,10 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
         setFormData(prev => {
             const newData = { ...prev, [field]: value };
             if (field === 'title' && !post) {
-                // Auto-generate slug from title IF creating new
                 newData.slug = generateSlug(value);
             }
             return newData;
         });
-    };
-
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (!e.target.files?.length) return;
-        const file = e.target.files[0];
-        setUploading(true);
-
-        const uploadData = new FormData();
-        uploadData.append('image', file);
-
-        try {
-            const res = await fetch(`${API_URL}/index.php?action=upload_image`, {
-                method: 'POST',
-                headers: { Authorization: `Bearer ${token}` },
-                body: uploadData
-            });
-            const data = await res.json();
-            if (data.success) {
-                handleChange('image_url', data.url);
-            } else {
-                alert("Görsel yükleme hatası: " + (data.error || "Bilinmeyen hata"));
-            }
-        } catch (err) {
-            alert("Bağlantı hatası");
-        } finally {
-            setUploading(false);
-        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -109,7 +80,7 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
             const data = await response.json();
 
             if (data.success) {
-                onSave(); // Navigate back or show success
+                onSave();
             } else {
                 alert("Hata: " + (data.error || "Kaydedilemedi"));
             }
@@ -127,7 +98,7 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                     <ArrowLeft size={18} /> Listeye Dön
                 </button>
                 <h2 className="text-xl font-bold text-slate-900">{post ? 'İçeriği Düzenle' : 'Yeni İçerik Ekle'}</h2>
-                <div className="w-24"></div> {/* Spacer for centering */}
+                <div className="w-24"></div>
             </div>
 
             <form onSubmit={handleSubmit} className="p-8 max-w-5xl mx-auto">
@@ -161,40 +132,17 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                         </div>
 
                         <div>
-                            <label className="block text-sm font-bold text-slate-700 mb-2">Kapak Görseli</label>
-                            <div className="border-2 border-dashed border-slate-200 rounded-xl p-6 flex flex-col items-center justify-center bg-slate-50 hover:bg-white hover:border-cyan-500 transition-all text-center relative group">
-                                {formData.image_url ? (
-                                    <div className="relative w-full">
-                                        <img src={formData.image_url} alt="Cover" className="h-48 w-full object-cover rounded-lg shadow-sm" />
-                                        <button
-                                            type="button"
-                                            onClick={() => handleChange('image_url', '')}
-                                            className="absolute top-2 right-2 p-1 bg-white rounded-full shadow-md text-slate-500 hover:text-red-500 transition-colors"
-                                        >
-                                            <X size={16} />
-                                        </button>
-                                        <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded backdrop-blur">
-                                            Değiştirmek için tıkla
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <>
-                                        <div className="w-12 h-12 bg-cyan-100/50 rounded-full flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                                            {uploading ? <Loader2 className="animate-spin text-cyan-600" /> : <ImageIcon className="text-cyan-600" />}
-                                        </div>
-                                        <p className="text-sm font-medium text-slate-900">{uploading ? "Yükleniyor..." : "Görsel Yükle"}</p>
-                                        <p className="text-xs text-slate-400 mt-1">PNG, JPG, WEBP (Max 5MB)</p>
-                                    </>
-                                )}
-
-                                <input
-                                    type="file"
-                                    className="absolute inset-0 opacity-0 cursor-pointer"
-                                    onChange={handleFileChange}
-                                    accept="image/*"
-                                    disabled={uploading}
-                                />
-                            </div>
+                            <ImageUploader
+                                label="Kapak Görseli"
+                                uploadEndpoint={`${API_URL}/index.php?action=upload_image`}
+                                token={token}
+                                existingImageUrl={formData.image_url}
+                                preset="blogCover"
+                                onUploadSuccess={(url) => handleChange('image_url', url)}
+                                onUploadError={(error) => alert("Görsel yükleme hatası: " + error)}
+                                onRemove={() => handleChange('image_url', '')}
+                                helperText="Otomatik olarak optimize edilir (maks 1600×900, ~400KB)"
+                            />
                         </div>
 
                         <div>
@@ -229,7 +177,7 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                                     <CheckCircle size={16} className="text-slate-400" /> Durum
                                 </label>
                                 <select
-                                    className="w-full p-2 bg-white border border-slate-200 rounded-lg outline-none"
+                                    className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none bg-white"
                                     value={formData.status}
                                     onChange={e => handleChange('status', e.target.value)}
                                 >
@@ -244,13 +192,12 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                                     <Globe size={16} className="text-slate-400" /> Dil
                                 </label>
                                 <select
-                                    className="w-full p-2 bg-white border border-slate-200 rounded-lg outline-none"
+                                    className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none bg-white"
                                     value={formData.language}
                                     onChange={e => handleChange('language', e.target.value)}
                                 >
-                                    <option value="tr">Türkçe</option>
-                                    <option value="en">English</option>
-                                    <option value="zh">Chinese</option>
+                                    <option value="tr">🇹🇷 Türkçe</option>
+                                    <option value="en">🇬🇧 English</option>
                                 </select>
                             </div>
 
@@ -260,9 +207,10 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                                 </label>
                                 <input
                                     type="text"
-                                    className="w-full p-2 bg-white border border-slate-200 rounded-lg outline-none"
+                                    className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none bg-white"
                                     value={formData.author}
                                     onChange={e => handleChange('author', e.target.value)}
+                                    placeholder="Yazar adı"
                                 />
                             </div>
 
@@ -272,23 +220,27 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                                 </label>
                                 <input
                                     type="datetime-local"
-                                    className="w-full p-2 bg-white border border-slate-200 rounded-lg outline-none text-sm"
+                                    className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none bg-white"
                                     value={formData.publish_at}
                                     onChange={e => handleChange('publish_at', e.target.value)}
                                 />
                             </div>
-
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="w-full py-3 bg-cyan-600 text-white font-bold rounded-xl hover:bg-cyan-700 transition-all flex items-center justify-center gap-2 mt-4 shadow-lg shadow-cyan-200"
-                            >
-                                {loading ? <Loader2 className="animate-spin" /> : <><Save size={18} /> Kaydet</>}
-                            </button>
                         </div>
+
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full py-4 bg-gradient-to-r from-cyan-500 to-teal-500 text-white font-bold rounded-xl hover:shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                        >
+                            {loading ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
+                            {loading ? 'Kaydediliyor...' : (post ? 'Güncelle' : 'Kaydet')}
+                        </button>
                     </div>
+
                 </div>
             </form>
         </div>
     );
 };
+
+export default AdminBlogEditor;
