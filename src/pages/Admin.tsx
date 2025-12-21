@@ -8,6 +8,7 @@ import { AdminFaqList } from "./admin/AdminFaqList";
 import { AdminFaqEditor } from "./admin/AdminFaqEditor";
 import { AdminUserList } from "./admin/AdminUserList";
 import { AdminUserEditor } from "./admin/AdminUserEditor";
+import { AdminAnalyticsSeo } from "./admin/AdminAnalyticsSeo";
 import {
   Mail,
   FileText,
@@ -17,7 +18,8 @@ import {
   X,
   Settings,
   HelpCircle,
-  Users
+  Users,
+  BarChart3
 } from "lucide-react";
 
 export const Admin = () => {
@@ -147,6 +149,8 @@ export const Admin = () => {
             onSave={() => setActiveTab("user_list")}
           />
         );
+      case "analytics_seo":
+        return <AdminAnalyticsSeo token={session.token} />;
       default:
         return <AdminMessages token={session.token} />;
     }
@@ -222,6 +226,19 @@ export const Admin = () => {
 
             {userRole === 'admin' && (
               <button
+                onClick={() => { setActiveTab("analytics_seo"); setMobileMenuOpen(false); }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "analytics_seo"
+                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  }`}
+              >
+                <BarChart3 size={20} />
+                <span className="font-medium">Analytics & SEO</span>
+              </button>
+            )}
+
+            {userRole === 'admin' && (
+              <button
                 onClick={() => { setActiveTab("settings"); setMobileMenuOpen(false); }}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "settings"
                   ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
@@ -259,6 +276,7 @@ export const Admin = () => {
               {activeTab === 'faq_edit' && "SSS Düzenleyici"}
               {activeTab === 'user_list' && "Kullanıcı Yönetimi"}
               {activeTab === 'user_edit' && "Kullanıcı Düzenleyici"}
+              {activeTab === 'analytics_seo' && "Analytics & SEO"}
               {activeTab === 'settings' && "Hesap Ayarları"}
             </h1>
             <p className="text-slate-500 text-sm mt-1">Hoşgeldin, {session.user.name}</p>
