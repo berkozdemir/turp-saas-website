@@ -4,6 +4,8 @@ import { AdminMessages } from "./admin/AdminMessages";
 import { AdminBlogList } from "./admin/AdminBlogList";
 import { AdminBlogEditor } from "./admin/AdminBlogEditor";
 import { AdminSettings } from "./admin/AdminSettings";
+import { AdminFaqList } from "./admin/AdminFaqList";
+import { AdminFaqEditor } from "./admin/AdminFaqEditor";
 import {
   Mail,
   FileText,
@@ -11,7 +13,8 @@ import {
   ExternalLink,
   Menu,
   X,
-  Settings
+  Settings,
+  HelpCircle
 } from "lucide-react";
 
 export const Admin = () => {
@@ -25,6 +28,7 @@ export const Admin = () => {
     const saved = localStorage.getItem("admin_editing_post");
     return saved ? JSON.parse(saved) : null;
   });
+  const [editingFaq, setEditingFaq] = useState<any | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Persist active tab
@@ -90,6 +94,29 @@ export const Admin = () => {
             userEmail={session.user.email}
           />
         );
+      case "faq_list":
+        return (
+          <AdminFaqList
+            token={session.token}
+            onEdit={(faq) => {
+              setEditingFaq(faq);
+              setActiveTab("faq_edit");
+            }}
+            onCreate={() => {
+              setEditingFaq(null);
+              setActiveTab("faq_edit");
+            }}
+          />
+        );
+      case "faq_edit":
+        return (
+          <AdminFaqEditor
+            token={session.token}
+            faq={editingFaq}
+            onCancel={() => setActiveTab("faq_list")}
+            onSave={() => setActiveTab("faq_list")}
+          />
+        );
       default:
         return <AdminMessages token={session.token} />;
     }
@@ -140,6 +167,17 @@ export const Admin = () => {
             </button>
 
             <button
+              onClick={() => { setActiveTab("faq_list"); setMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab.startsWith("faq")
+                ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                : "text-slate-400 hover:bg-white/5 hover:text-white"
+                }`}
+            >
+              <HelpCircle size={20} />
+              <span className="font-medium">SSS</span>
+            </button>
+
+            <button
               onClick={() => { setActiveTab("settings"); setMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "settings"
                 ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
@@ -172,6 +210,8 @@ export const Admin = () => {
               {activeTab === 'messages' && "Mesaj Yönetimi"}
               {activeTab === 'blog_list' && "İçerik Yönetimi"}
               {activeTab === 'blog_edit' && "İçerik Düzenleyici"}
+              {activeTab === 'faq_list' && "SSS Yönetimi"}
+              {activeTab === 'faq_edit' && "SSS Düzenleyici"}
               {activeTab === 'settings' && "Hesap Ayarları"}
             </h1>
             <p className="text-slate-500 text-sm mt-1">Hoşgeldin, {session.user.name}</p>

@@ -83,6 +83,14 @@ export const Footer: FC<FooterProps> = ({ setView }) => {
                 </button>
               </li>
               <li>
+                <button
+                  onClick={() => setView("sss")}
+                  className="hover:text-white transition-colors"
+                >
+                  SSS
+                </button>
+              </li>
+              <li>
                 <span className="text-slate-600 cursor-default">
                   e-Nabız Entegrasyonu
                 </span>
@@ -103,7 +111,7 @@ export const Footer: FC<FooterProps> = ({ setView }) => {
                 </button>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="https://kariyer.omega-cro.com/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">
                   Kariyer
                 </a>
               </li>

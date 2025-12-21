@@ -102,8 +102,8 @@ $action = $_GET['action'] ?? '';
 
 $client_secret = $_SERVER['HTTP_X_API_KEY'] ?? '';
 
-// Bypass API key for auth endpoints and public contact form
-$auth_actions = ['login', 'forgot-password', 'verify-reset-token', 'reset-password', 'contact'];
+// Bypass API key for auth endpoints and public endpoints
+$auth_actions = ['login', 'forgot-password', 'verify-reset-token', 'reset-password', 'contact', 'get_faqs_showcase', 'get_faqs_public'];
 $is_auth_request = in_array($action, $auth_actions);
 
 // Secret kontrolünü isteğe bağlı yapabiliriz local test için, ama güvenlik için açık kalsın
@@ -136,6 +136,9 @@ require_once __DIR__ . '/contact_api.php';
 
 // Include Blog API
 require_once __DIR__ . '/blog_api.php';
+
+// Include FAQ API
+require_once __DIR__ . '/faq_api.php';
 
 // =================================================================
 // ACTIONS

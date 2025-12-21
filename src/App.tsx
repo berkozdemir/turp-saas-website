@@ -13,10 +13,10 @@ import { Blog } from "./pages/Blog";
 import { PostDetail } from "./pages/PostDetail";
 import { ModuleDetail } from "./pages/ModuleDetail";
 import { Admin } from "./pages/Admin";
-import { Login } from "./pages/Login";
 import { ResetPassword } from "./pages/ResetPassword";
 import { ROICalculator } from "./pages/ROICalculator";
 import { RheumaCaseStudy } from "./pages/RheumaCaseStudy";
+import { FaqPage } from "./pages/FaqPage";
 import useAnalytics from "./lib/analytics";
 
 export default function App() {
@@ -126,17 +126,10 @@ export default function App() {
           return <ROICalculator initialCurrency={globalCurrency} />;
         case "case-rheuma":
           return <RheumaCaseStudy setView={setView} />;
+        case "sss":
+          return <FaqPage setView={setView} />;
         case "admin":
-          return session ? (
-            <Admin
-              editingPost={editingPost}
-              setEditingPost={setEditingPost}
-              setView={setView}
-              handleLogout={handleLogout}
-            />
-          ) : (
-            <Login onLogin={() => setSession({ user: { email: 'admin@turp.health' } })} />
-          );
+          return <Admin />;
         default:
           return <Home setView={setView} />;
       }
