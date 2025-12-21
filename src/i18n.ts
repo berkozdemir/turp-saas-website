@@ -155,6 +155,9 @@ const resources = {
       "footer_platform": "Platform",
       "footer_corp": "Kurumsal",
       "footer_contact": "İletişim",
+      "footer_privacy": "Gizlilik Politikası",
+      "footer_terms": "Kullanım Koşulları",
+      "footer_kvkk": "KVKK",
 
       // --- ROI HESAPLAYICI ---
       "roi_badge": "Gelişmiş Maliyet Analizi",
@@ -397,6 +400,9 @@ const resources = {
       "footer_platform": "Platform",
       "footer_corp": "Corporate",
       "footer_contact": "Contact",
+      "footer_privacy": "Privacy Policy",
+      "footer_terms": "Terms of Use",
+      "footer_kvkk": "KVKK",
 
       // ROI
       "roi_badge": "Advanced Cost Analysis",
@@ -624,6 +630,9 @@ const resources = {
       "footer_platform": "平台",
       "footer_corp": "企业",
       "footer_contact": "联系方式",
+      "footer_privacy": "隐私政策",
+      "footer_terms": "使用条款",
+      "footer_kvkk": "KVKK",
 
       // ROI
       "roi_badge": "高级成本分析",
