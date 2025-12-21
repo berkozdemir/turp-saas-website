@@ -1,6 +1,6 @@
 // src/pages/Home.tsx
 // @ts-nocheck
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getModuleContentTranslated } from '../data/content';
 // Calculator ikonunu ekledik
@@ -15,7 +15,7 @@ interface HomeProps {
 }
 
 export const Home: React.FC<HomeProps> = ({ setView }) => {
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     // Dil değiştiğinde modül içeriklerini yeniden hesapla
     const modules = getModuleContentTranslated(t);
@@ -30,6 +30,24 @@ export const Home: React.FC<HomeProps> = ({ setView }) => {
         consent: false
     });
     const [contactStatus, setContactStatus] = useState('idle');
+    const [showcaseFaqs, setShowcaseFaqs] = useState<Array<{ id: number, question: string, answer: string }>>([]);
+
+    // Fetch showcased FAQs
+    useEffect(() => {
+        const fetchShowcaseFaqs = async () => {
+            const API_URL = import.meta.env.VITE_API_URL || '/api';
+            try {
+                const response = await fetch(`${API_URL}/index.php?action=get_faqs_showcase&language=${i18n.language}&limit=4`);
+                const data = await response.json();
+                if (data.success && data.data) {
+                    setShowcaseFaqs(data.data);
+                }
+            } catch (err) {
+                console.error('FAQ fetch error:', err);
+            }
+        };
+        fetchShowcaseFaqs();
+    }, [i18n.language]);
 
     // Backend API Contact Submit
     const handleContactSubmit = async (e: any) => {
@@ -219,7 +237,10 @@ export const Home: React.FC<HomeProps> = ({ setView }) => {
                     <div>
                         <h2 className="font-heading text-3xl font-bold text-slate-900 mb-8">{t("faq_title")}</h2>
                         <div className="space-y-2">
-                            {['1', '2', '3'].map(num => <FAQItem key={num} question={t(`faq_${num}_q`)} answer={t(`faq_${num}_a`)} />)}
+                            {showcaseFaqs.length > 0
+                                ? showcaseFaqs.map(faq => <FAQItem key={faq.id} question={faq.question} answer={faq.answer} />)
+                                : ['1', '2', '3'].map(num => <FAQItem key={num} question={t(`faq_${num}_q`)} answer={t(`faq_${num}_a`)} />)
+                            }
                         </div>
                     </div>
 
