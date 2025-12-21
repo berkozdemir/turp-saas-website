@@ -11,16 +11,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
+// TEMPORARY DEBUG MODE - REVERT AFTER FIXING
 // Production security: Disable error display
 $is_production = file_exists(__DIR__ . '/env.php');
-if ($is_production) {
-    error_reporting(0);
-    ini_set('display_errors', 0);
-} else {
-    // Local development: Show errors
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-}
+// TEMP: Always show errors for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+// if ($is_production) {
+//     error_reporting(0);
+//     ini_set('display_errors', 0);
+// } else {
+//     // Local development: Show errors
+//     error_reporting(E_ALL);
+//     ini_set('display_errors', 1);
+// }
 
 // Load env.php for production (if exists)
 // This allows credentials to be stored securely outside of git
