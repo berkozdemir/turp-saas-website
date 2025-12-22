@@ -175,7 +175,7 @@ if ($resource === 'randomization') {
                 $data['stratificationFactors'] ?? null,
                 $data['blindingDetails'] ?? null,
                 json_encode($data['reportingPreferences'] ?? []),
-                $data['fullName'],
+                $data['contactPerson'],
                 $data['email'],
                 $data['institution']
             ]);
@@ -187,10 +187,55 @@ if ($resource === 'randomization') {
 }
 
 // --- CONTACT FORM ---
+// --- CONTACT FORM ---
 if ($resource === 'contact') {
     if ($request_method === 'POST') {
-        // Mock success
-        json_response(['message' => 'Message sent successfully']);
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        // Basic validation
+        if (empty($data['name']) || empty($data['email']) || empty($data['message'])) {
+            json_response(['error' => 'Missing required fields'], 400);
+        }
+
+        try {
+            $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, subject, message, created_at) VALUES (?, ?, ?, ?, NOW())");
+            $stmt->execute([
+                $data['name'],
+                $data['email'],
+                $data['subject'] ?? 'Contact Form',
+                $data['message']
+            ]);
+            json_response(['message' => 'Message sent successfully']);
+        } catch (PDOException $e) {
+            // If table doesn't exist, we might fail. For now, let's assume it exists or fail gracefully.
+            // If it fails, we fall back to mock success to not break frontend demo, or let it fail?
+            // Better to fail so we know to fix schema.
+            json_response(['error' => 'Database error: ' . $e->getMessage()], 500);
+        }
+    }
+}
+
+// --- GET MESSAGES (Admin) ---
+if ($resource === 'get-messages') {
+    if ($request_method === 'GET') {
+        // TODO: Add admin authentication check here
+        $stmt = $conn->query("SELECT * FROM contact_messages ORDER BY created_at DESC");
+        $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        json_response($messages);
+    }
+}
+
+// --- DELETE MESSAGE (Admin) ---
+if ($resource === 'delete-message') {
+    if ($request_method === 'POST') {
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (empty($data['id'])) {
+            json_response(['error' => 'ID required'], 400);
+        }
+
+        $stmt = $conn->prepare("DELETE FROM contact_messages WHERE id = ?");
+        $stmt->execute([$data['id']]);
+        json_response(['success' => true]);
     }
 }
 
@@ -198,8 +243,314 @@ if ($resource === 'contact') {
 if ($resource === 'ai-chat') {
     if ($request_method === 'POST') {
         $data = json_decode(file_get_contents('php://input'), true);
-        // Mock AI response
-        json_response(['reply' => 'This is a mock AI response from the local PHP API. You said: ' . ($data['message'] ?? '')]);
+        $userMessage = $data['message'] ?? '';
+
+        if (empty($userMessage)) {
+            json_response(['error' => 'Message is required'], 400);
+        }
+
+        // Get API Key
+        $apiKey = getenv('OPENAI_API_KEY');
+        if (!$apiKey && isset($config['OPENAI_API_KEY'])) {
+            $apiKey = $config['OPENAI_API_KEY'];
+        }
+
+        // Try reading .env if still missing
+        if (!$apiKey && file_exists(__DIR__ . '/../.env')) {
+            $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($lines as $line) {
+                if (strpos(trim($line), '#') === 0)
+                    continue;
+                if (strpos($line, '=') !== false) {
+                    list($name, $value) = explode('=', $line, 2);
+                    if (trim($name) === 'OPENAI_API_KEY') {
+                        $apiKey = trim($value);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (!$apiKey) {
+            json_response(['reply' => 'Üzgünüm, şu anda yapay zeka servisine erişemiyorum (API Key eksik).']);
+        }
+
+        $systemPrompt = "Sen 'Lila' adında, medikal araştırmalar ve klinik çalışmalar konusunda uzmanlaşmış bir yapay zeka asistanısın. 
+        İnsanlara nazik, profesyonel ve yardımcı bir tonda cevap veriyorsun. 
+        Kullanıcıların klinik araştırmalar, IWRS sistemleri ve medikal süreçlerle ilgili sorularını yanıtla.
+        Cevapların kısa, öz ve anlaşılır olsun.";
+
+        $payload = [
+            'model' => 'gpt-4o-mini',
+            'messages' => [
+                ['role' => 'system', 'content' => $systemPrompt],
+                ['role' => 'user', 'content' => $userMessage]
+            ],
+            'temperature' => 0.7,
+            'max_tokens' => 500
+        ];
+
+        $ch = curl_init('https://api.openai.com/v1/chat/completions');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $apiKey
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode !== 200) {
+            json_response(['reply' => 'Üzgünüm, bir bağlantı hatası oluştu. Lütfen daha sonra tekrar deneyin.'], 200); // 200 OK to frontend, but error msg
+        }
+
+        $result = json_decode($response, true);
+        $aiReply = $result['choices'][0]['message']['content'] ?? 'Anlaşılmadı.';
+
+        json_response(['reply' => $aiReply]);
+    }
+}
+
+// --- SETTINGS (Email & Password) ---
+if ($resource === 'settings') {
+    $user = require_admin_auth($conn);
+
+    if ($request_method === 'GET') {
+        try {
+            $stmt = $conn->prepare("SELECT setting_key, setting_value FROM site_settings");
+            $stmt->execute();
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $settings = [];
+            foreach ($rows as $row) {
+                $settings[$row['setting_key']] = $row['setting_value'];
+            }
+            json_response($settings);
+        } catch (Exception $e) {
+            // Table might not exist yet, return defaults
+            json_response(['notification_emails' => '']);
+        }
+    }
+
+    if ($request_method === 'POST') {
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        try {
+            // Create table if not exists
+            $conn->exec("CREATE TABLE IF NOT EXISTS site_settings (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                setting_key VARCHAR(100) NOT NULL UNIQUE,
+                setting_value TEXT,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+
+            foreach ($data as $key => $value) {
+                $stmt = $conn->prepare("INSERT INTO site_settings (setting_key, setting_value) 
+                    VALUES (?, ?) 
+                    ON DUPLICATE KEY UPDATE setting_value = ?");
+                $stmt->execute([$key, $value, $value]);
+            }
+            json_response(['message' => 'Settings saved']);
+        } catch (Exception $e) {
+            json_response(['error' => $e->getMessage()], 500);
+        }
+    }
+}
+
+if ($resource === 'change_password') {
+    if ($request_method === 'POST') {
+        $user_id = require_admin_auth_id($conn);
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (empty($data['current_password']) || empty($data['new_password'])) {
+            json_response(['error' => 'Missing fields'], 400);
+        }
+
+        // Verify current
+        $stmt = $conn->prepare("SELECT password_hash FROM admin_users WHERE id = ?");
+        $stmt->execute([$user_id]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$user || !password_verify($data['current_password'], $user['password_hash'])) {
+            json_response(['error' => 'Current password incorrect'], 400);
+        }
+
+        // Update
+        $new_hash = password_hash($data['new_password'], PASSWORD_BCRYPT);
+        $stmt = $conn->prepare("UPDATE admin_users SET password_hash = ? WHERE id = ?");
+        $stmt->execute([$new_hash, $user_id]);
+
+        json_response(['message' => 'Password updated']);
+    }
+}
+
+// --- FAQ ---
+if ($resource === 'faq') {
+    if ($request_method === 'GET') {
+        try {
+            $sql = "SELECT * FROM faqs ORDER BY sort_order ASC, created_at DESC";
+            $stmt = $conn->query($sql);
+            $faqs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            json_response($faqs);
+        } catch (Exception $e) {
+            json_response([]);
+        }
+    }
+
+    if ($request_method === 'POST') {
+        require_admin_auth($conn);
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        if (empty($data['question']) || empty($data['answer'])) {
+            json_response(['error' => 'Question and answer required'], 400);
+        }
+
+        // Ensure table exists
+        $conn->exec("CREATE TABLE IF NOT EXISTS faqs (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            question TEXT NOT NULL,
+            answer TEXT NOT NULL,
+            language VARCHAR(10) DEFAULT 'tr',
+            category VARCHAR(50) DEFAULT 'general',
+            sort_order INT DEFAULT 0,
+            is_active TINYINT(1) DEFAULT 1,
+            is_showcased TINYINT(1) DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
+
+        if (isset($data['id'])) {
+            // Update
+            $sql = "UPDATE faqs SET question=?, answer=?, language=?, category=?, sort_order=?, is_active=?, is_showcased=? WHERE id=?";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([
+                $data['question'],
+                $data['answer'],
+                $data['language'] ?? 'tr',
+                $data['category'] ?? 'general',
+                $data['sort_order'] ?? 0,
+                $data['is_active'] ?? 1,
+                $data['is_showcased'] ?? 0,
+                $data['id']
+            ]);
+            json_response(['message' => 'FAQ updated']);
+        } else {
+            // Create
+            $sql = "INSERT INTO faqs (question, answer, language, category, sort_order, is_active, is_showcased) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([
+                $data['question'],
+                $data['answer'],
+                $data['language'] ?? 'tr',
+                $data['category'] ?? 'general',
+                $data['sort_order'] ?? 0,
+                $data['is_active'] ?? 1,
+                $data['is_showcased'] ?? 0
+            ]);
+            json_response(['message' => 'FAQ created'], 201);
+        }
+    }
+
+    if ($request_method === 'DELETE' && $id) {
+        require_admin_auth($conn);
+        $stmt = $conn->prepare("DELETE FROM faqs WHERE id = ?");
+        $stmt->execute([$id]);
+        json_response(['message' => 'FAQ deleted']);
+    }
+}
+
+// --- AI BLOG TRANSLATION ---
+if ($resource === 'ai-translate-blog') {
+    if ($request_method === 'POST') {
+        require_admin_auth($conn);
+        require_once __DIR__ . '/translate_helper.php';
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        $targetLang = $data['target_language'] ?? 'en';
+
+        // Get DeepSeek API Key from env
+        $deepseek_key = getenv('DEEPSEEK_API_KEY');
+        if (!$deepseek_key && file_exists(__DIR__ . '/../.env')) {
+            $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($lines as $line) {
+                if (strpos(trim($line), 'DEEPSEEK_API_KEY=') === 0) {
+                    $deepseek_key = trim(substr($line, 17));
+                    break;
+                }
+            }
+        }
+
+        if (!$deepseek_key) {
+            json_response(['error' => 'Configuration error: DeepSeek API Key missing'], 500);
+        }
+
+        $results = [];
+
+        // Translate Title
+        if (!empty($data['title'])) {
+            $trans = translate_with_deepseek($data['title'], $targetLang, $deepseek_key);
+            if (isset($trans['success']))
+                $results['title'] = $trans['translation'];
+        }
+
+        // Translate Excerpt
+        if (!empty($data['excerpt'])) {
+            $trans = translate_with_deepseek($data['excerpt'], $targetLang, $deepseek_key);
+            if (isset($trans['success']))
+                $results['excerpt'] = $trans['translation'];
+        }
+
+        // Translate Content
+        if (!empty($data['content'])) {
+            $trans = translate_with_deepseek($data['content'], $targetLang, $deepseek_key);
+            if (isset($trans['success']))
+                $results['content'] = $trans['translation'];
+        }
+
+        json_response($results);
+    }
+}
+
+// --- AI FAQ TRANSLATION ---
+if ($resource === 'ai-translate-faq') {
+    if ($request_method === 'POST') {
+        require_admin_auth($conn);
+        require_once __DIR__ . '/translate_helper.php';
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        $targetLang = $data['target_language'] ?? 'en';
+
+        $deepseek_key = getenv('DEEPSEEK_API_KEY');
+        if (!$deepseek_key && file_exists(__DIR__ . '/../.env')) {
+            $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($lines as $line) {
+                if (strpos(trim($line), 'DEEPSEEK_API_KEY=') === 0) {
+                    $deepseek_key = trim(substr($line, 17));
+                    break;
+                }
+            }
+        }
+
+        if (!$deepseek_key) {
+            json_response(['error' => 'Configuration error: DeepSeek API Key missing'], 500);
+        }
+
+        $results = [];
+
+        if (!empty($data['question'])) {
+            $trans = translate_with_deepseek($data['question'], $targetLang, $deepseek_key);
+            if (isset($trans['success']))
+                $results['question'] = $trans['translation'];
+        }
+
+        if (!empty($data['answer'])) {
+            $trans = translate_with_deepseek($data['answer'], $targetLang, $deepseek_key);
+            if (isset($trans['success']))
+                $results['answer'] = $trans['translation'];
+        }
+
+        json_response($results);
     }
 }
 

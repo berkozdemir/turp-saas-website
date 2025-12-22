@@ -24,8 +24,8 @@ jobs:
 
       - name: 🔨 Build Project
         run: |
-          # API URL'sini buraya giriyoruz (ct.turp.health/api)
-          export VITE_API_URL="https://ct.turp.health/api/index.php"
+          # API URL'sini relative (göreli) yapıyoruz ki her iki domainde de çalışsın
+          export VITE_API_URL="/api/index.php"
           npm run build
 
       - name: 🚀 Deploy to Plesk (via lftp)
@@ -33,20 +33,22 @@ jobs:
           sudo apt-get install -y lftp
           lftp -e "
             set ftp:passive-mode true;
-            set ftp:ssl-allow no;  # Plesk'in SSL sertifikası sorunlarını atlamak için
+            set ftp:ssl-allow no;
             set net:timeout 10;
             set net:max-retries 3;
             set net:reconnect-interval-base 5;
             open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ${{ secrets.FTP_SERVER }};
             
             echo 'Uploading Frontend...';
+            # dist klasörünü ana dizine yüklüyoruz. api ve uploads klasörlerine dokunmuyoruz.
             mirror -R ./dist/ / --exclude uploads/ --exclude api/ --exclude .git/ --delete-first;
             
-            echo 'Uploading Uploads (optimized images)...';
-            mirror -R ./public/uploads/ /uploads/;
+            echo 'Uploading Uploads...';
+            mirror -R ./public/uploads/ /uploads/ --ignore-time --only-newer;
             
             echo 'Uploading API...';
-            mirror -R ./api/ /api/ --exclude .git/;
+            # env.php sunucuda özel olarak kalmalı, onu silmiyoruz veya ezmiyoruz (zaten git'te yok)
+            mirror -R ./api/ /api/ --exclude .git/ --exclude env.php;
             
             quit;
           "

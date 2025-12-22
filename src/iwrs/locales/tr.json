@@ -294,1143 +294,1117 @@
     "aiAssistantTitle": "AI Randomizasyon Asistanı",
     "aiAssistantDescription": "AI asistanımızı kullanmak için lütfen giriş yapın veya hesap oluşturun.",
     "loginSignup": "Giriş Yap / Kayıt Ol",
-    "loading": "Yükleniyor...",
-    "randomizationBot": {
-      "title": "AI Randomizasyon Asistanı",
-      "placeholder": "Randomizasyon hakkında soru sorun...",
-      "send": "Gönder",
-      "error": "Mesaj gönderilirken hata oluştu",
-      "authRequired": "Lütfen önce giriş yapın"
+    "loading": "Yükleniyor..."
+  },
+  "randomizationBot": {
+    "title": "AI Randomizasyon Asistanı",
+    "placeholder": "Randomizasyon hakkında soru sorun...",
+    "send": "Gönder",
+    "error": "Mesaj gönderilirken hata oluştu",
+    "authRequired": "Lütfen önce giriş yapın"
+  },
+  "randomizationForm": {
+    "title": "Randomizasyon Formu",
+    "description": "Çalışmanız için randomizasyon parametrelerini tanımlayın",
+    "basicInfo": "Temel Bilgiler",
+    "studyName": "Çalışma Adı",
+    "studyType": "Çalışma Tipi",
+    "totalParticipants": "Toplam Katılımcı Sayısı",
+    "treatmentArms": "Tedavi Kolları",
+    "randomizationSettings": "Randomizasyon Ayarları",
+    "randomizationMethod": "Randomizasyon Yöntemi",
+    "blockSize": "Blok Boyutu",
+    "stratification": "Stratifikasyon var mı?",
+    "stratificationFactors": "Stratifikasyon Faktörleri",
+    "blinding": "Körleme var mı?",
+    "blindingDetails": "Körleme Detayları",
+    "additionalOptions": "Ek Seçenekler",
+    "emergencyCodeOpening": "Acil Kod Açma",
+    "inventoryIntegration": "Envanter Entegrasyonu",
+    "reportingPreferences": "Raporlama Tercihleri",
+    "contactInfo": "İletişim Bilgileri",
+    "fullName": "Ad ve Soyad",
+    "email": "E-posta",
+    "phone": "Telefon",
+    "institution": "Kurum",
+    "testRun": "Test Çalışması",
+    "submit": "Formu Gönder",
+    "submitting": "Gönderiliyor...",
+    "success": "Form başarıyla gönderildi",
+    "error": "Form gönderilemedi",
+    "fullNamePlaceholder": "Ad Soyad",
+    "institutionPlaceholder": "Kurum veya firma adı",
+    "studyNameLabel": "1. Araştırmanın Adı veya Kısa Tanımı",
+    "studyNamePlaceholder": "Örn: Hipertansiyon tedavisinde ilaç A vs ilaç B karşılaştırması",
+    "studyTypeLabel": "2. Araştırmanın Türü",
+    "studyTypeRCT": "Randomize Kontrollü Çalışma (RKÇ)",
+    "studyTypeObservational": "Gözlemsel",
+    "studyTypeOther": "Diğer",
+    "studyTypeOtherPlaceholder": "Lütfen açıklayın",
+    "treatmentArmsLabel": "3. Kaç Farklı Tedavi veya Deney Kolu Var?",
+    "stratificationLabel": "5. Stratifikasyon Faktörleri Var mı?",
+    "stratificationFactorsPlaceholder": "Örn: Yaş grubu (18-50, 51+), Cinsiyet",
+    "randomizationMethodLabel": "6. Randomizasyon Yöntemi",
+    "methodSimple": "Basit Randomizasyon",
+    "methodBlock": "Blok Randomizasyon",
+    "methodStratified": "Stratifiye Randomizasyon",
+    "methodAdaptive": "Adaptif Randomizasyon",
+    "methodHelp": "Karar Vermem için Yardım İstiyorum",
+    "blockSizeLabel": "Blok Boyutu",
+    "blockSizePlaceholder": "Örn: 4, 6 veya 8",
+    "blindingLabel": "7. Körleme (Blinding) Var mı?",
+    "blindingDetailsPlaceholder": "Örn: Çift kör (Double-blind), Tek kör (Single-blind)",
+    "reportingPreferencesLabel": "Raporlama Tercihleri",
+    "reportingDaily": "Günlük",
+    "reportingWeekly": "Haftalık",
+    "reportingMonthly": "Aylık",
+    "reportingOnDemand": "Talep Üzerine",
+    "testRunLabel": "Bu Bir Test Çalışması (Gerçek veri değil)",
+    "authError": "Hata",
+    "authErrorDesc": "Giriş yapmanız gerekiyor",
+    "successTitle": "Başarılı",
+    "errorTitle": "Hata",
+    "validation": {
+      "contactPerson": "Dolduran kişi adı gereklidir",
+      "institution": "Kurum/Firma bilgisi gereklidir",
+      "phone": "Cep telefonu gereklidir",
+      "email": "Geçerli bir email adresi giriniz",
+      "studyName": "Çalışma adı zorunludur",
+      "studyType": "Çalışma tipi seçmelisiniz",
+      "treatmentArms": "En az 2 kol olmalıdır",
+      "totalParticipants": "En az 1 katılımcı olmalıdır",
+      "randomizationMethod": "Randomizasyon yöntemi seçmelisiniz",
+      "reportingPreferences": "En az bir raporlama tercihi seçmelisiniz"
+    }
+  },
+  "inventorySystem": {
+    "seo": {
+      "title": "Stok Sistemi | İlaç Takip & Soğuk Zincir | Omega CRO",
+      "description": "Klinik çalışma ilaç stoklarını yönetin, soğuk zincir takibi yapın.",
+      "keywords": "depo yönetimi, ilaç takibi, soğuk zincir, envanter kontrolü, klinik çalışma"
     },
-    "randomizationForm": {
-      "title": "Randomizasyon Formu",
-      "description": "Çalışmanız için randomizasyon parametrelerini tanımlayın",
-      "basicInfo": "Temel Bilgiler",
-      "studyName": "Çalışma Adı",
-      "studyType": "Çalışma Tipi",
-      "totalParticipants": "Toplam Katılımcı Sayısı",
-      "treatmentArms": "Tedavi Kolları",
-      "randomizationSettings": "Randomizasyon Ayarları",
-      "randomizationMethod": "Randomizasyon Yöntemi",
-      "blockSize": "Blok Boyutu",
-      "stratification": "Stratifikasyon var mı?",
-      "stratificationFactors": "Stratifikasyon Faktörleri",
-      "blinding": "Körleme var mı?",
-      "blindingDetails": "Körleme Detayları",
-      "additionalOptions": "Ek Seçenekler",
-      "emergencyCodeOpening": "Acil Kod Açma",
-      "inventoryIntegration": "Envanter Entegrasyonu",
-      "reportingPreferences": "Raporlama Tercihleri",
-      "contactInfo": "İletişim Bilgileri",
-      "fullName": "Ad ve Soyad",
-      "email": "E-posta",
-      "phone": "Telefon",
-      "institution": "Kurum",
-      "testRun": "Test Çalışması",
-      "submit": "Formu Gönder",
-      "submitting": "Gönderiliyor...",
-      "success": "Form başarıyla gönderildi",
-      "error": "Form gönderilemedi",
-      "fullNamePlaceholder": "Ad Soyad",
-      "institutionPlaceholder": "Kurum veya firma adı",
-      "studyNameLabel": "1. Araştırmanın Adı veya Kısa Tanımı",
-      "studyNamePlaceholder": "Örn: Hipertansiyon tedavisinde ilaç A vs ilaç B karşılaştırması",
-      "studyTypeLabel": "2. Araştırmanın Türü",
-      "studyTypeRCT": "Randomize Kontrollü Çalışma (RKÇ)",
-      "studyTypeObservational": "Gözlemsel",
-      "studyTypeOther": "Diğer",
-      "studyTypeOtherPlaceholder": "Lütfen açıklayın",
-      "treatmentArmsLabel": "3. Kaç Farklı Tedavi veya Deney Kolu Var?",
-      "stratificationLabel": "5. Stratifikasyon Faktörleri Var mı?",
-      "stratificationFactorsPlaceholder": "Örn: Yaş grubu (18-50, 51+), Cinsiyet",
-      "randomizationMethodLabel": "6. Randomizasyon Yöntemi",
-      "methodSimple": "Basit Randomizasyon",
-      "methodBlock": "Blok Randomizasyon",
-      "methodStratified": "Stratifiye Randomizasyon",
-      "methodAdaptive": "Adaptif Randomizasyon",
-      "methodHelp": "Karar Vermem için Yardım İstiyorum",
-      "blockSizeLabel": "Blok Boyutu",
-      "blockSizePlaceholder": "Örn: 4, 6 veya 8",
-      "blindingLabel": "7. Körleme (Blinding) Var mı?",
-      "blindingDetailsPlaceholder": "Örn: Çift kör (Double-blind), Tek kör (Single-blind)",
-      "reportingPreferencesLabel": "Raporlama Tercihleri",
-      "reportingDaily": "Günlük",
-      "reportingWeekly": "Haftalık",
-      "reportingMonthly": "Aylık",
-      "reportingOnDemand": "Talep Üzerine",
-      "testRunLabel": "Bu Bir Test Çalışması (Gerçek veri değil)",
-      "authError": "Hata",
-      "authErrorDesc": "Giriş yapmanız gerekiyor",
-      "successTitle": "Başarılı",
-      "errorTitle": "Hata",
-      "validation": {
-        "contactPerson": "Dolduran kişi adı gereklidir",
-        "institution": "Kurum/Firma bilgisi gereklidir",
-        "phone": "Cep telefonu gereklidir",
-        "email": "Geçerli bir email adresi giriniz",
-        "studyName": "Çalışma adı zorunludur",
-        "studyType": "Çalışma tipi seçmelisiniz",
-        "treatmentArms": "En az 2 kol olmalıdır",
-        "totalParticipants": "En az 1 katılımcı olmalıdır",
-        "randomizationMethod": "Randomizasyon yöntemi seçmelisiniz",
-        "reportingPreferences": "En az bir raporlama tercihi seçmelisiniz"
-      }
-    },
-    "emergencyUnblinding": {
-      "title": "Körlemenin Kırılması",
-      "description": "Acil durumlarda güvenli ve kontrollü körleme açma sistemi.",
-      "step1Title": "Güvenli Talep",
-      "step1Desc": "Yetkili personel hasta bilgisi ve gerekçe ile talep oluşturur",
-      "step2Title": "Onay Süreci",
-      "step2Desc": "Talep, baş araştırmacı ve sponsor onayına otomatik düşer",
-      "step3Title": "Kod Çözümü",
-      "step3Desc": "Onay sonrası tedavi bilgisi açılır ve tüm süreç kayıt altına alınır",
-      "featuresTitle": "IWRS Sisteminde Sunulan Özellikler",
-      "feature1Title": "Çok Katmanlı Güvenlik",
-      "feature1Desc": "Yetkili personel doğrulama ve şifreli kod çözme mekanizması",
-      "feature2Title": "Otomatik Belgeleme",
-      "feature2Desc": "Tüm kör açma işlemleri otomatik loglanır ve PDF rapor üretilir",
-      "feature3Title": "Anlık Bildirim",
-      "feature3Desc": "Talep oluşturulduğunda ilgili tüm taraflara SMS/E-posta gider",
-      "feature4Title": "Onay Takibi",
-      "feature4Desc": "Süreç şeffaf bir şekilde izlenebilir",
-      "ctaTitle": "IWRS Platformumuzda Mevcut",
-      "ctaDesc": "Acil kör açma modülü tam entegre sistemimizde mevcuttur.",
-      "viewDemo": "Demo İncele",
-      "contactUs": "İletişime Geç",
-      "complianceTitle": "Uyumluluk ve Güvenlik",
-      "auditTitle": "Tam Denetim İzleri",
-      "auditDesc": "Her işlem zaman damgasıyla kaydedilir.",
-      "privacyTitle": "Veri Gizliliği",
-      "privacyDesc": "Bilgiler şifreli saklanır.",
-      "audit1": "Her işlem zaman damgası ile kaydedilir",
-      "audit2": "Talep eden ve onaylayan kişiler loglanır",
-      "audit3": "Değiştirilemez kayıt sistemi",
-      "audit4": "Anında raporlama sistemi",
-      "regulatoryTitle": "Düzenleyici Uyumluluk",
-      "regulatory1": "FDA 21 CFR Part 11 uyumlu",
-      "regulatory2": "EMA GCP gereksinimlerine uygun",
-      "regulatory3": "ICH E6(R2) standardına uygun",
-      "regulatory4": "Yerel düzenleyici gereksinimlere uyum"
-    },
-    "inventorySystem": {
-      "seo": {
-        "title": "Stok Sistemi | İlaç Takip & Soğuk Zincir | Omega CRO",
-        "description": "Klinik çalışma ilaç stoklarını yönetin, soğuk zincir takibi yapın.",
-        "keywords": "[TODO] warehouse management, drug tracking, cold chain, inventory control, clinical trial"
+    "title": "Depo ve İlaç Takip",
+    "description": "İlaç stok yönetimi, soğuk zincir takibi ve otomatik ikmal sistemi.",
+    "features": {
+      "title": "Özellikler",
+      "realTimeTracking": {
+        "title": "Gerçek Zamanlı Takip",
+        "description": "Üretimden imhaya kadar ilaç takibi."
       },
-      "title": "Depo ve İlaç Takip",
-      "description": "İlaç stok yönetimi, soğuk zincir takibi ve otomatik ikmal sistemi.",
-      "features": {
-        "title": "Özellikler",
-        "realTimeTracking": {
-          "title": "Gerçek Zamanlı Takip",
-          "description": "Üretimden imhaya kadar ilaç takibi."
-        },
-        "coldChain": {
-          "title": "Soğuk Zincir",
-          "description": "Sıcaklık takibi ve sapma alarmları."
-        },
-        "expiryManagement": {
-          "title": "SKT Yönetimi",
-          "description": "Yaklaşan son kullanma tarihi uyarıları."
-        },
-        "reconciliation": {
-          "title": "Mutabakat",
-          "description": "Otomatik stok mutabakat raporları."
-        },
-        "subtitle": "Modern depo yönetimi ve ilaç takibi için tüm ihtiyaçlarınızı karşılayan kapsamlı özellikler",
-        "autoStock": {
-          "title": "Otomatik Envanter Yönetimi",
-          "description": "Gerçek zamanlı envanter takibi, minimum stok uyarıları ve otomatik sipariş önerileri ile stok tükenmelerini asla yaşamayın."
-        },
-        "reporting": {
-          "title": "Gelişmiş Raporlama",
-          "description": "Özelleştirilebilir raporlar, denetim izleri ve düzenleyici otoriteler için hazır dokümantasyon sistemi."
-        },
-        "alerts": {
-          "title": "Akıllı Uyarı Sistemi",
-          "description": "Son kullanma tarihi yaklaşan ilaçlar, kritik stok seviyeleri ve sıcaklık sapmaları için otomatik bildirimler."
-        },
-        "compliance": {
-          "title": "Uyumluluk ve Güvenlik",
-          "description": "FDA 21 CFR Part 11, EMA GCP ve yerel düzenleyici gereksinimlerle tam uyumlu sistem mimarisi."
-        },
-        "optimization": {
-          "title": "Envanter Optimizasyonu",
-          "description": "AI destekli talep tahmini ile stok seviyelerini optimize edin, israfı ve kayıpları en aza indirin."
-        }
+      "coldChain": {
+        "title": "Soğuk Zincir",
+        "description": "Sıcaklık takibi ve sapma alarmları."
       },
-      "process": {
-        "title": "Süreç",
-        "step1": {
-          "title": "Kabul & Kayıt",
-          "description": "Barkod ile sisteme giriş."
-        },
-        "step2": {
-          "title": "Saklama",
-          "description": "Sürekli sıcaklık ve nem takibi."
-        },
-        "step3": {
-          "title": "Dağıtım",
-          "description": "Otomatik atama ve gönderim."
-        },
-        "step4": {
-          "title": "İade & İmha",
-          "description": "Kullanılmayan ilaçların takibi ve imhası."
-        }
+      "expiryManagement": {
+        "title": "SKT Yönetimi",
+        "description": "Yaklaşan son kullanma tarihi uyarıları."
       },
-      "coldChainMonitoring": {
-        "title": "Soğuk Zincir İzleme",
-        "temperature": {
-          "title": "Sıcaklık Kaydı",
-          "description": "Bulut tabanlı sürekli izleme"
-        },
-        "alerts": {
-          "title": "Anlık Uyarılar",
-          "description": "Sapma durumunda SMS/E-posta"
-        },
-        "compliance": {
-          "title": "Uyumluluk Raporları",
-          "description": "Otomatik sıcaklık raporları"
-        },
-        "validation": {
-          "title": "Doğrulama",
-          "description": "Cihaz kalibrasyon takibi"
-        }
+      "reconciliation": {
+        "title": "Mutabakat",
+        "description": "Otomatik stok mutabakat raporları."
+      },
+      "subtitle": "Modern depo yönetimi ve ilaç takibi için tüm ihtiyaçlarınızı karşılayan kapsamlı özellikler",
+      "autoStock": {
+        "title": "Otomatik Envanter Yönetimi",
+        "description": "Gerçek zamanlı envanter takibi, minimum stok uyarıları ve otomatik sipariş önerileri ile stok tükenmelerini asla yaşamayın."
       },
       "reporting": {
-        "title": "Raporlama",
-        "inventoryLevels": "Merkez bazlı stok seviyeleri",
-        "usagePatterns": "Kullanım analizi",
-        "expiryReports": "SKT Raporları",
-        "temperatureLogs": "Sıcaklık kayıtları",
-        "reconciliation": "Mutabakat raporları"
+        "title": "Gelişmiş Raporlama",
+        "description": "Özelleştirilebilir raporlar, denetim izleri ve düzenleyici otoriteler için hazır dokümantasyon sistemi."
       },
-      "cta": {
-        "title": "IWRS Entegrasyonu",
-        "description": "Stok sistemi IWRS platformumuzun bir parçasıdır.",
-        "button": "İletişime Geç"
+      "alerts": {
+        "title": "Akıllı Uyarı Sistemi",
+        "description": "Son kullanma tarihi yaklaşan ilaçlar, kritik stok seviyeleri ve sıcaklık sapmaları için otomatik bildirimler."
       },
-      "hero": {
-        "title": "Depo ve İlaç Takip Sistemleri",
-        "subtitle": "Klinik araştırmalarınızdaki ilaç ve tıbbi malzemelerin güvenli saklanması, takibi ve yönetimi için akıllı çözümlerimizle tam kontrol sağlayın.",
-        "cta": "Daha Fazla Bilgi Alın"
-      },
-      "benefits": {
-        "title": "Sistem Faydaları",
-        "efficiency": {
-          "title": "Operasyonel Verimlilik",
-          "description": "Manuel süreçleri otomatikleştirerek zamandan tasarruf edin. Barkod ve RFID entegrasyonu ile hızlı ve hatasız operasyonlar. Merkezi yönetim ile tüm depoları tek noktadan kontrol edin."
-        },
-        "accuracy": {
-          "title": "Doğruluk ve Güvenilirlik",
-          "description": "İnsan hatasını en aza indiren otomatik kayıt sistemi. Tam denetim izi ile her işlemin kaydını tutun. Gerçek zamanlı veri senkronizasyonu ile tutarlı bilgiye erişin."
-        },
-        "transparency": {
-          "title": "Şeffaflık ve İzlenebilirlik",
-          "description": "Tedarikten tüketime kadar ilaçların tüm yaşam döngüsünü izleyin. Detaylı raporlama ile denetim ve teftiş süreçlerine hazır olun. Kullanıcı bazlı yetkilendirme ile veri güvenliğini sağlayın."
-        }
-      }
-    },
-    "dataSecurity": {
-      "seo": {
-        "title": "Veri Güvenliği | KVKK/GDPR | Omega CRO",
-        "description": "KVKK ve GDPR uyumlu veri yönetimi.",
-        "keywords": "[TODO] data security, KVKK, GDPR, patient information, clinical data, encryption"
-      },
-      "title": "Veri Güvenliği ve Uyumluluk",
-      "description": "Kapsamlı hasta verisi koruma ve uyumluluk sistemi.",
       "compliance": {
-        "title": "Mevzuat Uyumluluğu",
-        "kvkk": {
-          "title": "KVKK",
-          "description": "Kişisel Verilerin Korunması Kanunu tam uyum."
-        },
-        "gdpr": {
-          "title": "GDPR",
-          "description": "Avrupa Genel Veri Koruma Tüzüğü uyumu."
-        },
-        "fda": {
-          "title": "FDA 21 CFR Part 11",
-          "description": "Elektronik kayıt ve imza standartları."
-        },
-        "description1": "Omega CRO'nun veri güvenliği altyapısı uluslararası standartlara uygun olarak tasarlanmış ve düzenli olarak bağımsız denetimlerden geçmektedir.",
-        "description2": "Sistemlerimizin güvenliği ISO 27001 bilgi güvenliği yönetim sistemi sertifikası ile garanti altındadır. Operasyonel güvenlik süreçlerimiz SOC 2 Tip II uyumluluğu ile doğrulanmıştır.",
-        "description3": "KVKK Veri Sorumlusu olarak yasal yükümlülüklerimizi yerine getiriyor, düzenli raporlama ve denetimler yapıyoruz. Avrupa çalışmalarınız için GDPR temsilciliği ile tam destek sağlıyoruz."
+        "title": "Uyumluluk ve Güvenlik",
+        "description": "FDA 21 CFR Part 11, EMA GCP ve yerel düzenleyici gereksinimlerle tam uyumlu sistem mimarisi."
       },
-      "features": {
-        "title": "Güvenlik Özellikleri",
-        "encryption": {
-          "title": "Uçtan Uca Şifreleme",
-          "description": "AES-256 standardında veri şifreleme."
-        },
-        "accessControl": {
-          "title": "Erişim Kontrolü",
-          "description": "Rol tabanlı yetkilendirme."
-        },
-        "auditTrails": {
-          "title": "Denetim İzleri",
-          "description": "Tüm işlemlerin kayıt altına alınması."
-        },
-        "backup": {
-          "title": "Yedekleme",
-          "description": "Otomatik ve şifreli yedekleme."
-        },
-        "subtitle": "Hasta verilerinin korunması ve yasal uyumluluk için kapsamlı güvenlik altyapısı",
-        "gdpr": {
-          "title": "KVKK / GDPR Uyumluluğu",
-          "description": "Türk Kişisel Verileri Koruma Kanunu ve Avrupa GDPR gereksinimleriyle tam uyumlu sistem mimarisi ve süreçler."
-        },
-        "access": {
-          "title": "Erişim Kontrolü",
-          "description": "Rol tabanlı erişim yönetimi, çok faktörlü kimlik doğrulama ve detaylı kullanıcı yetkilendirme sistemi."
-        },
-        "audit": {
-          "title": "Denetim İzi",
-          "description": "Tüm sistem aktivitelerinin otomatik kaydı, değiştirilemez log sistemi ve detaylı denetim raporları."
-        },
-        "consent": {
-          "title": "Bilgilendirme ve Onam Yönetimi",
-          "description": "Dijital aydınlatma metinleri, elektronik onam süreçleri ve onam durumu takip sistemi."
-        }
-      },
-      "informedConsent": {
-        "title": "Bilgilendirilmiş Onam",
-        "digital": {
-          "title": "Dijital Onam",
-          "description": "E-imzalı onam süreci"
-        },
-        "version": {
-          "title": "Versiyon Kontrolü",
-          "description": "Onam formu değişiklik takibi"
-        },
-        "language": {
-          "title": "Çoklu Dil",
-          "description": "Katılımcı dilinde onam formları"
-        },
-        "storage": {
-          "title": "Güvenli Saklama",
-          "description": "Değiştirilemez arşivleme"
-        }
-      },
-      "dataRights": {
-        "title": "Katılımcı Hakları",
-        "access": "Erişim: Verilere erişim hakkı",
-        "rectification": "Düzeltme: Yanlış verilerin düzeltilmesi",
-        "erasure": "Silme: Mevzuata uygun silme hakkı",
-        "portability": "Taşınabilirlik: Veri transfer imkanı",
-        "objection": "İtiraz: İşlemeye itiraz hakkı"
-      },
-      "security": {
-        "title": "Güvenlik Önlemleri",
-        "network": {
-          "title": "Ağ Güvenliği",
-          "description": "Güvenlik duvarı ve sızma testleri"
-        },
-        "physical": {
-          "title": "Fiziksel Güvenlik",
-          "description": "Yüksek güvenlikli veri merkezleri"
-        },
-        "personnel": {
-          "title": "Personel Eğitimi",
-          "description": "Düzenli güvenlik eğitimleri"
-        },
-        "incident": {
-          "title": "Olay Müdahalesi",
-          "description": "7/24 güvenlik izleme ve müdahale"
-        }
-      },
-      "cta": {
-        "title": "Güvenli Altyapı",
-        "description": "Tüm güvenlik özellikleri standarttır.",
-        "button": "Bize Ulaşın"
-      },
-      "hero": {
-        "title": "Hasta Bilgilendirme ve Veri Güvenliği",
-        "subtitle": "Hasta mahremiyetini ön planda tutan, KVKK ve GDPR uyumlu, güvenli ve şeffaf veri yönetimi çözümlerimizle klinik araştırmalarınızda tam uyumluluk sağlayın.",
-        "cta": "Daha Fazla Bilgi Alın"
-      },
-      "patientInfo": {
-        "title": "Hasta Bilgilendirme Süreci",
-        "transparency": {
-          "title": "Şeffaf Bilgilendirme",
-          "description": "Hastalar için yalın dille hazırlanmış aydınlatma metinleri. Çalışma sürecinin her aşamasında net ve açık bilgilendirme. Çoklu dil desteği ile her hasta grubuna erişim."
-        },
-        "rights": {
-          "title": "Hasta Hakları",
-          "description": "Verilerine erişme, düzeltme ve silme haklarının yönetimi. Çalışmadan çekilme süreçlerinin kolay yönetimi. Hasta haklarının tam koruması ve izlenebilirliği."
-        },
-        "communication": {
-          "title": "İletişim ve Destek",
-          "description": "Hasta soruları için güvenli iletişim kanalları. Gizliliği korunan mesajlaşma sistemi. 7/24 teknik destek ve danışmanlık hizmeti."
-        }
+      "optimization": {
+        "title": "Envanter Optimizasyonu",
+        "description": "AI destekli talep tahmini ile stok seviyelerini optimize edin, israfı ve kayıpları en aza indirin."
       }
     },
-    "references": {
-      "seo": {
-        "title": "Referanslar | Başarı Hikayeleri | Omega CRO",
-        "description": "Müşteri başarı hikayeleri ve referanslarımız.",
-        "keywords": "[TODO] references, case studies, customers, success stories, clinical trial"
+    "process": {
+      "title": "Süreç",
+      "step1": {
+        "title": "Kabul & Kayıt",
+        "description": "Barkod ile sisteme giriş."
       },
-      "title": "Müşteri",
-      "titleHighlight": "Başarı Hikayeleri",
-      "description": "Önde gelen ilaç firmalarının başarı hikayeleri.",
-      "stats": {
-        "trials": {
-          "number": "500+",
-          "label": "Tamamlanan Çalışma",
-          "value": "200+"
-        },
-        "patients": {
-          "number": "50,000+",
-          "label": "Randomize Hasta",
-          "value": "25.000+"
-        },
-        "satisfaction": {
-          "number": "98%",
-          "label": "Müşteri Memnuniyeti"
-        },
-        "countries": {
-          "number": "45",
-          "label": "Ülke"
-        },
-        "clients": {
-          "value": "50+",
-          "label": "Aktif Müşteri"
-        }
+      "step2": {
+        "title": "Saklama",
+        "description": "Sürekli sıcaklık ve nem takibi."
       },
-      "testimonials": {
-        "title": "Müşteri Yorumları",
-        "testimonial1": {
-          "quote": "Omega CRO sayesinde çalışma kurulum süremiz %60 kısaldı.",
-          "author": "Dr. Sarah Johnson",
-          "role": "Klinik Operasyon Direktörü",
-          "company": "Global Pharma Co."
-        },
-        "testimonial2": {
-          "quote": "Platform çok kullanışlı ve destek ekibi harika.",
-          "author": "Michael Chen",
-          "role": "Klinik Araştırma Müdürü",
-          "company": "Biotech Inc."
-        },
-        "testimonial3": {
-          "quote": "Denetim süreçlerinde tam uyumluluk sağladık.",
-          "author": "Dr. Emma Williams",
-          "role": "Kalite Güvence Müdürü",
-          "company": "Leading CRO"
-        }
+      "step3": {
+        "title": "Dağıtım",
+        "description": "Otomatik atama ve gönderim."
       },
-      "caseStudies": {
-        "title": "Vaka Analizleri",
-        "study1": {
-          "title": "Global Onkoloji Çalışması",
-          "description": "30 ülkede 500 hasta",
-          "results": "Dengeli gruplar, sıfır tedarik sorunu"
-        },
-        "study2": {
-          "title": "Nadir Hastalık Çalışması",
-          "description": "Adaptif randomizasyon",
-          "results": "Optimum hasta dağılımı"
-        },
-        "study3": {
-          "title": "Kompleks Tasarımlı Çalışma",
-          "description": "Çok kollu, çok aşamalı",
-          "results": "Gerçek zamanlı adaptasyon"
-        },
-        "subtitle": "Gerçek çalışmalardan örnekler ve elde edilen sonuçlar",
-        "labels": {
-          "sites": "Merkez Sayısı",
-          "patients": "Hasta Sayısı",
-          "duration": "Süre"
-        },
-        "case1": {
-          "type": "Faz 3 - Onkoloji",
-          "year": "2023-2024",
-          "title": "İleri Evre Akciğer Kanseri Çalışması",
-          "description": "Çok merkezli, uluslararası bir Faz 3 çalışmasında, Omega CRO IWRS platformu kullanılarak 850 hasta başarıyla randomize edildi. Karmaşık stratifikasyon faktörleri (EGFR mutasyonu, hastalık evresi, ECOG skoru) kusursuz yönetildi. AI destekli IMP tahmin modülü sayesinde hiçbir merkezde stok sıkıntısı yaşanmadı.",
-          "sites": "45",
-          "patients": "850",
-          "duration": "18 ay"
-        },
-        "case2": {
-          "type": "Faz 2 - Kardiyoloji",
-          "year": "2023",
-          "title": "Yeni Antikoagülan Doz Bulma Çalışması",
-          "description": "Adaptif tasarım gerektiren bir Faz 2 çalışmasında, ara analiz sonuçlarına göre randomizasyon oranları başarıyla güncellendi. Sistem, tüm değişiklikleri düzenleyici gereksinimlere uygun şekilde belgeledi ve validasyon süreçlerini otomatik yönetti.",
-          "sites": "12",
-          "patients": "240",
-          "duration": "14 ay"
-        },
-        "case3": {
-          "type": "Faz 1 - Biyoteknoloji",
-          "year": "2024",
-          "title": "Yeni İmmünoterapi İlacı İnsanlarda İlk Kullanım Çalışması",
-          "description": "Doz yükseltme çalışmasında kohort bazlı randomizasyon ve gerçek zamanlı güvenlik takibi yapıldı. Hızlı kurulum (3 gün) ve esnek yapı, protokol tadilatlarının sorunsuz yönetilmesini sağladı. Soğuk zincir takibi ile kritik IMP güvenliği sağlandı.",
-          "sites": "3",
-          "patients": "48",
-          "duration": "10 ay"
-        }
-      },
-      "industries": {
-        "title": "Sektörler",
-        "pharma": "İlaç Firmaları",
-        "biotech": "Biyoteknoloji",
-        "cro": "CRO'lar",
-        "academic": "Akademik Kurumlar",
-        "medical": "Tıbbi Cihaz"
-      },
-      "cta": {
-        "title": "Bize Katılın",
-        "description": "Başarı hikayenizi birlikte yazalım.",
-        "button": "İletişime Geç"
-      },
-      "hero": {
-        "title": "Referanslar ve Başarı Hikayeleri",
-        "subtitle": "Dünya çapında onlarca CRO, sponsor firma ve araştırma merkezi tarafından güvenilen Omega CRO IWRS platformu"
-      },
-      "phases": {
-        "title": "Tüm Fazlarda IWRS Deneyimi",
-        "subtitle": "Faz 1'den Faz 4'e kadar her aşamada başarılı çalışma yönetimi",
-        "phase1": {
-          "badge": "Faz 1",
-          "title": "Erken Faz Çalışmaları",
-          "description": "Küçük hasta grupları, yoğun takip ve esneklik gerektiren Faz 1 çalışmalarında hızlı kurulum ve adaptif randomizasyon desteği.",
-          "feature1": "Doz eskalasyonu takibi ve güvenlik değerlendirmesi",
-          "feature2": "[TODO] Cohort-based randomization and real-time data analysis"
-        },
-        "phase2": {
-          "badge": "[TODO] Phase 2",
-          "title": "[TODO] Dose Finding Studies",
-          "description": "[TODO] Stratified randomization and interim analysis support for optimal dose determination and early efficacy signals.",
-          "feature1": "[TODO] Multiple dose group management and comparative analysis",
-          "feature2": "[TODO] Adaptive design support and futility analyses"
-        },
-        "phase3": {
-          "badge": "[TODO] Phase 3",
-          "title": "[TODO] Pivotal Studies",
-          "description": "[TODO] Central randomization, IMP management, and GCP compliance in multi-center, large patient population Phase 3 studies.",
-          "feature1": "[TODO] International multi-center study management",
-          "feature2": "[TODO] Complex stratification and block randomization"
-        },
-        "phase4": {
-          "badge": "[TODO] Phase 4",
-          "title": "[TODO] Post-Marketing Studies",
-          "description": "[TODO] Long-term follow-up and real-world data collection capability in large patient populations.",
-          "feature1": "[TODO] Pragmatic study designs and simplified procedures",
-          "feature2": "[TODO] Electronic health records (EHR) integration"
-        }
+      "step4": {
+        "title": "İade & İmha",
+        "description": "Kullanılmayan ilaçların takibi ve imhası."
       }
     },
-    "faq": {
-      "seo": {
-        "title": "SSS | Sıkça Sorulan Sorular | Omega CRO",
-        "description": "IWRS platformu hakkında sık sorulan sorular.",
-        "keywords": "[TODO] FAQ, randomization, IWRS, clinical trial, Q&A"
+    "coldChainMonitoring": {
+      "title": "Soğuk Zincir İzleme",
+      "temperature": {
+        "title": "Sıcaklık Kaydı",
+        "description": "Bulut tabanlı sürekli izleme"
       },
-      "title": "Sıkça Sorulan",
-      "titleHighlight": "Sorular",
-      "description": "Platform hakkında merak edilenler.",
-      "general": {
-        "title": "Genel",
-        "q1": {
-          "question": "IWRS nedir?",
-          "answer": "Klinik çalışmalarda randomizasyon ve ilaç yönetimini sağlayan sistemdir."
-        },
-        "q2": {
-          "question": "AI nasıl çalışır?",
-          "answer": "Geçmiş verileri analiz ederek optimum stratejiler önerir."
-        },
-        "q3": {
-          "question": "Mevzuata uygun mu?",
-          "answer": "Evet, FDA, EMA ve KVKK/GDPR uyumludur."
-        }
+      "alerts": {
+        "title": "Anlık Uyarılar",
+        "description": "Sapma durumunda SMS/E-posta"
       },
-      "implementation": {
-        "title": "Kurulum",
-        "q1": {
-          "question": "Kurulum ne kadar sürer?",
-          "answer": "Genellikle 2-3 hafta içinde sistem hazır olur."
-        },
-        "q2": {
-          "question": "Destek veriyor musunuz?",
-          "answer": "7/24 teknik destek sağlıyoruz."
-        },
-        "q3": {
-          "question": "Entegrasyon mümkün mü?",
-          "answer": "Evet, EDC ve diğer sistemlerle entegre olabilir."
-        }
+      "compliance": {
+        "title": "Uyumluluk Raporları",
+        "description": "Otomatik sıcaklık raporları"
       },
-      "pricing": {
-        "title": "Fiyatlandırma",
-        "q1": {
-          "question": "Fiyatlandırma nasıl?",
-          "answer": "Çalışma özelliklerine göre teklif verilir."
-        },
-        "q2": {
-          "question": "Kurulum ücreti var mı?",
-          "answer": "Proje kapsamına göre belirlenir."
-        },
-        "q3": {
-          "question": "Demo mevcut mu?",
-          "answer": "Evet, ücretsiz demo talep edebilirsiniz."
-        }
-      },
-      "technical": {
-        "title": "Teknik",
-        "q1": {
-          "question": "Veriler nerede saklanıyor?",
-          "answer": "Güvenli bulut sunucularında veya talep üzerine lokal sunucularda."
-        },
-        "q2": {
-          "question": "Güvenlik önlemleri neler?",
-          "answer": "SSL, şifreleme ve düzenli sızma testleri."
-        },
-        "q3": {
-          "question": "Körleme destekleniyor mu?",
-          "answer": "Evet, tam körleme yönetimi mevcuttur."
-        }
-      },
-      "cta": {
-        "title": "Başka Sorunuz Var mı?",
-        "description": "Ekibimiz yanıtlamaktan memnuniyet duyar.",
-        "button": "Destek İste"
-      },
-      "hero": {
-        "title": "[TODO] Frequently Asked Questions",
-        "subtitle": "[TODO] Everything you need to know about Omega CRO IWRS platform and our services"
-      },
-      "categories": {
-        "randomization": "[TODO] About Randomization",
-        "iwrs": "[TODO] IWRS System",
-        "inventory": "[TODO] Warehouse & Drug Tracking",
-        "security": "[TODO] Security and Compliance"
-      },
-      "questions": {
-        "q1": {
-          "question": "[TODO] What is randomization and why is it important?",
-          "answer": "[TODO] Randomization is the process of randomly assigning patients to treatment arms in clinical trials. This method ensures comparability between study groups and eliminates selection bias. Omega CRO IWRS platform supports simple randomization, block randomization, stratified randomization, and adaptive randomization methods. Our AI-powered system recommends optimal randomization strategies and monitors balance in real-time."
-        },
-        "q2": {
-          "question": "[TODO] What is the difference between block randomization and stratified randomization?",
-          "answer": "[TODO] Block randomization ensures balanced allocation within blocks of a certain number of patients and maintains numerical balance between treatment groups. Stratified randomization divides patients into subgroups based on important prognostic factors (such as age, gender, disease stage) and applies separate randomization within each subgroup. Omega CRO IWRS supports both methods and even allows you to combine them for 'stratified block randomization'."
-        },
-        "q3": {
-          "question": "[TODO] How does adaptive randomization work?",
-          "answer": "[TODO] Adaptive randomization learns from data collected as the study progresses and dynamically adjusts randomization ratios. For example, if better results are seen in one treatment arm than expected, the system can assign more patients to that arm. Omega CRO's AI-powered module suggests adaptive strategies through real-time data analysis, implements these strategies after ethics committee approval, and documents all changes in detail."
-        },
-        "q4": {
-          "question": "[TODO] What are the main features of the IWRS system?",
-          "answer": "[TODO] Omega CRO IWRS (Interactive Web Response System) offers central randomization, drug supply management, patient enrollment tracking, site management, real-time reporting, and GCP-compliant audit trail features. The system is accessible 24/7, has multilingual support, and can be used from all devices (computer, tablet, phone). It is fully compliant with FDA 21 CFR Part 11 and EMA requirements."
-        },
-        "q5": {
-          "question": "[TODO] How is IMP (Investigational Medicinal Product) supply management done with IWRS?",
-          "answer": "[TODO] The IWRS system tracks each site's drug inventory in real-time, predicts future needs based on patient randomization rate, and automatically generates resupply alerts. Our AI module analyzes historical study data to suggest optimal stock levels, applies FEFO (First Expired, First Out) principle based on expiration dates, and minimizes waste. Additionally, special tracking and alarm systems are available for drugs requiring cold chain."
-        },
-        "q6": {
-          "question": "[TODO] What happens if a protocol amendment is needed during the study?",
-          "answer": "[TODO] Omega CRO IWRS has a flexible structure to manage protocol amendments. When changes are needed in critical parameters such as randomization algorithm, number of treatment arms, stratification factors, the system maintains full data integrity before and after the change. All changes are recorded in the audit trail and detailed documentation is provided for submission to regulatory authorities. Validation tests are performed automatically."
-        },
-        "q7": {
-          "question": "[TODO] What features does the warehouse module include?",
-          "answer": "[TODO] The warehouse module offers real-time inventory tracking, barcode/RFID integration, expiration date management, cold chain monitoring (2-8°C, -20°C, -80°C), automatic stock alerts, drug dispensing according to FEFO principle, detailed inventory reports, and GCP-compliant audit trail. In multi-center studies, central warehouse and site-based stock management is available."
-        },
-        "q8": {
-          "question": "[TODO] How is cold chain tracking done?",
-          "answer": "[TODO] Our system provides 24/7 temperature and humidity monitoring with IoT sensors. When specified limits are exceeded, automatic SMS, email, and mobile app notifications are sent. All temperature data is recorded and reported on a second-by-second basis. Emergency action plans are activated in critical situations such as power outages or freezer failures. All required documentation for regulatory audits can be presented ready."
-        },
-        "q9": {
-          "question": "[TODO] What is done in case of a drug recall?",
-          "answer": "[TODO] In case of a recall, the IWRS system immediately identifies all drugs with the relevant lot/batch number and shows which sites they are at. The system automatically sends notifications to all relevant sites, marks the drugs in question as 'unusable', and provides a list for patient communication. All transactions are recorded in the audit trail and documentation required for regulatory reporting is automatically generated."
-        },
-        "q10": {
-          "question": "[TODO] How is data security ensured?",
-          "answer": "[TODO] Omega CRO has an ISO 27001 certified information security management system. Data is protected with 256-bit AES encryption, encryption is applied both in the database (at rest) and during transmission (in transit). Multi-factor authentication (MFA), role-based access control (RBAC), and regular penetration tests are performed. All servers are hosted in secure, geographically distributed data centers."
-        },
-        "q11": {
-          "question": "[TODO] How is KVKK and GDPR compliance ensured?",
-          "answer": "[TODO] Our system is fully compliant with KVKK and GDPR requirements for personal data protection. Patient information texts, explicit consent management, data subject rights (access, correction, deletion, data portability), data processing inventory, data breach notification mechanisms are integrated. Regular KVKK/GDPR compliance audits are conducted and all necessary documentation is provided."
-        },
-        "q12": {
-          "question": "[TODO] What is FDA 21 CFR Part 11 compliance?",
-          "answer": "[TODO] FDA 21 CFR Part 11 is the US regulation for electronic records and electronic signatures. Omega CRO IWRS is fully compliant with this regulation: immutable audit trail, electronic signature validation, user access control, data integrity, system validation, and regular backups are performed. All critical transactions are approved with electronic signatures and system validation documentation is kept ready."
-        }
+      "validation": {
+        "title": "Doğrulama",
+        "description": "Cihaz kalibrasyon takibi"
       }
     },
-    "blog": {
-      "seo": {
-        "title": "Blog | Klinik Araştırma Haberleri | Omega CRO",
-        "description": "Sektörel haberler ve makaleler."
-      },
-      "title": "Blog",
-      "subtitle": "Güncel Haberler ve İçgörüler",
-      "loading": "Yükleniyor...",
-      "noPosts": "Henüz yazı yok",
-      "titleHighlight": "İçgörüler",
-      "description": "Klinik araştırma dünyasından son gelişmeler.",
-      "categories": {
-        "all": "Tümü",
-        "ai": "AI & Teknoloji",
-        "regulatory": "Mevzuat",
-        "bestPractices": "İyi Uygulamalar",
-        "caseStudies": "Vaka Analizleri"
-      },
-      "readMore": "Devamını Oku",
-      "readTime": "dk okuma",
-      "featured": "Öne Çıkan",
-      "latest": "Son Yazılar",
-      "author": "Yazar",
-      "publishedOn": "Yayın Tarihi",
-      "share": "Paylaş",
-      "relatedPosts": "İlgili Yazılar"
+    "reporting": {
+      "title": "Raporlama",
+      "inventoryLevels": "Merkez bazlı stok seviyeleri",
+      "usagePatterns": "Kullanım analizi",
+      "expiryReports": "SKT Raporları",
+      "temperatureLogs": "Sıcaklık kayıtları",
+      "reconciliation": "Mutabakat raporları"
     },
-    "adminDashboard": {
-      "title": "Yönetici Paneli",
-      "blogPosts": "Blog Yazıları",
-      "createPost": "Yeni Yazı",
-      "editPost": "Düzenle",
-      "title_label": "Başlık",
-      "slug": "URL Yolu (Slug)",
-      "excerpt": "Özet",
-      "content": "İçerik",
-      "featuredImage": "Görsel URL",
-      "status": {
-        "0": "D",
-        "1": "u",
-        "2": "r",
-        "3": "u",
-        "4": "m",
-        "draft": "[TODO] Draft",
-        "published": "[TODO] Published"
-      },
-      "draft": "Taslak",
-      "published": "Yayında",
-      "seoTitle": "SEO Başlığı",
-      "seoDescription": "SEO Açıklaması",
-      "seoKeywords": "Anahtar Kelimeler",
-      "save": "Kaydet",
-      "saving": "Kaydediliyor...",
-      "cancel": "İptal",
-      "edit": "Düzenle",
-      "delete": "Sil",
-      "confirmDelete": "Silmek istediğinize emin misiniz?",
-      "noAccess": "Erişim Reddedildi",
-      "adminOnly": "Bu sayfaya sadece yöneticiler erişebilir.",
-      "blogManagement": "[TODO] Blog Management",
-      "backToHome": "[TODO] Back to Home",
-      "accessDenied": "[TODO] Access denied",
-      "accessDeniedDesc": "[TODO] You don't have permission to access this page.",
-      "loading": "[TODO] Loading...",
-      "allPosts": "[TODO] All Blog Posts",
-      "table": {
-        "title": "[TODO] Title",
-        "slug": "[TODO] Slug",
-        "status": "[TODO] Status",
-        "publishedAt": "[TODO] Published At",
-        "actions": "[TODO] Actions"
-      },
-      "form": {
-        "createTitle": "[TODO] Create New Blog Post",
-        "editTitle": "[TODO] Edit Blog Post",
-        "titleLabel": "[TODO] Title",
-        "titlePlaceholder": "[TODO] Blog post title",
-        "slugLabel": "[TODO] Slug (for URL)",
-        "slugPlaceholder": "[TODO] blog-post-slug",
-        "statusLabel": "[TODO] Status",
-        "contentLabel": "[TODO] Content (Markdown)",
-        "contentPlaceholder": "[TODO] Write your content in Markdown format...",
-        "excerptLabel": "[TODO] Excerpt (Optional)",
-        "excerptPlaceholder": "[TODO] Short excerpt",
-        "featuredImageLabel": "[TODO] Featured Image URL (Optional)",
-        "featuredImagePlaceholder": "[TODO] https://example.com/image.jpg",
-        "seoTitle": "[TODO] SEO Title (Optional)",
-        "seoTitlePlaceholder": "[TODO] Title for search engines",
-        "seoDescription": "[TODO] SEO Description (Optional)",
-        "seoDescriptionPlaceholder": "[TODO] Description for search engines",
-        "seoKeywords": "[TODO] SEO Keywords (Optional)",
-        "seoKeywordsPlaceholder": "[TODO] keyword1, keyword2, keyword3",
-        "cancel": "[TODO] Cancel",
-        "create": "[TODO] Create",
-        "update": "[TODO] Update",
-        "creating": "[TODO] Creating...",
-        "updating": "[TODO] Updating..."
-      },
-      "messages": {
-        "loadError": "[TODO] Could not load blog posts.",
-        "createSuccess": "[TODO] Blog post created successfully!",
-        "createError": "[TODO] Could not create blog post.",
-        "updateSuccess": "[TODO] Blog post updated successfully!",
-        "updateError": "[TODO] Could not update blog post.",
-        "deleteSuccess": "[TODO] Blog post deleted successfully!",
-        "deleteError": "[TODO] Could not delete blog post.",
-        "validationError": "[TODO] Form validation error"
-      }
+    "cta": {
+      "title": "IWRS Entegrasyonu",
+      "description": "Stok sistemi IWRS platformumuzun bir parçasıdır.",
+      "button": "İletişime Geç"
     },
-    "notFound": {
-      "title": "404 - Sayfa Bulunamadı",
-      "description": "Aradığınız sayfa mevcut değil.",
-      "backHome": "Ana Sayfaya Dön",
-      "code": "[TODO] 404"
+    "hero": {
+      "title": "Depo ve İlaç Takip Sistemleri",
+      "subtitle": "Klinik araştırmalarınızdaki ilaç ve tıbbi malzemelerin güvenli saklanması, takibi ve yönetimi için akıllı çözümlerimizle tam kontrol sağlayın.",
+      "cta": "Daha Fazla Bilgi Alın"
     },
-    "seo": {
-      "title": "[TODO] Omega CRO - AI-Powered IWRS Platform for Clinical Trials",
-      "description": "[TODO] Transform clinical trial randomization with AI. Omega CRO's intelligent IWRS platform optimizes randomization strategies, ensures balanced patient groups, and maximizes trial efficiency with FDA/EMA compliance."
-    },
-    "blogPost": {
-      "loading": "[TODO] Loading...",
-      "notFound": "[TODO] Blog post not found",
-      "backToBlog": "[TODO] Back to Blog"
-    },
-    "iwrsMockup": {
-      "header": "[TODO] Interactive Web Response System",
-      "studyId": "[TODO] Study ID",
-      "signOut": "[TODO] Sign Out",
-      "stats": {
-        "totalPatients": "[TODO] Total Patients",
-        "randomizedToday": "[TODO] Randomized Today",
-        "activeSites": "[TODO] Active Sites",
-        "ipsInventory": "[TODO] IPS Inventory"
+    "benefits": {
+      "title": "Sistem Faydaları",
+      "efficiency": {
+        "title": "Operasyonel Verimlilik",
+        "description": "Manuel süreçleri otomatikleştirerek zamandan tasarruf edin. Barkod ve RFID entegrasyonu ile hızlı ve hatasız operasyonlar. Merkezi yönetim ile tüm depoları tek noktadan kontrol edin."
       },
-      "tabs": {
-        "randomize": "[TODO] Randomize Patient",
-        "inventory": "[TODO] Inventory",
-        "reports": "[TODO] Reports",
-        "aiAssistant": "[TODO] AI Assistant"
+      "accuracy": {
+        "title": "Doğruluk ve Güvenilirlik",
+        "description": "İnsan hatasını en aza indiren otomatik kayıt sistemi. Tam denetim izi ile her işlemin kaydını tutun. Gerçek zamanlı veri senkronizasyonu ile tutarlı bilgiye erişin."
       },
-      "randomizeForm": {
-        "title": "[TODO] New Patient Randomization",
-        "description": "[TODO] Enter patient information to randomize a new patient",
-        "patientId": "[TODO] Patient ID",
-        "patientIdPlaceholder": "[TODO] e.g. PT-XXX",
-        "site": "[TODO] Site",
-        "selectSite": "[TODO] Select a Site",
-        "stratificationFactor": "[TODO] Stratification Factor",
-        "selectFactor": "[TODO] Select a Factor",
-        "randomizeButton": "[TODO] Randomize Patient",
-        "result": "[TODO] Randomization Result",
-        "assignedTo": "[TODO] Assigned to:",
-        "kitNumber": "[TODO] Kit Number:",
-        "confirmationCode": "[TODO] Confirmation Code:",
-        "printLabel": "[TODO] Print Label"
-      },
-      "recentRandomizations": {
-        "title": "[TODO] Recent Randomizations",
-        "patientId": "[TODO] Patient ID",
-        "date": "[TODO] Date",
-        "group": "[TODO] Group",
-        "site": "[TODO] Site",
-        "status": "[TODO] Status"
-      },
-      "inventory": {
-        "title": "[TODO] Inventory Management",
-        "description": "[TODO] Manage kit inventory across sites",
-        "site": "[TODO] Site",
-        "treatmentA": "[TODO] Treatment A",
-        "treatmentB": "[TODO] Treatment B",
-        "placebo": "[TODO] Placebo",
-        "total": "[TODO] Total",
-        "status": "[TODO] Status",
-        "actions": "[TODO] Actions",
-        "restock": "[TODO] Restock"
-      },
-      "reports": {
-        "title": "[TODO] Reports",
-        "description": "[TODO] View study statistics and analytics",
-        "enrollmentProgress": "[TODO] Enrollment Progress",
-        "target": "[TODO] Target: 500 patients",
-        "groupDistribution": "[TODO] Group Distribution",
-        "generateReport": "[TODO] Generate Report"
-      },
-      "aiAssistant": {
-        "title": "[TODO] AI Assistant",
-        "description": "[TODO] Get AI-powered help for randomization recommendations and predictions",
-        "placeholder": "[TODO] Ask the AI assistant a question...",
-        "send": "[TODO] Send",
-        "suggestions": "[TODO] AI Suggestions",
-        "balanceWarning": "[TODO] ⚠️ Imbalance detected at Site 002. Consider increasing enrollment at Sites 001 or 003.",
-        "inventoryAlert": "[TODO] 📦 Treatment A kits at Site 001 may run out in 2 weeks. Restocking recommended.",
-        "enrollmentTrend": "[TODO] 📈 Based on current enrollment rate, target enrollment expected in 8 weeks."
-      },
-      "statusBadges": {
-        "active": "[TODO] Active",
-        "completed": "[TODO] Completed",
-        "lowStock": "[TODO] Low Stock",
-        "adequate": "[TODO] Adequate",
-        "critical": "[TODO] Critical"
-      }
-    },
-    "adverseEventsCall": {
-      "seo": {
-        "title": "[TODO] Adverse Events Reporting | Phone-Assisted Clinical Services | Omega CRO",
-        "description": "[TODO] Automated adverse event tracking and secure recording system via regular calls and SMS to clinical trial participants."
-      },
-      "hero": {
-        "title": "[TODO] Adverse Events Reporting",
-        "subtitle": "[TODO] Automated Tracking and Reporting via Phone",
-        "description": "[TODO] Regular reminders and secure recording system for potential drug side effects via call or SMS to participants"
-      },
-      "features": {
-        "title": "[TODO] Service Features",
-        "automaticCalls": {
-          "title": "[TODO] Automatic Call System",
-          "description": "[TODO] Adverse event queries are conducted through automatic calls to participants at specified periods. Responses are instantly recorded in the system."
-        },
-        "smsReminders": {
-          "title": "[TODO] SMS Reminders",
-          "description": "[TODO] SMS reminders are sent to participants to report adverse events. Quick feedback is received with easy response options."
-        },
-        "secureRecording": {
-          "title": "[TODO] Secure Recording",
-          "description": "[TODO] All reports are encrypted and recorded in compliance with KVKK/GDPR and shared securely with the research team."
-        },
-        "realTimeAlerts": {
-          "title": "[TODO] Real-Time Alerts",
-          "description": "[TODO] Serious adverse event reports are instantly communicated to the research team, enabling rapid intervention."
-        }
-      },
-      "workflow": {
-        "title": "[TODO] Workflow Process",
-        "step1": {
-          "title": "[TODO] Scheduled Calls",
-          "description": "[TODO] The system automatically calls participants at specified times and asks questions like 'Have you experienced any unexpected side effects in the last three days?'"
-        },
-        "step2": {
-          "title": "[TODO] Response Recording",
-          "description": "[TODO] Participant responses are recorded in the system via voice or keypad. Detailed questions are triggered upon receiving a 'yes' answer."
-        },
-        "step3": {
-          "title": "[TODO] Team Notification",
-          "description": "[TODO] Adverse event reports are instantly communicated to the research team. Serious cases are marked as urgent alerts."
-        },
-        "step4": {
-          "title": "[TODO] Follow-up and Reporting",
-          "description": "[TODO] All reports are documented and archived in accordance with regulatory reporting requirements."
-        }
-      },
-      "security": {
-        "title": "[TODO] Security and Privacy",
-        "description": "[TODO] All patient data is processed in accordance with KVKK/GDPR standards. Calls are conducted over encrypted lines. Participant consent and confidentiality agreements are meticulously followed."
-      },
-      "cta": {
-        "title": "[TODO] Contact Us for Adverse Event Tracking",
-        "description": "[TODO] Get detailed information about phone-assisted adverse event tracking in your clinical trial",
-        "button": "[TODO] Contact Us"
-      }
-    },
-    "medicationReminder": {
-      "seo": {
-        "title": "[TODO] Medication Reminder | Phone-Assisted Clinical Services | Omega CRO",
-        "description": "[TODO] Automatic medication intake reminder system via call or message for patients in treatment program."
-      },
-      "hero": {
-        "title": "[TODO] Medication Reminder",
-        "subtitle": "[TODO] Automated System to Improve Treatment Adherence",
-        "description": "[TODO] Automatic reminders for medication intake time via call or message to patients in treatment program"
-      },
-      "features": {
-        "title": "[TODO] Service Features",
-        "scheduledReminders": {
-          "title": "[TODO] Scheduled Reminders",
-          "description": "[TODO] Automatic reminder calls or SMS are sent at personalized medication intake times for each participant."
-        },
-        "doseInformation": {
-          "title": "[TODO] Dose Information",
-          "description": "[TODO] Reminder messages include dose amount, administration method, and special instructions."
-        },
-        "confirmationTracking": {
-          "title": "[TODO] Confirmation Tracking",
-          "description": "[TODO] Participants are asked to confirm that they have taken their medication and adherence rates are automatically recorded."
-        },
-        "missedDoseAlerts": {
-          "title": "[TODO] Missed Dose Alerts",
-          "description": "[TODO] When medication is not taken, a notification is sent to the research team and necessary follow-up action is taken."
-        }
-      },
-      "workflow": {
-        "title": "[TODO] Workflow Process",
-        "step1": {
-          "title": "[TODO] Time Setting",
-          "description": "[TODO] Medication intake times are defined in the system for each participant according to the study protocol."
-        },
-        "step2": {
-          "title": "[TODO] Automatic Reminder",
-          "description": "[TODO] A call or SMS is sent to the participant at the specified time: 'Time to take your medication - 2 tablets with breakfast'."
-        },
-        "step3": {
-          "title": "[TODO] Confirmation",
-          "description": "[TODO] The participant is asked to confirm that they have taken the medication. If no confirmation is given, the reminder is repeated."
-        },
-        "step4": {
-          "title": "[TODO] Adherence Reporting",
-          "description": "[TODO] All medication intake records and adherence rates are automatically reported and monitored."
-        }
-      },
-      "benefits": {
-        "title": "[TODO] Benefits",
-        "description": "[TODO] The medication reminder system increases treatment adherence by up to 40%, reduces protocol violations, and improves study quality."
-      },
-      "cta": {
-        "title": "[TODO] Learn About Medication Reminder System",
-        "description": "[TODO] Contact us to improve treatment adherence in your clinical trial",
-        "button": "[TODO] Request Demo"
-      }
-    },
-    "appointmentReminder": {
-      "seo": {
-        "title": "[TODO] Appointment Reminder | Phone-Assisted Clinical Services | Omega CRO",
-        "description": "[TODO] Automatic reminder system for clinical visits, laboratory and follow-up appointments to participants."
-      },
-      "hero": {
-        "title": "[TODO] Appointment Reminder",
-        "subtitle": "[TODO] Smart System to Increase Participation Rates",
-        "description": "[TODO] Automatic reminders for clinical visits, laboratory, control or follow-up appointments via call/SMS to participants"
-      },
-      "features": {
-        "title": "[TODO] Service Features",
-        "multipleReminders": {
-          "title": "[TODO] Multiple Reminders",
-          "description": "[TODO] Automatic reminders are sent 7 days, 3 days, and 1 day before the appointment."
-        },
-        "calendarIntegration": {
-          "title": "[TODO] Calendar Integration",
-          "description": "[TODO] Participants can automatically add appointment information to their own calendars."
-        },
-        "confirmationRequest": {
-          "title": "[TODO] Attendance Confirmation",
-          "description": "[TODO] Participants are asked to confirm that they will attend the appointment, reducing no-show rates."
-        },
-        "reschedulingSupport": {
-          "title": "[TODO] Rescheduling Support",
-          "description": "[TODO] Participants can easily reschedule their appointments with the automatic system, and empty slots are immediately filled."
-        }
-      },
-      "workflow": {
-        "title": "[TODO] Workflow Process",
-        "step1": {
-          "title": "[TODO] Appointment Definition",
-          "description": "[TODO] Clinical visits, laboratory tests, or control appointments are entered into the system."
-        },
-        "step2": {
-          "title": "[TODO] Reminder Delivery",
-          "description": "[TODO] Participants are notified at specified times: 'You have an appointment with Dr. Yılmaz on Friday at 2:00 PM'."
-        },
-        "step3": {
-          "title": "[TODO] Confirmation Tracking",
-          "description": "[TODO] Participants respond with options 'Yes, I will come' or 'I want to reschedule'."
-        },
-        "step4": {
-          "title": "[TODO] Team Notification",
-          "description": "[TODO] Unconfirmed or rescheduled appointments are notified to the research team and necessary actions are taken."
-        }
-      },
-      "statistics": {
-        "title": "[TODO] Effectiveness",
-        "showUpRate": {
-          "label": "[TODO] Show-Up Rate",
-          "value": "[TODO] +35%"
-        },
-        "noShowReduction": {
-          "label": "[TODO] No-Show Reduction",
-          "value": "[TODO] -60%"
-        },
-        "satisfaction": {
-          "label": "[TODO] Participant Satisfaction",
-          "value": "[TODO] 4.8/5"
-        }
-      },
-      "cta": {
-        "title": "[TODO] Set Up Appointment Reminder System",
-        "description": "[TODO] Contact us to increase participation rates and reduce no-shows",
-        "button": "[TODO] Contact Us"
-      }
-    },
-    "patientSurvey": {
-      "seo": {
-        "title": "[TODO] Patient Surveys | Phone-Assisted Clinical Services | Omega CRO",
-        "description": "[TODO] Scheduled delivery of surveys regarding satisfaction, therapy response and treatment compliance via phone."
-      },
-      "hero": {
-        "title": "[TODO] Patient Surveys",
-        "subtitle": "[TODO] Data Collection and Analysis via Phone",
-        "description": "[TODO] Scheduled delivery of surveys regarding periodic satisfaction, therapy response, quality of life or treatment compliance via phone call or SMS"
-      },
-      "features": {
-        "title": "[TODO] Service Features",
-        "automatedSurveys": {
-          "title": "[TODO] Automated Survey Delivery",
-          "description": "[TODO] Surveys are automatically sent to participants via phone or SMS at specified periods."
-        },
-        "multipleFormats": {
-          "title": "[TODO] Multiple Formats",
-          "description": "[TODO] Voice response, keypad (DTMF) or SMS response options are available."
-        },
-        "realTimeData": {
-          "title": "[TODO] Real-Time Data",
-          "description": "[TODO] Survey responses are instantly transferred to the system and made available to the research team."
-        },
-        "privacyCompliant": {
-          "title": "[TODO] Privacy Compliant",
-          "description": "[TODO] All survey data is processed with participant consent and in accordance with KVKK/GDPR standards."
-        }
-      },
-      "surveyTypes": {
-        "title": "[TODO] Survey Types",
-        "satisfaction": {
-          "title": "[TODO] Satisfaction Survey",
-          "description": "[TODO] Measurement of satisfaction with the treatment process and participation experience in the study"
-        },
-        "therapyResponse": {
-          "title": "[TODO] Therapy Response Survey",
-          "description": "[TODO] Assessment of treatment response, symptom reduction and overall improvement"
-        },
-        "qualityOfLife": {
-          "title": "[TODO] Quality of Life Survey",
-          "description": "[TODO] Impact of treatment on daily life activities and overall quality of life"
-        },
-        "adherence": {
-          "title": "[TODO] Treatment Adherence Survey",
-          "description": "[TODO] Measurement of medication intake frequency, side effect experience and protocol adherence"
-        }
-      },
-      "workflow": {
-        "title": "[TODO] Workflow Process",
-        "step1": {
-          "title": "[TODO] Survey Design",
-          "description": "[TODO] Survey questions appropriate to research objectives are determined and uploaded to the system."
-        },
-        "step2": {
-          "title": "[TODO] Scheduled Delivery",
-          "description": "[TODO] Surveys are sent to participants via phone call or SMS at specified times."
-        },
-        "step3": {
-          "title": "[TODO] Response Collection",
-          "description": "[TODO] Participants respond to questions via voice, keypad or SMS. The system automatically records."
-        },
-        "step4": {
-          "title": "[TODO] Analysis and Reporting",
-          "description": "[TODO] Collected data is analyzed, reports are automatically generated and shared with the research team."
-        }
-      },
-      "benefits": {
-        "title": "[TODO] Benefits",
-        "responseRate": {
-          "title": "[TODO] High Response Rate",
-          "description": "[TODO] Phone-assisted surveys provide 50% higher response rates compared to traditional methods"
-        },
-        "realTimeInsights": {
-          "title": "[TODO] Real-Time Insights",
-          "description": "[TODO] Data is collected instantly, research team can make quick decisions"
-        },
-        "reducedBurden": {
-          "title": "[TODO] Reduced Burden",
-          "description": "[TODO] Thanks to the automatic system, manual survey administration and data entry become unnecessary"
-        }
-      },
-      "cta": {
-        "title": "[TODO] Set Up Patient Survey System",
-        "description": "[TODO] Contact us for phone-assisted survey applications in your clinical trial",
-        "button": "[TODO] Request Demo"
+      "transparency": {
+        "title": "Şeffaflık ve İzlenebilirlik",
+        "description": "Tedarikten tüketime kadar ilaçların tüm yaşam döngüsünü izleyin. Detaylı raporlama ile denetim ve teftiş süreçlerine hazır olun. Kullanıcı bazlı yetkilendirme ile veri güvenliğini sağlayın."
       }
     }
+  },
+  "dataSecurity": {
+    "seo": {
+      "title": "Veri Güvenliği | KVKK/GDPR | Omega CRO",
+      "description": "KVKK ve GDPR uyumlu veri yönetimi.",
+      "keywords": "veri güvenliği, KVKK, GDPR, hasta bilgileri, klinik veri, şifreleme"
+    },
+    "title": "Veri Güvenliği ve Uyumluluk",
+    "description": "Kapsamlı hasta verisi koruma ve uyumluluk sistemi.",
+    "compliance": {
+      "title": "Mevzuat Uyumluluğu",
+      "kvkk": {
+        "title": "KVKK",
+        "description": "Kişisel Verilerin Korunması Kanunu tam uyum."
+      },
+      "gdpr": {
+        "title": "GDPR",
+        "description": "Avrupa Genel Veri Koruma Tüzüğü uyumu."
+      },
+      "fda": {
+        "title": "FDA 21 CFR Part 11",
+        "description": "Elektronik kayıt ve imza standartları."
+      },
+      "description1": "Omega CRO'nun veri güvenliği altyapısı uluslararası standartlara uygun olarak tasarlanmış ve düzenli olarak bağımsız denetimlerden geçmektedir.",
+      "description2": "Sistemlerimizin güvenliği ISO 27001 bilgi güvenliği yönetim sistemi sertifikası ile garanti altındadır. Operasyonel güvenlik süreçlerimiz SOC 2 Tip II uyumluluğu ile doğrulanmıştır.",
+      "description3": "KVKK Veri Sorumlusu olarak yasal yükümlülüklerimizi yerine getiriyor, düzenli raporlama ve denetimler yapıyoruz. Avrupa çalışmalarınız için GDPR temsilciliği ile tam destek sağlıyoruz."
+    },
+    "features": {
+      "title": "Güvenlik Özellikleri",
+      "encryption": {
+        "title": "Uçtan Uca Şifreleme",
+        "description": "AES-256 standardında veri şifreleme."
+      },
+      "accessControl": {
+        "title": "Erişim Kontrolü",
+        "description": "Rol tabanlı yetkilendirme."
+      },
+      "auditTrails": {
+        "title": "Denetim İzleri",
+        "description": "Tüm işlemlerin kayıt altına alınması."
+      },
+      "backup": {
+        "title": "Yedekleme",
+        "description": "Otomatik ve şifreli yedekleme."
+      },
+      "subtitle": "Hasta verilerinin korunması ve yasal uyumluluk için kapsamlı güvenlik altyapısı",
+      "gdpr": {
+        "title": "KVKK / GDPR Uyumluluğu",
+        "description": "Türk Kişisel Verileri Koruma Kanunu ve Avrupa GDPR gereksinimleriyle tam uyumlu sistem mimarisi ve süreçler."
+      },
+      "access": {
+        "title": "Erişim Kontrolü",
+        "description": "Rol tabanlı erişim yönetimi, çok faktörlü kimlik doğrulama ve detaylı kullanıcı yetkilendirme sistemi."
+      },
+      "audit": {
+        "title": "Denetim İzi",
+        "description": "Tüm sistem aktivitelerinin otomatik kaydı, değiştirilemez log sistemi ve detaylı denetim raporları."
+      },
+      "consent": {
+        "title": "Bilgilendirme ve Onam Yönetimi",
+        "description": "Dijital aydınlatma metinleri, elektronik onam süreçleri ve onam durumu takip sistemi."
+      }
+    },
+    "informedConsent": {
+      "title": "Bilgilendirilmiş Onam",
+      "digital": {
+        "title": "Dijital Onam",
+        "description": "E-imzalı onam süreci"
+      },
+      "version": {
+        "title": "Versiyon Kontrolü",
+        "description": "Onam formu değişiklik takibi"
+      },
+      "language": {
+        "title": "Çoklu Dil",
+        "description": "Katılımcı dilinde onam formları"
+      },
+      "storage": {
+        "title": "Güvenli Saklama",
+        "description": "Değiştirilemez arşivleme"
+      }
+    },
+    "dataRights": {
+      "title": "Katılımcı Hakları",
+      "access": "Erişim: Verilere erişim hakkı",
+      "rectification": "Düzeltme: Yanlış verilerin düzeltilmesi",
+      "erasure": "Silme: Mevzuata uygun silme hakkı",
+      "portability": "Taşınabilirlik: Veri transfer imkanı",
+      "objection": "İtiraz: İşlemeye itiraz hakkı"
+    },
+    "security": {
+      "title": "Güvenlik Önlemleri",
+      "network": {
+        "title": "Ağ Güvenliği",
+        "description": "Güvenlik duvarı ve sızma testleri"
+      },
+      "physical": {
+        "title": "Fiziksel Güvenlik",
+        "description": "Yüksek güvenlikli veri merkezleri"
+      },
+      "personnel": {
+        "title": "Personel Eğitimi",
+        "description": "Düzenli güvenlik eğitimleri"
+      },
+      "incident": {
+        "title": "Olay Müdahalesi",
+        "description": "7/24 güvenlik izleme ve müdahale"
+      }
+    },
+    "cta": {
+      "title": "Güvenli Altyapı",
+      "description": "Tüm güvenlik özellikleri standarttır.",
+      "button": "Bize Ulaşın"
+    },
+    "hero": {
+      "title": "Hasta Bilgilendirme ve Veri Güvenliği",
+      "subtitle": "Hasta mahremiyetini ön planda tutan, KVKK ve GDPR uyumlu, güvenli ve şeffaf veri yönetimi çözümlerimizle klinik araştırmalarınızda tam uyumluluk sağlayın.",
+      "cta": "Daha Fazla Bilgi Alın"
+    },
+    "patientInfo": {
+      "title": "Hasta Bilgilendirme Süreci",
+      "transparency": {
+        "title": "Şeffaf Bilgilendirme",
+        "description": "Hastalar için yalın dille hazırlanmış aydınlatma metinleri. Çalışma sürecinin her aşamasında net ve açık bilgilendirme. Çoklu dil desteği ile her hasta grubuna erişim."
+      },
+      "rights": {
+        "title": "Hasta Hakları",
+        "description": "Verilerine erişme, düzeltme ve silme haklarının yönetimi. Çalışmadan çekilme süreçlerinin kolay yönetimi. Hasta haklarının tam koruması ve izlenebilirliği."
+      },
+      "communication": {
+        "title": "İletişim ve Destek",
+        "description": "Hasta soruları için güvenli iletişim kanalları. Gizliliği korunan mesajlaşma sistemi. 7/24 teknik destek ve danışmanlık hizmeti."
+      }
+    }
+  },
+  "references": {
+    "seo": {
+      "title": "Referanslar | Başarı Hikayeleri | Omega CRO",
+      "description": "Müşteri başarı hikayeleri ve referanslarımız.",
+      "keywords": "referanslar, vaka analizleri, müşteriler, başarı hikayeleri, klinik çalışma"
+    },
+    "title": "Müşteri",
+    "titleHighlight": "Başarı Hikayeleri",
+    "description": "Önde gelen ilaç firmalarının başarı hikayeleri.",
+    "stats": {
+      "trials": {
+        "number": "500+",
+        "label": "Tamamlanan Çalışma",
+        "value": "200+"
+      },
+      "patients": {
+        "number": "50,000+",
+        "label": "Randomize Hasta",
+        "value": "25.000+"
+      },
+      "satisfaction": {
+        "number": "98%",
+        "label": "Müşteri Memnuniyeti"
+      },
+      "countries": {
+        "number": "45",
+        "label": "Ülke"
+      },
+      "clients": {
+        "value": "50+",
+        "label": "Aktif Müşteri"
+      }
+    },
+    "testimonials": {
+      "title": "Müşteri Yorumları",
+      "testimonial1": {
+        "quote": "Omega CRO sayesinde çalışma kurulum süremiz %60 kısaldı.",
+        "author": "Dr. Sarah Johnson",
+        "role": "Klinik Operasyon Direktörü",
+        "company": "Global Pharma Co."
+      },
+      "testimonial2": {
+        "quote": "Platform çok kullanışlı ve destek ekibi harika.",
+        "author": "Michael Chen",
+        "role": "Klinik Araştırma Müdürü",
+        "company": "Biotech Inc."
+      },
+      "testimonial3": {
+        "quote": "Denetim süreçlerinde tam uyumluluk sağladık.",
+        "author": "Dr. Emma Williams",
+        "role": "Kalite Güvence Müdürü",
+        "company": "Leading CRO"
+      }
+    },
+    "caseStudies": {
+      "title": "Vaka Analizleri",
+      "study1": {
+        "title": "Global Onkoloji Çalışması",
+        "description": "30 ülkede 500 hasta",
+        "results": "Dengeli gruplar, sıfır tedarik sorunu"
+      },
+      "study2": {
+        "title": "Nadir Hastalık Çalışması",
+        "description": "Adaptif randomizasyon",
+        "results": "Optimum hasta dağılımı"
+      },
+      "study3": {
+        "title": "Kompleks Tasarımlı Çalışma",
+        "description": "Çok kollu, çok aşamalı",
+        "results": "Gerçek zamanlı adaptasyon"
+      },
+      "subtitle": "Gerçek çalışmalardan örnekler ve elde edilen sonuçlar",
+      "labels": {
+        "sites": "Merkez Sayısı",
+        "patients": "Hasta Sayısı",
+        "duration": "Süre"
+      },
+      "case1": {
+        "type": "Faz 3 - Onkoloji",
+        "year": "2023-2024",
+        "title": "İleri Evre Akciğer Kanseri Çalışması",
+        "description": "Çok merkezli, uluslararası bir Faz 3 çalışmasında, Omega CRO IWRS platformu kullanılarak 850 hasta başarıyla randomize edildi. Karmaşık stratifikasyon faktörleri (EGFR mutasyonu, hastalık evresi, ECOG skoru) kusursuz yönetildi. AI destekli IMP tahmin modülü sayesinde hiçbir merkezde stok sıkıntısı yaşanmadı.",
+        "sites": "45",
+        "patients": "850",
+        "duration": "18 ay"
+      },
+      "case2": {
+        "type": "Faz 2 - Kardiyoloji",
+        "year": "2023",
+        "title": "Yeni Antikoagülan Doz Bulma Çalışması",
+        "description": "Adaptif tasarım gerektiren bir Faz 2 çalışmasında, ara analiz sonuçlarına göre randomizasyon oranları başarıyla güncellendi. Sistem, tüm değişiklikleri düzenleyici gereksinimlere uygun şekilde belgeledi ve validasyon süreçlerini otomatik yönetti.",
+        "sites": "12",
+        "patients": "240",
+        "duration": "14 ay"
+      },
+      "case3": {
+        "type": "Faz 1 - Biyoteknoloji",
+        "year": "2024",
+        "title": "Yeni İmmünoterapi İlacı İnsanlarda İlk Kullanım Çalışması",
+        "description": "Doz yükseltme çalışmasında kohort bazlı randomizasyon ve gerçek zamanlı güvenlik takibi yapıldı. Hızlı kurulum (3 gün) ve esnek yapı, protokol tadilatlarının sorunsuz yönetilmesini sağladı. Soğuk zincir takibi ile kritik IMP güvenliği sağlandı.",
+        "sites": "3",
+        "patients": "48",
+        "duration": "10 ay"
+      }
+    },
+    "industries": {
+      "title": "Sektörler",
+      "pharma": "İlaç Firmaları",
+      "biotech": "Biyoteknoloji",
+      "cro": "CRO'lar",
+      "academic": "Akademik Kurumlar",
+      "medical": "Tıbbi Cihaz"
+    },
+    "cta": {
+      "title": "Bize Katılın",
+      "description": "Başarı hikayenizi birlikte yazalım.",
+      "button": "İletişime Geç"
+    },
+    "hero": {
+      "title": "Referanslar ve Başarı Hikayeleri",
+      "subtitle": "Dünya çapında onlarca CRO, sponsor firma ve araştırma merkezi tarafından güvenilen Omega CRO IWRS platformu"
+    },
+    "phases": {
+      "title": "Tüm Fazlarda IWRS Deneyimi",
+      "subtitle": "Faz 1'den Faz 4'e kadar her aşamada başarılı çalışma yönetimi",
+      "phase1": {
+        "badge": "Faz 1",
+        "title": "Erken Faz Çalışmaları",
+        "description": "Küçük hasta grupları, yoğun takip ve esneklik gerektiren Faz 1 çalışmalarında hızlı kurulum ve adaptif randomizasyon desteği.",
+        "feature1": "Doz eskalasyonu takibi ve güvenlik değerlendirmesi",
+        "feature2": "Kohort bazlı randomizasyon ve gerçek zamanlı veri analizi"
+      },
+      "phase2": {
+        "badge": "Faz 2",
+        "title": "Doz Bulma Çalışmaları",
+        "description": "Optimal doz belirleme ve erken etkinlik sinyalleri için stratifiye randomizasyon ve ara analiz desteği.",
+        "feature1": "Çoklu doz grubu yönetimi ve karşılaştırmalı analiz",
+        "feature2": "Adaptif tasarım desteği ve futilite analizleri"
+      },
+      "phase3": {
+        "badge": "Faz 3",
+        "title": "Pivot Çalışmalar",
+        "description": "Çok merkezli, geniş hasta popülasyonlu Faz 3 çalışmalarında merkezi randomizasyon, IMP yönetimi ve GCP uyumluluğu.",
+        "feature1": "Uluslararası çok merkezli çalışma yönetimi",
+        "feature2": "Karmaşık stratifikasyon ve blok randomizasyon"
+      },
+      "phase4": {
+        "badge": "Faz 4",
+        "title": "Pazarlama Sonrası Çalışmalar",
+        "description": "Geniş hasta popülasyonlarında uzun vadeli takip ve gerçek dünya verisi toplama yeteneği.",
+        "feature1": "Pragmatik çalışma tasarımları ve basitleştirilmiş prosedürler",
+        "feature2": "Elektronik sağlık kayıtları (EHR) entegrasyonu"
+      }
+    }
+  },
+  "faq": {
+    "seo": {
+      "title": "SSS | Sıkça Sorulan Sorular | Omega CRO IWRS",
+      "description": "Klinik çalışma randomizasyonu, IWRS, depo yönetimi ve veri güvenliği hakkında sıkça sorulan sorular ve cevaplar.",
+      "keywords": "SSS, randomizasyon, IWRS, klinik çalışma, S&C"
+    },
+    "hero": {
+      "title": "Sıkça Sorulan Sorular",
+      "subtitle": "Omega CRO IWRS platformu ve hizmetlerimiz hakkında bilmeniz gereken her şey"
+    },
+    "categories": {
+      "randomization": "Randomizasyon Hakkında",
+      "iwrs": "IWRS Sistemi",
+      "inventory": "Depo & İlaç Takip",
+      "security": "Güvenlik ve Uyumluluk"
+    },
+    "questions": {
+      "q1": {
+        "question": "Randomizasyon nedir ve neden önemlidir?",
+        "answer": "Randomizasyon, klinik çalışmalarda hastaların tedavi kollarına rastgele atanması sürecidir. Bu yöntem, çalışma grupları arasında karşılaştırılabilirliği sağlar ve seçim yanlılığını ortadan kaldırır. Omega CRO IWRS platformu, basit randomizasyon, blok randomizasyon, stratifiye randomizasyon ve adaptif randomizasyon yöntemlerini destekler. Yapay zeka destekli sistemimiz, optimal randomizasyon stratejilerini önerir ve dengeyi gerçek zamanlı izler."
+      },
+      "q2": {
+        "question": "Blok randomizasyon ile stratifiye randomizasyon arasındaki fark nedir?",
+        "answer": "Blok randomizasyon, belirli bir sayıdaki hasta blokları içinde dengeli atama yapılmasını sağlar ve tedavi grupları arasındaki sayısal dengeyi korur. Stratifiye randomizasyon ise hastaları önemli prognostik faktörlere (yaş, cinsiyet, hastalık evresi vb.) göre alt gruplara ayırır ve her alt grup içinde ayrı randomizasyon uygular. Omega CRO IWRS her iki yöntemi de destekler ve hatta 'stratifiye blok randomizasyon' olarak bir arada kullanmanıza olanak tanır."
+      },
+      "q3": {
+        "question": "Adaptif randomizasyon nasıl çalışır?",
+        "answer": "Adaptif randomizasyon, çalışma ilerledikçe toplanan verilerden öğrenir ve randomizasyon oranlarını dinamik olarak ayarlar. Örneğin, bir tedavi kolunda beklenenden daha iyi sonuçlar görülürse, sistem o kola daha fazla hasta atayabilir. Omega CRO'nun AI destekli modülü, gerçek zamanlı veri analizi ile adaptif stratejiler önerir, etik kurul onayı sonrası bu stratejileri uygular ve tüm değişiklikleri detaylı şekilde belgeler."
+      },
+      "q4": {
+        "question": "IWRS sisteminin temel özellikleri nelerdir?",
+        "answer": "Omega CRO IWRS (İnteraktif Web Yanıt Sistemi), merkezi randomizasyon, ilaç tedarik yönetimi, hasta kayıt takibi, merkez yönetimi, gerçek zamanlı raporlama ve GCP uyumlu denetim izi özelliklerini sunar. Sistem 7/24 erişilebilir, çoklu dil desteğine sahiptir ve tüm cihazlardan (bilgisayar, tablet, telefon) kullanılabilir. FDA 21 CFR Part 11 ve EMA gereksinimleriyle tam uyumludur."
+      },
+      "q5": {
+        "question": "IWRS ile IMP (Araştırma Ürünü) tedarik yönetimi nasıl yapılır?",
+        "answer": "IWRS sistemi, her merkezin ilaç envanterini gerçek zamanlı takip eder, hasta randomizasyon hızına göre gelecek ihtiyaçları tahmin eder ve otomatik ikmal uyarıları oluşturur. AI modülümüz, geçmiş çalışma verilerini analiz ederek optimal stok seviyelerini önerir, son kullanma tarihlerine göre FEFO (İlk Sona Eren İlk Çıkar) prensibini uygular ve israfı minimize eder. Ayrıca soğuk zincir gerektiren ilaçlar için özel takip ve alarm sistemleri mevcuttur."
+      },
+      "q6": {
+        "question": "Çalışma sırasında protokol değişikliği gerekirse ne olur?",
+        "answer": "Omega CRO IWRS, protokol değişikliklerini yönetmek için esnek bir yapıya sahiptir. Randomizasyon algoritması, tedavi kolu sayısı, stratifikasyon faktörleri gibi kritik parametrelerde değişiklik gerektiğinde, sistem değişiklik öncesi ve sonrası veri bütünlüğünü tam olarak korur. Tüm değişiklikler denetim izinde (audit trail) kaydedilir ve düzenleyici otoritelere sunulmak üzere detaylı dokümantasyon sağlanır. Validasyon testleri otomatik olarak gerçekleştirilir."
+      },
+      "q7": {
+        "question": "Depo modülü hangi özellikleri içerir?",
+        "answer": "Depo modülü; gerçek zamanlı envanter takibi, barkod/RFID entegrasyonu, son kullanma tarihi yönetimi, soğuk zincir monitoring (2-8°C, -20°C, -80°C), otomatik stok uyarıları, FEFO prensibine göre ilaç çıkışı, detaylı envanter raporları ve GCP uyumlu denetim izi özelliklerini sunar. Çok merkezli çalışmalarda merkezi depo ve merkez bazlı stok yönetimi mevcuttur."
+      },
+      "q8": {
+        "question": "Soğuk zincir takibi nasıl yapılır?",
+        "answer": "Sistemimiz IoT sensörleri ile 7/24 sıcaklık ve nem takibi sağlar. Belirlenen limitlerin dışına çıkıldığında otomatik SMS, e-posta ve mobil uygulama bildirimleri gönderilir. Tüm sıcaklık verileri saniye saniye kaydedilir ve raporlanır. Elektrik kesintisi veya dondurucu arızası gibi kritik durumlarda acil eylem planları devreye girer. Denetimlerde gerekli olan tüm dokümantasyon hazır olarak sunulabilir."
+      },
+      "q9": {
+        "question": "İlaç geri çağırma (rekol) durumunda ne yapılır?",
+        "answer": "Geri çağırma durumunda, IWRS sistemi ilgili lot/seri numarasına sahip tüm ilaçları anında tespit eder ve hangi merkezlerde olduklarını gösterir. Sistem, ilgili tüm merkezlere otomatik bildirim gönderir, söz konusu ilaçları 'kullanılamaz' olarak işaretler ve hasta iletişimi için liste sunar. Tüm işlemler denetim izinde kaydedilir ve yasal raporlama için gerekli dokümantasyon otomatik oluşturulur."
+      },
+      "q10": {
+        "question": "Veri güvenliği nasıl sağlanır?",
+        "answer": "Omega CRO, ISO 27001 sertifikalı bilgi güvenliği yönetim sistemine sahiptir. Veriler 256-bit AES şifreleme ile korunur, hem veritabanında (at rest) hem de iletim sırasında (in transit) şifreleme uygulanır. Çok faktörlü kimlik doğrulama (MFA), rol tabanlı erişim kontrolü (RBAC) ve düzenli sızma testleri (penetration tests) yapılır. Tüm sunucular coğrafi yedekli güvenli veri merkezlerinde barındırılır."
+      },
+      "q11": {
+        "question": "KVKK ve GDPR uyumluluğu nasıl sağlanır?",
+        "answer": "Sistemimiz, kişisel verilerin korunması konusunda KVKK ve GDPR gereksinimleriyle tam uyumludur. Hasta aydınlatma metinleri, açık rıza yönetimi, veri sahibi hakları (erişim, düzeltme, silme, veri taşınabilirliği), veri işleme envanteri, veri ihlali bildirim mekanizmaları entegre edilmiştir. Düzenli KVKK/GDPR uyum denetimleri yapılır ve gerekli tüm dokümantasyon sağlanır."
+      },
+      "q12": {
+        "question": "FDA 21 CFR Part 11 uyumluluğu nedir?",
+        "answer": "FDA 21 CFR Part 11, elektronik kayıtlar ve elektronik imzalarla ilgili ABD yönetmeliğidir. Omega CRO IWRS bu yönetmelikle tam uyumludur: Değiştirilemez denetim izi (audit trail), elektronik imza doğrulama, kullanıcı erişim kontrolü, veri bütünlüğü, sistem validasyonu ve düzenli yedeklemeler yapılır. Kritik tüm işlemler elektronik imza ile onaylanır ve sistem validasyon dokümantasyonu hazır tutulur."
+      }
+    },
+    "cta": {
+      "title": "Başka sorularınız mı var?",
+      "description": "Omega CRO ekibi size yardımcı olmaya hazır. Bizimle iletişime geçin.",
+      "button": "Bize Ulaşın"
+    }
+  },
+  "iwrs": {
+    "seo": {
+      "title": "IWRS Demo | İnteraktif Web Yanıt Sistemi | Omega CRO",
+      "description": "Klinik çalışma hasta randomizasyonu, tedavi atama ve körleme yönetimi için AI destekli IWRS platformumuzu deneyimleyin."
+    },
+    "title": "IWRS Platformu",
+    "titleHighlight": "Demo",
+    "description": "Hasta kaydı ve tedavi ataması için AI destekli randomizasyon sistemimizi deneyimleyin.",
+    "patientEnrollment": {
+      "title": "Hasta Kaydı",
+      "patientId": "Hasta No",
+      "patientIdPlaceholder": "Hasta No giriniz",
+      "siteId": "Merkez No",
+      "siteIdPlaceholder": "Merkez seçiniz",
+      "age": "Yaş",
+      "agePlaceholder": "Yaş giriniz",
+      "gender": "Cinsiyet",
+      "male": "Erkek",
+      "female": "Kadın",
+      "other": "Diğer",
+      "stratificationFactors": "Stratifikasyon Faktörleri",
+      "factor": "Faktör",
+      "value": "Değer",
+      "randomize": "Hastayı Randomize Et",
+      "randomizing": "Randomize ediliyor..."
+    },
+    "result": {
+      "title": "Randomizasyon Sonucu",
+      "patientId": "Hasta No",
+      "treatmentArm": "Tedavi Kolu",
+      "stratumId": "Stratum (Tabaka) ID",
+      "kitNumber": "Kit Numarası",
+      "timestamp": "Zaman Damgası",
+      "aiRecommendation": "AI Önerisi",
+      "downloadPdf": "PDF İndir"
+    }
+  },
+  "blog": {
+    "seo": {
+      "title": "Blog | Klinik Araştırma Haberleri | Omega CRO",
+      "description": "Sektörel haberler ve makaleler."
+    },
+    "title": "Blog",
+    "subtitle": "Güncel Haberler ve İçgörüler",
+    "loading": "Yükleniyor...",
+    "noPosts": "Henüz yazı yok",
+    "titleHighlight": "İçgörüler",
+    "description": "Klinik araştırma dünyasından son gelişmeler.",
+    "categories": {
+      "all": "Tümü",
+      "ai": "AI & Teknoloji",
+      "regulatory": "Mevzuat",
+      "bestPractices": "İyi Uygulamalar",
+      "caseStudies": "Vaka Analizleri"
+    },
+    "readMore": "Devamını Oku",
+    "readTime": "dk okuma",
+    "featured": "Öne Çıkan",
+    "latest": "Son Yazılar",
+    "author": "Yazar",
+    "publishedOn": "Yayın Tarihi",
+    "share": "Paylaş",
+    "relatedPosts": "İlgili Yazılar"
+  },
+  "adminDashboard": {
+    "title": "Yönetici Paneli",
+    "blogPosts": "Blog Yazıları",
+    "createPost": "Yeni Yazı",
+    "editPost": "Düzenle",
+    "title_label": "Başlık",
+    "slug": "URL Yolu (Slug)",
+    "excerpt": "Özet",
+    "content": "İçerik",
+    "featuredImage": "Görsel URL",
+    "status": {
+      "0": "D",
+      "1": "u",
+      "2": "r",
+      "3": "u",
+      "4": "m",
+      "draft": "Taslak",
+      "published": "Yayında"
+    },
+    "draft": "Taslak",
+    "published": "Yayında",
+    "seoTitle": "SEO Başlığı",
+    "seoDescription": "SEO Açıklaması",
+    "seoKeywords": "Anahtar Kelimeler",
+    "save": "Kaydet",
+    "saving": "Kaydediliyor...",
+    "cancel": "İptal",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "confirmDelete": "Silmek istediğinize emin misiniz?",
+    "noAccess": "Erişim Reddedildi",
+    "adminOnly": "Bu sayfaya sadece yöneticiler erişebilir.",
+    "blogManagement": "Blog Yönetimi",
+    "backToHome": "Ana Sayfaya Dön",
+    "accessDenied": "Erişim Reddedildi",
+    "accessDeniedDesc": "Bu sayfaya erişim yetkiniz yok.",
+    "loading": "Yükleniyor...",
+    "allPosts": "Tüm Blog Yazıları",
+    "table": {
+      "title": "Başlık",
+      "slug": "Slug",
+      "status": "Durum",
+      "publishedAt": "Yayın Tarihi",
+      "actions": "İşlemler"
+    },
+    "form": {
+      "createTitle": "Yeni Blog Yazısı Oluştur",
+      "editTitle": "Blog Yazısını Düzenle",
+      "titleLabel": "Başlık",
+      "titlePlaceholder": "Blog yazısı başlığı",
+      "slugLabel": "Slug (URL Yolu)",
+      "slugPlaceholder": "blog-yazisi-slug",
+      "statusLabel": "Durum",
+      "contentLabel": "İçerik (Markdown)",
+      "contentPlaceholder": "İçeriğinizi Markdown formatında yazın...",
+      "excerptLabel": "Özet (Opsiyonel)",
+      "excerptPlaceholder": "Kısa özet",
+      "featuredImageLabel": "Öne Çıkan Görsel URL (Opsiyonel)",
+      "featuredImagePlaceholder": "https://ornek.com/resim.jpg",
+      "seoTitle": "SEO Başlığı (Opsiyonel)",
+      "seoTitlePlaceholder": "Arama motorları için başlık",
+      "seoDescription": "SEO Açıklaması (Opsiyonel)",
+      "seoDescriptionPlaceholder": "Arama motorları için açıklama",
+      "seoKeywords": "SEO Anahtar Kelimeler (Opsiyonel)",
+      "seoKeywordsPlaceholder": "anahtar1, anahtar2, anahtar3",
+      "cancel": "İptal",
+      "create": "Oluştur",
+      "update": "Güncelle",
+      "creating": "Oluşturuluyor...",
+      "updating": "Güncelleniyor..."
+    },
+    "messages": {
+      "loadError": "Blog yazıları yüklenemedi.",
+      "createSuccess": "Blog yazısı başarıyla oluşturuldu!",
+      "createError": "Blog yazısı oluşturulamadı.",
+      "updateSuccess": "Blog yazısı başarıyla güncellendi!",
+      "updateError": "Blog yazısı güncellenemedi.",
+      "deleteSuccess": "Blog yazısı başarıyla silindi!",
+      "deleteError": "Blog yazısı silinemedi.",
+      "validationError": "Form doğrulama hatası"
+    }
+  },
+  "notFound": {
+    "title": "404 - Sayfa Bulunamadı",
+    "description": "Aradığınız sayfa mevcut değil.",
+    "backHome": "Ana Sayfaya Dön",
+    "code": "404"
+  },
+  "seo": {
+    "title": "Omega CRO - Klinik Araştırmalar İçin AI Destekli IWRS Platformu",
+    "description": "Klinik çalışma randomizasyonunu AI ile dönüştürün. Omega CRO'nun akıllı IWRS platformu randomizasyon stratejilerini optimize eder, dengeli hasta grupları sağlar ve FDA/EMA uyumluluğu ile çalışma verimliliğini maksimize eder."
+  },
+  "blogPost": {
+    "loading": "Yükleniyor...",
+    "notFound": "Blog yazısı bulunamadı",
+    "backToBlog": "Blog'a Dön"
+  },
+  "iwrsMockup": {
+    "header": "İnteraktif Web Yanıt Sistemi",
+    "studyId": "Çalışma ID",
+    "signOut": "Çıkış Yap",
+    "stats": {
+      "totalPatients": "Toplam Hasta",
+      "randomizedToday": "Bugün Randomize",
+      "activeSites": "Aktif Merkez",
+      "ipsInventory": "IPS Envanteri"
+    },
+    "tabs": {
+      "randomize": "Hasta Randomize Et",
+      "inventory": "Envanter",
+      "reports": "Raporlar",
+      "aiAssistant": "AI Asistan"
+    },
+    "randomizeForm": {
+      "title": "Yeni Hasta Randomizasyonu",
+      "description": "Yeni bir hastayı randomize etmek için bilgileri girin",
+      "patientId": "Hasta ID",
+      "patientIdPlaceholder": "Örn: PT-XXX",
+      "site": "Merkez",
+      "selectSite": "Bir Merkez Seçin",
+      "stratificationFactor": "Stratifikasyon Faktörü",
+      "selectFactor": "Bir Faktör Seçin",
+      "randomizeButton": "Hastayı Randomize Et",
+      "result": "Randomizasyon Sonucu",
+      "assignedTo": "Atanan Tedavi:",
+      "kitNumber": "Kit Numarası:",
+      "confirmationCode": "Onay Kodu:",
+      "printLabel": "Etiket Yazdır"
+    },
+    "recentRandomizations": {
+      "title": "Son Randomizasyonlar",
+      "patientId": "Hasta ID",
+      "date": "Tarih",
+      "group": "Grup",
+      "site": "Merkez",
+      "status": "Durum"
+    },
+    "inventory": {
+      "title": "Envanter Yönetimi",
+      "description": "Merkezler arası kit envanterini yönetin",
+      "site": "Merkez",
+      "treatmentA": "Tedavi A",
+      "treatmentB": "Tedavi B",
+      "placebo": "Plasebo",
+      "total": "Toplam",
+      "status": "Durum",
+      "actions": "İşlemler",
+      "restock": "Stok Yenile"
+    },
+    "reports": {
+      "title": "Raporlar",
+      "description": "Çalışma istatistiklerini ve analizlerini görüntüleyin",
+      "enrollmentProgress": "Kayıt İlerlemesi",
+      "target": "Hedef: 500 hasta",
+      "groupDistribution": "Grup Dağılımı",
+      "generateReport": "Rapor Oluştur"
+    },
+    "aiAssistant": {
+      "title": "AI Asistan",
+      "description": "Randomizasyon önerileri ve tahminleri için AI destekli yardım alın",
+      "placeholder": "AI asistana bir soru sorun...",
+      "send": "Gönder",
+      "suggestions": "AI Önerileri",
+      "balanceWarning": "⚠️ Merkez 002'de dengesizlik tespit edildi. Merkez 001 veya 003'te kaydı artırmayı düşünün.",
+      "inventoryAlert": "📦 Merkez 001'deki Tedavi A kitleri 2 hafta içinde tükenebilir. Stok yenileme önerilir.",
+      "enrollmentTrend": "📈 Mevcut kayıt hızına göre, hedef kayda 8 hafta içinde ulaşılması bekleniyor."
+    },
+    "statusBadges": {
+      "active": "Aktif",
+      "completed": "Tamamlandı",
+      "lowStock": "Düşük Stok",
+      "adequate": "Yeterli",
+      "critical": "Kritik"
+    }
+  },
+  "adverseEventsCall": {
+    "seo": {
+      "title": "Yan Etki Bildirimi | Telefon Destekli Klinik Hizmetler | Omega CRO",
+      "description": "Klinik çalışma katılımcılarına düzenli aramalar ve SMS ile otomatik yan etki takibi ve güvenli kayıt sistemi."
+    },
+    "hero": {
+      "title": "Yan Etki Bildirimi",
+      "subtitle": "Telefon ile Otomatik Takip ve Raporlama",
+      "description": "Katılımcılara arama veya SMS yoluyla düzenli hatırlatmalar ve olası ilaç yan etkileri için güvenli kayıt sistemi"
+    },
+    "features": {
+      "title": "Hizmet Özellikleri",
+      "automaticCalls": {
+        "title": "Otomatik Arama Sistemi",
+        "description": "Katılımcılara belirlenen periyotlarda otomatik aramalarla yan etki sorgusu yapılır. Yanıtlar anında sisteme işlenir."
+      },
+      "smsReminders": {
+        "title": "SMS Hatırlatmaları",
+        "description": "Katılımcılara yan etkilerini bildirmeleri için SMS hatırlatmaları gönderilir. Kolay cevap seçenekleriyle hızlı geri dönüş alınır."
+      },
+      "secureRecording": {
+        "title": "Güvenli Kayıt",
+        "description": "Tüm bildirimler KVKK/GDPR uyumlu olarak şifreli kaydedilir ve araştırma ekibiyle güvenli şekilde paylaşılır."
+      },
+      "realTimeAlerts": {
+        "title": "Gerçek Zamanlı Uyarılar",
+        "description": "Ciddi yan etki bildirimleri anında araştırma ekibine iletilerek hızlı müdahale imkanı sağlanır."
+      }
+    },
+    "workflow": {
+      "title": "İş Akışı",
+      "step1": {
+        "title": "Planlı Aramalar",
+        "description": "Sistem, belirlenen zamanlarda katılımcıları otomatik arar ve 'Son üç günde beklenmedik bir yan etki yaşadınız mı?' gibi sorular sorar."
+      },
+      "step2": {
+        "title": "Yanıt Kaydı",
+        "description": "Katılımcı yanıtları sesli veya tuşlama yoluyla sisteme kaydedilir. 'Evet' cevabı üzerine detaylı sorular tetiklenir."
+      },
+      "step3": {
+        "title": "Ekip Bildirimi",
+        "description": "Yan etki bildirimleri anında araştırma ekibine iletilir. Ciddi durumlar acil uyarı olarak işaretlenir."
+      },
+      "step4": {
+        "title": "Takip ve Raporlama",
+        "description": "Tüm bildirimler düzenleyici raporlama gereksinimlerine uygun şekilde belgelenir ve arşivlenir."
+      }
+    },
+    "security": {
+      "title": "Güvenlik ve Gizlilik",
+      "description": "Tüm hasta verileri KVKK/GDPR standartlarına uygun işlenir. Aramalar şifreli hatlar üzerinden yapılır. Katılımcı onam ve gizlilik sözleşmeleri titizlikle takip edilir."
+    },
+    "cta": {
+      "title": "Yan Etki Takibi İçin Bize Ulaşın",
+      "description": "Klinik çalışmanızda telefon destekli yan etki takibi hakkında detaylı bilgi alın",
+      "button": "İletişime Geçin"
+    }
+  },
+  "medicationReminder": {
+    "seo": {
+      "title": "İlaç Hatırlatma | Telefon Destekli Klinik Hizmetler | Omega CRO",
+      "description": "Tedavi programındaki hastalar için telefon araması veya mesajla otomatik ilaç alma hatırlatma sistemi."
+    },
+    "hero": {
+      "title": "İlaç Hatırlatma",
+      "subtitle": "Tedavi Uyumunu Artıran Otomatik Sistem",
+      "description": "Tedavi programındaki hastalara telefon araması veya mesajla otomatik ilaç alma hatırlatmaları"
+    },
+    "features": {
+      "title": "Hizmet Özellikleri",
+      "scheduledReminders": {
+        "title": "Zamanlanmış Hatırlatmalar",
+        "description": "Her katılımcı için kişiselleştirilmiş ilaç alma saatlerinde otomatik hatırlatma aramaları veya SMS gönderilir."
+      },
+      "doseInformation": {
+        "title": "Doz Bilgisi",
+        "description": "Hatırlatma mesajları doz miktarını, uygulama şeklini ve özel talimatları içerir."
+      },
+      "confirmationTracking": {
+        "title": "Onay Takibi",
+        "description": "Katılımcılardan ilacı aldıklarına dair onay istenir ve uyum oranları otomatik olarak kaydedilir."
+      },
+      "missedDoseAlerts": {
+        "title": "Atlanan Doz Uyarıları",
+        "description": "İlaç alınmadığında araştırma ekibine bildirim gönderilir ve gerekli takip aksiyonu alınır."
+      }
+    },
+    "workflow": {
+      "title": "İş Akışı",
+      "step1": {
+        "title": "Zaman Ayarı",
+        "description": "Her katılımcı için çalışma protokolüne uygun ilaç alma saatleri sisteme tanımlanır."
+      },
+      "step2": {
+        "title": "Otomatik Hatırlatma",
+        "description": "Belirlenen saatte katılımcıya arama veya SMS gider: 'İlaç alma saatiniz - Kahvaltı ile birlikte 2 tablet'."
+      },
+      "step3": {
+        "title": "Onay",
+        "description": "Katılımcıdan ilacı aldığına dair onay istenir. Onay verilmezse hatırlatma tekrarlanır."
+      },
+      "step4": {
+        "title": "Uyum Raporlama",
+        "description": "Tüm ilaç alma kayıtları ve uyum oranları otomatik olarak raporlanır ve izlenir."
+      }
+    },
+    "benefits": {
+      "title": "Faydalar",
+      "description": "İlaç hatırlatma sistemi tedavi uyumunu %40'a kadar artırır, protokol ihlallerini azaltır ve çalışma kalitesini yükseltir."
+    },
+    "cta": {
+      "title": "İlaç Hatırlatma Sistemi Hakkında Bilgi Alın",
+      "description": "Klinik çalışmanızda tedavi uyumunu artırmak için bizimle iletişime geçin",
+      "button": "Demo Talep Et"
+    }
+  },
+  "appointmentReminder": {
+    "seo": {
+      "title": "Randevu Hatırlatma | Telefon Destekli Klinik Hizmetler | Omega CRO",
+      "description": "Katılımcılara klinik ziyaret, laboratuvar ve kontrol randevuları için otomatik hatırlatma sistemi."
+    },
+    "hero": {
+      "title": "Randevu Hatırlatma",
+      "subtitle": "Katılım Oranlarını Artıran Akıllı Sistem",
+      "description": "Klinik ziyaret, laboratuvar, kontrol veya takip randevuları için katılımcılara arama/SMS ile otomatik hatırlatmalar"
+    },
+    "features": {
+      "title": "Hizmet Özellikleri",
+      "multipleReminders": {
+        "title": "Çoklu Hatırlatma",
+        "description": "Randevudan 7 gün, 3 gün ve 1 gün önce otomatik hatırlatmalar gönderilir."
+      },
+      "calendarIntegration": {
+        "title": "Takvim Entegrasyonu",
+        "description": "Katılımcılar randevu bilgilerini otomatik olarak kendi takvimlerine ekleyebilirler."
+      },
+      "confirmationRequest": {
+        "title": "Katılım Onayı",
+        "description": "Katılımcılardan randevuya geleceklerine dair onay istenir, bu sayede gelmeme (no-show) oranları düşürülür."
+      },
+      "reschedulingSupport": {
+        "title": "Yeniden Planlama Desteği",
+        "description": "Katılımcılar otomatik sistemle randevularını kolayca erteleyebilir, boşalan saatler hemen değerlendirilir."
+      }
+    },
+    "workflow": {
+      "title": "İş Akışı",
+      "step1": {
+        "title": "Randevu Tanımlama",
+        "description": "Sisteme klinik ziyaretler, laboratuvar testleri veya kontrol randevuları girilir."
+      },
+      "step2": {
+        "title": "Hatırlatma Gönderimi",
+        "description": "Belirli zamanlarda katılımcılara bildirim gider: 'Cuma günü saat 14:00'te Dr. Yılmaz ile randevunuz var'."
+      },
+      "step3": {
+        "title": "Onay Takibi",
+        "description": "Katılımcılar 'Evet, geleceğim' veya 'Ertelemek istiyorum' seçenekleriyle yanıt verir."
+      },
+      "step4": {
+        "title": "Ekip Bildirimi",
+        "description": "Onaylanmayan veya ertelenen randevular araştırma ekibine bildirilir ve gerekli aksiyon alınır."
+      }
+    },
+    "statistics": {
+      "title": "Etkinlik",
+      "showUpRate": {
+        "label": "Randevuya Gelme Oranı",
+        "value": "+35%"
+      },
+      "noShowReduction": {
+        "label": "Gelmeme (No-Show) Azalışı",
+        "value": "-60%"
+      },
+      "satisfaction": {
+        "label": "Katılımcı Memnuniyeti",
+        "value": "4.8/5"
+      }
+    },
+    "cta": {
+      "title": "Randevu Hatırlatma Sistemini Kurun",
+      "description": "Katılım oranlarını artırmak ve randevu kaçırmaları azaltmak için bizimle iletişime geçin",
+      "button": "İletişime Geçin"
+    }
+  },
+  "patientSurvey": {
+    "seo": {
+      "title": "Hasta Anketleri | Telefon Destekli Klinik Hizmetler | Omega CRO",
+      "description": "Telefon araması ile memnuniyet, tedavi yanıtı ve tedaviye uyum anketlerinin programlı uygulanması."
+    },
+    "hero": {
+      "title": "Hasta Anketleri",
+      "subtitle": "Telefon ile Veri Toplama ve Analiz",
+      "description": "Telefon araması veya SMS yoluyla periyodik memnuniyet, tedavi yanıtı, yaşam kalitesi veya tedaviye uyum anketlerinin programlı uygulanması"
+    },
+    "features": {
+      "title": "Hizmet Özellikleri",
+      "automatedSurveys": {
+        "title": "Otomatik Anket Gönderimi",
+        "description": "Anketler belirlenen periyotlarda katılımcılara telefon veya SMS yoluyla otomatik olarak iletilir."
+      },
+      "multipleFormats": {
+        "title": "Çoklu Format",
+        "description": "Sesli yanıt, tuşlama (DTMF) veya SMS ile cevaplama seçenekleri sunulur."
+      },
+      "realTimeData": {
+        "title": "Gerçek Zamanlı Veri",
+        "description": "Anket yanıtları anında sisteme aktarılır ve araştırma ekibinin erişimine sunulur."
+      },
+      "privacyCompliant": {
+        "title": "Gizlilik Uyumlu",
+        "description": "Tüm anket verileri katılımcı onayı ile ve KVKK/GDPR standartlarına uygun işlenir."
+      }
+    },
+    "surveyTypes": {
+      "title": "Anket Türleri",
+      "satisfaction": {
+        "title": "Memnuniyet Anketi",
+        "description": "Tedavi süreci ve çalışmaya katılım deneyiminden memnuniyetin ölçülmesi"
+      },
+      "therapyResponse": {
+        "title": "Tedavi Yanıtı Anketi",
+        "description": "Tedaviye verilen yanıtın, semptom azalışının ve genel iyileşmenin değerlendirilmesi"
+      },
+      "qualityOfLife": {
+        "title": "Yaşam Kalitesi Anketi",
+        "description": "Tedavinin günlük yaşam aktivitelerine ve genel yaşam kalitesine etkisinin ölçülmesi"
+      },
+      "adherence": {
+        "title": "Tedavi Uyum Anketi",
+        "description": "İlaç kullanım sıklığı, yan etki deneyimi ve protokole uyumun ölçülmesi"
+      }
+    },
+    "workflow": {
+      "title": "İş Akışı",
+      "step1": {
+        "title": "Anket Tasarımı",
+        "description": "Araştırma hedeflerine uygun anket soruları belirlenir ve sisteme yüklenir."
+      },
+      "step2": {
+        "title": "Planlı Gönderim",
+        "description": "Anketler belirlenen zamanlarda katılımcılara arama veya SMS ile iletilir."
+      },
+      "step3": {
+        "title": "Yanıt Toplama",
+        "description": "Katılımcılar soruları ses, tuşlama veya SMS ile yanıtlar. Sistem otomatik kaydeder."
+      },
+      "step4": {
+        "title": "Analiz ve Raporlama",
+        "description": "Toplanan veriler analiz edilir, raporlar otomatik oluşturulur ve araştırma ekibiyle paylaşılır."
+      }
+    },
+    "benefits": {
+      "title": "Faydaları",
+      "responseRate": {
+        "title": "Yüksek Yanıt Oranı",
+        "description": "Telefon destekli anketler, geleneksel yöntemlere göre %50 daha yüksek yanıt oranı sağlar"
+      },
+      "realTimeInsights": {
+        "title": "Anlık İçgörüler",
+        "description": "Veriler anında toplanır, araştırma ekibi hızlı karar alabilir"
+      },
+      "reducedBurden": {
+        "title": "Azalan İş Yükü",
+        "description": "Otomatik sistem sayesinde manuel anket uygulama ve veri girişi gereksiz hale gelir"
+      }
+    },
+    "cta": {
+      "title": "Hasta Anketi Sistemini Kurun",
+      "description": "Klinik çalışmanızda telefon destekli anket uygulamaları için bize ulaşın",
+      "button": "Demo Talep Et"
+    }
+  },
+  "emergencyUnblinding": {
+    "title": "Acil Körleme Kırma",
+    "description": "Hasta güvenliği için acil durumlarda tedavi tahsisinin güvenli bir şekilde açılması. Tüm işlemler tam denetim kaydı ile loglanır.",
+    "step1Title": "Güvenli İstek",
+    "step1Desc": "Yetkili personel hasta bilgileri ve gerekçe ile istek oluşturur",
+    "step2Title": "Onay Süreci",
+    "step2Desc": "İstek otomatik olarak baş araştırmacı ve sponsor onayına gönderilir",
+    "step3Title": "Kod Açma",
+    "step3Desc": "Onay sonrası tedavi bilgisi açılır ve tüm süreç kayıt altına alınır",
+    "featuresTitle": "IWRS Sisteminde Sunulan Özellikler",
+    "feature1Title": "Çok Katmanlı Güvenlik",
+    "feature1Desc": "Yetkili personel doğrulaması, iki aşamalı onay süreci ve şifreli kod açma mekanizması ile maksimum güvenlik",
+    "feature2Title": "Otomatik Dokümantasyon",
+    "feature2Desc": "Tüm körleme kırma işlemleri otomatik olarak dokümante edilir, PDF raporlar anında oluşturulur",
+    "feature3Title": "Anında Bildirim",
+    "feature3Desc": "Körleme kırma talebi oluşturulduğunda baş araştırmacı, sponsor ve düzenleyici otorite anında bilgilendirilir",
+    "feature4Title": "Onay Takibi",
+    "feature4Desc": "Onay sürecinin her aşaması gerçek zamanlı olarak takip edilebilir, e-posta ve SMS bildirimleri ile süreç şeffaf tutulur",
+    "ctaTitle": "IWRS Platformumuzda Mevcut",
+    "ctaDesc": "Acil körleme kırma modülü, tam entegre IWRS platformumuzda mevcuttur. Demo talep ederek tüm özellikleri deneyebilirsiniz.",
+    "viewDemo": "Demo Görüntüle",
+    "contactUs": "İletişime Geçin",
+    "complianceTitle": "Uyumluluk ve Güvenlik",
+    "auditTitle": "Tam Denetim İzi",
+    "auditDesc": "Her körleme kırma işlemi zaman damgası, kullanıcı kimliği, gerekçe ve onay bilgileriyle kaydedilir. FDA 21 CFR Part 11 ve EMA standartlarıyla tam uyumluluk sağlanır.",
+    "privacyTitle": "Veri Gizliliği",
+    "privacyDesc": "Tedavi atama bilgileri şifreli olarak saklanır. Sadece yetkili ve onaylanmış personel acil durumlarda bu bilgilere erişebilir. KVKK ve GDPR gereksinimleriyle tam uyumluluk sağlanır.",
+    "audit1": "Her işlem zaman damgası ile kaydedilir",
+    "audit2": "Talep eden ve onaylayan kişiler loglanır",
+    "audit3": "Değiştirilemez kayıt sistemi",
+    "audit4": "Anında raporlama sistemi",
+    "regulatoryTitle": "Düzenleyici Uyumluluk",
+    "regulatory1": "FDA 21 CFR Part 11 uyumlu",
+    "regulatory2": "EMA GCP gereksinimlerine uygun",
+    "regulatory3": "ICH E6(R2) standardına uygun",
+    "regulatory4": "Yerel düzenleyici gereksinimlere uyum"
   }
 }

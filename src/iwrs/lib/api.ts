@@ -105,6 +105,17 @@ export const contactApi = {
             body: JSON.stringify(data),
         });
     },
+    getMessages: async () => {
+        return fetchInfo<any[]>(`${API_BASE}?resource=get-messages`, {
+            method: 'GET',
+        });
+    },
+    deleteMessage: async (id: number) => {
+        return fetchInfo(`${API_BASE}?resource=delete-message`, {
+            method: 'POST',
+            body: JSON.stringify({ id }),
+        });
+    },
 };
 
 export const chatApi = {
@@ -114,4 +125,60 @@ export const chatApi = {
             body: JSON.stringify({ message }),
         });
     },
+};
+
+export const translationApi = {
+    translateBlog: async (data: { title?: string, excerpt?: string, content?: string, target_language?: string }) => {
+        return fetchInfo<any>(`${API_BASE}?resource=ai-translate-blog`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    },
+    translateFaq: async (data: { question: string, answer: string, target_language?: string }) => {
+        return fetchInfo<any>(`${API_BASE}?resource=ai-translate-faq`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    }
+};
+
+export const settingsApi = {
+    get: async () => {
+        return fetchInfo<any>(`${API_BASE}?resource=settings&action=GET`); // explicit action for clarity/consistency if needed, though PHP relies on method
+    },
+    update: async (data: any) => {
+        return fetchInfo(`${API_BASE}?resource=settings`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    },
+    changePassword: async (data: any) => {
+        return fetchInfo(`${API_BASE}?resource=change_password`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    }
+};
+
+export const faqApi = {
+    getAll: async () => {
+        return fetchInfo<any[]>(`${API_BASE}?resource=faq`);
+    },
+    create: async (data: any) => {
+        return fetchInfo(`${API_BASE}?resource=faq`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    },
+    update: async (id: number, data: any) => {
+        return fetchInfo(`${API_BASE}?resource=faq`, {
+            method: 'POST',
+            body: JSON.stringify({ ...data, id }),
+        });
+    },
+    delete: async (id: number) => {
+        return fetchInfo(`${API_BASE}?resource=faq&id=${id}`, {
+            method: 'DELETE',
+        });
+    }
 };

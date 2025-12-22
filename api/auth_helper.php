@@ -103,3 +103,9 @@ function require_role($user, $allowed_roles)
         exit;
     }
 }
+
+function require_admin_auth_id($conn)
+{
+    $user = require_admin_auth($conn);
+    return $user['id'];
+}
