@@ -2,8 +2,12 @@
 // IWRS API
 // Handles Blog, Randomization, and Inventory endpoints
 
+// Prevent any output before JSON
+ob_start();
+
 require_once __DIR__ . '/db_connection.php';
 require_once __DIR__ . '/auth_helper.php';
+require_once __DIR__ . '/email_service.php';
 
 // Enable CORS
 header('Access-Control-Allow-Origin: *');
@@ -15,10 +19,100 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-$conn = get_db_connection();
+
 $request_method = $_SERVER['REQUEST_METHOD'];
 $resource = $_GET['resource'] ?? '';
 $id = $_GET['id'] ?? null;
+
+
+// Helper to load env for AI Chat if DB not connected yet
+function load_env_safe()
+{
+    $env_file = __DIR__ . '/../.env';
+    if (file_exists($env_file)) {
+        $lines = file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        foreach ($lines as $line) {
+            if (strpos(trim($line), '#') === 0)
+                continue;
+            if (strpos($line, '=') !== false) {
+                list($name, $value) = explode('=', $line, 2);
+                $_ENV[trim($name)] = trim($value);
+                putenv(trim($name) . '=' . trim($value));
+            }
+        }
+    }
+}
+
+// --- AI CHAT (No DB Required) ---
+$resource = $_GET['resource'] ?? '';
+if ($resource === 'ai-chat') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $userMessage = $data['message'] ?? '';
+
+        if (empty($userMessage)) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Message is required']);
+            exit;
+        }
+
+        load_env_safe();
+        $apiKey = getenv('DEEPSEEK_API_KEY');
+
+        if (!$apiKey) {
+            // Fallback to OpenAI if DeepSeek missing
+            $apiKey = getenv('OPENAI_API_KEY');
+            $apiUrl = 'https://api.openai.com/v1/chat/completions';
+            $model = 'gpt-4o-mini';
+        } else {
+            $apiUrl = 'https://api.deepseek.com/chat/completions';
+            $model = 'deepseek-chat';
+        }
+
+        if (!$apiKey) {
+            echo json_encode(['reply' => 'Üzgünüm, şu anda yapay zeka servisine erişemiyorum (API Key eksik).']);
+            exit;
+        }
+
+        $systemPrompt = "Sen 'Lila' adında, medikal araştırmalar ve klinik çalışmalar konusunda uzmanlaşmış bir yapay zeka asistanısın. 
+        Omega CRO için çalışıyorsun.
+        İnsanlara nazik, profesyonel ve yardımcı bir tonda cevap veriyorsun. 
+        Kullanıcıların klinik araştırmalar, IWRS sistemleri ve medikal süreçlerle ilgili sorularını yanıtla.
+        Cevapların Türkçe olmalı. Kısa, öz ve anlaşılır olsun.";
+
+        $payload = [
+            'model' => $model,
+            'messages' => [
+                ['role' => 'system', 'content' => $systemPrompt],
+                ['role' => 'user', 'content' => $userMessage]
+            ],
+            'temperature' => 0.7,
+            'max_tokens' => 500
+        ];
+
+        $ch = curl_init($apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $apiKey
+        ]);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode === 200) {
+            $responseData = json_decode($response, true);
+            $reply = $responseData['choices'][0]['message']['content'] ?? 'Cevap alınamadı.';
+            echo json_encode(['reply' => $reply]);
+        } else {
+            echo json_encode(['reply' => 'Üzgünüm, şu anda hizmet veremiyorum.', 'debug' => $response]);
+        }
+    }
+    exit;
+}
 
 // Helper to generate UUID v4
 function guidv4()
@@ -32,10 +126,17 @@ function guidv4()
 // Helper for JSON response
 function json_response($data, $status = 200)
 {
+    // Clear any previous output (warnings, notices, whitespace)
+    ob_end_clean();
+
     http_response_code($status);
+    header('Content-Type: application/json');
     echo json_encode($data);
     exit;
 }
+
+// Connect to DB for other resources
+$conn = get_db_connection();
 
 // --- BLOG POSTS ---
 if ($resource === 'blog_posts') {
@@ -179,6 +280,44 @@ if ($resource === 'randomization') {
                 $data['email'],
                 $data['institution']
             ]);
+
+
+            // Send Notification Email
+            try {
+                $stmtSettings = $conn->prepare("SELECT setting_value FROM site_settings WHERE setting_key = 'notification_emails'");
+                $stmtSettings->execute();
+                $emailSetting = $stmtSettings->fetchColumn();
+
+                if ($emailSetting) {
+                    $toEmails = array_map('trim', explode(',', $emailSetting));
+                    $subject = "Yeni Randomizasyon Başvurusu: " . $data['studyName'];
+
+                    $htmlBody = "
+                    <div style='font-family: Arial, sans-serif; color: #333;'>
+                        <h2 style='color: #0891b2;'>Yeni Randomizasyon Çalışması Başvurusu</h2>
+                        <p><strong>Çalışma Adı:</strong> " . htmlspecialchars($data['studyName']) . "</p>
+                        <p><strong>Tür:</strong> " . htmlspecialchars($data['studyType']) . "</p>
+                        <p><strong>Kurum:</strong> " . htmlspecialchars($data['institution']) . "</p>
+                        <p><strong>İletişim:</strong> " . htmlspecialchars($data['contactPerson']) . " (" . htmlspecialchars($data['email']) . ")</p>
+                        <hr style='border: 1px solid #eee;'>
+                        <h3>Protokol Detayları</h3>
+                        <ul>
+                            <li><strong>Katılımcı Sayısı:</strong> " . htmlspecialchars($data['totalParticipants']) . "</li>
+                            <li><strong>Tedavi Kolları:</strong> " . htmlspecialchars($data['treatmentArms']) . "</li>
+                            <li><strong>Randomizasyon Yöntemi:</strong> " . htmlspecialchars($data['randomizationMethod']) . "</li>
+                        </ul>
+                        <p style='margin-top: 20px;'>
+                            <a href='https://ct.turp.health/iwrs/admin' style='background-color: #0891b2; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;'>Admin Paneline Git</a>
+                        </p>
+                    </div>
+                    ";
+
+                    send_notification_email($toEmails, $subject, $htmlBody);
+                }
+            } catch (Exception $e) {
+                error_log("Failed to send notification email: " . $e->getMessage());
+            }
+
             json_response(['id' => $uuid, 'message' => 'Form submitted successfully'], 201);
         } catch (PDOException $e) {
             json_response(['error' => $e->getMessage()], 500);
@@ -240,79 +379,7 @@ if ($resource === 'delete-message') {
 }
 
 // --- AI CHAT ---
-if ($resource === 'ai-chat') {
-    if ($request_method === 'POST') {
-        $data = json_decode(file_get_contents('php://input'), true);
-        $userMessage = $data['message'] ?? '';
 
-        if (empty($userMessage)) {
-            json_response(['error' => 'Message is required'], 400);
-        }
-
-        // Get API Key
-        $apiKey = getenv('OPENAI_API_KEY');
-        if (!$apiKey && isset($config['OPENAI_API_KEY'])) {
-            $apiKey = $config['OPENAI_API_KEY'];
-        }
-
-        // Try reading .env if still missing
-        if (!$apiKey && file_exists(__DIR__ . '/../.env')) {
-            $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            foreach ($lines as $line) {
-                if (strpos(trim($line), '#') === 0)
-                    continue;
-                if (strpos($line, '=') !== false) {
-                    list($name, $value) = explode('=', $line, 2);
-                    if (trim($name) === 'OPENAI_API_KEY') {
-                        $apiKey = trim($value);
-                        break;
-                    }
-                }
-            }
-        }
-
-        if (!$apiKey) {
-            json_response(['reply' => 'Üzgünüm, şu anda yapay zeka servisine erişemiyorum (API Key eksik).']);
-        }
-
-        $systemPrompt = "Sen 'Lila' adında, medikal araştırmalar ve klinik çalışmalar konusunda uzmanlaşmış bir yapay zeka asistanısın. 
-        İnsanlara nazik, profesyonel ve yardımcı bir tonda cevap veriyorsun. 
-        Kullanıcıların klinik araştırmalar, IWRS sistemleri ve medikal süreçlerle ilgili sorularını yanıtla.
-        Cevapların kısa, öz ve anlaşılır olsun.";
-
-        $payload = [
-            'model' => 'gpt-4o-mini',
-            'messages' => [
-                ['role' => 'system', 'content' => $systemPrompt],
-                ['role' => 'user', 'content' => $userMessage]
-            ],
-            'temperature' => 0.7,
-            'max_tokens' => 500
-        ];
-
-        $ch = curl_init('https://api.openai.com/v1/chat/completions');
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Authorization: Bearer ' . $apiKey
-        ]);
-
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        if ($httpCode !== 200) {
-            json_response(['reply' => 'Üzgünüm, bir bağlantı hatası oluştu. Lütfen daha sonra tekrar deneyin.'], 200); // 200 OK to frontend, but error msg
-        }
-
-        $result = json_decode($response, true);
-        $aiReply = $result['choices'][0]['message']['content'] ?? 'Anlaşılmadı.';
-
-        json_response(['reply' => $aiReply]);
-    }
-}
 
 // --- SETTINGS (Email & Password) ---
 if ($resource === 'settings') {
@@ -346,11 +413,13 @@ if ($resource === 'settings') {
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
             ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
-            foreach ($data as $key => $value) {
-                $stmt = $conn->prepare("INSERT INTO site_settings (setting_key, setting_value) 
-                    VALUES (?, ?) 
-                    ON DUPLICATE KEY UPDATE setting_value = ?");
-                $stmt->execute([$key, $value, $value]);
+            if (is_array($data)) {
+                foreach ($data as $key => $value) {
+                    $stmt = $conn->prepare("INSERT INTO site_settings (setting_key, setting_value) 
+                        VALUES (?, ?) 
+                        ON DUPLICATE KEY UPDATE setting_value = ?");
+                    $stmt->execute([$key, $value, $value]);
+                }
             }
             json_response(['message' => 'Settings saved']);
         } catch (Exception $e) {

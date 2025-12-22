@@ -55,6 +55,86 @@ function send_password_reset_email($to_email, $to_name, $reset_token)
     }
 }
 
+
+
+
+/**
+ * Send a generic notification email
+ * @param array|string $to_emails Single email string or array of emails
+ * @param string $subject
+ * @param string $html_body
+ * @return boolean
+ */
+function send_notification_email($to_emails, $subject, $html_body)
+{
+    $brevo_api_key = getenv('BREVO_API_KEY');
+    if (!$brevo_api_key) {
+        // Try loading from env file if not in env
+        if (file_exists(__DIR__ . '/../.env')) {
+            $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($lines as $line) {
+                if (strpos(trim($line), 'BREVO_API_KEY=') === 0) {
+                    $brevo_api_key = trim(substr($line, 14));
+                    break;
+                }
+            }
+        }
+    }
+
+    if (!$brevo_api_key) {
+        error_log('BREVO_API_KEY not configured for notifications');
+        return false;
+    }
+
+    $recipients = [];
+    if (is_array($to_emails)) {
+        foreach ($to_emails as $email) {
+            if (filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
+                $recipients[] = ['email' => trim($email)];
+            }
+        }
+    } else {
+        // Comma separated or single
+        $parts = explode(',', $to_emails);
+        foreach ($parts as $email) {
+            if (filter_var(trim($email), FILTER_VALIDATE_EMAIL)) {
+                $recipients[] = ['email' => trim($email)];
+            }
+        }
+    }
+
+    if (empty($recipients)) {
+        error_log('No valid recipients for notification email');
+        return false;
+    }
+
+    $email_data = [
+        'sender' => [
+            'email' => 'noreply@turp.health',
+            'name' => 'Turp IWRS System'
+        ],
+        'to' => $recipients,
+        'subject' => $subject,
+        'htmlContent' => $html_body
+    ];
+
+    $ch = curl_init('https://api.brevo.com/v3/smtp/email');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'api-key: ' . $brevo_api_key,
+        'Content-Type: application/json',
+        'Accept: application/json'
+    ]);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($email_data));
+
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    return ($http_code >= 200 && $http_code < 300);
+}
+
 function generate_reset_email_html($reset_url, $name)
 {
     $greeting_name = $name ? ' ' . htmlspecialchars($name) : '';

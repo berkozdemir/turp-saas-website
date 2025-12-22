@@ -7,6 +7,7 @@ import { AdminSettings } from "@/iwrs/components/admin/AdminSettings";
 import { AdminFaqList } from "@/iwrs/components/admin/AdminFaqList";
 import { AdminFaqEditor } from "@/iwrs/components/admin/AdminFaqEditor";
 import { Menu, X, Mail, FileText, Settings, ExternalLink, LogOut, HelpCircle } from "lucide-react";
+import { RandomizationBot } from "@/iwrs/components/RandomizationBot";
 
 export default function AdminDashboard() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -200,6 +201,9 @@ export default function AdminDashboard() {
           className="fixed inset-0 z-30 bg-black/50 lg:hidden backdrop-blur-sm"
         ></div>
       )}
+
+      {/* AI Bot */}
+      <RandomizationBot />
     </div>
   );
 }
