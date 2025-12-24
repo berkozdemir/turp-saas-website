@@ -5,19 +5,21 @@ import { Badge } from "@/iwrs/components/ui/badge";
 import { Header } from "@/iwrs/components/Header";
 import { Footer } from "@/iwrs/components/Footer";
 import { useTranslation } from "react-i18next";
-import { blogApi } from "@/iwrs/lib/api"; // Import local API
+import { blogApi } from "@/iwrs/lib/api";
 
 interface BlogPost {
   id: string;
-  title: string;
   slug: string;
-  excerpt: string | null;
+  title_tr: string;
+  title_en: string | null;
+  title_zh: string | null;
+  excerpt_tr: string | null;
+  excerpt_en: string | null;
+  excerpt_zh: string | null;
   featured_image: string | null;
   published_at: string | null;
   seo_keywords: string | null;
 }
-
-// ... imports
 
 export default function Blog() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -37,6 +39,14 @@ export default function Blog() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Get localized content with fallback to Turkish
+  const getLocalizedField = (post: BlogPost, field: 'title' | 'excerpt') => {
+    const lang = i18n.language === 'zh' ? 'zh' : (i18n.language === 'en' ? 'en' : 'tr');
+    const value = post[`${field}_${lang}` as keyof BlogPost] as string | null;
+    // Fallback to Turkish if no translation
+    return value || (post[`${field}_tr` as keyof BlogPost] as string | null) || '';
   };
 
   return (
@@ -67,13 +77,13 @@ export default function Blog() {
                         <div className="aspect-video overflow-hidden">
                           <img
                             src={post.featured_image}
-                            alt={post.title}
+                            alt={getLocalizedField(post, 'title')}
                             className="w-full h-full object-cover transition-transform hover:scale-105"
                           />
                         </div>
                       )}
                       <CardHeader>
-                        <CardTitle className="line-clamp-2">{post.title}</CardTitle>
+                        <CardTitle className="line-clamp-2">{getLocalizedField(post, 'title')}</CardTitle>
                         {post.published_at && (
                           <CardDescription>
                             {new Date(post.published_at).toLocaleDateString(i18n.language === 'tr' ? 'tr-TR' : i18n.language === 'zh' ? 'zh-CN' : 'en-US', {
@@ -85,9 +95,9 @@ export default function Blog() {
                         )}
                       </CardHeader>
                       <CardContent>
-                        {post.excerpt && (
+                        {getLocalizedField(post, 'excerpt') && (
                           <p className="text-muted-foreground line-clamp-3 mb-4">
-                            {post.excerpt}
+                            {getLocalizedField(post, 'excerpt')}
                           </p>
                         )}
                         {post.seo_keywords && (

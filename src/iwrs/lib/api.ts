@@ -57,6 +57,12 @@ export const authApi = {
             return { session: { access_token: token, user: JSON.parse(user) } };
         }
         return { session: null };
+    },
+    register: async (data: any) => {
+        return fetchInfo(`${API_BASE}?resource=users`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
     }
 };
 
@@ -134,6 +140,12 @@ export const translationApi = {
             body: JSON.stringify(data),
         });
     },
+    translateBlogAll: async (data: { title_tr: string, excerpt_tr?: string, content_tr: string }) => {
+        return fetchInfo<{ en: { title?: string, excerpt?: string, content?: string }, zh: { title?: string, excerpt?: string, content?: string } }>(`${API_BASE}?resource=ai-translate-blog-all`, {
+            method: 'POST',
+            body: JSON.stringify(data),
+        });
+    },
     translateFaq: async (data: { question: string, answer: string, target_language?: string }) => {
         return fetchInfo<any>(`${API_BASE}?resource=ai-translate-faq`, {
             method: 'POST',
@@ -179,6 +191,24 @@ export const faqApi = {
     delete: async (id: number) => {
         return fetchInfo(`${API_BASE}?resource=faq&id=${id}`, {
             method: 'DELETE',
+        });
+    }
+};
+
+export const adminApi = {
+    getUsers: async () => {
+        return fetchInfo<any[]>(`${API_BASE}?resource=users`);
+    },
+    getLogs: async (limit: number = 100) => {
+        return fetchInfo<any[]>(`${API_BASE}?resource=api-logs&limit=${limit}`);
+    }
+};
+
+export const formApi = {
+    submit: async (formName: string, data: any) => {
+        return fetchInfo(`${API_BASE}?resource=submit-form`, {
+            method: 'POST',
+            body: JSON.stringify({ form_name: formName, ...data }),
         });
     }
 };

@@ -8,6 +8,7 @@ ob_start();
 require_once __DIR__ . '/db_connection.php';
 require_once __DIR__ . '/auth_helper.php';
 require_once __DIR__ . '/email_service.php';
+require_once __DIR__ . '/tenant_helper.php';
 
 // Enable CORS
 header('Access-Control-Allow-Origin: *');
@@ -23,6 +24,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $request_method = $_SERVER['REQUEST_METHOD'];
 $resource = $_GET['resource'] ?? '';
 $id = $_GET['id'] ?? null;
+
+// --- API LOGGING MIDDLEWARE ---
+if ($resource !== 'api-logs' && $resource !== 'get-messages') { // Don't log log-fetching
+    try {
+        $logParams = [
+            'endpoint' => $resource,
+            'method' => $request_method,
+            'request_data' => ($request_method === 'POST' || $request_method === 'PUT') ? file_get_contents('php://input') : json_encode($_GET),
+            'ip_address' => $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0',
+            'user_id' => null
+        ];
+
+        // Attempt to get user ID if authorized (without breaking flow)
+        // This is a lightweight check; for full auth we rely on endpoints
+        $headers = getallheaders();
+        if (isset($headers['Authorization']) && preg_match('/Bearer\s(\S+)/', $headers['Authorization'], $matches)) {
+            $token = $matches[1];
+            // We need a separate connection or reuse one, but main conn isn't established yet in this file flow?
+            // Actually it is established at line 139. We should log AFTER connection.
+        }
+    } catch (Exception $e) { /* Ignore log errors */
+    }
+}
 
 
 // Helper to load env for AI Chat if DB not connected yet
@@ -138,40 +162,86 @@ function json_response($data, $status = 200)
 // Connect to DB for other resources
 $conn = get_db_connection();
 
-// --- BLOG POSTS ---
+// --- LOGGING EXECUTION ---
+if (isset($logParams)) {
+    // Try to identify user
+    if (isset($headers['Authorization']) && preg_match('/Bearer\s(\S+)/', $headers['Authorization'], $matches)) {
+        $stmtLog = $conn->prepare("SELECT user_id FROM admin_sessions WHERE token = ?");
+        $stmtLog->execute([$matches[1]]);
+        if ($uid = $stmtLog->fetchColumn()) {
+            $logParams['user_id'] = $uid;
+        }
+    }
+    // redact sensitive
+    if (strpos($logParams['request_data'], 'password') !== false) {
+        $logParams['request_data'] = 'REDACTED';
+    }
+
+    $stmtLog = $conn->prepare("INSERT INTO api_logs (endpoint, method, request_data, ip_address, user_id, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
+    $stmtLog->execute([
+        $logParams['endpoint'],
+        $logParams['method'],
+        substr($logParams['request_data'], 0, 5000), // Truncate if too long
+        $logParams['ip_address'],
+        $logParams['user_id']
+    ]);
+}
+
+// --- HELPER: Email Logging ---
+function log_email_dispatch($conn, $to, $subject, $type, $status, $error = null)
+{
+    try {
+        $stmt = $conn->prepare("INSERT INTO email_logs (recipient_email, subject, email_type, status, error_message, sent_at) VALUES (?, ?, ?, ?, ?, NOW())");
+        $stmt->execute([$to, $subject, $type, $status, $error]);
+    } catch (Exception $e) {
+        error_log("Log Email Failed: " . $e->getMessage());
+    }
+}
+// --- BLOG POSTS (Multilingual Single-Row Model) ---
 if ($resource === 'blog_posts') {
+    $tenant_id = get_current_tenant($conn);
+
     // GET /api/iwrs_api.php?resource=blog_posts
     if ($request_method === 'GET') {
         if ($id) {
             // Get single post by ID or Slug
-            $sql = "SELECT * FROM blog_posts WHERE id = ? OR slug = ?";
+            $sql = "SELECT * FROM blog_posts WHERE (id = ? OR slug = ?) AND tenant_id = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$id, $id]);
+            $stmt->execute([$id, $id, $tenant_id]);
             $post = $stmt->fetch(PDO::FETCH_ASSOC);
 
             if ($post) {
+                // Public: check status
+                $headers = getallheaders();
+                $auth_header = isset($headers['Authorization']) ? $headers['Authorization'] : '';
+                if (empty($auth_header)) {
+                    if ($post['status'] !== 'published' || ($post['published_at'] && strtotime($post['published_at']) > time())) {
+                        json_response(['error' => 'Post not found or not published'], 404);
+                    }
+                }
                 json_response($post);
             } else {
                 json_response(['error' => 'Post not found'], 404);
             }
         } else {
             // List posts
-            // If admin, show all. If public, show only published.
-            // Simplified: Public list always filters by published unless 'all' param is present (and authorized)
+            $limit = $_GET['limit'] ?? 50;
+            $where = ["tenant_id = ?"];
+            $params = [$tenant_id];
 
-            $status_filter = "WHERE status = 'published'";
-            // Check auth header for admin access to see drafts
             $headers = getallheaders();
             $auth_header = isset($headers['Authorization']) ? $headers['Authorization'] : '';
 
-            if (!empty($auth_header)) {
-                // Very basic check, proper auth_helper usage recommended for full security
-                // For now, if authorized, showing all for admin dashboard
-                $status_filter = "";
+            if (empty($auth_header)) {
+                $where[] = "status = 'published'";
+                $where[] = "published_at <= NOW()";
             }
 
-            $sql = "SELECT * FROM blog_posts $status_filter ORDER BY created_at DESC";
-            $stmt = $conn->query($sql);
+            $whereSql = implode(' AND ', $where);
+            $sql = "SELECT * FROM blog_posts WHERE $whereSql ORDER BY published_at DESC, created_at DESC LIMIT " . intval($limit);
+
+            $stmt = $conn->prepare($sql);
+            $stmt->execute($params);
             $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
             json_response($posts);
         }
@@ -179,24 +249,36 @@ if ($resource === 'blog_posts') {
 
     // POST /api/iwrs_api.php?resource=blog_posts (Create)
     if ($request_method === 'POST') {
-        $user = require_admin_auth($conn); // Protect this endpoint
-
+        $user = require_admin_auth($conn);
         $data = json_decode(file_get_contents('php://input'), true);
         $uuid = guidv4();
 
-        $sql = "INSERT INTO blog_posts (id, title, slug, content, excerpt, status, featured_image, seo_title, seo_description, seo_keywords, published_at) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $slug = $data['slug'] ?? '';
+        $published_at = ($data['status'] === 'published' && empty($data['published_at'])) ? date('Y-m-d H:i:s') : ($data['published_at'] ?? null);
+
+        $sql = "INSERT INTO blog_posts (
+            id, tenant_id, slug,
+            title_tr, excerpt_tr, content_tr,
+            title_en, excerpt_en, content_en,
+            title_zh, excerpt_zh, content_zh,
+            status, featured_image, seo_title, seo_description, seo_keywords, published_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $stmt = $conn->prepare($sql);
-        $published_at = ($data['status'] === 'published') ? date('Y-m-d H:i:s') : null;
-
         try {
             $stmt->execute([
                 $uuid,
-                $data['title'],
-                $data['slug'],
-                $data['content'],
-                $data['excerpt'] ?? null,
+                $tenant_id,
+                $slug,
+                $data['title_tr'] ?? $data['title'] ?? '',
+                $data['excerpt_tr'] ?? $data['excerpt'] ?? null,
+                $data['content_tr'] ?? $data['content'] ?? '',
+                $data['title_en'] ?? null,
+                $data['excerpt_en'] ?? null,
+                $data['content_en'] ?? null,
+                $data['title_zh'] ?? null,
+                $data['excerpt_zh'] ?? null,
+                $data['content_zh'] ?? null,
                 $data['status'] ?? 'draft',
                 $data['featured_image'] ?? null,
                 $data['seo_title'] ?? null,
@@ -204,8 +286,11 @@ if ($resource === 'blog_posts') {
                 $data['seo_keywords'] ?? null,
                 $published_at
             ]);
-            json_response(['id' => $uuid, 'message' => 'Blog post created'], 201);
+            json_response(['id' => $uuid, 'message' => 'Post created'], 201);
         } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                json_response(['error' => 'Slug already exists'], 409);
+            }
             json_response(['error' => $e->getMessage()], 500);
         }
     }
@@ -215,17 +300,44 @@ if ($resource === 'blog_posts') {
         $user = require_admin_auth($conn);
         $data = json_decode(file_get_contents('php://input'), true);
 
+        // Security check: ensure post belongs to tenant
+        $stmt = $conn->prepare("SELECT id FROM blog_posts WHERE id = ? AND tenant_id = ?");
+        $stmt->execute([$id, $tenant_id]);
+        if (!$stmt->fetch()) {
+            json_response(['error' => 'Post not found or access denied'], 404);
+        }
+
         $fields = [];
         $values = [];
 
-        foreach (['title', 'slug', 'content', 'excerpt', 'status', 'featured_image', 'seo_title', 'seo_description', 'seo_keywords'] as $field) {
+        $allowedFields = [
+            'slug',
+            'title_tr',
+            'excerpt_tr',
+            'content_tr',
+            'title_en',
+            'excerpt_en',
+            'content_en',
+            'title_zh',
+            'excerpt_zh',
+            'content_zh',
+            'status',
+            'featured_image',
+            'seo_title',
+            'seo_description',
+            'seo_keywords',
+            'published_at'
+        ];
+
+        foreach ($allowedFields as $field) {
             if (isset($data[$field])) {
                 $fields[] = "$field = ?";
                 $values[] = $data[$field];
             }
         }
 
-        if (isset($data['status']) && $data['status'] === 'published') {
+        // Auto-set published_at if publishing and not already set
+        if (isset($data['status']) && $data['status'] === 'published' && !isset($data['published_at'])) {
             $fields[] = "published_at = IFNULL(published_at, NOW())";
         }
 
@@ -233,13 +345,13 @@ if ($resource === 'blog_posts') {
             json_response(['message' => 'No changes'], 200);
         }
 
-        $sql = "UPDATE blog_posts SET " . implode(', ', $fields) . " WHERE id = ?";
+        $sql = "UPDATE blog_posts SET " . implode(', ', $fields) . ", updated_at = NOW() WHERE id = ?";
         $values[] = $id;
 
         $stmt = $conn->prepare($sql);
         try {
             $stmt->execute($values);
-            json_response(['message' => 'Blog post updated']);
+            json_response(['message' => 'Post updated']);
         } catch (PDOException $e) {
             json_response(['error' => $e->getMessage()], 500);
         }
@@ -248,9 +360,13 @@ if ($resource === 'blog_posts') {
     // DELETE /api/iwrs_api.php?resource=blog_posts&id=UUID
     if ($request_method === 'DELETE' && $id) {
         $user = require_admin_auth($conn);
-        $stmt = $conn->prepare("DELETE FROM blog_posts WHERE id = ?");
-        $stmt->execute([$id]);
-        json_response(['message' => 'Blog post deleted']);
+        $stmt = $conn->prepare("DELETE FROM blog_posts WHERE id = ? AND tenant_id = ?");
+        $stmt->execute([$id, $tenant_id]);
+        if ($stmt->rowCount() > 0) {
+            json_response(['message' => 'Post deleted']);
+        } else {
+            json_response(['error' => 'Post not found or access denied'], 404);
+        }
     }
 }
 
@@ -312,10 +428,19 @@ if ($resource === 'randomization') {
                     </div>
                     ";
 
-                    send_notification_email($toEmails, $subject, $htmlBody);
+                    $success = send_notification_email($toEmails, $subject, $htmlBody);
+                    log_email_dispatch(
+                        $conn,
+                        implode(',', $toEmails),
+                        $subject,
+                        'randomization_notification',
+                        $success ? 'sent' : 'failed',
+                        $success ? null : 'API Error'
+                    );
                 }
             } catch (Exception $e) {
                 error_log("Failed to send notification email: " . $e->getMessage());
+                log_email_dispatch($conn, 'admin_list', "Randomization: " . $data['studyName'], 'randomization_notification', 'failed', $e->getMessage());
             }
 
             json_response(['id' => $uuid, 'message' => 'Form submitted successfully'], 201);
@@ -345,6 +470,30 @@ if ($resource === 'contact') {
                 $data['message']
             ]);
             json_response(['message' => 'Message sent successfully']);
+
+            // Send Notification Email
+            try {
+                $stmt = $conn->query("SELECT setting_value FROM site_settings WHERE setting_key = 'contact_email'");
+                $contactEmail = $stmt->fetchColumn();
+                if (!$contactEmail) {
+                    $stmt = $conn->query("SELECT setting_value FROM site_settings WHERE setting_key = 'notification_emails'");
+                    $contactEmail = $stmt->fetchColumn();
+                }
+
+                if ($contactEmail) {
+                    $toEmails = explode(',', $contactEmail);
+                    $subject = "İletişim Formu: " . $data['subject'];
+                    $htmlBody = "<h2>Yeni İletişim Mesajı</h2>" .
+                        "<p><strong>İsim:</strong> " . htmlspecialchars($data['name']) . "</p>" .
+                        "<p><strong>Email:</strong> " . htmlspecialchars($data['email']) . "</p>" .
+                        "<p><strong>Mesaj:</strong><br>" . nl2br(htmlspecialchars($data['message'])) . "</p>";
+
+                    $success = send_notification_email($toEmails, $subject, $htmlBody);
+                    log_email_dispatch($conn, implode(',', $toEmails), $subject, 'contact_form', $success ? 'sent' : 'failed');
+                }
+            } catch (Exception $e) { /* Ignore email error */
+            }
+
         } catch (PDOException $e) {
             // If table doesn't exist, we might fail. For now, let's assume it exists or fail gracefully.
             // If it fails, we fall back to mock success to not break frontend demo, or let it fail?
@@ -581,6 +730,74 @@ if ($resource === 'ai-translate-blog') {
     }
 }
 
+// --- AI BLOG TRANSLATION (BATCH EN+ZH) ---
+if ($resource === 'ai-translate-blog-all') {
+    if ($request_method === 'POST') {
+        require_admin_auth($conn);
+        require_once __DIR__ . '/translate_helper.php';
+
+        $data = json_decode(file_get_contents('php://input'), true);
+
+        // Get DeepSeek API Key from env
+        $deepseek_key = getenv('DEEPSEEK_API_KEY');
+        if (!$deepseek_key && file_exists(__DIR__ . '/../.env')) {
+            $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            foreach ($lines as $line) {
+                if (strpos(trim($line), 'DEEPSEEK_API_KEY=') === 0) {
+                    $deepseek_key = trim(substr($line, 17));
+                    break;
+                }
+            }
+        }
+
+        if (!$deepseek_key) {
+            json_response(['error' => 'Configuration error: DeepSeek API Key missing'], 500);
+        }
+
+        $title_tr = $data['title_tr'] ?? '';
+        $excerpt_tr = $data['excerpt_tr'] ?? '';
+        $content_tr = $data['content_tr'] ?? '';
+
+        $results = ['en' => [], 'zh' => []];
+
+        // Translate to English
+        if (!empty($title_tr)) {
+            $trans = translate_with_deepseek($title_tr, 'en', $deepseek_key);
+            if (isset($trans['success']))
+                $results['en']['title'] = $trans['translation'];
+        }
+        if (!empty($excerpt_tr)) {
+            $trans = translate_with_deepseek($excerpt_tr, 'en', $deepseek_key);
+            if (isset($trans['success']))
+                $results['en']['excerpt'] = $trans['translation'];
+        }
+        if (!empty($content_tr)) {
+            $trans = translate_with_deepseek($content_tr, 'en', $deepseek_key);
+            if (isset($trans['success']))
+                $results['en']['content'] = $trans['translation'];
+        }
+
+        // Translate to Chinese
+        if (!empty($title_tr)) {
+            $trans = translate_with_deepseek($title_tr, 'zh', $deepseek_key);
+            if (isset($trans['success']))
+                $results['zh']['title'] = $trans['translation'];
+        }
+        if (!empty($excerpt_tr)) {
+            $trans = translate_with_deepseek($excerpt_tr, 'zh', $deepseek_key);
+            if (isset($trans['success']))
+                $results['zh']['excerpt'] = $trans['translation'];
+        }
+        if (!empty($content_tr)) {
+            $trans = translate_with_deepseek($content_tr, 'zh', $deepseek_key);
+            if (isset($trans['success']))
+                $results['zh']['content'] = $trans['translation'];
+        }
+
+        json_response($results);
+    }
+}
+
 // --- AI FAQ TRANSLATION ---
 if ($resource === 'ai-translate-faq') {
     if ($request_method === 'POST') {
@@ -620,6 +837,118 @@ if ($resource === 'ai-translate-faq') {
         }
 
         json_response($results);
+    }
+}
+
+// --- USERS MANAGEMENT ---
+if ($resource === 'users') {
+    // GET /users (List)
+    if ($request_method === 'GET') {
+        require_admin_auth($conn);
+        $sql = "SELECT id, email, full_name, institution, role, is_active, last_login_at, created_at FROM users ORDER BY created_at DESC";
+        $stmt = $conn->query($sql);
+        json_response($stmt->fetchAll(PDO::FETCH_ASSOC));
+    }
+
+    // POST /users (Register/Create)
+    if ($request_method === 'POST') {
+        // Optional: require admin auth to create users? Or public registration?
+        // Plan says "Enable Signup flow" -> implies public or admin-led. 
+        // Let's allow public for now or assume simple auth. Auth.tsx has signup tab.
+        // But normally we'd want validation.
+
+        $data = json_decode(file_get_contents('php://input'), true);
+        if (empty($data['email']) || empty($data['password'])) {
+            json_response(['error' => 'Email and Password required'], 400);
+        }
+
+        // Check exists
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->execute([$data['email']]);
+        if ($stmt->fetch()) {
+            json_response(['error' => 'Email already exists'], 409);
+        }
+
+        $uuid = guidv4();
+        $hash = password_hash($data['password'], PASSWORD_BCRYPT);
+
+        $stmt = $conn->prepare("INSERT INTO users (id, email, full_name, institution, role, password_hash) VALUES (?, ?, ?, ?, ?, ?)");
+        try {
+            $stmt->execute([
+                $uuid,
+                $data['email'],
+                $data['full_name'] ?? '',
+                $data['institution'] ?? '',
+                'user', // Default role
+                $hash
+            ]);
+            json_response(['id' => $uuid, 'message' => 'User created'], 201);
+        } catch (PDOException $e) {
+            json_response(['error' => $e->getMessage()], 500);
+        }
+    }
+}
+
+// --- API LOGS ---
+if ($resource === 'api-logs') {
+    if ($request_method === 'GET') {
+        require_admin_auth($conn);
+        $limit = $_GET['limit'] ?? 100;
+        $sql = "SELECT * FROM api_logs ORDER BY created_at DESC LIMIT " . intval($limit);
+        $stmt = $conn->query($sql);
+        json_response($stmt->fetchAll(PDO::FETCH_ASSOC));
+    }
+}
+
+// --- CONTACT INFO FORM HANDLER (Generic trigger) ---
+if ($resource === 'submit-form') {
+    if ($request_method === 'POST') {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $formName = $data['form_name'] ?? 'Unknown Form';
+
+        // Save to DB? Maybe not needed for all, but email is required.
+        // Send email to admin
+
+        try {
+            $stmt = $conn->prepare("SELECT setting_value FROM site_settings WHERE setting_key IN ('contact_email', 'notification_emails')");
+            $stmt->execute();
+            $settings = $stmt->fetchAll(PDO::FETCH_COLUMN); // Simplification
+
+            // Better: get specific
+            $stmt = $conn->query("SELECT setting_value FROM site_settings WHERE setting_key = 'contact_email'");
+            $contactEmail = $stmt->fetchColumn();
+
+            if (!$contactEmail) {
+                // Fallback to notification emails
+                $stmt = $conn->query("SELECT setting_value FROM site_settings WHERE setting_key = 'notification_emails'");
+                $contactEmail = $stmt->fetchColumn();
+            }
+
+            if ($contactEmail) {
+                $toEmails = explode(',', $contactEmail);
+                $subject = "Form Submission: $formName";
+
+                // Build generic body
+                $htmlBody = "<h2>New Form Submission: $formName</h2><ul>";
+                foreach ($data as $k => $v) {
+                    if ($k !== 'form_name') {
+                        $htmlBody .= "<li><strong>" . htmlspecialchars($k) . ":</strong> " . htmlspecialchars(is_string($v) ? $v : json_encode($v)) . "</li>";
+                    }
+                }
+                $htmlBody .= "</ul>";
+
+                $success = send_notification_email($toEmails, $subject, $htmlBody);
+                log_email_dispatch($conn, implode(',', $toEmails), $subject, 'form_submission', $success ? 'sent' : 'failed');
+            }
+
+            // Also log raw request
+            // (Already handled by middleware if we rely on that, but maybe we want explicit success msg)
+
+            json_response(['message' => 'Form submitted']);
+
+        } catch (Exception $e) {
+            json_response(['error' => $e->getMessage()], 500);
+        }
     }
 }
 

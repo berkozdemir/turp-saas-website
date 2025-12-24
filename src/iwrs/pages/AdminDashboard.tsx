@@ -8,6 +8,8 @@ import { AdminFaqList } from "@/iwrs/components/admin/AdminFaqList";
 import { AdminFaqEditor } from "@/iwrs/components/admin/AdminFaqEditor";
 import { Menu, X, Mail, FileText, Settings, ExternalLink, LogOut, HelpCircle } from "lucide-react";
 import { RandomizationBot } from "@/iwrs/components/RandomizationBot";
+import { AdminUsers } from "@/iwrs/components/admin/AdminUsers";
+import { AdminBotLogs } from "@/iwrs/components/admin/AdminBotLogs"; // Import new component
 
 export default function AdminDashboard() {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -80,6 +82,10 @@ export default function AdminDashboard() {
         );
       case "settings":
         return <AdminSettings userName="Admin" userEmail="admin@iwrs.com.tr" />;
+      case "users":
+        return <AdminUsers />;
+      case "logs":
+        return <AdminBotLogs />;
       default:
         return <AdminMessages />;
     }
@@ -151,6 +157,28 @@ export default function AdminDashboard() {
             </button>
 
             <button
+              onClick={() => { setActiveTab("users"); setMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "users"
+                ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                : "text-slate-400 hover:bg-white/5 hover:text-white"
+                }`}
+            >
+              <FileText size={20} /> {/* Reusing icon or import User icon */}
+              <span className="font-medium">Kullanıcılar</span>
+            </button>
+
+            <button
+              onClick={() => { setActiveTab("logs"); setMobileMenuOpen(false); }}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "logs"
+                ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                : "text-slate-400 hover:bg-white/5 hover:text-white"
+                }`}
+            >
+              <FileText size={20} />
+              <span className="font-medium">Loglar</span>
+            </button>
+
+            <button
               onClick={() => { setActiveTab("settings"); setMobileMenuOpen(false); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "settings"
                 ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
@@ -186,6 +214,8 @@ export default function AdminDashboard() {
               {activeTab === 'faq' && "Sıkça Sorulan Sorular"}
               {activeTab === 'faq_edit' && "SSS Düzenleyici"}
               {activeTab === 'settings' && "Panel Ayarları"}
+              {activeTab === 'users' && "Kullanıcı Yönetimi"}
+              {activeTab === 'logs' && "Sistem Günlükleri"}
             </h1>
             <p className="text-slate-500 text-sm mt-1">Hoşgeldin</p>
           </div>

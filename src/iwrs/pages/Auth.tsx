@@ -54,12 +54,19 @@ const Auth = () => {
         navigate("/admin"); // Redirect to admin after login
 
       } else {
-        // --- SIGNUP (Disabled/Not Implemented for Local migration yet) ---
-        // For now, guide user to contact admin or use specific flow
-        toast({
-          title: "Info",
-          description: "Registration is disabled in this version. Please contact administrator.",
+        // --- SIGNUP ---
+        await authApi.register({
+          email,
+          password,
+          full_name: fullName,
+          institution
         });
+
+        toast({
+          title: t('auth.signupSuccessTitle') || "Kayıt Başarılı",
+          description: t('auth.signupSuccessDesc') || "Hesabınız oluşturuldu. Giriş yapabilirsiniz.",
+        });
+        setActiveTab("login"); // Switch to login
       }
     } catch (error: any) {
       toast({

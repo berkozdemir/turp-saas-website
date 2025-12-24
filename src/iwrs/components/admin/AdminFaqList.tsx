@@ -112,6 +112,7 @@ export const AdminFaqList = ({ onEdit, onCreate }: AdminFaqListProps) => {
                     <option value="all">Tüm Diller</option>
                     <option value="tr">Türkçe</option>
                     <option value="en">English</option>
+                    <option value="zh">Chinese</option>
                 </select>
             </div>
 

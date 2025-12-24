@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Lock, Save, Loader2, Mail, Eye, EyeOff } from "lucide-react";
+import { Lock, Save, Loader2, Mail, Eye, EyeOff, Building } from "lucide-react";
 import { settingsApi } from "@/iwrs/lib/api";
 import { useToast } from "@/iwrs/hooks/use-toast";
 
@@ -21,6 +21,14 @@ export const AdminSettings = ({ userName, userEmail }: AdminSettingsProps) => {
     // Email settings state
     const [notificationEmails, setNotificationEmails] = useState("");
     const [emailLoading, setEmailLoading] = useState(false);
+
+    // Contact Settings State
+    const [companyName, setCompanyName] = useState("");
+    const [contactEmail, setContactEmail] = useState("");
+    const [contactPhone, setContactPhone] = useState("");
+    const [contactAddress, setContactAddress] = useState("");
+    const [contactLoading, setContactLoading] = useState(false);
+
     const [loadingSettings, setLoadingSettings] = useState(true);
 
     const { toast } = useToast();
@@ -32,6 +40,10 @@ export const AdminSettings = ({ userName, userEmail }: AdminSettingsProps) => {
                 const data = await settingsApi.get();
                 if (data) {
                     setNotificationEmails(data.notification_emails || "berko@omega-cro.com.tr");
+                    setCompanyName(data.company_name || "");
+                    setContactEmail(data.contact_email || "");
+                    setContactPhone(data.contact_phone || "");
+                    setContactAddress(data.contact_address || "");
                 }
             } catch (err) {
                 console.error("Settings load error:", err);
@@ -100,8 +112,82 @@ export const AdminSettings = ({ userName, userEmail }: AdminSettingsProps) => {
         }
     };
 
+    const handleSaveContactInfo = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setContactLoading(true);
+        try {
+            await settingsApi.update({
+                company_name: companyName,
+                contact_email: contactEmail,
+                contact_phone: contactPhone,
+                contact_address: contactAddress,
+            });
+            toast({ title: "Başarılı", description: "İletişim bilgileri kaydedildi." });
+        } catch (err: any) {
+            toast({ title: "Hata", description: "İletişim bilgileri kaydedilemedi.", variant: "destructive" });
+        } finally {
+            setContactLoading(false);
+        }
+    };
+
     return (
         <div className="space-y-6">
+            {/* Contact Information Settings */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="p-6 border-b border-slate-100 bg-gradient-to-r from-emerald-50 to-teal-50">
+                    <h2 className="text-xl font-bold flex items-center gap-2">
+                        <Building className="text-emerald-600" /> İletişim Bilgileri
+                    </h2>
+                    <p className="text-slate-500 text-sm mt-1">Platformun genel iletişim bilgilerini buradan yönetin.</p>
+                </div>
+                <div className="p-8 max-w-2xl">
+                    {loadingSettings ? (
+                        <Loader2 className="animate-spin text-slate-400" />
+                    ) : (
+                        <form onSubmit={handleSaveContactInfo} className="space-y-4">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-2">Şirket Adı</label>
+                                    <input
+                                        className="w-full p-3 border border-slate-200 rounded-xl focus:border-emerald-500 outline-none"
+                                        value={companyName} onChange={e => setCompanyName(e.target.value)} placeholder="Omega CRO"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-2">İletişim E-posta</label>
+                                    <input
+                                        className="w-full p-3 border border-slate-200 rounded-xl focus:border-emerald-500 outline-none"
+                                        value={contactEmail} onChange={e => setContactEmail(e.target.value)} placeholder="info@omegacro.com"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-2">Telefon</label>
+                                    <input
+                                        className="w-full p-3 border border-slate-200 rounded-xl focus:border-emerald-500 outline-none"
+                                        value={contactPhone} onChange={e => setContactPhone(e.target.value)} placeholder="+90 555 ..."
+                                    />
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-sm font-bold text-slate-700 mb-2">Adres</label>
+                                    <textarea
+                                        className="w-full p-3 border border-slate-200 rounded-xl focus:border-emerald-500 outline-none resize-none h-20"
+                                        value={contactAddress} onChange={e => setContactAddress(e.target.value)} placeholder="Full address..."
+                                    />
+                                </div>
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={contactLoading}
+                                className="px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-colors flex items-center gap-2 disabled:opacity-50"
+                            >
+                                {contactLoading ? <Loader2 className="animate-spin" size={20} /> : <Save size={20} />}
+                                {contactLoading ? 'Kaydediliyor...' : 'Bilgileri Kaydet'}
+                            </button>
+                        </form>
+                    )}
+                </div>
+            </div>
+
             {/* Email Notification Settings */}
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                 <div className="p-6 border-b border-slate-100 bg-gradient-to-r from-rose-50 to-pink-50">
