@@ -138,6 +138,10 @@ export default function App() {
         case "sss":
           return <FaqPage setView={setView} />;
         case "admin":
+          // Ensure URL is /admin when rendering admin
+          if (window.location.pathname !== '/admin') {
+            window.history.pushState({}, '', '/admin');
+          }
           return <Admin />;
         default:
           return <Home setView={setView} />;
