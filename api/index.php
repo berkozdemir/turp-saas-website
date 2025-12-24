@@ -393,9 +393,15 @@ if ($action == 'get_settings' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     require_once __DIR__ . '/auth_helper.php';
     require_admin_auth($conn);
 
+    // Get current tenant
+    require_once __DIR__ . '/tenant_helper.php';
+    $tenant_id = get_current_tenant($conn);
+
     try {
-        $stmt = $conn->prepare("SELECT setting_key, setting_value FROM site_settings");
-        $stmt->execute();
+        // Check if tenant_id column exists, if not this might fail on first run before migration
+        // But we handle it gracefully or rely on update actions to fix schema
+        $stmt = $conn->prepare("SELECT setting_key, setting_value FROM site_settings WHERE tenant_id = ?");
+        $stmt->execute([$tenant_id]);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         $settings = [];
@@ -405,7 +411,7 @@ if ($action == 'get_settings' && $_SERVER['REQUEST_METHOD'] === 'GET') {
 
         echo json_encode(['success' => true, 'data' => $settings]);
     } catch (Exception $e) {
-        // Table might not exist, return defaults
+        // Table might not exist or schema mismatch, return defaults
         echo json_encode([
             'success' => true,
             'data' => [
@@ -421,28 +427,53 @@ if ($action == 'update_settings' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     require_once __DIR__ . '/auth_helper.php';
     require_admin_auth($conn);
 
+    // Get current tenant
+    require_once __DIR__ . '/tenant_helper.php';
+    $tenant_id = get_current_tenant($conn);
+
     $request_body = json_decode(file_get_contents('php://input'), true) ?? [];
 
     try {
-        // Create table if not exists
+        // Create table if not exists with tenant_id
         $conn->exec("CREATE TABLE IF NOT EXISTS site_settings (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            setting_key VARCHAR(100) NOT NULL UNIQUE,
+            tenant_id VARCHAR(50) NOT NULL DEFAULT 'turp',
+            setting_key VARCHAR(100) NOT NULL,
             setting_value TEXT,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            UNIQUE KEY unique_tenant_key (tenant_id, setting_key)
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
-        // Update each setting
+        // Update each setting for specific tenant
         foreach ($request_body as $key => $value) {
-            $stmt = $conn->prepare("INSERT INTO site_settings (setting_key, setting_value) 
-                VALUES (?, ?) 
+            $stmt = $conn->prepare("INSERT INTO site_settings (tenant_id, setting_key, setting_value) 
+                VALUES (?, ?, ?) 
                 ON DUPLICATE KEY UPDATE setting_value = ?");
-            $stmt->execute([$key, $value, $value]);
+            $stmt->execute([$tenant_id, $key, $value, $value]);
         }
 
         echo json_encode(['success' => true, 'message' => 'Ayarlar kaydedildi']);
     } catch (Exception $e) {
-        echo json_encode(['error' => 'Bir hata oluştu: ' . $e->getMessage()]);
+        // Migration fallback: If table exists but no tenant_id or unique key is wrong
+        // We'll try to ALTER table silently or just report error
+        try {
+            // Try to add tenant_id if missing
+            $conn->exec("ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS tenant_id VARCHAR(50) NOT NULL DEFAULT 'turp'");
+            // Drop old unique key if strictly on setting_key
+            $conn->exec("DROP INDEX setting_key ON site_settings");
+            $conn->exec("CREATE UNIQUE INDEX unique_tenant_key ON site_settings(tenant_id, setting_key)");
+
+            // Retry update
+            foreach ($request_body as $key => $value) {
+                $stmt = $conn->prepare("INSERT INTO site_settings (tenant_id, setting_key, setting_value) 
+                    VALUES (?, ?, ?) 
+                    ON DUPLICATE KEY UPDATE setting_value = ?");
+                $stmt->execute([$tenant_id, $key, $value, $value]);
+            }
+            echo json_encode(['success' => true, 'message' => 'Ayarlar kaydedildi (Schema updated)']);
+        } catch (Exception $ex) {
+            echo json_encode(['error' => 'Bir hata oluştu: ' . $e->getMessage() . ' | ' . $ex->getMessage()]);
+        }
     }
     exit;
 }

@@ -21,7 +21,6 @@ import { ROICalculator } from "./pages/ROICalculator";
 import { RheumaCaseStudy } from "./pages/RheumaCaseStudy";
 import { FaqPage } from "./pages/FaqPage";
 import { LegalPage } from "./pages/LegalPage";
-import { useNotification } from "./components/NotificationProvider";
 import useAnalytics, { trackLanguageChange } from "./lib/analytics";
 
 export default function App() {
@@ -30,12 +29,27 @@ export default function App() {
   // --- TURP APP LOGIC BELOW ---
 
   // --- STATE YÖNETİMİ ---
-  const [view, setView] = useState<any>("home");
-  // const [editingPost, setEditingPost] = useState<any | null>(null);
+  const [view, setView] = useState<any>(() => {
+    const path = window.location.pathname;
+
+    // 1. Admin route check
+    if (path === '/admin' || path.startsWith('/admin/')) {
+      return 'admin';
+    }
+
+    // 2. Password reset check
+    const urlParams = new URLSearchParams(window.location.search);
+    const resetToken = urlParams.get('token');
+    if (resetToken && path.includes('reset-password')) {
+      return { type: 'reset-password', token: resetToken };
+    }
+
+    return "home";
+  });
+
   const [session, setSession] = useState<any | null>(null);
   const [globalCurrency, setGlobalCurrency] = useState("TRY");
   // const [isScrolled, setIsScrolled] = useState(false);
-  const notify = useNotification();
 
   // i18n (Çeviri) Kurulumu
   const { t, i18n } = useTranslation();
@@ -53,24 +67,11 @@ export default function App() {
   const modules: Record<string, any> =
     rawModules && typeof rawModules === "object" ? rawModules : {};
 
-  // Check URL for password reset token
-  // Check URL for routes
+  // Check URL routes (handled by lazy state init)
   useEffect(() => {
-    const path = window.location.pathname;
-
-    // Admin route check
-    if (path === '/admin' || path.startsWith('/admin/')) {
-      setView('admin');
-    }
-
-    // Password reset check
-    const urlParams = new URLSearchParams(window.location.search);
-    const resetToken = urlParams.get('token');
-    if (resetToken && path.includes('reset-password')) {
-      setView({ type: 'reset-password', token: resetToken });
-    }
+    // Only needed if we want to handle browser back/forward buttons strictly, 
+    // but for initial load the lazy state above handles it.
   }, []);
-
 
   // --- BAŞLANGIÇ AYARLARI (EFFECTS) ---
   useEffect(() => {
@@ -109,18 +110,6 @@ export default function App() {
     setSession(null);
     setView("home");
   };
-
-  /*
-  const startEdit = (post: any) => {
-    if (!session) {
-      notify.error("Giriş yapmalısınız!");
-      setView("admin");
-      return;
-    }
-    setEditingPost(post);
-    setView("admin");
-  };
-  */
 
   const changeLanguage = (lng: string) => {
     const oldLang = i18n.language;

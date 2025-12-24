@@ -140,12 +140,21 @@ if ($action == 'create_admin_user' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
+        // 1. Create user in global table
         $stmt = $conn->prepare("INSERT INTO admin_users (name, email, password_hash, is_active) VALUES (?, ?, ?, ?)");
         $stmt->execute([$name, $email, $password_hash, $is_active]);
+        $new_user_id = $conn->lastInsertId();
 
-        echo json_encode(['success' => true, 'id' => $conn->lastInsertId()]);
+        // 2. Assign to current TENANT
+        require_once __DIR__ . '/tenant_helper.php';
+        $current_tenant_id = get_current_tenant($conn);
+
+        $stmt = $conn->prepare("INSERT INTO admin_user_tenants (user_id, tenant_id, role) VALUES (?, ?, ?)");
+        $stmt->execute([$new_user_id, $current_tenant_id, $role]);
+
+        echo json_encode(['success' => true, 'id' => $new_user_id]);
     } catch (Exception $e) {
-        echo json_encode(['error' => 'Kullanıcı oluşturulamadı']);
+        echo json_encode(['error' => 'Kullanıcı oluşturulamadı: ' . $e->getMessage()]);
     }
     exit;
 }
