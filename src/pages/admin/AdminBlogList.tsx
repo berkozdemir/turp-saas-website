@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Search, Plus, Edit2, Trash2, Globe, Clock, FileText, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Search, Plus, Edit2, Trash2, Clock, FileText, Loader2, ChevronLeft, ChevronRight, CheckCircle, AlertCircle } from "lucide-react";
 import { useNotification } from "../../components/NotificationProvider";
 import { useConfirm } from "../../components/ConfirmProvider";
 
@@ -14,7 +14,6 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
     const [loading, setLoading] = useState(true);
     const notify = useNotification();
     const confirm = useConfirm();
-    const [filterLang, setFilterLang] = useState("all");
     const [filterStatus, setFilterStatus] = useState("all");
     const [search, setSearch] = useState("");
     const [page, setPage] = useState(1);
@@ -26,7 +25,7 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
         setLoading(true);
         try {
             const response = await fetch(
-                `${API_URL}/index.php?action=get_blog_posts_admin&lang=${filterLang}&status=${filterStatus}&search=${search}&page=${page}`,
+                `${API_URL}/index.php?action=get_blog_posts_admin&status=${filterStatus}&search=${search}&page=${page}`,
                 {
                     headers: { Authorization: `Bearer ${token}` }
                 }
@@ -48,9 +47,9 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
     useEffect(() => {
         const timer = setTimeout(() => {
             fetchPosts();
-        }, 300); // Debounce search
+        }, 300);
         return () => clearTimeout(timer);
-    }, [filterLang, filterStatus, search, page]);
+    }, [filterStatus, search, page]);
 
     const handleDelete = async (id: number) => {
         const isConfirmed = await confirm({
@@ -84,6 +83,13 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
         }
     };
 
+    const TranslationBadge = ({ hasTranslation, lang }: { hasTranslation: boolean; lang: string }) => (
+        <span className={`inline-flex items-center gap-0.5 text-xs ${hasTranslation ? 'text-green-600' : 'text-amber-500'}`}>
+            {lang}
+            {hasTranslation ? <CheckCircle size={10} /> : <AlertCircle size={10} />}
+        </span>
+    );
+
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
             {/* Header & Toolbar */}
@@ -92,7 +98,7 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
                     <h2 className="text-xl font-bold flex items-center gap-2 mb-1">
                         <FileText className="text-rose-600" /> Blog İçerikleri
                     </h2>
-                    <p className="text-slate-500 text-sm">Web sitesi yazılarını buradan yönetin.</p>
+                    <p className="text-slate-500 text-sm">Çok dilli blog yazılarını buradan yönetin.</p>
                 </div>
 
                 <button
@@ -109,22 +115,12 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
                     <input
                         type="text"
-                        placeholder="Başlıkta ara..."
+                        placeholder="Başlıkta ara (TR/EN/ZH)..."
                         className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg outline-none focus:border-rose-500"
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                     />
                 </div>
-                <select
-                    className="p-2 border border-slate-200 rounded-lg outline-none focus:border-rose-500 bg-white"
-                    value={filterLang}
-                    onChange={e => setFilterLang(e.target.value)}
-                >
-                    <option value="all">Tüm Diller</option>
-                    <option value="tr">Türkçe</option>
-                    <option value="en">English</option>
-                    <option value="zh">Chinese</option>
-                </select>
                 <select
                     className="p-2 border border-slate-200 rounded-lg outline-none focus:border-rose-500 bg-white"
                     value={filterStatus}
@@ -143,8 +139,8 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
                     <thead className="bg-white text-slate-500 text-xs uppercase font-bold border-b border-slate-100">
                         <tr>
                             <th className="p-4">Durum</th>
-                            <th className="p-4">Başlık / Yazar</th>
-                            <th className="p-4">Dil</th>
+                            <th className="p-4">Başlık</th>
+                            <th className="p-4">Çeviriler</th>
                             <th className="p-4">Tarih</th>
                             <th className="p-4 text-right">İşlemler</th>
                         </tr>
@@ -165,14 +161,14 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
                                         </span>
                                     </td>
                                     <td className="p-4">
-                                        <div className="font-bold text-slate-900 line-clamp-1">{post.title}</div>
-                                        <div className="text-xs text-slate-400 flex items-center gap-1 mt-1">
-                                            <Edit2 size={10} /> {post.author || 'Anonim'}
-                                        </div>
+                                        <div className="font-bold text-slate-900 line-clamp-1">{post.title_tr || '(başlıksız)'}</div>
+                                        <div className="text-xs text-slate-400 mt-1">/{post.slug}</div>
                                     </td>
                                     <td className="p-4">
-                                        <div className="flex items-center gap-1 text-sm text-slate-600 uppercase font-bold">
-                                            <Globe size={14} className="text-slate-400" /> {post.language}
+                                        <div className="flex gap-2">
+                                            <TranslationBadge hasTranslation={!!post.title_tr} lang="TR" />
+                                            <TranslationBadge hasTranslation={!!post.title_en} lang="EN" />
+                                            <TranslationBadge hasTranslation={!!post.title_zh} lang="ZH" />
                                         </div>
                                     </td>
                                     <td className="p-4 text-sm text-slate-500">

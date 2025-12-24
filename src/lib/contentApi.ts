@@ -51,29 +51,33 @@ export const normalizeLang = (raw: string | undefined | null): LangCode => {
 
 // PHP API'den gelen veriyi React uygulamamızın beklediği tipe dönüştürür
 function mapPostToType(post: any, lang: LangCode): BlogPost {
-  // PHP API düz veri dönüyor (content_translations yok)
-  // Bu yüzden mevcut veriyi, istenen dilmiş gibi kabul ediyoruz.
+  // Multilingual: pick the right language field with fallback to Turkish
+  const getLocalizedField = (field: string) => {
+    const value = post[`${field}_${lang}`];
+    return value || post[`${field}_tr`] || '';
+  };
+
   return {
     id: post.id,
-    translationId: post.id, // Translation ID olarak kendi ID'sini kullanıyoruz
+    translationId: post.id,
     slug: post.slug,
     lang: lang,
-    title: post.title,
-    excerpt: post.excerpt,
-    body: post.content, // PHP'de 'content', React'ta 'body'
-    content: post.content,
-    image_url: post.image_url || post.featured_image, // Veritabanında image_url olarak geçiyor
+    title: getLocalizedField('title'),
+    excerpt: getLocalizedField('excerpt'),
+    body: getLocalizedField('content'),
+    content: getLocalizedField('content'),
+    image_url: post.image_url || post.featured_image,
     created_at: post.published_at || post.created_at || new Date().toISOString()
   };
 }
 
 export const fetchBlogPosts = async (lang: LangCode): Promise<BlogPost[]> => {
-  // API'ye dil parametresi gönder
-  const response = await fetchAPI('get_blog_posts', { lang });
+  // API now returns all posts with all language fields
+  const response = await fetchAPI('get_blog_posts', {});
 
   if (!response?.data) return [];
 
-  // Status check: Sadece published olanlar
+  // Status check: Only published posts
   const posts = response.data.filter((p: any) => p.status === 'published');
 
   return posts.map((p: any) => mapPostToType(p, lang));
@@ -83,7 +87,6 @@ export const fetchBlogPostBySlug = async (
   slug: string,
   lang: LangCode
 ): Promise<BlogPost | null> => {
-  // API tarafında 'get_post_by_slug' yok, mecburen tümünü çekip buluyoruz (Optimize edilebilir)
   const posts = await fetchBlogPosts(lang);
   return posts.find(p => p.slug === slug) || null;
 };

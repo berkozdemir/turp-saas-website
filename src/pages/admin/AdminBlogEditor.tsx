@@ -1,36 +1,48 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Save, Loader2, Globe, Calendar, User, CheckCircle, FolderOpen } from "lucide-react";
+import { ArrowLeft, Save, Loader2, Calendar, CheckCircle, Wand2, Languages, FolderOpen } from "lucide-react";
 import { ImageUploader } from "../../components/ImageUploader";
 import { useNotification } from "../../components/NotificationProvider";
 import { MediaPickerDialog } from "../../components/MediaPickerDialog";
 
 interface AdminBlogEditorProps {
     token: string;
-    post: any | null; // null if creating new
+    post: any | null;
     onSave: () => void;
     onCancel: () => void;
 }
 
+type TabType = 'tr' | 'en' | 'zh';
+
 export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEditorProps) => {
     const [loading, setLoading] = useState(false);
-    const notify = useNotification();
+    const [translateLoading, setTranslateLoading] = useState(false);
     const [loadingPost, setLoadingPost] = useState(false);
     const [showMediaPicker, setShowMediaPicker] = useState(false);
+    const [activeTab, setActiveTab] = useState<TabType>('tr');
+    const notify = useNotification();
+
     const [formData, setFormData] = useState({
-        title: "",
         slug: "",
         image_url: "",
-        language: "tr",
-        author: "",
-        excerpt: "",
-        content: "",
         status: "draft",
         publish_at: "",
+        // Turkish (Primary)
+        title_tr: "",
+        excerpt_tr: "",
+        content_tr: "",
+        // English
+        title_en: "",
+        excerpt_en: "",
+        content_en: "",
+        // Chinese
+        title_zh: "",
+        excerpt_zh: "",
+        content_zh: "",
     });
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
 
-    // Fetch full post details when editing (list API only returns partial data)
+    // Fetch full post details when editing
     useEffect(() => {
         if (post?.id) {
             setLoadingPost(true);
@@ -42,15 +54,19 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                     if (data.success && data.data) {
                         const p = data.data;
                         setFormData({
-                            title: p.title || "",
                             slug: p.slug || "",
                             image_url: p.image_url || "",
-                            language: p.language || "tr",
-                            author: p.author || "",
-                            excerpt: p.excerpt || "",
-                            content: p.content || "",
                             status: p.status || "draft",
                             publish_at: p.publish_at ? p.publish_at.slice(0, 16) : "",
+                            title_tr: p.title_tr || "",
+                            excerpt_tr: p.excerpt_tr || "",
+                            content_tr: p.content_tr || "",
+                            title_en: p.title_en || "",
+                            excerpt_en: p.excerpt_en || "",
+                            content_en: p.content_en || "",
+                            title_zh: p.title_zh || "",
+                            excerpt_zh: p.excerpt_zh || "",
+                            content_zh: p.content_zh || "",
                         });
                     }
                 })
@@ -62,15 +78,19 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
         } else if (!post) {
             // New post - reset form
             setFormData({
-                title: "",
                 slug: "",
                 image_url: "",
-                language: "tr",
-                author: "Admin",
-                excerpt: "",
-                content: "",
                 status: "draft",
                 publish_at: "",
+                title_tr: "",
+                excerpt_tr: "",
+                content_tr: "",
+                title_en: "",
+                excerpt_en: "",
+                content_en: "",
+                title_zh: "",
+                excerpt_zh: "",
+                content_zh: "",
             });
         }
     }, [post, token, API_URL]);
@@ -86,7 +106,7 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
     const handleChange = (field: string, value: any) => {
         setFormData(prev => {
             const newData = { ...prev, [field]: value };
-            if (field === 'title' && !post) {
+            if (field === 'title_tr' && !post) {
                 newData.slug = generateSlug(value);
             }
             return newData;
@@ -124,6 +144,59 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
         }
     };
 
+    const handleGenerateTranslations = async () => {
+        if (!formData.title_tr && !formData.content_tr) {
+            notify.error("Çeviri için Türkçe başlık ve içerik gereklidir.");
+            return;
+        }
+
+        setTranslateLoading(true);
+        try {
+            const response = await fetch(`${API_URL}/index.php?action=ai_translate_blog_all`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                    title_tr: formData.title_tr,
+                    excerpt_tr: formData.excerpt_tr,
+                    content_tr: formData.content_tr,
+                }),
+            });
+            const result = await response.json();
+
+            if (result.en || result.zh) {
+                setFormData(prev => ({
+                    ...prev,
+                    title_en: result.en?.title || prev.title_en,
+                    excerpt_en: result.en?.excerpt || prev.excerpt_en,
+                    content_en: result.en?.content || prev.content_en,
+                    title_zh: result.zh?.title || prev.title_zh,
+                    excerpt_zh: result.zh?.excerpt || prev.excerpt_zh,
+                    content_zh: result.zh?.content || prev.content_zh,
+                }));
+                notify.success("EN ve ZH çevirileri oluşturuldu. Kontrol edip kaydedebilirsiniz.");
+            } else if (result.error) {
+                notify.error("Çeviri hatası: " + result.error);
+            }
+        } catch (err) {
+            notify.error("Çeviri başarısız oldu.");
+        } finally {
+            setTranslateLoading(false);
+        }
+    };
+
+    const tabs: { key: TabType; label: string; flag: string }[] = [
+        { key: 'tr', label: 'Türkçe', flag: '🇹🇷' },
+        { key: 'en', label: 'English', flag: '🇬🇧' },
+        { key: 'zh', label: '中文', flag: '🇨🇳' },
+    ];
+
+    const hasTranslation = (lang: 'en' | 'zh') => {
+        return formData[`title_${lang}`] || formData[`content_${lang}`];
+    };
+
     return (
         <>
             <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden relative">
@@ -135,83 +208,128 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                         </div>
                     </div>
                 )}
+
                 <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50">
                     <button onClick={onCancel} className="flex items-center gap-2 text-slate-500 hover:text-slate-900 font-medium transition-colors">
                         <ArrowLeft size={18} /> Listeye Dön
                     </button>
                     <h2 className="text-xl font-bold text-slate-900">{post ? 'İçeriği Düzenle' : 'Yeni İçerik Ekle'}</h2>
-                    <div className="w-24"></div>
+                    <button
+                        type="button"
+                        onClick={handleGenerateTranslations}
+                        disabled={translateLoading}
+                        className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg hover:shadow-lg transition-all font-medium text-sm disabled:opacity-50"
+                    >
+                        {translateLoading ? <Loader2 className="animate-spin" size={16} /> : <Wand2 size={16} />}
+                        {translateLoading ? 'Çevriliyor...' : 'EN + ZH Çeviri Oluştur'}
+                    </button>
+                </div>
+
+                {/* Language Tabs */}
+                <div className="flex border-b border-slate-200 bg-slate-50/50">
+                    {tabs.map(tab => (
+                        <button
+                            key={tab.key}
+                            type="button"
+                            onClick={() => setActiveTab(tab.key)}
+                            className={`flex items-center gap-2 px-6 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === tab.key
+                                    ? 'border-cyan-500 text-cyan-600 bg-white'
+                                    : 'border-transparent text-slate-500 hover:text-slate-700'
+                                }`}
+                        >
+                            <span>{tab.flag}</span>
+                            {tab.label}
+                            {tab.key !== 'tr' && hasTranslation(tab.key) && (
+                                <CheckCircle size={14} className="text-green-500" />
+                            )}
+                            {tab.key !== 'tr' && !hasTranslation(tab.key) && (
+                                <span className="text-xs text-amber-500">(boş)</span>
+                            )}
+                        </button>
+                    ))}
                 </div>
 
                 <form onSubmit={handleSubmit} className="p-8 max-w-5xl mx-auto">
                     <div className="grid md:grid-cols-3 gap-8">
-
-                        {/* Left: Main Content */}
+                        {/* Left: Main Content based on active tab */}
                         <div className="md:col-span-2 space-y-6">
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Başlık</label>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">
+                                    Başlık ({tabs.find(t => t.key === activeTab)?.label})
+                                    {activeTab === 'tr' && <span className="text-red-500 ml-1">*</span>}
+                                </label>
                                 <input
                                     type="text"
                                     className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none text-lg font-bold"
-                                    value={formData.title}
-                                    onChange={e => handleChange('title', e.target.value)}
-                                    placeholder="Blog başlığı..."
-                                    required
+                                    value={formData[`title_${activeTab}`]}
+                                    onChange={e => handleChange(`title_${activeTab}`, e.target.value)}
+                                    placeholder={activeTab === 'tr' ? "Blog başlığı..." : `${tabs.find(t => t.key === activeTab)?.label} title...`}
+                                    required={activeTab === 'tr'}
                                 />
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Slug (URL)</label>
-                                <div className="flex items-center gap-1 text-slate-400 bg-slate-50 p-3 rounded-xl border border-slate-200">
-                                    <span className="text-xs">turp.health/blog/</span>
-                                    <input
-                                        type="text"
-                                        className="flex-1 bg-transparent outline-none text-slate-700 font-medium"
-                                        value={formData.slug}
-                                        onChange={e => handleChange('slug', e.target.value)}
-                                    />
+                            {activeTab === 'tr' && (
+                                <div>
+                                    <label className="block text-sm font-bold text-slate-700 mb-2">Slug (URL)</label>
+                                    <div className="flex items-center gap-1 text-slate-400 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                                        <span className="text-xs">ct.turp.health/blog/</span>
+                                        <input
+                                            type="text"
+                                            className="flex-1 bg-transparent outline-none text-slate-700 font-medium"
+                                            value={formData.slug}
+                                            onChange={e => handleChange('slug', e.target.value)}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
+                            )}
+
+                            {activeTab === 'tr' && (
+                                <div>
+                                    <ImageUploader
+                                        label="Kapak Görseli"
+                                        uploadEndpoint={`${API_URL}/index.php?action=upload_image`}
+                                        token={token}
+                                        existingImageUrl={formData.image_url}
+                                        preset="blogCover"
+                                        onUploadSuccess={(url) => handleChange('image_url', url)}
+                                        onUploadError={(error) => notify.error("Görsel yükleme hatası: " + error)}
+                                        onRemove={() => handleChange('image_url', '')}
+                                        helperText="Otomatik olarak optimize edilir (maks 1600×900, ~400KB)"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowMediaPicker(true)}
+                                        className="mt-2 w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
+                                    >
+                                        <FolderOpen size={16} />
+                                        Medya Kütüphanesinden Seç
+                                    </button>
+                                </div>
+                            )}
 
                             <div>
-                                <ImageUploader
-                                    label="Kapak Görseli"
-                                    uploadEndpoint={`${API_URL}/index.php?action=upload_image`}
-                                    token={token}
-                                    existingImageUrl={formData.image_url}
-                                    preset="blogCover"
-                                    onUploadSuccess={(url) => handleChange('image_url', url)}
-                                    onUploadError={(error) => notify.error("Görsel yükleme hatası: " + error)}
-                                    onRemove={() => handleChange('image_url', '')}
-                                    helperText="Otomatik olarak optimize edilir (maks 1600×900, ~400KB)"
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => setShowMediaPicker(true)}
-                                    className="mt-2 w-full flex items-center justify-center gap-2 px-4 py-2 text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors"
-                                >
-                                    <FolderOpen size={16} />
-                                    Medya Kütüphanesinden Seç
-                                </button>
-                            </div>
-
-                            <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">Kısa Özet (Excerpt)</label>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">
+                                    Özet ({tabs.find(t => t.key === activeTab)?.label})
+                                </label>
                                 <textarea
                                     className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none h-24 resize-none"
-                                    value={formData.excerpt}
-                                    onChange={e => handleChange('excerpt', e.target.value)}
-                                    placeholder="Liste görünümünde çıkacak kısa açıklama..."
+                                    value={formData[`excerpt_${activeTab}`]}
+                                    onChange={e => handleChange(`excerpt_${activeTab}`, e.target.value)}
+                                    placeholder={activeTab === 'tr' ? "Liste görünümünde çıkacak kısa açıklama..." : "Short excerpt..."}
                                 ></textarea>
                             </div>
 
                             <div>
-                                <label className="block text-sm font-bold text-slate-700 mb-2">İçerik (HTML/Markdown)</label>
+                                <label className="block text-sm font-bold text-slate-700 mb-2">
+                                    İçerik ({tabs.find(t => t.key === activeTab)?.label})
+                                    {activeTab === 'tr' && <span className="text-red-500 ml-1">*</span>}
+                                </label>
                                 <textarea
-                                    className="w-full p-4 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none h-[500px] font-mono text-sm leading-relaxed"
-                                    value={formData.content}
-                                    onChange={e => handleChange('content', e.target.value)}
-                                    placeholder="İçeriğinizi buraya yazın..."
+                                    className="w-full p-4 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none h-[400px] font-mono text-sm leading-relaxed"
+                                    value={formData[`content_${activeTab}`]}
+                                    onChange={e => handleChange(`content_${activeTab}`, e.target.value)}
+                                    placeholder={activeTab === 'tr' ? "İçeriğinizi buraya yazın..." : "Content..."}
+                                    required={activeTab === 'tr'}
                                 ></textarea>
                                 <p className="text-xs text-slate-400 mt-2 text-right">HTML etiketleri desteklenir.</p>
                             </div>
@@ -237,32 +355,21 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                                     </select>
                                 </div>
 
-                                <div>
-                                    <label className="flex items-center gap-2 text-sm font-bold text-slate-700 mb-2">
-                                        <Globe size={16} className="text-slate-400" /> Dil
-                                    </label>
-                                    <select
-                                        className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none bg-white"
-                                        value={formData.language}
-                                        onChange={e => handleChange('language', e.target.value)}
-                                    >
-                                        <option value="tr">🇹🇷 Türkçe</option>
-                                        <option value="en">🇬🇧 English</option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label className="flex items-center gap-2 text-sm font-bold text-slate-700 mb-2">
-                                        <User size={16} className="text-slate-400" /> Yazar
-                                    </label>
-                                    <input
-                                        type="text"
-                                        className="w-full p-3 border border-slate-200 rounded-xl focus:border-cyan-500 outline-none bg-white"
-                                        value={formData.author}
-                                        onChange={e => handleChange('author', e.target.value)}
-                                        placeholder="Yazar adı"
-                                    />
-                                </div>
+                                {formData.status === 'published' && (
+                                    <div className="p-3 bg-green-50 text-green-700 rounded-lg text-sm border border-green-100">
+                                        <div className="flex items-center gap-2 font-bold mb-1">
+                                            <CheckCircle size={14} /> Yayında
+                                        </div>
+                                        <a
+                                            href={`${window.location.origin}/blog/${formData.slug}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="underline break-all hover:text-green-800"
+                                        >
+                                            /blog/{formData.slug}
+                                        </a>
+                                    </div>
+                                )}
 
                                 <div>
                                     <label className="flex items-center gap-2 text-sm font-bold text-slate-700 mb-2">
@@ -277,6 +384,34 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                                 </div>
                             </div>
 
+                            {/* Translation Status */}
+                            <div className="bg-indigo-50 p-4 rounded-2xl border border-indigo-100">
+                                <div className="flex items-center gap-2 text-indigo-700 font-bold mb-3">
+                                    <Languages size={16} />
+                                    Çeviri Durumu
+                                </div>
+                                <div className="space-y-2 text-sm">
+                                    <div className="flex justify-between items-center">
+                                        <span>🇹🇷 Türkçe</span>
+                                        <span className={formData.title_tr ? 'text-green-600 font-bold' : 'text-slate-400'}>
+                                            {formData.title_tr ? '✓ Mevcut' : '—'}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span>🇬🇧 English</span>
+                                        <span className={formData.title_en ? 'text-green-600 font-bold' : 'text-amber-500'}>
+                                            {formData.title_en ? '✓ Mevcut' : '⚠ Eksik'}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between items-center">
+                                        <span>🇨🇳 中文</span>
+                                        <span className={formData.title_zh ? 'text-green-600 font-bold' : 'text-amber-500'}>
+                                            {formData.title_zh ? '✓ Mevcut' : '⚠ Eksik'}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
                             <button
                                 type="submit"
                                 disabled={loading}
@@ -286,7 +421,6 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                                 {loading ? 'Kaydediliyor...' : (post ? 'Güncelle' : 'Kaydet')}
                             </button>
                         </div>
-
                     </div>
                 </form>
             </div>
