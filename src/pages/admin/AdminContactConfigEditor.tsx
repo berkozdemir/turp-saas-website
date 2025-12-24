@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, Save, MapPin, Phone, Mail, Clock } from "lucide-react";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface ContactConfig {
     id?: number;
@@ -64,7 +65,7 @@ export const AdminContactConfigEditor = ({ editId, onBack }: AdminContactConfigE
             const token = localStorage.getItem("admin_token");
             const response = await fetch(
                 `${API_URL}/index.php?action=get_contact_config_detail&id=${editId}`,
-                { headers: { Authorization: `Bearer ${token}` } }
+                { headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() } }
             );
             const data = await response.json();
             if (data.success && data.data) {
@@ -95,6 +96,7 @@ export const AdminContactConfigEditor = ({ editId, onBack }: AdminContactConfigE
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({
                     ...config,

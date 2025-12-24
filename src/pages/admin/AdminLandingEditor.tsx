@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, Save, Sparkles, RotateCcw, FolderOpen } from "lucide-react";
 import { MediaPickerDialog } from "../../components/MediaPickerDialog";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface LandingConfig {
     id?: number;
@@ -96,7 +97,7 @@ export const AdminLandingEditor = ({ editId, onBack }: AdminLandingEditorProps) 
             const token = localStorage.getItem("admin_token");
             const response = await fetch(
                 `${API_URL}/index.php?action=get_landing_config_detail&id=${editId}`,
-                { headers: { Authorization: `Bearer ${token}` } }
+                { headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() } }
             );
             const data = await response.json();
             if (data.success && data.data) {
@@ -129,6 +130,7 @@ export const AdminLandingEditor = ({ editId, onBack }: AdminLandingEditorProps) 
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({
                     ...config,
@@ -161,6 +163,7 @@ export const AdminLandingEditor = ({ editId, onBack }: AdminLandingEditorProps) 
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({
                     text: `Bu tanıma göre etkileyici bir hero başlığı ve alt başlık öner (JSON formatında title ve subtitle olarak döndür): ${description}`,

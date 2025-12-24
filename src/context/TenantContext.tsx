@@ -22,17 +22,26 @@ interface TenantContextType {
 const TenantContext = createContext<TenantContextType | undefined>(undefined);
 
 const TENANT_STORAGE_KEY = 'admin_current_tenant';
+const TENANTS_LIST_KEY = 'admin_available_tenants';
 
 export const TenantProvider = ({ children }: { children: ReactNode }) => {
     const [currentTenant, setCurrentTenantState] = useState<Tenant | null>(() => {
         const stored = localStorage.getItem(TENANT_STORAGE_KEY);
         return stored ? JSON.parse(stored) : null;
     });
-    const [availableTenants, setAvailableTenants] = useState<Tenant[]>([]);
+    const [availableTenants, setAvailableTenantsState] = useState<Tenant[]>(() => {
+        const stored = localStorage.getItem(TENANTS_LIST_KEY);
+        return stored ? JSON.parse(stored) : [];
+    });
 
     const setCurrentTenant = useCallback((tenant: Tenant) => {
         setCurrentTenantState(tenant);
         localStorage.setItem(TENANT_STORAGE_KEY, JSON.stringify(tenant));
+    }, []);
+
+    const setAvailableTenants = useCallback((tenants: Tenant[]) => {
+        setAvailableTenantsState(tenants);
+        localStorage.setItem(TENANTS_LIST_KEY, JSON.stringify(tenants));
     }, []);
 
     const switchTenant = useCallback((tenantCode: string) => {
@@ -44,8 +53,9 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
 
     const clearTenantContext = useCallback(() => {
         setCurrentTenantState(null);
-        setAvailableTenants([]);
+        setAvailableTenantsState([]);
         localStorage.removeItem(TENANT_STORAGE_KEY);
+        localStorage.removeItem(TENANTS_LIST_KEY);
     }, []);
 
     return (

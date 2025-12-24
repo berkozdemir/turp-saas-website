@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ArrowLeft, Save, Loader2, Mail, User, Shield, Eye, Key } from "lucide-react";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface AdminUser {
     id?: number;
@@ -59,6 +60,7 @@ export const AdminUserEditor = ({ token, user, onCancel, onSave }: AdminUserEdit
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify(payload),
             });
@@ -93,6 +95,7 @@ export const AdminUserEditor = ({ token, user, onCancel, onSave }: AdminUserEdit
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({ id: user!.id, new_password: password }),
             });

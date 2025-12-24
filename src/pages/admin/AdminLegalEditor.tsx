@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, Save, Loader2, Globe, Eye, Hash, Languages, Sparkles, Calendar } from "lucide-react";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface AdminLegalEditorProps {
     token: string;
@@ -53,6 +54,7 @@ export const AdminLegalEditor = ({ token, doc, onCancel, onSave }: AdminLegalEdi
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({
                     title_tr: titleTr,
@@ -115,6 +117,7 @@ export const AdminLegalEditor = ({ token, doc, onCancel, onSave }: AdminLegalEdi
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify(payload),
             });
