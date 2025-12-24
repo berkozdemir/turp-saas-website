@@ -54,10 +54,19 @@ export default function App() {
     rawModules && typeof rawModules === "object" ? rawModules : {};
 
   // Check URL for password reset token
+  // Check URL for routes
   useEffect(() => {
+    const path = window.location.pathname;
+
+    // Admin route check
+    if (path === '/admin' || path.startsWith('/admin/')) {
+      setView('admin');
+    }
+
+    // Password reset check
     const urlParams = new URLSearchParams(window.location.search);
     const resetToken = urlParams.get('token');
-    if (resetToken && window.location.pathname.includes('reset-password')) {
+    if (resetToken && path.includes('reset-password')) {
       setView({ type: 'reset-password', token: resetToken });
     }
   }, []);
