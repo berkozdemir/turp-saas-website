@@ -11,14 +11,33 @@
 
 /**
  * Get the current tenant ID based on request context.
- * Priority: 1. X-Tenant-ID header, 2. Origin domain lookup, 3. Default 'turp'
+ * Priority: 1. X-Tenant-Code header (new), 2. X-Tenant-ID header, 3. Origin domain lookup, 4. Default 'turp'
  * 
  * @param PDO $conn Database connection
- * @return string The tenant ID
+ * @return int|string The tenant ID (numeric for new system, string code for legacy)
  */
 function get_current_tenant($conn)
 {
-    // 1. Check for explicit header
+    // 1. Check for X-Tenant-Code header (from new admin panel)
+    $headers = getallheaders();
+    $tenant_code = null;
+    foreach ($headers as $key => $value) {
+        if (strtolower($key) === 'x-tenant-code') {
+            $tenant_code = $value;
+            break;
+        }
+    }
+
+    if ($tenant_code) {
+        $stmt = $conn->prepare("SELECT id FROM tenants WHERE code = ? AND is_active = 1");
+        $stmt->execute([$tenant_code]);
+        $tenant = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($tenant) {
+            return $tenant['id'];
+        }
+    }
+
+    // 2. Check for explicit X-Tenant-ID header (legacy)
     $tenant_id = $_SERVER['HTTP_X_TENANT_ID'] ?? null;
 
     if ($tenant_id) {
@@ -31,12 +50,13 @@ function get_current_tenant($conn)
         }
     }
 
-    // 2. Try to determine from Origin or Referer header
+    // 3. Try to determine from Origin or Referer header
     $origin = $_SERVER['HTTP_ORIGIN'] ?? $_SERVER['HTTP_REFERER'] ?? '';
     if ($origin) {
         $domain = parse_url($origin, PHP_URL_HOST);
         if ($domain) {
-            $stmt = $conn->prepare("SELECT id FROM tenants WHERE domain = ? AND is_active = 1");
+            // Check primary_domain column
+            $stmt = $conn->prepare("SELECT id FROM tenants WHERE primary_domain = ? AND is_active = 1");
             $stmt->execute([$domain]);
             $tenant = $stmt->fetch(PDO::FETCH_ASSOC);
             if ($tenant) {
@@ -45,8 +65,11 @@ function get_current_tenant($conn)
         }
     }
 
-    // 3. Default fallback
-    return 'turp';
+    // 4. Default fallback - return 'turp' tenant ID
+    $stmt = $conn->prepare("SELECT id FROM tenants WHERE code = 'turp' AND is_active = 1");
+    $stmt->execute();
+    $tenant = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $tenant ? $tenant['id'] : 1;
 }
 
 /**

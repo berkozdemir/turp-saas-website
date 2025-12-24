@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Search, Plus, Edit2, Trash2, Clock, FileText, Loader2, ChevronLeft, ChevronRight, CheckCircle, AlertCircle } from "lucide-react";
 import { useNotification } from "../../components/NotificationProvider";
 import { useConfirm } from "../../components/ConfirmProvider";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface AdminBlogListProps {
     token: string;
@@ -27,7 +28,10 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
             const response = await fetch(
                 `${API_URL}/index.php?action=get_blog_posts_admin&status=${filterStatus}&search=${search}&page=${page}`,
                 {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        ...getTenantHeader()
+                    }
                 }
             );
             const data = await response.json();
@@ -68,6 +72,7 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({ id }),
             });

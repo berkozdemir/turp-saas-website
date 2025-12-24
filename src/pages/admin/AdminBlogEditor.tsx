@@ -3,6 +3,7 @@ import { ArrowLeft, Save, Loader2, Calendar, CheckCircle, Wand2, Languages, Fold
 import { ImageUploader } from "../../components/ImageUploader";
 import { useNotification } from "../../components/NotificationProvider";
 import { MediaPickerDialog } from "../../components/MediaPickerDialog";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface AdminBlogEditorProps {
     token: string;
@@ -47,7 +48,7 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
         if (post?.id) {
             setLoadingPost(true);
             fetch(`${API_URL}/index.php?action=get_blog_post_detail&id=${post.id}`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
             })
                 .then(res => res.json())
                 .then(data => {
@@ -126,6 +127,7 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify(payload),
             });
@@ -157,6 +159,7 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({
                     title_tr: formData.title_tr,
@@ -233,8 +236,8 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                             type="button"
                             onClick={() => setActiveTab(tab.key)}
                             className={`flex items-center gap-2 px-6 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === tab.key
-                                    ? 'border-cyan-500 text-cyan-600 bg-white'
-                                    : 'border-transparent text-slate-500 hover:text-slate-700'
+                                ? 'border-cyan-500 text-cyan-600 bg-white'
+                                : 'border-transparent text-slate-500 hover:text-slate-700'
                                 }`}
                         >
                             <span>{tab.flag}</span>
