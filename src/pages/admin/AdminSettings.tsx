@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Lock, Save, Loader2, CheckCircle, AlertCircle, Eye, EyeOff, Mail, Settings } from "lucide-react";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface AdminSettingsProps {
     token: string;
@@ -30,7 +31,7 @@ export const AdminSettings = ({ token, userName, userEmail }: AdminSettingsProps
         const loadSettings = async () => {
             try {
                 const response = await fetch(`${API_URL}/index.php?action=get_settings`, {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
                 });
                 const data = await response.json();
                 if (data.success && data.data) {
@@ -153,8 +154,8 @@ export const AdminSettings = ({ token, userName, userEmail }: AdminSettingsProps
                         <form onSubmit={handleSaveEmailSettings} className="space-y-4">
                             {emailMessage && (
                                 <div className={`flex items-center gap-2 p-3 rounded-lg ${emailMessage.type === 'success'
-                                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                        : 'bg-red-50 text-red-700 border border-red-200'
+                                    ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                                    : 'bg-red-50 text-red-700 border border-red-200'
                                     }`}>
                                     {emailMessage.type === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
                                     <span className="font-medium">{emailMessage.text}</span>
@@ -218,8 +219,8 @@ export const AdminSettings = ({ token, userName, userEmail }: AdminSettingsProps
 
                     {passwordMessage && (
                         <div className={`flex items-center gap-2 p-3 rounded-lg mb-6 ${passwordMessage.type === 'success'
-                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                                : 'bg-red-50 text-red-700 border border-red-200'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            : 'bg-red-50 text-red-700 border border-red-200'
                             }`}>
                             {passwordMessage.type === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}
                             <span className="font-medium">{passwordMessage.text}</span>

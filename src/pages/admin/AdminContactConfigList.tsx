@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Plus, Edit, Trash2, Check, X, Globe } from "lucide-react";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface ContactConfig {
     id: number;
@@ -31,7 +32,7 @@ export const AdminContactConfigList = ({ onEdit }: AdminContactConfigListProps) 
             const token = localStorage.getItem("admin_token");
             const response = await fetch(
                 `${API_URL}/index.php?action=get_contact_configs_admin&language=${filterLang}`,
-                { headers: { Authorization: `Bearer ${token}` } }
+                { headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() } }
             );
             const data = await response.json();
             if (data.success) {
@@ -57,6 +58,7 @@ export const AdminContactConfigList = ({ onEdit }: AdminContactConfigListProps) 
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({ id }),
             });
@@ -77,6 +79,7 @@ export const AdminContactConfigList = ({ onEdit }: AdminContactConfigListProps) 
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({
                     ...config,

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Plus, Edit, Copy, Trash2, Check, X, Globe } from "lucide-react";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface LandingConfig {
     id: number;
@@ -34,7 +35,7 @@ export const AdminLandingList = ({ onEdit }: AdminLandingListProps) => {
             const token = localStorage.getItem("admin_token");
             const response = await fetch(
                 `${API_URL}/index.php?action=get_landing_configs_admin&language=${filterLang}`,
-                { headers: { Authorization: `Bearer ${token}` } }
+                { headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() } }
             );
             const data = await response.json();
             if (data.success) {
@@ -60,6 +61,7 @@ export const AdminLandingList = ({ onEdit }: AdminLandingListProps) => {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({ id }),
             });
@@ -81,6 +83,7 @@ export const AdminLandingList = ({ onEdit }: AdminLandingListProps) => {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({ id }),
             });
@@ -101,6 +104,7 @@ export const AdminLandingList = ({ onEdit }: AdminLandingListProps) => {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({
                     ...config,
@@ -195,8 +199,8 @@ export const AdminLandingList = ({ onEdit }: AdminLandingListProps) => {
                                         <button
                                             onClick={() => handleToggleActive(config)}
                                             className={`p-1 rounded-full ${config.is_active
-                                                    ? "bg-emerald-100 text-emerald-600"
-                                                    : "bg-slate-100 text-slate-400"
+                                                ? "bg-emerald-100 text-emerald-600"
+                                                : "bg-slate-100 text-slate-400"
                                                 }`}
                                         >
                                             {config.is_active ? <Check size={16} /> : <X size={16} />}

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Search, Plus, Edit, Trash2, UserCheck, UserX, Loader2, Shield, Users, Eye } from "lucide-react";
 import { useConfirm } from "../../components/ConfirmProvider";
 import { useNotification } from "../../components/NotificationProvider";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface AdminUser {
     id: number;
@@ -55,7 +56,7 @@ export const AdminUserList = ({ token, userRole, onEdit, onCreate }: AdminUserLi
         try {
             const params = new URLSearchParams({ role: roleFilter, status: statusFilter, search: searchQuery });
             const response = await fetch(`${API_URL}/index.php?action=get_admin_users&${params}`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
             });
             const data = await response.json();
             if (data.success) {
@@ -90,7 +91,8 @@ export const AdminUserList = ({ token, userRole, onEdit, onCreate }: AdminUserLi
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({ id: user.id })
             });
@@ -112,7 +114,8 @@ export const AdminUserList = ({ token, userRole, onEdit, onCreate }: AdminUserLi
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({ ...user, is_active: !user.is_active })
             });

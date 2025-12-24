@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Save, Loader2, BarChart3, Search, Globe, AlertTriangle, CheckCircle } from "lucide-react";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface AdminAnalyticsSeoProps {
     token: string;
@@ -49,7 +50,7 @@ export const AdminAnalyticsSeo = ({ token }: AdminAnalyticsSeoProps) => {
         const fetchSettings = async () => {
             try {
                 const response = await fetch(`${API_URL}/index.php?action=get_settings`, {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
                 });
                 const data = await response.json();
 
@@ -85,7 +86,8 @@ export const AdminAnalyticsSeo = ({ token }: AdminAnalyticsSeoProps) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({ analytics: JSON.stringify(analytics) })
             });
@@ -112,7 +114,8 @@ export const AdminAnalyticsSeo = ({ token }: AdminAnalyticsSeoProps) => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({ global_seo: JSON.stringify(seo) })
             });
@@ -147,8 +150,8 @@ export const AdminAnalyticsSeo = ({ token }: AdminAnalyticsSeoProps) => {
                     <button
                         onClick={() => setActiveTab('analytics')}
                         className={`flex-1 px-6 py-4 text-center font-medium transition-colors flex items-center justify-center gap-2 ${activeTab === 'analytics'
-                                ? 'bg-rose-50 text-rose-700 border-b-2 border-rose-500'
-                                : 'text-slate-500 hover:bg-slate-50'
+                            ? 'bg-rose-50 text-rose-700 border-b-2 border-rose-500'
+                            : 'text-slate-500 hover:bg-slate-50'
                             }`}
                     >
                         <BarChart3 size={20} />
@@ -157,8 +160,8 @@ export const AdminAnalyticsSeo = ({ token }: AdminAnalyticsSeoProps) => {
                     <button
                         onClick={() => setActiveTab('seo')}
                         className={`flex-1 px-6 py-4 text-center font-medium transition-colors flex items-center justify-center gap-2 ${activeTab === 'seo'
-                                ? 'bg-rose-50 text-rose-700 border-b-2 border-rose-500'
-                                : 'text-slate-500 hover:bg-slate-50'
+                            ? 'bg-rose-50 text-rose-700 border-b-2 border-rose-500'
+                            : 'text-slate-500 hover:bg-slate-50'
                             }`}
                     >
                         <Search size={20} />
@@ -169,8 +172,8 @@ export const AdminAnalyticsSeo = ({ token }: AdminAnalyticsSeoProps) => {
                 {/* Message */}
                 {message && (
                     <div className={`mx-6 mt-6 p-4 rounded-xl flex items-center gap-2 ${message.type === 'success'
-                            ? 'bg-green-50 text-green-700 border border-green-200'
-                            : 'bg-red-50 text-red-700 border border-red-200'
+                        ? 'bg-green-50 text-green-700 border border-green-200'
+                        : 'bg-red-50 text-red-700 border border-red-200'
                         }`}>
                         {message.type === 'success' ? <CheckCircle size={18} /> : <AlertTriangle size={18} />}
                         {message.text}

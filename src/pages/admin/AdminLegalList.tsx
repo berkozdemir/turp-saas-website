@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Search, Plus, Edit2, Trash2, Globe, Star, StarOff, Eye, EyeOff, Loader2, ChevronLeft, ChevronRight, FileText } from "lucide-react";
 import { useNotification } from "../../components/NotificationProvider";
 import { useConfirm } from "../../components/ConfirmProvider";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface AdminLegalListProps {
     token: string;
@@ -23,7 +24,7 @@ export const AdminLegalList = ({ token, onEdit, onCreate }: AdminLegalListProps)
         setLoading(true);
         try {
             const response = await fetch(`${API_URL}/index.php?action=get_legal_docs_admin`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
             });
             const data = await response.json();
             if (data.success) {
@@ -59,6 +60,7 @@ export const AdminLegalList = ({ token, onEdit, onCreate }: AdminLegalListProps)
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({ id }),
             });
@@ -90,6 +92,7 @@ export const AdminLegalList = ({ token, onEdit, onCreate }: AdminLegalListProps)
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({ ...doc, is_active: !current }),
             });
