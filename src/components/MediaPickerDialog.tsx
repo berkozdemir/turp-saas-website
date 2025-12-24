@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { Search, X, Check, Loader2, FolderOpen } from "lucide-react";
+import { getTenantHeader } from "../context/TenantContext";
 
 interface MediaAsset {
     id: number;
@@ -52,7 +53,10 @@ export const MediaPickerDialog = ({
             if (category) params.append("category", category);
 
             const response = await fetch(`${API_URL}/index.php?action=get_media_list&${params}`, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    ...getTenantHeader() // Inject tenant header
+                },
             });
             const data = await response.json();
             if (data.success) {
@@ -70,7 +74,10 @@ export const MediaPickerDialog = ({
         try {
             const token = localStorage.getItem("admin_token");
             const response = await fetch(`${API_URL}/index.php?action=get_media_categories`, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    ...getTenantHeader() // Inject tenant header
+                },
             });
             const data = await response.json();
             if (data.success) {
