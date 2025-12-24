@@ -16,6 +16,9 @@ import { AdminLandingEditor } from "./admin/AdminLandingEditor";
 import { AdminContactConfigList } from "./admin/AdminContactConfigList";
 import { AdminContactConfigEditor } from "./admin/AdminContactConfigEditor";
 import { AdminMediaList } from "./admin/AdminMediaList";
+import { TenantProvider, useTenant, Tenant } from "../context/TenantContext";
+import { TenantSelector } from "./admin/TenantSelector";
+import { TenantSwitcher } from "../components/TenantSwitcher";
 import {
   Mail,
   FileText,
@@ -32,7 +35,7 @@ import {
   Image
 } from "lucide-react";
 
-export const Admin = () => {
+const AdminContent = () => {
   // Initialize session from localStorage to prevent flash of login screen
   const [session, setSession] = useState<any>(() => {
     const storedSession = localStorage.getItem("admin_session");
@@ -49,6 +52,9 @@ export const Admin = () => {
   const [editingLandingId, setEditingLandingId] = useState<number | null>(null);
   const [editingContactConfigId, setEditingContactConfigId] = useState<number | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [pendingTenants, setPendingTenants] = useState<Tenant[] | null>(null);
+
+  const { currentTenant, setCurrentTenant, setAvailableTenants, clearTenantContext } = useTenant();
 
   const userRole = session?.user?.role || 'viewer';
 
@@ -68,16 +74,38 @@ export const Admin = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("admin_session");
+    clearTenantContext();
     setSession(null);
   };
 
   const handleLogin = (data: any) => {
     setSession(data);
     localStorage.setItem("admin_session", JSON.stringify(data));
+    // Store tenants from login response
+    if (data.tenants && data.tenants.length > 0) {
+      setAvailableTenants(data.tenants);
+      if (data.tenants.length === 1) {
+        // Auto-select if only one tenant
+        setCurrentTenant(data.tenants[0]);
+      } else {
+        // Show tenant selection screen
+        setPendingTenants(data.tenants);
+      }
+    }
+  };
+
+  const handleTenantSelect = (tenant: Tenant) => {
+    setCurrentTenant(tenant);
+    setPendingTenants(null);
   };
 
   if (!session) {
     return <Login onLogin={handleLogin} />;
+  }
+
+  // Show tenant selector if logged in but no tenant selected
+  if (pendingTenants && pendingTenants.length > 1 && !currentTenant) {
+    return <TenantSelector tenants={pendingTenants} onSelect={handleTenantSelect} />;
   }
 
   const renderContent = () => {
@@ -242,9 +270,14 @@ export const Admin = () => {
         ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
       `}>
         <div className="p-6">
-          <div className="flex items-center gap-3 mb-10">
+          <div className="flex items-center gap-3 mb-4">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-rose-500 to-purple-600 flex items-center justify-center font-bold text-white">T</div>
             <span className="font-heading font-bold text-lg">Turp <span className="text-slate-400">Panel</span></span>
+          </div>
+
+          {/* Tenant Switcher */}
+          <div className="mb-6">
+            <TenantSwitcher />
           </div>
 
           <nav className="space-y-2">
@@ -420,3 +453,10 @@ export const Admin = () => {
     </div>
   );
 };
+
+// Export with TenantProvider wrapper
+export const Admin = () => (
+  <TenantProvider>
+    <AdminContent />
+  </TenantProvider>
+);

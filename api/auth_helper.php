@@ -109,3 +109,71 @@ function require_admin_auth_id($conn)
     $user = require_admin_auth($conn);
     return $user['id'];
 }
+
+/**
+ * Get user's accessible tenants
+ */
+function get_user_tenants($conn, $user_id)
+{
+    $stmt = $conn->prepare("
+        SELECT t.id, t.code, t.name, t.primary_domain, aut.role as tenant_role
+        FROM admin_user_tenants aut
+        JOIN tenants t ON t.id = aut.tenant_id
+        WHERE aut.user_id = ? AND t.is_active = 1
+        ORDER BY t.name
+    ");
+    $stmt->execute([$user_id]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+/**
+ * Require tenant context from X-Tenant-Code header
+ * Returns tenant info if valid, exits with 400/403 if not
+ */
+function require_tenant_context($conn, $user)
+{
+    $headers = getallheaders();
+    $tenant_code = null;
+
+    // Case-insensitive header check
+    foreach ($headers as $key => $value) {
+        if (strtolower($key) === 'x-tenant-code') {
+            $tenant_code = $value;
+            break;
+        }
+    }
+
+    if (empty($tenant_code)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Tenant context required (X-Tenant-Code header missing)']);
+        exit;
+    }
+
+    // Verify tenant exists and user has access
+    $stmt = $conn->prepare("
+        SELECT t.id, t.code, t.name, t.primary_domain, aut.role as tenant_role
+        FROM tenants t
+        JOIN admin_user_tenants aut ON aut.tenant_id = t.id
+        WHERE t.code = ? AND aut.user_id = ? AND t.is_active = 1
+    ");
+    $stmt->execute([$tenant_code, $user['id']]);
+    $tenant = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$tenant) {
+        http_response_code(403);
+        echo json_encode(['error' => 'Access denied for this tenant']);
+        exit;
+    }
+
+    return $tenant;
+}
+
+/**
+ * Get tenant ID from code (for queries)
+ */
+function get_tenant_id_by_code($conn, $tenant_code)
+{
+    $stmt = $conn->prepare("SELECT id FROM tenants WHERE code = ? AND is_active = 1");
+    $stmt->execute([$tenant_code]);
+    return $stmt->fetchColumn();
+}

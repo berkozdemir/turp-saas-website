@@ -223,10 +223,26 @@ if ($action == 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $conn->prepare("INSERT INTO admin_sessions (user_id, token, ip_address, user_agent, expires_at) VALUES (?, ?, ?, ?, ?)");
         $stmt->execute([$user['id'], $token, $ip_address, $user_agent, $expires_at]);
 
-        $stmt = $conn->prepare("UPDATE admin_users SET last_login_at = NOW() WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE admin_users SET last_login = NOW() WHERE id = ?");
         $stmt->execute([$user['id']]);
 
-        echo json_encode(['success' => true, 'token' => $token, 'user' => ['id' => $user['id'], 'email' => $user['email'], 'name' => $user['name'], 'role' => $user['role']]]);
+        // Fetch user's accessible tenants
+        $stmt = $conn->prepare("
+            SELECT t.id, t.code, t.name, t.primary_domain, t.logo_url, t.primary_color, aut.role as tenant_role
+            FROM admin_user_tenants aut
+            JOIN tenants t ON t.id = aut.tenant_id
+            WHERE aut.user_id = ? AND t.is_active = 1
+            ORDER BY t.name
+        ");
+        $stmt->execute([$user['id']]);
+        $tenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode([
+            'success' => true,
+            'token' => $token,
+            'user' => ['id' => $user['id'], 'email' => $user['email'], 'name' => $user['name'], 'role' => $user['role']],
+            'tenants' => $tenants
+        ]);
     } catch (Exception $e) {
         echo json_encode(['error' => 'Bir hata oluştu: ' . $e->getMessage()]);
     }
