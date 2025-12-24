@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Search, Plus, Edit2, Trash2, Globe, Star, StarOff, Eye, EyeOff, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useNotification } from "../../components/NotificationProvider";
 import { useConfirm } from "../../components/ConfirmProvider";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface AdminFaqListProps {
     token: string;
@@ -36,7 +37,7 @@ export const AdminFaqList = ({ token, onEdit, onCreate }: AdminFaqListProps) => 
             });
 
             const response = await fetch(`${API_URL}/index.php?${params}`, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
             });
             const data = await response.json();
             if (data.success) {

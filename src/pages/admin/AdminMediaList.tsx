@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { ArrowLeft, Upload, Search, Trash2, Copy, Check, X, Image as ImageIcon, Loader2, FolderOpen } from "lucide-react";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface MediaAsset {
     id: number;
@@ -54,7 +55,7 @@ export const AdminMediaList = ({ onBack }: AdminMediaListProps) => {
             if (category) params.append("category", category);
 
             const response = await fetch(`${API_URL}/index.php?action=get_media_list&${params}`, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() },
             });
             const data = await response.json();
             if (data.success) {
@@ -72,7 +73,7 @@ export const AdminMediaList = ({ onBack }: AdminMediaListProps) => {
         try {
             const token = localStorage.getItem("admin_token");
             const response = await fetch(`${API_URL}/index.php?action=get_media_categories`, {
-                headers: { Authorization: `Bearer ${token}` },
+                headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() },
             });
             const data = await response.json();
             if (data.success) {
@@ -101,7 +102,7 @@ export const AdminMediaList = ({ onBack }: AdminMediaListProps) => {
             const token = localStorage.getItem("admin_token");
             const response = await fetch(`${API_URL}/index.php?action=upload_media`, {
                 method: "POST",
-                headers: { Authorization: `Bearer ${token}` },
+                headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() },
                 body: formData,
             });
             const data = await response.json();
@@ -128,6 +129,7 @@ export const AdminMediaList = ({ onBack }: AdminMediaListProps) => {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({ id }),
             });
@@ -149,6 +151,7 @@ export const AdminMediaList = ({ onBack }: AdminMediaListProps) => {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json",
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({
                     id: asset.id,

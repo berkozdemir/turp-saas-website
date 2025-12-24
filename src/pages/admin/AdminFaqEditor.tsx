@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { ArrowLeft, Save, Loader2, Globe, Star, Eye, Hash, Plus, Languages, Sparkles } from "lucide-react";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface AdminFaqEditorProps {
     token: string;
@@ -41,7 +42,7 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
         const fetchCategories = async () => {
             try {
                 const response = await fetch(`${API_URL}/index.php?action=get_settings`, {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
                 });
                 const data = await response.json();
                 if (data.success && data.data?.faq_categories) {
@@ -73,6 +74,7 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({ faq_categories: updatedCategories.join(', ') }),
             }).catch(err => console.error("Category save error:", err));
@@ -96,6 +98,7 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({
                     question_tr: question,
@@ -155,6 +158,7 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify(payload),
             });

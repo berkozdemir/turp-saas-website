@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Mail, Eye, CheckCircle, Archive, X, Loader2, ChevronLeft, ChevronRight } from "lucide-react";
 import { useNotification } from "../../components/NotificationProvider";
+import { getTenantHeader } from "../../context/TenantContext";
 
 interface AdminMessagesProps {
     token: string;
@@ -27,6 +28,7 @@ export const AdminMessages = ({ token }: AdminMessagesProps) => {
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
+                        ...getTenantHeader()
                     },
                 }
             );
@@ -57,6 +59,7 @@ export const AdminMessages = ({ token }: AdminMessagesProps) => {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
+                    ...getTenantHeader()
                 },
                 body: JSON.stringify({ id, status }),
             });
