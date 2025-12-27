@@ -28,6 +28,7 @@ import AppointmentReminder from "./pages/AppointmentReminder";
 import PatientSurvey from "./pages/PatientSurvey";
 import EmergencyUnblinding from "./pages/EmergencyUnblinding";
 import ContactPage from "./pages/ContactPage";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +68,7 @@ const IWRSApp = () => (
           <Route path="*" element={<NotFound />} />
           <Route path="/contact" element={<ContactPage />} />
         </Routes>
+        <CookieConsentBanner />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

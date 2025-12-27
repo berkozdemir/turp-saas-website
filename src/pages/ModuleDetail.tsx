@@ -127,7 +127,7 @@ export const ModuleDetail: React.FC<ModuleDetailProps> = ({ moduleId, setView })
             {t("module_cta_desc")}
           </p>
           <button
-            onClick={() => setView("home")}
+            onClick={() => setView({ type: "home", scrollTo: "contact" })}
             className="px-10 py-4 bg-white text-slate-900 font-bold rounded-xl hover:scale-105 transition-transform"
           >
             {t("module_cta_btn")}

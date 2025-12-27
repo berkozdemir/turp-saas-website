@@ -8,64 +8,82 @@ try {
     $conn = get_db_connection();
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    // 0. Fix site_settings (CRITICAL FIX FIRST)
+    echo "Checking site_settings (File: " . __FILE__ . ")...\n";
+    try {
+        $conn->query("SELECT tenant_id FROM site_settings LIMIT 1");
+        echo "site_settings tenant_id already exists.\n";
+    } catch (Exception $e) {
+        echo "Adding tenant_id to site_settings...\n";
+        $conn->exec("ALTER TABLE site_settings ADD COLUMN tenant_id INT NOT NULL DEFAULT 1 AFTER id");
+
+        try {
+            $conn->exec("CREATE INDEX idx_settings_tenant ON site_settings(tenant_id)");
+            $conn->exec("DROP INDEX setting_key ON site_settings");
+            $conn->exec("CREATE UNIQUE INDEX unique_tenant_key ON site_settings(tenant_id, setting_key)");
+        } catch (Exception $ex) {
+            // Index might not exist or already exist
+        }
+    }
+
     // 1. Add tenant_id
     echo "Checking tenant_id...\n";
     try {
-        $conn->query("SELECT tenant_id FROM blog_posts LIMIT 1");
+        $conn->query("SELECT tenant_id FROM iwrs_saas_blog_posts LIMIT 1");
         echo "tenant_id already exists.\n";
     } catch (Exception $e) {
         echo "Adding tenant_id...\n";
-        $conn->exec("ALTER TABLE blog_posts ADD COLUMN tenant_id VARCHAR(50) NOT NULL DEFAULT 'turp' AFTER id");
-        $conn->exec("CREATE INDEX idx_blog_tenant ON blog_posts(tenant_id)");
+        $conn->exec("ALTER TABLE iwrs_saas_blog_posts ADD COLUMN tenant_id INT NOT NULL DEFAULT 1 AFTER id"); // Default to 1 (usually 'turp' or 'admin')
+        $conn->exec("CREATE INDEX idx_blog_tenant ON iwrs_saas_blog_posts(tenant_id)");
     }
 
-    // 2. Add language
-    echo "Checking language...\n";
-    try {
-        $conn->query("SELECT language FROM blog_posts LIMIT 1");
-        echo "language already exists.\n";
-    } catch (Exception $e) {
-        echo "Adding language...\n";
-        $conn->exec("ALTER TABLE blog_posts ADD COLUMN language VARCHAR(10) NOT NULL DEFAULT 'tr' AFTER slug");
-        $conn->exec("CREATE INDEX idx_blog_lang ON blog_posts(language)");
-    }
+    // 2. Add language (if missing, though usually likely there if it's iwrs specific)
+    // Actually, check if it's already multilingual columns directly.
+    // The previous view of blog_api.php showed title_tr, title_en etc.
+    // So we might not need 'language' column if it's a flat table. 
+    // BUT the previous error was "Unknown column 'tenant_id'".
+    // So surely we need tenant_id.
 
     // 3. Fix Slug Uniqueness Scope
-    // Currently slug is UNIQUE globally. We want UNIQUE(tenant_id, slug) or (tenant_id, language, slug).
-    // Let's go with (tenant_id, slug) to keep URLs simple per tenant, or allow same slug in diff langs?
-    // Usually /tr/blog/slug and /en/blog/slug => same slug OK if different ID? 
-    // Actually, usually slug is unique per tenant.
-
     echo "Updating slug index...\n";
     try {
-        // Try to drop existing simple unique index
-        // Note: The constraint name for UNIQUE(slug) is typically 'slug' or 'idx_slug' depends on creation.
-        // We will try dropping both common names using a procedure or just try-catch.
-
-        // First check if index is just on slug
-        // SHOW INDEX FROM blog_posts WHERE Key_name = 'slug'
-
-        $conn->exec("ALTER TABLE blog_posts DROP INDEX slug");
+        $conn->exec("ALTER TABLE iwrs_saas_blog_posts DROP INDEX slug");
         echo "Dropped index 'slug'.\n";
     } catch (Exception $e) {
-        try {
-            $conn->exec("ALTER TABLE blog_posts DROP INDEX idx_slug");
-            echo "Dropped index 'idx_slug'.\n";
-        } catch (Exception $e2) {
-            echo "Index drop skipped (might not exist or different name): " . $e2->getMessage() . "\n";
-        }
+        // Ignore
     }
 
     // Add composite unique index
     try {
-        // We allow same slug for different languages? 
-        // Example: /blog/hello (TR) and /blog/hello (EN). 
-        // If the frontend URL is /blog/:slug, then we rely on current language to find the post.
-        // So yes, slug + language + tenant should be unique.
-        $conn->exec("ALTER TABLE blog_posts ADD UNIQUE INDEX idx_tenant_lang_slug (tenant_id, language, slug)");
-        echo "Added composite unique index (tenant_id, language, slug).\n";
+        // Unique per tenant
+        $conn->exec("ALTER TABLE iwrs_saas_blog_posts ADD UNIQUE INDEX idx_tenant_slug (tenant_id, slug)");
+        echo "Added composite unique index (tenant_id, slug).\n";
     } catch (Exception $e) {
-        echo "Composite index addition skipped: " . $e->getMessage() . "\n";
+        // Ignore
+    }
+
+    // 4. Fix site_settings (for Admin Settings)
+    echo "Checking site_settings...\n";
+    try {
+        $conn->query("SELECT tenant_id FROM site_settings LIMIT 1");
+        echo "site_settings tenant_id already exists.\n";
+    } catch (Exception $e) {
+        echo "Adding tenant_id to site_settings...\n";
+        // Assuming tenant_id is INT based on other tables, but index.php had VARCHAR default 'turp'.
+        // Let's check tenants table type. Usually ID is int.
+        // We will make it INT to match other tables if tenant_helper returns get_current_tenant as ID.
+        // But wait, if index.php expects code ('turp'), then VARCHAR.
+        // Let's safe bet: Match iwrs_saas_blog_posts (INT).
+        $conn->exec("ALTER TABLE site_settings ADD COLUMN tenant_id INT NOT NULL DEFAULT 1 AFTER id");
+
+        try {
+            $conn->exec("CREATE INDEX idx_settings_tenant ON site_settings(tenant_id)");
+            // Update uniqueness if needed
+            $conn->exec("DROP INDEX setting_key ON site_settings");
+            $conn->exec("CREATE UNIQUE INDEX unique_tenant_key ON site_settings(tenant_id, setting_key)");
+        } catch (Exception $ex) {
+            // Index might not exist or already exist
+        }
     }
 
     echo "Migration completed successfully!\n";

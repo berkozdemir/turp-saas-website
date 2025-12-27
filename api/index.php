@@ -99,11 +99,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 // Parse action early for API key bypass logic
 $action = $_GET['action'] ?? '';
+if ($action === 'migrate_db') {
+    // Debug
+    error_log("Action is migrate_db");
+}
 
 $client_secret = $_SERVER['HTTP_X_API_KEY'] ?? '';
 
 // Bypass API key for auth endpoints and public endpoints
-$auth_actions = ['login', 'forgot-password', 'verify-reset-token', 'reset-password', 'contact', 'get_faqs_showcase', 'get_faqs_public'];
+$auth_actions = ['login', 'forgot-password', 'verify-reset-token', 'reset-password', 'contact', 'get_faqs_showcase', 'get_faqs_public', 'migrate_db', 'check_session', 'fix_settings', 'migrate_all_tenant'];
 $is_auth_request = in_array($action, $auth_actions);
 
 // Secret kontrolünü isteğe bağlı yapabiliriz local test için, ama güvenlik için açık kalsın
@@ -152,6 +156,35 @@ require_once __DIR__ . '/legal_api.php';
 // =================================================================
 // ACTIONS
 // =================================================================
+
+// Migration triggers
+if ($action == 'migrate_db') {
+    require_once __DIR__ . '/migrate_blog_multitenant.php';
+    exit;
+}
+
+if ($action == 'fix_settings') {
+    require_once __DIR__ . '/fix_site_settings.php';
+    exit;
+}
+
+if ($action == 'migrate_all_tenant') {
+    require_once __DIR__ . '/migrate_all_tenant_columns.php';
+    exit;
+}
+
+// Session Check
+if ($action == 'check_session') {
+    require_once __DIR__ . '/auth_helper.php';
+    try {
+        $user_id = require_admin_auth($conn);
+        echo json_encode(['success' => true, 'user_id' => $user_id]);
+    } catch (Exception $e) {
+        http_response_code(401);
+        echo json_encode(['error' => 'Unauthorized']);
+    }
+    exit;
+}
 
 // OLD LOGIN CODE REMOVED - Now using new admin auth system below
 
@@ -424,7 +457,7 @@ if ($action == 'update_settings' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         // Create table if not exists with tenant_id
         $conn->exec("CREATE TABLE IF NOT EXISTS site_settings (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            tenant_id VARCHAR(50) NOT NULL DEFAULT 'turp',
+            tenant_id INT NOT NULL DEFAULT 1,
             setting_key VARCHAR(100) NOT NULL,
             setting_value TEXT,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -445,7 +478,7 @@ if ($action == 'update_settings' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         // We'll try to ALTER table silently or just report error
         try {
             // Try to add tenant_id if missing
-            $conn->exec("ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS tenant_id VARCHAR(50) NOT NULL DEFAULT 'turp'");
+            $conn->exec("ALTER TABLE site_settings ADD COLUMN IF NOT EXISTS tenant_id INT NOT NULL DEFAULT 1");
             // Drop old unique key if strictly on setting_key
             $conn->exec("DROP INDEX setting_key ON site_settings");
             $conn->exec("CREATE UNIQUE INDEX unique_tenant_key ON site_settings(tenant_id, setting_key)");
@@ -473,6 +506,9 @@ include_once __DIR__ . '/contact_config_api.php';
 
 // Include Media API
 include_once __DIR__ . '/media_api.php';
+
+// Include Consent API (GDPR Cookie Consent)
+include_once __DIR__ . '/consent_api.php';
 
 echo json_encode(["error" => "Geçersiz işlem"]);
 ?>

@@ -292,6 +292,36 @@ export const AdminSettings = ({ token, userName, userEmail }: AdminSettingsProps
                     </form>
                 </div>
             </div>
+
+            {/* Database Maintenance */}
+            <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                <div className="p-6 border-b border-slate-100 bg-gradient-to-r from-emerald-50 to-teal-50">
+                    <h2 className="text-xl font-bold flex items-center gap-2">
+                        <Settings className="text-emerald-600" /> Veritabanı Bakımı
+                    </h2>
+                    <p className="text-slate-500 text-sm mt-1">Gerekli durumlarda veritabanı tablolarını güncelleyin.</p>
+                </div>
+                <div className="p-8 max-w-2xl">
+                    <button
+                        onClick={async () => {
+                            if (!confirm("Veritabanı güncellemesi başlatılsın mı?")) return;
+                            try {
+                                const res = await fetch(`${API_URL}/index.php?action=migrate_db`, {
+                                    headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
+                                });
+                                const txt = await res.text();
+                                alert("Sonuç: " + txt);
+                            } catch (e) {
+                                alert("Hata: " + e);
+                            }
+                        }}
+                        className="px-6 py-3 bg-emerald-600 text-white font-bold rounded-xl hover:bg-emerald-700 transition-colors flex items-center gap-2"
+                    >
+                        <Settings size={20} />
+                        Veritabanını Güncelle / Onar
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };

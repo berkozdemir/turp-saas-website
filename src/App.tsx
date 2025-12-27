@@ -22,6 +22,8 @@ import { RheumaCaseStudy } from "./pages/RheumaCaseStudy";
 import { FaqPage } from "./pages/FaqPage";
 import { LegalPage } from "./pages/LegalPage";
 import useAnalytics, { trackLanguageChange } from "./lib/analytics";
+import { CookieConsentBanner } from "./components/CookieConsentBanner";
+import { initAnalytics } from "./utils/consent-analytics";
 
 export default function App() {
 
@@ -80,24 +82,17 @@ export default function App() {
     // window.addEventListener("scroll", handleScroll);
 
     // 2. Konum ve Dil Algılama
-    const initLocalization = async () => {
-      try {
-        const settings = await detectLocationSettings();
-        if (!settings) return;
-
-        if (settings.lang && i18n.language !== settings.lang) {
-          i18n.changeLanguage(settings.lang);
+    detectLocationSettings()
+      .then(({ countryCode, defaultLanguage }) => {
+        if (defaultLanguage) {
+          changeLanguage(defaultLanguage);
         }
+        setGlobalCurrency(countryCode === "TR" ? "TRY" : "USD");
+      })
+      .catch((err) => console.error("Geo detection error:", err));
 
-        if (settings.currency) {
-          setGlobalCurrency(settings.currency);
-        }
-      } catch (err) {
-        console.error("Localization error:", err);
-      }
-    };
-
-    initLocalization();
+    // Initialize analytics with consent check
+    initAnalytics();
 
     return () => {
       // window.removeEventListener("scroll", handleScroll);
@@ -149,6 +144,9 @@ export default function App() {
     }
 
     if (typeof view === "object" && view !== null) {
+      if (view.type === "home") {
+        return <Home setView={setView} scrollTo={view.scrollTo} />;
+      }
       if (view.type === "module") {
         return <ModuleDetail moduleId={view.id} setView={setView} />;
       }
@@ -193,6 +191,9 @@ export default function App() {
 
       {/* --- FOOTER --- */}
       <Footer setView={setView} />
+
+      {/* --- COOKIE CONSENT BANNER --- */}
+      <CookieConsentBanner />
     </div>
   );
 }

@@ -8,6 +8,7 @@ const getHeaders = () => {
     const token = localStorage.getItem('auth_token');
     return {
         'Content-Type': 'application/json',
+        'X-Tenant-Code': 'iwrs', // Explicitly set tenant for public API calls
         ...(token ? { 'Authorization': `Bearer ${token}` } : {})
     };
 };

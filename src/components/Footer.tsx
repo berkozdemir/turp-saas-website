@@ -31,6 +31,16 @@ export const Footer: FC<FooterProps> = ({ setView }) => {
               Klinik araştırmalarda veriyi kaynağından doğrulayan, USBS onaylı
               yeni nesil dijital sağlık platformu.
             </p>
+
+            {/* Omega Ownership */}
+            <div className="mb-6 border-l-2 border-slate-700 pl-4">
+              <div className="flex items-center gap-2 mb-2">
+                <img src="/omega_logo.png" alt="Omega CRO" className="h-4 w-auto grayscale brightness-200 opacity-60" />
+              </div>
+              <p className="text-xs text-slate-500">
+                Bu platform <span className="text-slate-400 font-bold">Omega Araştırma / Omega CRO</span> ekosistemi tarafından geliştirilmiştir.
+              </p>
+            </div>
             <div className="flex gap-4">
               <a
                 href="#"

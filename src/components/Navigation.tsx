@@ -80,13 +80,19 @@ export function Navigation({
             >
                 <div className="container mx-auto px-4">
                     <div className="flex items-center justify-between h-16">
-                        {/* Logo */}
-                        <button
-                            onClick={() => handleNavigation("home")}
-                            className="flex items-center gap-2 text-xl font-black text-slate-900 hover:opacity-80 transition-opacity"
-                        >
-                            <img src="/logo.png" alt="TURP" className="h-10 w-auto" />
-                        </button>
+                        {/* Logo & Omega Byline */}
+                        <div className="flex flex-col items-start leading-none">
+                            <div className="flex items-center gap-1.5 mb-0.5 opacity-80">
+                                <img src="/omega_logo.png" alt="Omega CRO" className="h-3 w-auto opacity-70 grayscale" />
+                                <span className="text-[10px] font-bold text-slate-400 tracking-wider">by OMEGA CRO</span>
+                            </div>
+                            <button
+                                onClick={() => handleNavigation("home")}
+                                className="flex items-center gap-2 text-xl font-black text-slate-900 hover:opacity-80 transition-opacity"
+                            >
+                                <img src="/logo.png" alt="TURP" className="h-9 w-auto" />
+                            </button>
+                        </div>
 
                         {/* Desktop Menu (hidden on mobile) */}
                         <div className="hidden md:flex items-center gap-2">

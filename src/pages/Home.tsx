@@ -15,13 +15,27 @@ import emailjs from '@emailjs/browser';
 
 interface HomeProps {
     setView: (view: any) => void;
+    scrollTo?: string;
 }
 
-export const Home: React.FC<HomeProps> = ({ setView }) => {
+export const Home: React.FC<HomeProps> = ({ setView, scrollTo }) => {
     const { t, i18n } = useTranslation();
     const notify = useNotification();
     const { config: landingConfig } = useLandingConfig();
     const { config: contactConfig } = useContactConfig();
+
+    // Auto-scroll effect
+    useEffect(() => {
+        if (scrollTo) {
+            // Small timeout to ensure DOM is ready and layout is stable
+            setTimeout(() => {
+                const element = document.getElementById(scrollTo);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                }
+            }, 100);
+        }
+    }, [scrollTo]);
 
     // Dil değiştiğinde modül içeriklerini yeniden hesapla
     const modules = getModuleContentTranslated(t);
@@ -158,9 +172,16 @@ export const Home: React.FC<HomeProps> = ({ setView }) => {
                             </>
                         )}
                     </h1>
-                    <p className="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed font-light">
+                    <p className="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-8 leading-relaxed font-light">
                         {heroSubtitle}
                     </p>
+
+                    {/* Omega Trust Line */}
+                    <div className="flex items-center justify-center gap-2 mb-10 opacity-80">
+                        <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Supported by</span>
+                        <img src="/omega_logo.png" alt="Omega CRO" className="h-4 w-auto grayscale opacity-60" />
+                        <span className="text-sm text-slate-500 font-medium">Omega Araştırma’nın 25+ yıllık klinik araştırma tecrübesi</span>
+                    </div>
                     <div className="flex flex-col sm:flex-row justify-center gap-4">
                         <button onClick={() => {
                             const target = primaryCtaUrl.startsWith('#') ? primaryCtaUrl.slice(1) : 'contact';

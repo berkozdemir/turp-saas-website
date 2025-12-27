@@ -95,7 +95,13 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ErrorBoundary>
       {isIwrs ? (
-        <IWRSApp />
+        <HelmetProvider>
+          <NotificationProvider>
+            <ConfirmProvider>
+              <IWRSApp />
+            </ConfirmProvider>
+          </NotificationProvider>
+        </HelmetProvider>
       ) : (
         <HelmetProvider>
           <NotificationProvider>

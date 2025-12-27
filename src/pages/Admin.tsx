@@ -72,6 +72,40 @@ const AdminContent = () => {
     }
   }, [editingPost]);
 
+  // Session Validity Check
+  useEffect(() => {
+    const verifySession = async () => {
+      if (!session) return;
+      try {
+        const API_URL = import.meta.env.VITE_API_URL || "/api";
+        // Determine tenant header if selected
+        const headers: any = {
+          Authorization: `Bearer ${session.token}`
+        };
+        if (currentTenant) {
+          headers['X-Tenant-Code'] = currentTenant.code;
+        }
+
+        const res = await fetch(`${API_URL}/index.php?action=check_session`, {
+          headers
+        });
+
+        if (res.status === 401) {
+          handleLogout();
+        }
+      } catch (e) {
+        // Network error
+      }
+    };
+
+    verifySession();
+    // Check every 1 minute
+    const interval = setInterval(verifySession, 60000);
+    return () => clearInterval(interval);
+  }, [session, currentTenant]);
+
+
+
   const handleLogout = () => {
     localStorage.removeItem("admin_session");
     clearTenantContext();
@@ -136,13 +170,8 @@ const AdminContent = () => {
           />
         );
       case "settings":
-        return (
-          <AdminSettings
-            token={session.token}
-            userName={session.user.name}
-            userEmail={session.user.email}
-          />
-        );
+        // ... logic ...
+        return <AdminSettings token={session.token} userName={session.user.name} userEmail={session.user.email} />;
       case "faq_list":
         return (
           <AdminFaqList

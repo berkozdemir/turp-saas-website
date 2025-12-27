@@ -20,7 +20,8 @@ async function fetchAPI(action: string, params: Record<string, any> = {}, method
 
   const headers: HeadersInit = {
     "Content-Type": "application/json",
-    "X-Api-Key": API_SECRET || ""
+    "X-Api-Key": API_SECRET || "",
+    "X-Tenant-Code": "turp" // Explicitly set tenant for public API calls
   };
 
   try {
