@@ -158,21 +158,8 @@ require_once __DIR__ . '/legal_api.php';
 
 
 // --- E. BLOG İŞLEMLERİ ---
-if ($action == 'get_blog_posts') {
-    try {
-        // Dil parametresi (varsayılan: tr)
-        $lang = $_GET['lang'] ?? 'tr';
+// Changed to blog_api.php to support multi-tenant and multi-language
 
-        $sql = "SELECT * FROM iwrs_saas_blog_posts WHERE lang = ? ORDER BY created_at DESC";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$lang]);
-        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode(["data" => $posts, "error" => null]);
-    } catch (Exception $e) {
-        echo json_encode(["data" => [], "error" => "Tablo bulunamadı veya boş."]);
-    }
-    exit();
-}
 
 // --- F. ROI SETTINGS ---
 if ($action == 'get_roi_settings') {

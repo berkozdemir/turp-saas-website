@@ -32,10 +32,13 @@ export default function Blog() {
 
   const fetchPosts = async () => {
     try {
-      const data = await blogApi.getAll();
-      setPosts(data || []);
+      const response = await blogApi.getAll();
+      // Handle { success: true, data: [...] } wrapper
+      const postsData = response.data || response;
+      setPosts(Array.isArray(postsData) ? postsData : []);
     } catch (error) {
       console.error("Failed to fetch posts:", error);
+      setPosts([]);
     } finally {
       setIsLoading(false);
     }

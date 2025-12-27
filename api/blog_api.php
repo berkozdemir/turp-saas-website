@@ -4,7 +4,39 @@
 
 require_once __DIR__ . '/tenant_helper.php';
 
-// 1. LIST BLOG POSTS (Admin)
+// 1. LIST BLOG POSTS (Public)
+if ($action == 'get_blog_posts' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+    require_once __DIR__ . '/tenant_helper.php';
+    $tenant_id = get_current_tenant($conn);
+
+    try {
+        // Select all multilingual fields for public display
+        $query = "SELECT id, slug, 
+            title_tr, excerpt_tr, content_tr,
+            title_en, excerpt_en, content_en,
+            title_zh, excerpt_zh, content_zh,
+            featured_image as image_url, 'Admin' as author, status, published_at as created_at 
+            FROM iwrs_saas_blog_posts 
+            WHERE tenant_id = ? AND status = 'published'
+            ORDER BY published_at DESC";
+
+        $stmt = $conn->prepare($query);
+        $stmt->execute([$tenant_id]);
+        $posts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode([
+            'success' => true,
+            'data' => $posts
+        ]);
+    } catch (Exception $e) {
+        // Return empty array on error for public safety
+        error_log("Blog API Error: " . $e->getMessage());
+        echo json_encode(['success' => false, 'data' => [], 'error' => $e->getMessage()]);
+    }
+    exit;
+}
+
+// 1.5 LIST BLOG POSTS (Admin)
 if ($action == 'get_blog_posts_admin' && $_SERVER['REQUEST_METHOD'] === 'GET') {
     require_once __DIR__ . '/auth_helper.php';
     $user_id = require_admin_auth($conn);
