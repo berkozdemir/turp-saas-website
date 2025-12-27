@@ -66,8 +66,11 @@ import IWRSApp from "./iwrs/IWRSApp";
 import { initTurpI18n } from "./i18n";
 import { initIwrsI18n } from "./iwrs/i18n/config";
 
+import NIPTApp from "./nipt/NIPTApp";
+
 // --- TENANT DETERMINATION LOGIC ---
 const hostname = window.location.hostname;
+const pathname = window.location.pathname;
 const searchParams = new URLSearchParams(window.location.search);
 const appParam = searchParams.get('app');
 
@@ -83,10 +86,17 @@ const savedMode = localStorage.getItem('turp_app_mode');
 const isIwrsDomain = hostname === 'iwrs.com.tr' || hostname === 'iwrs.localhost' || hostname.includes('iwrs.');
 const isIwrs = isIwrsDomain || appParam === 'iwrs' || savedMode === 'iwrs';
 
+const isNiptDomain = hostname === 'nipt.tr' || hostname.includes('nipt.');
+const isNiptPath = pathname.startsWith('/nipt');
+const isNipt = isNiptDomain || isNiptPath;
+
 // 3. Initialize correct i18n
 if (isIwrs) {
   document.title = "Omega IWRS";
   initIwrsI18n();
+} else if (isNipt) {
+  document.title = "NIPT Türkiye Platformu";
+  // NIPT i18n can be init here if needed
 } else {
   initTurpI18n();
 }
@@ -100,6 +110,12 @@ ReactDOM.createRoot(rootElement).render(
             <ConfirmProvider>
               <IWRSApp />
             </ConfirmProvider>
+          </NotificationProvider>
+        </HelmetProvider>
+      ) : isNipt ? (
+        <HelmetProvider>
+          <NotificationProvider>
+            <NIPTApp />
           </NotificationProvider>
         </HelmetProvider>
       ) : (
