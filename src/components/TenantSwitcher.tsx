@@ -6,8 +6,18 @@ export const TenantSwitcher = () => {
     const { currentTenant, availableTenants, setCurrentTenant } = useTenant();
     const [isOpen, setIsOpen] = useState(false);
 
-    if (!currentTenant || availableTenants.length <= 1) {
+    if (!currentTenant) {
         return null;
+    }
+
+    // Single tenant view - Static display
+    if (availableTenants.length <= 1) {
+        return (
+            <div className="flex items-center gap-2 px-3 py-2 bg-white/5 rounded-lg text-white text-sm border border-white/10">
+                <Building2 size={16} className="text-emerald-400" />
+                <span className="font-medium">{currentTenant.name}</span>
+            </div>
+        );
     }
 
     return (

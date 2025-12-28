@@ -16,6 +16,7 @@ import { AdminLandingEditor } from "./admin/AdminLandingEditor";
 import { AdminContactConfigList } from "./admin/AdminContactConfigList";
 import { AdminContactConfigEditor } from "./admin/AdminContactConfigEditor";
 import { AdminMediaList } from "./admin/AdminMediaList";
+import { AdminNIPTBookings } from "./admin/AdminNIPTBookings";
 import { TenantProvider, useTenant, Tenant } from "../context/TenantContext";
 import { TenantSelector } from "./admin/TenantSelector";
 import { TenantSwitcher } from "../components/TenantSwitcher";
@@ -32,7 +33,8 @@ import {
   BarChart3,
   Layout,
   Phone,
-  Image
+  Image,
+  Clock
 } from "lucide-react";
 
 const AdminContent = () => {
@@ -57,6 +59,25 @@ const AdminContent = () => {
   const { currentTenant, setCurrentTenant, setAvailableTenants, clearTenantContext } = useTenant();
 
   const userRole = session?.user?.role || 'viewer';
+
+  // Handle cached session: if session exists but no tenant selected OR user logs in fresh
+  useEffect(() => {
+    // Always populate availableTenants from session if they exist
+    if (session && session.tenants && session.tenants.length > 0) {
+      setAvailableTenants(session.tenants);
+
+      // If no tenant selected yet, show selector or auto-select
+      if (!currentTenant) {
+        if (session.tenants.length === 1) {
+          // Auto-select if only one tenant
+          setCurrentTenant(session.tenants[0]);
+        } else {
+          // Show tenant selection screen
+          setPendingTenants(session.tenants);
+        }
+      }
+    }
+  }, [session]); // Only depend on session, not currentTenant
 
   // Persist active tab
   useEffect(() => {
@@ -107,7 +128,7 @@ const AdminContent = () => {
 
 
   const handleLogout = () => {
-    localStorage.removeItem("admin_session");
+    localStorage.clear(); // User request: "logout deyince tüm local cache'yi silsin"
     clearTenantContext();
     setSession(null);
   };
@@ -278,6 +299,8 @@ const AdminContent = () => {
         );
       case "media":
         return <AdminMediaList />;
+      case "nipt_bookings":
+        return <AdminNIPTBookings token={session.token} />;
       default:
         return <AdminMessages token={session.token} />;
     }
@@ -423,6 +446,19 @@ const AdminContent = () => {
 
             {userRole === 'admin' && (
               <button
+                onClick={() => { setActiveTab("nipt_bookings"); setMobileMenuOpen(false); }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "nipt_bookings"
+                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  }`}
+              >
+                <Clock size={20} />
+                <span className="font-medium">NIPT Randevuları</span>
+              </button>
+            )}
+
+            {userRole === 'admin' && (
+              <button
                 onClick={() => { setActiveTab("settings"); setMobileMenuOpen(false); }}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "settings"
                   ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
@@ -463,6 +499,8 @@ const AdminContent = () => {
               {activeTab === 'analytics_seo' && "Analytics & SEO"}
               {activeTab === 'legal_list' && "Hukuki Dokümanlar"}
               {activeTab === 'legal_edit' && "Doküman Düzenleyici"}
+              {activeTab === 'legal_edit' && "Doküman Düzenleyici"}
+              {activeTab === 'nipt_bookings' && "NIPT Randevu Yönetimi"}
               {activeTab === 'settings' && "Hesap Ayarları"}
             </h1>
             <p className="text-slate-500 text-sm mt-1">Hoşgeldin, {session.user.name}</p>

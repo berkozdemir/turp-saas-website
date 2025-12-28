@@ -510,5 +510,14 @@ include_once __DIR__ . '/media_api.php';
 // Include Consent API (GDPR Cookie Consent)
 include_once __DIR__ . '/consent_api.php';
 
+// Include NIPT API (Multi-Tenant Prenatal Testing)
+include_once __DIR__ . '/nipt_api.php';
+
+// Include Westesti API
+include_once __DIR__ . '/westesti_api.php';
+
+// Include Trombofili API
+include_once __DIR__ . '/trombofili_api.php';
+
 echo json_encode(["error" => "Geçersiz işlem"]);
 ?>

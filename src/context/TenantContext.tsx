@@ -85,7 +85,10 @@ export const getTenantHeader = (): Record<string, string> => {
     const stored = localStorage.getItem(TENANT_STORAGE_KEY);
     if (stored) {
         const tenant = JSON.parse(stored);
-        return { 'X-Tenant-Code': tenant.code };
+        return {
+            'X-Tenant-Id': String(tenant.id || ''),
+            'X-Tenant-Code': tenant.code || ''
+        };
     }
     return {};
 };
