@@ -29,9 +29,9 @@ function handle_blog_public(string $action): bool
 
 function blog_public_list(): bool
 {
-    $tenant_id = get_current_tenant_id();
+    $tenant_code = get_current_tenant_code();
 
-    $posts = blog_get_published_posts($tenant_id);
+    $posts = blog_get_published_posts($tenant_code);
 
     echo json_encode([
         'success' => true,
@@ -42,7 +42,7 @@ function blog_public_list(): bool
 
 function blog_public_get(): bool
 {
-    $tenant_id = get_current_tenant_id();
+    $tenant_code = get_current_tenant_code();
     $slug = $_GET['slug'] ?? '';
 
     if (empty($slug)) {
@@ -50,7 +50,7 @@ function blog_public_get(): bool
         return true;
     }
 
-    $post = blog_get_post_by_slug($tenant_id, $slug);
+    $post = blog_get_post_by_slug($tenant_code, $slug);
 
     if ($post) {
         echo json_encode(['success' => true, 'data' => $post]);

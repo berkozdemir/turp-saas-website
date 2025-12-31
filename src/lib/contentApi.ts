@@ -105,3 +105,11 @@ export const fetchPageBySlug = async (
   // Mock veya boş data
   return null;
 };
+
+export const fetchContactConfig = async (lang: LangCode, tenantCode: string = "nipt"): Promise<any | null> => {
+  const response = await fetchAPI('get_contact_config', { language: lang, tenant: tenantCode });
+  if (response?.success && response.data) {
+    return response.data;
+  }
+  return null;
+};

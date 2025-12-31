@@ -86,7 +86,7 @@ const savedMode = localStorage.getItem('turp_app_mode');
 const isIwrsDomain = hostname === 'iwrs.com.tr' || hostname === 'iwrs.localhost' || hostname.includes('iwrs.');
 const isIwrs = isIwrsDomain || appParam === 'iwrs' || savedMode === 'iwrs';
 
-const isNiptDomain = hostname === 'nipt.tr' || hostname.includes('nipt.');
+const isNiptDomain = hostname === 'nipt.tr' || hostname.includes('nipt.') || hostname === 'westesti.com' || hostname.includes('westesti.') || hostname === 'trombofili.com' || hostname.includes('trombofili.');
 const isNiptPath = pathname.startsWith('/nipt');
 const isNipt = isNiptDomain || isNiptPath;
 

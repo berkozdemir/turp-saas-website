@@ -10,7 +10,7 @@ require_once __DIR__ . '/../../config/db.php';
 /**
  * List legal documents for tenant
  */
-function legal_list(int $tenant_id): array
+function legal_list($tenant_id): array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("
@@ -19,36 +19,36 @@ function legal_list(int $tenant_id): array
         WHERE tenant_id = ?
         ORDER BY type ASC
     ");
-    $stmt->execute([$tenant_id]);
+    $stmt->execute([(string) $tenant_id]);
     return $stmt->fetchAll();
 }
 
 /**
  * Get legal document by type
  */
-function legal_get_by_type(int $tenant_id, string $type): ?array
+function legal_get_by_type($tenant_id, string $type): ?array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("SELECT * FROM legal_documents WHERE tenant_id = ? AND type = ?");
-    $stmt->execute([$tenant_id, $type]);
+    $stmt->execute([(string) $tenant_id, $type]);
     return $stmt->fetch() ?: null;
 }
 
 /**
  * Get legal document by ID
  */
-function legal_get(int $tenant_id, int $id): ?array
+function legal_get($tenant_id, int $id): ?array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("SELECT * FROM legal_documents WHERE id = ? AND tenant_id = ?");
-    $stmt->execute([$id, $tenant_id]);
+    $stmt->execute([$id, (string) $tenant_id]);
     return $stmt->fetch() ?: null;
 }
 
 /**
  * Create or update legal document
  */
-function legal_save(int $tenant_id, string $type, array $data): int
+function legal_save($tenant_id, string $type, array $data): int
 {
     $conn = get_db_connection();
 
@@ -70,7 +70,7 @@ function legal_save(int $tenant_id, string $type, array $data): int
             $data['content_en'] ?? null,
             $data['title_zh'] ?? null,
             $data['content_zh'] ?? null,
-            $tenant_id,
+            (string) $tenant_id,
             $type
         ]);
         return (int) $existing['id'];
@@ -81,7 +81,7 @@ function legal_save(int $tenant_id, string $type, array $data): int
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->execute([
-            $tenant_id,
+            (string) $tenant_id,
             $type,
             $data['title_tr'] ?? '',
             $data['content_tr'] ?? '',
@@ -97,9 +97,9 @@ function legal_save(int $tenant_id, string $type, array $data): int
 /**
  * Delete legal document
  */
-function legal_delete(int $tenant_id, int $id): bool
+function legal_delete($tenant_id, int $id): bool
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("DELETE FROM legal_documents WHERE id = ? AND tenant_id = ?");
-    return $stmt->execute([$id, $tenant_id]);
+    return $stmt->execute([$id, (string) $tenant_id]);
 }

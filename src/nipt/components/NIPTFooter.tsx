@@ -22,6 +22,7 @@ export const NIPTFooter = () => {
                             <li><a href="/nipt#testler" className="hover:text-blue-400 transition-colors">NIPT Testleri</a></li>
                             <li><a href="/nipt#nasil-calisir" className="hover:text-blue-400 transition-colors">Süreç</a></li>
                             <li><a href="/nipt/booking" className="hover:text-blue-400 transition-colors">Randevu Al</a></li>
+                            <li><a href="/iletisim" className="hover:text-blue-400 transition-colors">İletişim</a></li>
                             <li><a href="/nipt/about" className="hover:text-blue-400 transition-colors">Hakkımızda</a></li>
                         </ul>
                     </div>

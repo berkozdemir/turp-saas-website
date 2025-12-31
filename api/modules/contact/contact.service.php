@@ -10,18 +10,18 @@ require_once __DIR__ . '/../../config/db.php';
 /**
  * Get contact config for tenant
  */
-function contact_get_config(int $tenant_id): ?array
+function contact_get_config($tenant_id): ?array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("SELECT * FROM contact_configs WHERE tenant_id = ?");
-    $stmt->execute([$tenant_id]);
+    $stmt->execute([(string) $tenant_id]);
     return $stmt->fetch() ?: null;
 }
 
 /**
  * Save contact config
  */
-function contact_save_config(int $tenant_id, array $data): bool
+function contact_save_config($tenant_id, array $data): bool
 {
     $conn = get_db_connection();
 
@@ -48,7 +48,7 @@ function contact_save_config(int $tenant_id, array $data): bool
             $data['form_title'] ?? 'Send a Message',
             $data['form_subtitle'] ?? '',
             json_encode($data['social_links'] ?? []),
-            $tenant_id
+            (string) $tenant_id
         ]);
     } else {
         $stmt = $conn->prepare("
@@ -58,7 +58,7 @@ function contact_save_config(int $tenant_id, array $data): bool
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
         return $stmt->execute([
-            $tenant_id,
+            (string) $tenant_id,
             $data['page_title'] ?? 'Contact Us',
             $data['page_subtitle'] ?? '',
             $data['phone'] ?? '',
@@ -76,7 +76,7 @@ function contact_save_config(int $tenant_id, array $data): bool
 /**
  * List contact messages for tenant
  */
-function contact_list_messages(int $tenant_id, array $options = []): array
+function contact_list_messages($tenant_id, array $options = []): array
 {
     $conn = get_db_connection();
 
@@ -86,7 +86,7 @@ function contact_list_messages(int $tenant_id, array $options = []): array
     $offset = ($page - 1) * $limit;
 
     $query = "SELECT * FROM contact_messages WHERE tenant_id = ?";
-    $params = [$tenant_id];
+    $params = [(string) $tenant_id];
 
     if ($status !== 'all') {
         $query .= " AND status = ?";
@@ -103,7 +103,7 @@ function contact_list_messages(int $tenant_id, array $options = []): array
 /**
  * Create contact message
  */
-function contact_create_message(int $tenant_id, array $data): int
+function contact_create_message($tenant_id, array $data): int
 {
     $conn = get_db_connection();
 
@@ -114,7 +114,7 @@ function contact_create_message(int $tenant_id, array $data): int
     ");
 
     $stmt->execute([
-        $tenant_id,
+        (string) $tenant_id,
         $data['name'] ?? '',
         $data['email'] ?? '',
         $data['phone'] ?? null,
@@ -128,9 +128,9 @@ function contact_create_message(int $tenant_id, array $data): int
 /**
  * Update message status
  */
-function contact_update_message_status(int $tenant_id, int $id, string $status): bool
+function contact_update_message_status($tenant_id, int $id, string $status): bool
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("UPDATE contact_messages SET status = ? WHERE id = ? AND tenant_id = ?");
-    return $stmt->execute([$status, $id, $tenant_id]);
+    return $stmt->execute([$status, $id, (string) $tenant_id]);
 }

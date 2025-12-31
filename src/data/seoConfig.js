@@ -94,5 +94,20 @@ export const seoData = {
     tr: { title: "Romatoloji & Artrit Takip Yazılımı | Turp", description: "Dijital DAS28 hesaplayıcı, sabah tutukluğu kronometresi ve eklem haritası." },
     en: { title: "Rheumatology & Arthritis Tracking Software | Turp", description: "Digital DAS28 calculator, morning stiffness stopwatch, and joint mapping." },
     zh: { title: "风湿病 & 关节炎追踪软件 | Turp", description: "数字 DAS28 计算器、晨僵秒表和关节映射。" }
+  },
+  'case-rheuma': {
+    tr: { title: "Romatoloji Vaka Analizi - Dijital Dönüşüm | Turp", description: "Hekim zamanından %45 tasarruf sağlayan hibrit romatoloji izlem modeli." },
+    en: { title: "Rheumatology Case Study - Digital Transformation | Turp", description: "Hybrid rheumatology monitoring model saving 45% of physician time." },
+    zh: { title: "风湿病案例研究 - 数字化转型 | Turp", description: "混合型风湿病监测模型，可节省 45% 的医生时间。" }
+  },
+  'case-education': {
+    tr: { title: "Dijital Onam ve Eğitim Vaka Analizi | Turp", description: "Onam süreçlerinde %100 uyumluluk ve kağıtsız klinik araştırma yönetimi." },
+    en: { title: "Digital Consent & Education Case Study | Turp", description: "100% compliance in consent processes and paperless clinical research management." },
+    zh: { title: "数字化知情同意与教育案例研究 | Turp", description: "知情同意流程 100% 合规，无纸化临床研究管理。" }
+  },
+  'contact': {
+    tr: { title: "Bize Ulaşın - İletişim Bilgileri | Turp Health", description: "Sorularınız, randevu talepleriniz ve teknik destek için bizimle iletişime geçin. Ankara ve İstanbul ofislerimiz." },
+    en: { title: "Contact Us - Contact Information | Turp Health", description: "Contact us for your questions, appointment requests, and technical support. Our Ankara and Istanbul offices." },
+    zh: { title: "联系我们 - 联系信息 | Turp Health", description: "如有任何疑问、预约请求和技术支持，请联系我们。我们在安卡拉和伊斯坦布尔的办事处。" }
   }
 };

@@ -19,7 +19,9 @@ import { Admin } from "./pages/Admin";
 import { ResetPassword } from "./pages/ResetPassword";
 import { ROICalculator } from "./pages/ROICalculator";
 import { RheumaCaseStudy } from "./pages/RheumaCaseStudy";
+import { EducationCaseStudy } from "./pages/EducationCaseStudy";
 import { FaqPage } from "./pages/FaqPage";
+import { Contact } from "./pages/Contact";
 import { LegalPage } from "./pages/LegalPage";
 import useAnalytics, { trackLanguageChange } from "./lib/analytics";
 import { CookieConsentBanner } from "./components/CookieConsentBanner";
@@ -39,7 +41,12 @@ export default function App() {
       return 'admin';
     }
 
-    // 2. Password reset check
+    // 2. Contact page check
+    if (path === '/iletisim' || path === '/contact') {
+      return 'contact';
+    }
+
+    // 3. Password reset check
     const urlParams = new URLSearchParams(window.location.search);
     const resetToken = urlParams.get('token');
     if (resetToken && path.includes('reset-password')) {
@@ -128,8 +135,12 @@ export default function App() {
           return <Blog setView={setView} />;
         case "roi":
           return <ROICalculator initialCurrency={globalCurrency} />;
+        case "contact":
+          return <Contact setView={setView} />;
         case "case-rheuma":
           return <RheumaCaseStudy setView={setView} />;
+        case "case-education":
+          return <EducationCaseStudy setView={setView} />;
         case "sss":
           return <FaqPage setView={setView} />;
         case "admin":

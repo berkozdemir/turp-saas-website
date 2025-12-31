@@ -9,6 +9,8 @@
 // Load module controllers
 require_once __DIR__ . '/../modules/blog/blog.public.controller.php';
 require_once __DIR__ . '/../modules/faq/faq.public.controller.php';
+require_once __DIR__ . '/../modules/nipt/doctors.controller.php';
+require_once __DIR__ . '/../modules/contact/contact.public.controller.php';
 
 /**
  * Route public actions to controllers
@@ -28,10 +30,18 @@ function route_public_action(string $action): bool
         return true;
     }
 
-    // TODO: Add other modules:
-    // if (handle_landing_public($action)) return true;
-    // if (handle_contact_public($action)) return true;
-    // if (handle_legal_public($action)) return true;
+    if (handle_doctors_public($action))
+        return true;
+    if (handle_contact_public($action))
+        return true;
+    if (handle_roi_public($action))
+        return true;
+    if (handle_landing_public($action))
+        return true;
+    if (handle_contact_public($action))
+        return true;
+    if (handle_legal_public($action))
+        return true;
 
     return false;
 }

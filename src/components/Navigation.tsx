@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Globe, ChevronDown, FileText, Lock, Menu, X } from "lucide-react";
+import { Globe, ChevronDown, FileText, Lock, Menu, X, BookOpen } from "lucide-react";
 
 interface NavigationProps {
     view: any;
@@ -136,15 +136,26 @@ export function Navigation({
                             </button>
 
                             {/* Senaryolar */}
-                            <button
-                                onClick={() => handleNavigation("case-rheuma")}
-                                className={`hidden lg:flex items-center gap-1 px-4 py-2 rounded-full text-sm font-bold transition-all ${view === "case-rheuma"
-                                    ? "bg-slate-900 text-white shadow-md"
-                                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                                    }`}
-                            >
-                                <FileText size={14} /> {t("nav_solutions")}
-                            </button>
+                            <div className="hidden lg:flex items-center gap-2">
+                                <button
+                                    onClick={() => handleNavigation("case-rheuma")}
+                                    className={`flex items-center gap-1 px-4 py-2 rounded-full text-sm font-bold transition-all ${view === "case-rheuma"
+                                        ? "bg-slate-900 text-white shadow-md"
+                                        : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                                        }`}
+                                >
+                                    <FileText size={14} /> Romatoloji
+                                </button>
+                                <button
+                                    onClick={() => handleNavigation("case-education")}
+                                    className={`flex items-center gap-1 px-4 py-2 rounded-full text-sm font-bold transition-all ${view === "case-education"
+                                        ? "bg-sky-600 text-white shadow-md"
+                                        : "text-sky-600 hover:bg-sky-50"
+                                        }`}
+                                >
+                                    <BookOpen size={14} /> {t("mod_edu_title")}
+                                </button>
+                            </div>
 
                             {/* Blog */}
                             <button
@@ -155,6 +166,16 @@ export function Navigation({
                                     }`}
                             >
                                 {t("nav_blog")}
+                            </button>
+
+                            <button
+                                onClick={() => handleNavigation("contact")}
+                                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${view === "contact"
+                                    ? "bg-slate-900 text-white shadow-md"
+                                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                                    }`}
+                            >
+                                {t("nav_contact")}
                             </button>
 
                             {/* FAQ (SSS) */}
@@ -295,12 +316,20 @@ export function Navigation({
                     </button>
 
                     {/* Senaryolar */}
-                    <button
-                        onClick={() => handleNavigation("case-rheuma")}
-                        className="text-left px-4 py-3 rounded-lg text-base font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
-                    >
-                        📊 {t("nav_solutions")}
-                    </button>
+                    <div className="grid grid-cols-2 gap-2">
+                        <button
+                            onClick={() => handleNavigation("case-rheuma")}
+                            className={`text-left px-4 py-3 rounded-lg text-sm font-bold transition-colors ${view === "case-rheuma" ? "bg-slate-900 text-white" : "text-slate-700 bg-slate-50 hover:bg-slate-100"}`}
+                        >
+                            📊 Romatoloji
+                        </button>
+                        <button
+                            onClick={() => handleNavigation("case-education")}
+                            className={`text-left px-4 py-3 rounded-lg text-sm font-bold transition-colors ${view === "case-education" ? "bg-sky-600 text-white" : "text-sky-600 bg-sky-50 hover:bg-sky-100"}`}
+                        >
+                            📚 {t("mod_edu_title")}
+                        </button>
+                    </div>
 
                     {/* Blog */}
                     <button
@@ -313,9 +342,17 @@ export function Navigation({
                     {/* FAQ (SSS) */}
                     <button
                         onClick={() => handleNavigation("sss")}
-                        className="text-left px-4 py-3 rounded-lg text-base font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
+                        className={`text-left px-4 py-3 rounded-lg text-base font-bold transition-colors ${view === "sss" ? "bg-slate-100 text-rose-600" : "text-slate-700 hover:bg-slate-50"}`}
                     >
                         ❓ {t("nav_faq")}
+                    </button>
+
+                    {/* Contact */}
+                    <button
+                        onClick={() => handleNavigation("contact")}
+                        className={`text-left px-4 py-3 rounded-lg text-base font-bold transition-colors ${view === "contact" ? "bg-slate-100 text-rose-600" : "text-slate-700 hover:bg-slate-50"}`}
+                    >
+                        📞 {t("nav_contact")}
                     </button>
 
                     {/* Hakkımızda */}

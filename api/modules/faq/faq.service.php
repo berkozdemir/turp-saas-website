@@ -24,7 +24,7 @@ function faq_list(int $tenant_id, array $options = []): array
     $limit = min(100, max(1, (int) ($options['limit'] ?? 50)));
     $offset = ($page - 1) * $limit;
 
-    $query = "SELECT * FROM iwrs_saas_faqs WHERE tenant_id = ?";
+    $query = "SELECT * FROM faqs WHERE tenant_id = ?";
     $params = [$tenant_id];
 
     if ($status !== 'all') {
@@ -45,7 +45,7 @@ function faq_list(int $tenant_id, array $options = []): array
 function faq_get(int $tenant_id, int $id): ?array
 {
     $conn = get_db_connection();
-    $stmt = $conn->prepare("SELECT * FROM iwrs_saas_faqs WHERE id = ? AND tenant_id = ?");
+    $stmt = $conn->prepare("SELECT * FROM faqs WHERE id = ? AND tenant_id = ?");
     $stmt->execute([$id, $tenant_id]);
     return $stmt->fetch() ?: null;
 }
@@ -58,7 +58,7 @@ function faq_create(int $tenant_id, array $data): int
     $conn = get_db_connection();
 
     $stmt = $conn->prepare("
-        INSERT INTO iwrs_saas_faqs 
+        INSERT INTO faqs 
         (question_tr, answer_tr, question_en, answer_en, question_zh, answer_zh, 
          category, sort_order, status, tenant_id) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -88,7 +88,7 @@ function faq_update(int $tenant_id, int $id, array $data): bool
     $conn = get_db_connection();
 
     $stmt = $conn->prepare("
-        UPDATE iwrs_saas_faqs SET 
+        UPDATE faqs SET 
             question_tr=?, answer_tr=?, question_en=?, answer_en=?, 
             question_zh=?, answer_zh=?, category=?, sort_order=?, status=?
         WHERE id=? AND tenant_id=?
@@ -115,7 +115,7 @@ function faq_update(int $tenant_id, int $id, array $data): bool
 function faq_delete(int $tenant_id, int $id): bool
 {
     $conn = get_db_connection();
-    $stmt = $conn->prepare("DELETE FROM iwrs_saas_faqs WHERE id = ? AND tenant_id = ?");
+    $stmt = $conn->prepare("DELETE FROM faqs WHERE id = ? AND tenant_id = ?");
     return $stmt->execute([$id, $tenant_id]);
 }
 
@@ -126,7 +126,7 @@ function faq_get_published(int $tenant_id): array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("
-        SELECT * FROM iwrs_saas_faqs 
+        SELECT * FROM faqs 
         WHERE tenant_id = ? AND status = 'published'
         ORDER BY sort_order ASC, id DESC
     ");

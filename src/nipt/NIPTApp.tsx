@@ -5,8 +5,10 @@ import { NIPTPortal } from "./pages/NIPTPortal";
 import { BookingForm } from "./pages/BookingForm";
 import { MomGuardIntro } from "./pages/MomGuardIntro";
 import { VerifiIntro } from "./pages/VerifiIntro";
-import { VeritasIntro } from "./pages/VeritasIntro";
+import { TestsList } from "./pages/TestsList";
 import { About } from "./pages/About";
+import { Contact } from "./pages/Contact";
+import { VeritasIntro } from "./pages/VeritasIntro";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -36,9 +38,10 @@ const NIPTApp: React.FC = () => {
                     <Route path="/booking" element={<BookingForm />} />
 
                     {/* Unified Test Details - Redirect old paths if needed, or just new structure */}
-                    <Route path="testler/momguard" element={<MomGuardIntro />} />
-                    <Route path="testler/verifi" element={<VerifiIntro />} />
-                    <Route path="testler/veritas" element={<VeritasIntro />} />
+                    <Route path="/testler" element={<TestsList />} />
+                    <Route path="/testler/momguard" element={<MomGuardIntro />} />
+                    <Route path="/testler/verifi" element={<VerifiIntro />} />
+                    <Route path="/testler/veritas" element={<VeritasIntro />} />
 
                     {/* Legacy/Direct Brand Access redirects to new structure or keeps working */}
                     <Route path="momguard" element={<Navigate to="/testler/momguard" replace />} />
@@ -47,7 +50,7 @@ const NIPTApp: React.FC = () => {
 
                     <Route path="about" element={<About />} />
                     <Route path="hakkimizda" element={<About />} />
-                    <Route path="iletisim" element={<About />} /> {/* Placeholder */}
+                    <Route path="iletisim" element={<Contact />} />
 
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>

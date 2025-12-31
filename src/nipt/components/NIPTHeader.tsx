@@ -18,7 +18,7 @@ export const NIPTHeader = () => {
                 <nav className="hidden md:flex items-center gap-8 font-medium text-slate-600">
                     <a href="/nipt#sss" className="hover:text-blue-600 transition-colors">S.S.S.</a>
                     <button onClick={() => navigate('/about')} className="hover:text-blue-600 transition-colors">Hakkımızda</button>
-                    <a href="/nipt#iletisim" className="hover:text-blue-600 transition-colors">İletişim</a>
+                    <button onClick={() => navigate('/iletisim')} className="hover:text-blue-600 transition-colors">İletişim</button>
                 </nav>
 
                 {/* CTA & Mobile Menu */}

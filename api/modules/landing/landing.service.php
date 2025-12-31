@@ -10,18 +10,18 @@ require_once __DIR__ . '/../../config/db.php';
 /**
  * Get landing config for tenant
  */
-function landing_get_config(int $tenant_id): ?array
+function landing_get_config($tenant_id): ?array
 {
     $conn = get_db_connection();
-    $stmt = $conn->prepare("SELECT * FROM iwrs_saas_landing_configs WHERE tenant_id = ?");
-    $stmt->execute([$tenant_id]);
+    $stmt = $conn->prepare("SELECT * FROM landing_configs WHERE tenant_id = ?");
+    $stmt->execute([(string) $tenant_id]);
     return $stmt->fetch() ?: null;
 }
 
 /**
  * Save landing config
  */
-function landing_save_config(int $tenant_id, array $data): bool
+function landing_save_config($tenant_id, array $data): bool
 {
     $conn = get_db_connection();
 
@@ -30,7 +30,7 @@ function landing_save_config(int $tenant_id, array $data): bool
 
     if ($existing) {
         $stmt = $conn->prepare("
-            UPDATE iwrs_saas_landing_configs SET 
+            UPDATE landing_configs SET 
                 hero_title=?, hero_title_line2=?, hero_subtitle=?, hero_cta_text=?, hero_cta_link=?,
                 hero_bg_gradient_from=?, hero_bg_gradient_to=?,
                 features_title=?, features_json=?,
@@ -54,11 +54,11 @@ function landing_save_config(int $tenant_id, array $data): bool
             $data['cta_description'] ?? '',
             $data['cta_button_text'] ?? 'Contact Us',
             $data['cta_button_link'] ?? '/contact',
-            $tenant_id
+            (string) $tenant_id
         ]);
     } else {
         $stmt = $conn->prepare("
-            INSERT INTO iwrs_saas_landing_configs 
+            INSERT INTO landing_configs 
             (tenant_id, hero_title, hero_title_line2, hero_subtitle, hero_cta_text, hero_cta_link,
              hero_bg_gradient_from, hero_bg_gradient_to,
              features_title, features_json, stats_json, testimonials_json,
@@ -66,7 +66,7 @@ function landing_save_config(int $tenant_id, array $data): bool
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
         return $stmt->execute([
-            $tenant_id,
+            (string) $tenant_id,
             $data['hero_title'] ?? '',
             $data['hero_title_line2'] ?? '',
             $data['hero_subtitle'] ?? '',

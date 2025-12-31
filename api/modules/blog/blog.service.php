@@ -27,8 +27,8 @@ function blog_list_posts(int $tenant_id, array $options = []): array
 
     // Build query
     $query = "SELECT id, slug, title_tr, title_en, title_zh, featured_image as image_url, status, created_at 
-              FROM iwrs_saas_blog_posts WHERE tenant_id = ?";
-    $params = [$tenant_id];
+              FROM blog_posts WHERE tenant_id = ?";
+    $params = [(string) $tenant_id];
 
     if ($status !== 'all') {
         $query .= " AND status = ?";
@@ -44,7 +44,7 @@ function blog_list_posts(int $tenant_id, array $options = []): array
     }
 
     // Count total
-    $count_query = str_replace("SELECT id, slug, title_tr, title_en, title_zh, featured_image as image_url, status, created_at", "SELECT COUNT(*) as total", $query);
+    $count_query = str_replace("SELECT id, slug, title_tr, title_en, title_zh, featured_image, status, created_at", "SELECT COUNT(*) as total", $query);
     $stmt = $conn->prepare($count_query);
     $stmt->execute($params);
     $total = (int) $stmt->fetch()['total'];
@@ -79,10 +79,10 @@ function blog_get_post(int $tenant_id, int $post_id): ?array
             title_en, excerpt_en, content_en,
             title_zh, excerpt_zh, content_zh,
             featured_image as image_url, status, published_at, created_at 
-        FROM iwrs_saas_blog_posts 
+        FROM blog_posts 
         WHERE id = ? AND tenant_id = ?
     ");
-    $stmt->execute([$post_id, $tenant_id]);
+    $stmt->execute([$post_id, (string) $tenant_id]);
     return $stmt->fetch() ?: null;
 }
 
@@ -102,10 +102,10 @@ function blog_get_post_by_slug(int $tenant_id, string $slug): ?array
             title_en, excerpt_en, content_en,
             title_zh, excerpt_zh, content_zh,
             featured_image as image_url, status, published_at as created_at 
-        FROM iwrs_saas_blog_posts 
+        FROM blog_posts 
         WHERE slug = ? AND tenant_id = ? AND status = 'published'
     ");
-    $stmt->execute([$slug, $tenant_id]);
+    $stmt->execute([$slug, (string) $tenant_id]);
     return $stmt->fetch() ?: null;
 }
 
@@ -121,7 +121,7 @@ function blog_create_post(int $tenant_id, array $data): int
     $conn = get_db_connection();
 
     $stmt = $conn->prepare("
-        INSERT INTO iwrs_saas_blog_posts 
+        INSERT INTO blog_posts 
         (slug, title_tr, excerpt_tr, content_tr, title_en, excerpt_en, content_en, 
          title_zh, excerpt_zh, content_zh, status, published_at, featured_image, tenant_id) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -140,8 +140,8 @@ function blog_create_post(int $tenant_id, array $data): int
         $data['content_zh'] ?? null,
         $data['status'] ?? 'draft',
         $data['published_at'] ?? null,
-        $data['image_url'] ?? null,
-        $tenant_id
+        $data['image_url'] ?? $data['featured_image'] ?? null,
+        (string) $tenant_id
     ]);
 
     return (int) $conn->lastInsertId();
@@ -160,7 +160,7 @@ function blog_update_post(int $tenant_id, int $post_id, array $data): bool
     $conn = get_db_connection();
 
     $stmt = $conn->prepare("
-        UPDATE iwrs_saas_blog_posts SET 
+        UPDATE blog_posts SET 
             slug=?, title_tr=?, excerpt_tr=?, content_tr=?, 
             title_en=?, excerpt_en=?, content_en=?,
             title_zh=?, excerpt_zh=?, content_zh=?,
@@ -181,9 +181,9 @@ function blog_update_post(int $tenant_id, int $post_id, array $data): bool
         $data['content_zh'] ?? null,
         $data['status'] ?? 'draft',
         $data['published_at'] ?? null,
-        $data['image_url'] ?? null,
+        $data['image_url'] ?? $data['featured_image'] ?? null,
         $post_id,
-        $tenant_id
+        (string) $tenant_id
     ]);
 }
 
@@ -197,8 +197,8 @@ function blog_update_post(int $tenant_id, int $post_id, array $data): bool
 function blog_delete_post(int $tenant_id, int $post_id): bool
 {
     $conn = get_db_connection();
-    $stmt = $conn->prepare("DELETE FROM iwrs_saas_blog_posts WHERE id = ? AND tenant_id = ?");
-    return $stmt->execute([$post_id, $tenant_id]);
+    $stmt = $conn->prepare("DELETE FROM blog_posts WHERE id = ? AND tenant_id = ?");
+    return $stmt->execute([$post_id, (string) $tenant_id]);
 }
 
 /**
@@ -216,10 +216,10 @@ function blog_get_published_posts(int $tenant_id): array
             title_en, excerpt_en, content_en,
             title_zh, excerpt_zh, content_zh,
             featured_image as image_url, published_at as created_at 
-        FROM iwrs_saas_blog_posts 
+        FROM blog_posts 
         WHERE tenant_id = ? AND status = 'published'
         ORDER BY published_at DESC
     ");
-    $stmt->execute([$tenant_id]);
+    $stmt->execute([(string) $tenant_id]);
     return $stmt->fetchAll();
 }

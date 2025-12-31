@@ -9,6 +9,7 @@
 // Load module controllers
 require_once __DIR__ . '/../modules/blog/blog.admin.controller.php';
 require_once __DIR__ . '/../modules/faq/faq.admin.controller.php';
+require_once __DIR__ . '/../modules/nipt/doctors.admin.controller.php';
 
 /**
  * Route admin actions to controllers
@@ -25,6 +26,12 @@ function route_admin_action(string $action): bool
 
     // FAQ module
     if (handle_faq_admin($action)) {
+        return true;
+    }
+
+    // Doctors module
+    global $token;
+    if (handle_doctors_admin($action, $token)) {
         return true;
     }
 

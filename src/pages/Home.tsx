@@ -274,7 +274,19 @@ export const Home: React.FC<HomeProps> = ({ setView, scrollTo }) => {
                                         {React.createElement(val.icon, { size: 24 })}
                                     </div>
                                     <h3 className="text-2xl font-heading font-bold mb-3">{val.title}</h3>
-                                    <p className={`text-lg ${isBig ? 'text-rose-100' : 'text-slate-500'}`}>{val.short}</p>
+                                    <p className={`text-lg ${isBig ? 'text-rose-100' : 'text-slate-500'} mb-6`}>{val.short}</p>
+
+                                    {key === 'education' && (
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setView('case-education');
+                                            }}
+                                            className="px-4 py-2 bg-sky-500 text-white text-sm font-bold rounded-lg hover:bg-sky-400 transition-colors shadow-md relative z-20"
+                                        >
+                                            {t("case_edu.badge")}
+                                        </button>
+                                    )}
                                 </div>
                                 {isBig && <div className="absolute right-0 bottom-0 w-64 h-64 bg-white/10 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700"></div>}
                                 <ArrowRight className={`absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity ${isBig ? 'text-white' : 'text-slate-900'}`} />

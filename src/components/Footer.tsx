@@ -125,9 +125,12 @@ export const Footer: FC<FooterProps> = ({ setView }) => {
                 </a>
               </li>
               <li>
-                <a href="#contact" className="hover:text-white transition-colors">
-                  İletişim
-                </a>
+                <button
+                  onClick={() => setView("contact")}
+                  className="hover:text-white transition-colors"
+                >
+                  {t("footer_contact")}
+                </button>
               </li>
 
               {/* YÖNETİM GİRİŞİ */}

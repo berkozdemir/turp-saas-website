@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft, CheckCircle } from "lucide-react";
+import { ArrowLeft, CheckCircle, FileText } from "lucide-react";
 import { getModuleContentTranslated } from "../data/content";
 import { OptimizedImage } from "../components/OptimizedImage";
 
@@ -32,16 +32,26 @@ export const ModuleDetail: React.FC<ModuleDetailProps> = ({ moduleId, setView })
           >
             <ArrowLeft size={20} /> {t("module_back")}
           </button>
-          <button
-            onClick={() =>
-              document
-                .getElementById("contact-module")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="px-5 py-2 bg-slate-900 text-white rounded-full text-sm font-bold hover:bg-slate-700 transition-colors shadow-lg"
-          >
-            {t("module_btn_detail")}
-          </button>
+          <div className="flex items-center gap-3">
+            {moduleId === "education" && (
+              <button
+                onClick={() => setView("case-education")}
+                className="px-5 py-2 bg-sky-100 text-sky-700 rounded-full text-sm font-bold hover:bg-sky-200 transition-colors border border-sky-200 shadow-sm flex items-center gap-2"
+              >
+                <FileText size={16} /> {t("case_edu.badge")}
+              </button>
+            )}
+            <button
+              onClick={() =>
+                document
+                  .getElementById("contact-module")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+              className="px-5 py-2 bg-slate-900 text-white rounded-full text-sm font-bold hover:bg-slate-700 transition-colors shadow-lg"
+            >
+              {t("module_btn_detail")}
+            </button>
+          </div>
         </div>
       </div>
 

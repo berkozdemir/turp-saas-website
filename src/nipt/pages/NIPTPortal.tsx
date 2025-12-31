@@ -18,6 +18,7 @@ import {
 
 import { NIPTHeader } from '../components/NIPTHeader';
 import { NIPTFooter } from '../components/NIPTFooter';
+import NIPTSEO from '../components/NIPTSEO';
 
 export const NIPTPortal = () => {
     const navigate = useNavigate();
@@ -92,7 +93,7 @@ export const NIPTPortal = () => {
 
     return (
         <div className="min-h-screen bg-[#FAFBFC] font-sans text-slate-800 selection:bg-blue-100 selection:text-blue-900">
-
+            <NIPTSEO />
             <NIPTHeader />
 
             {/* 2. Hero Section */}

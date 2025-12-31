@@ -100,3 +100,40 @@ function get_current_tenant_id(): ?int
     $tenant = get_tenant_by_code('turp');
     return $tenant ? (int) $tenant['id'] : 1;
 }
+
+/**
+ * Get current tenant code
+ * 
+ * @return string|null Tenant code
+ */
+function get_current_tenant_code(): ?string
+{
+    // Try X-Tenant-Code header
+    $headers = getallheaders();
+    foreach ($headers as $key => $value) {
+        if (strtolower($key) === 'x-tenant-code') {
+            return $value;
+        }
+    }
+
+    // Try ID to Code resolution if only ID is provided
+    $tenant_id = $_SERVER['HTTP_X_TENANT_ID'] ?? null;
+    if ($tenant_id) {
+        $tenant = get_tenant_by_id((int) $tenant_id);
+        if ($tenant)
+            return $tenant['code'];
+    }
+
+    // Try Origin/Referer domain
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? $_SERVER['HTTP_REFERER'] ?? '';
+    if ($origin) {
+        $domain = parse_url($origin, PHP_URL_HOST);
+        if ($domain) {
+            $tenant = get_tenant_by_domain($domain);
+            if ($tenant)
+                return $tenant['code'];
+        }
+    }
+
+    return 'turp';
+}
