@@ -101,22 +101,29 @@ setup_cors();
 $token = get_bearer_token();
 $action = $_GET['action'] ?? '';
 
-// Determine route type (admin vs public)
-if (strpos($action, 'admin_') === 0 || in_array($action, ['get_dashboard_stats', 'get_recent_bookings', 'sync_tenant_data'])) {
-    // Admin Routes
-    require_once __DIR__ . '/routes/admin.routes.php';
-    if (!route_admin_action($action)) {
-        http_response_code(404);
-        echo json_encode(['error' => 'Admin action not found']);
-    }
-} else {
-    // Public Routes
-    require_once __DIR__ . '/routes/public.routes.php';
-    if (!route_public_action($action)) {
-        http_response_code(404);
-        echo json_encode(['error' => 'Action not found']);
-    }
+if (empty($action)) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Action required']);
+    exit;
 }
+
+// 7. Try Admin Routes
+// We include admin routes if it looks like an admin action or if a token is present
+require_once __DIR__ . '/routes/admin.routes.php';
+if (route_admin_action($action)) {
+    exit;
+}
+
+// 8. Try Public Routes
+require_once __DIR__ . '/routes/public.routes.php';
+if (route_public_action($action)) {
+    exit;
+}
+
+// 9. Error handling
+http_response_code(404);
+echo json_encode(['error' => 'Action not found', 'action' => $action]);
+exit;
 
 // End of Front Controller
 exit;

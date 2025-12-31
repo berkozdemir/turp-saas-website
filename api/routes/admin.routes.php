@@ -30,8 +30,7 @@ function route_admin_action(string $action): bool
     }
 
     // Doctors module
-    global $token;
-    if (handle_doctors_admin($action, $token)) {
+    if (handle_doctors_admin($action)) {
         return true;
     }
 

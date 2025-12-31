@@ -4,23 +4,18 @@
 
 require_once __DIR__ . '/../../core/auth/auth.middleware.php';
 
-function handle_doctors_admin($action, $token)
+function handle_doctors_admin($action)
 {
     global $conn;
     if (!isset($conn)) {
         $conn = get_db_connection();
     }
 
-    // All admin actions require authentication
-    $auth = require_admin_auth($token);
-    if (!$auth) {
-        http_response_code(401);
-        echo json_encode(['error' => 'Unauthorized']);
-        return true;
-    }
-
     // GET - List all doctors
     if ($action === 'admin_list_doctors' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+        // All admin actions require authentication
+        require_admin_context();
+
         try {
             $stmt = $conn->prepare("
                 SELECT id, name, email, phone, city, clinic, notes, is_active, created_at, updated_at 
@@ -41,6 +36,8 @@ function handle_doctors_admin($action, $token)
 
     // POST - Create new doctor
     if ($action === 'admin_create_doctor' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        require_admin_context();
+
         try {
             $data = json_decode(file_get_contents('php://input'), true);
 
@@ -85,6 +82,8 @@ function handle_doctors_admin($action, $token)
 
     // PUT - Update doctor
     if ($action === 'admin_update_doctor' && $_SERVER['REQUEST_METHOD'] === 'PUT') {
+        require_admin_context();
+
         try {
             $data = json_decode(file_get_contents('php://input'), true);
 
@@ -120,6 +119,8 @@ function handle_doctors_admin($action, $token)
 
     // DELETE - Soft delete doctor
     if ($action === 'admin_delete_doctor' && $_SERVER['REQUEST_METHOD'] === 'DELETE') {
+        require_admin_context();
+
         try {
             $id = $_GET['id'] ?? null;
             if (!$id) {
@@ -142,6 +143,8 @@ function handle_doctors_admin($action, $token)
 
     // POST - Bulk import from CSV
     if ($action === 'admin_import_doctors' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        require_admin_context();
+
         try {
             $data = json_decode(file_get_contents('php://input'), true);
             $doctors = $data['doctors'] ?? [];
@@ -200,6 +203,8 @@ function handle_doctors_admin($action, $token)
 
     // GET - Export doctors as JSON (frontend converts to CSV)
     if ($action === 'admin_export_doctors' && $_SERVER['REQUEST_METHOD'] === 'GET') {
+        require_admin_context();
+
         try {
             $stmt = $conn->prepare("
                 SELECT name, email, phone, city, clinic, notes 
