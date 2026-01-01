@@ -1,21 +1,24 @@
 // import { toast } from "@/iwrs/hooks/use-toast"; // Removed unused
 
-const API_BASE = '/api/iwrs_api.php';
-const AUTH_API = '/api/admin_auth.php';
+const API_BASE = '/api/index.php';
 
 // Helper to get headers with token
 const getHeaders = () => {
     const token = localStorage.getItem('auth_token');
     return {
         'Content-Type': 'application/json',
-        'X-Tenant-Code': 'iwrs', // Explicitly set tenant for public API calls
+        'X-Tenant-Code': 'iwrs', // Explicitly set tenant
         ...(token ? { 'Authorization': `Bearer ${token}` } : {})
     };
 };
 
 // Generic fetch wrapper
 async function fetchInfo<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const response = await fetch(endpoint, {
+    // Cache buster
+    const separator = endpoint.includes('?') ? '&' : '?';
+    const url = `${endpoint}${separator}_t=${new Date().getTime()}`;
+
+    const response = await fetch(url, {
         ...options,
         headers: {
             ...getHeaders(),
@@ -35,17 +38,14 @@ async function fetchInfo<T>(endpoint: string, options: RequestInit = {}): Promis
 // --- AUTH ---
 export const authApi = {
     login: async (email: string, password: string) => {
-        const response = await fetch(`${AUTH_API}?action=login`, {
+        const response = await fetch(`${API_BASE}?action=login`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password }),
         });
         const data = await response.json();
         if (data.token) {
             localStorage.setItem('auth_token', data.token);
-            // Also set basic user info
             localStorage.setItem('user', JSON.stringify(data.user));
         }
         return data;
@@ -63,36 +63,38 @@ export const authApi = {
         return { session: null };
     },
     register: async (data: any) => {
-        return fetchInfo(`${API_BASE}?resource=users`, {
-            method: 'POST',
-            body: JSON.stringify(data),
-        });
+        // Not implemented in backend yet, keeping placeholder
+        return { success: false, error: "Not implemented" };
     }
 };
 
 // --- BLOG ---
 export const blogApi = {
     getAll: async () => {
-        return fetchInfo<any[]>(`${API_BASE}?resource=blog_posts`);
+        // Map resource=blog_posts to action=get_blog_posts
+        return fetchInfo<any[]>(`${API_BASE}?action=get_blog_posts`);
     },
-    getOne: async (id: string) => {
-        return fetchInfo<any>(`${API_BASE}?resource=blog_posts&id=${id}`);
+    getOne: async (slug: string) => {
+        // Map resource=blog_posts&id=... to action=get_blog_post&slug=...
+        return fetchInfo<any>(`${API_BASE}?action=get_blog_post&slug=${slug}`);
     },
     create: async (data: any) => {
-        return fetchInfo(`${API_BASE}?resource=blog_posts`, {
+        // Admin only
+        return fetchInfo(`${API_BASE}?action=create_blog_post`, {
             method: 'POST',
             body: JSON.stringify(data),
         });
     },
     update: async (id: string, data: any) => {
-        return fetchInfo(`${API_BASE}?resource=blog_posts&id=${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(data),
+        return fetchInfo(`${API_BASE}?action=update_blog_post`, {
+            method: 'POST',
+            body: JSON.stringify({ ...data, id }),
         });
     },
     delete: async (id: string) => {
-        return fetchInfo(`${API_BASE}?resource=blog_posts&id=${id}`, {
-            method: 'DELETE',
+        return fetchInfo(`${API_BASE}?action=delete_blog_post`, {
+            method: 'POST', // PHP API usually expects POST for actions
+            body: JSON.stringify({ id })
         });
     }
 };

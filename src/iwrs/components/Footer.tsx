@@ -7,7 +7,7 @@ import { Mail, Phone, MapPin, Linkedin } from "lucide-react";
 import OmegaLogo from "../assets/omegalogo28.png";
 
 // Arka plan resim URL'si (Placeholder)
-const CTA_BACKGROUND_IMAGE = "https://images.unsplash.com/photo-1517486804599-bfb772ae817a?q=80&w=2070&auto=format&fit=crop";
+const CTA_BACKGROUND_IMAGE = "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=2070&auto=format&fit=crop";
 
 // --- 1. CALL TO ACTION (CTA) BİLEŞENİ ---
 const GlobalCallToAction = () => {
