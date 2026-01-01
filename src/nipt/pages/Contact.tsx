@@ -163,8 +163,6 @@ export const Contact = () => {
             setStatus('error');
             setErrorMsg(err.message);
             showToast('error', err.message);
-        } finally {
-            if (status !== 'success') setStatus('idle'); // Only reset if not success to keep success state if desired
         }
     };
 
