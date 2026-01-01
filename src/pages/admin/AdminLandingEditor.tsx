@@ -84,6 +84,7 @@ export const AdminLandingEditor = ({ editId, onBack }: AdminLandingEditorProps) 
     const [showMediaPicker, setShowMediaPicker] = useState(false);
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
+    const API_BASE_URL = API_URL.endsWith('/index.php') ? API_URL : `${API_URL}/index.php`;
 
     useEffect(() => {
         if (editId) {

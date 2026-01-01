@@ -30,6 +30,7 @@ export const AdminUserEditor = ({ token, user, onCancel, onSave }: AdminUserEdit
     const [success, setSuccess] = useState<string | null>(null);
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
+    const API_BASE_URL = API_URL.endsWith('/index.php') ? API_URL : `${API_URL}/index.php`;
     const isEditing = Boolean(user?.id);
 
     const handleSubmit = async (e: React.FormEvent) => {
