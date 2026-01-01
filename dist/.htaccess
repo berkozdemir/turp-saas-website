@@ -1,6 +1,17 @@
 # Enable SPA routing for React Router
 # Redirect all non-file requests to index.html
 
+# Fix MIME types for JavaScript files
+<IfModule mod_mime.c>
+    AddType application/javascript .js
+    AddType application/javascript .mjs
+    AddType text/css .css
+    AddType image/svg+xml .svg
+    AddType application/json .json
+    AddType font/woff2 .woff2
+    AddType font/woff .woff
+</IfModule>
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
     RewriteBase /
