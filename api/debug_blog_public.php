@@ -56,6 +56,10 @@ try {
     // 3. fetch actual posts via service
     $posts = blog_get_published_posts($tenant_id);
     $response['service_result_count'] = count($posts);
+    if (count($posts) > 0) {
+        $response['first_post_keys'] = array_keys($posts[0]);
+        $response['first_post_status_value'] = $posts[0]['status'] ?? 'MISSING';
+    }
     $response['service_posts_sample'] = array_slice($posts, 0, 2); // Show first 2
 
 } catch (Exception $e) {
