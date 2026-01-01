@@ -14,7 +14,12 @@ try {
 
     // --- 1. Seed Blog Posts ---
     echo "Seeding Blog Posts...\n";
-    $blog_count = $conn->query("SELECT COUNT(*) FROM blog_posts WHERE tenant_id = 'turp'")->fetchColumn();
+
+    // First, fix any existing 'turp' tenant_ids to '1' to match system standard
+    $conn->exec("UPDATE blog_posts SET tenant_id = '1' WHERE tenant_id = 'turp'");
+
+    // Now check count for '1'
+    $blog_count = $conn->query("SELECT COUNT(*) FROM blog_posts WHERE tenant_id = '1'")->fetchColumn();
 
     if ($blog_count == 0) {
         $stmt = $conn->prepare("INSERT INTO blog_posts (id, tenant_id, title_tr, content_tr, excerpt_tr, slug, status, created_at, published_at) VALUES (:id, :tenant_id, :title, :content, :excerpt, :slug, :status, NOW(), NOW())");
@@ -39,7 +44,7 @@ try {
         foreach ($posts as $i => $post) {
             $stmt->execute([
                 ':id' => sprintf('demo-%d', $i),
-                ':tenant_id' => 'turp',
+                ':tenant_id' => '1', // Use '1' explicitly
                 ':title' => $post['title'],
                 ':content' => $post['content'],
                 ':excerpt' => $post['excerpt'],
