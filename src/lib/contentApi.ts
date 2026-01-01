@@ -33,10 +33,26 @@ export async function fetchAPI(action: string, params: Record<string, any> = {},
     });
   }
 
+
+  // Helper to determine tenant code from hostname for public API calls
+  function getPublicTenantCode(): string {
+    if (typeof window === 'undefined') return 'turp';
+
+    const host = window.location.hostname;
+
+    // Check for IWRS domain
+    if (host.includes('iwrs.com.tr') || host.includes('iwrs')) {
+      return 'iwrs';
+    }
+
+    // Default to turp for all other domains (ct.turp.health, localhost, etc.)
+    return 'turp';
+  }
+
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     "X-Api-Key": API_SECRET || "",
-    "X-Tenant-Code": "turp" // Explicitly set tenant for public API calls
+    "X-Tenant-Code": getPublicTenantCode() // Dynamic tenant for public API
   };
 
   try {
