@@ -143,8 +143,12 @@ export const Contact = () => {
                 body: JSON.stringify(formData)
             });
 
+            console.log('Response status:', res.status);
+
             // Check for non-JSON content type or empty response
             const contentType = res.headers.get("content-type");
+            console.log('Content-Type:', contentType);
+
             if (!contentType || !contentType.includes("application/json")) {
                 const text = await res.text();
                 console.error("Non-JSON response:", text);
@@ -152,14 +156,17 @@ export const Contact = () => {
             }
 
             const result = await res.json();
+            console.log('API Result:', result);
 
             if (result.success) {
+                console.log('Setting status to success');
                 setStatus('success');
                 window.scrollTo(0, 0);
             } else {
                 throw new Error(result.error || 'Bir hata oluştu.');
             }
         } catch (err: any) {
+            console.error('Submit error:', err);
             setStatus('error');
             setErrorMsg(err.message);
             showToast('error', err.message);
