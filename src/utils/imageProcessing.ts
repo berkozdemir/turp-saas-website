@@ -130,6 +130,34 @@ export async function processImage(
     const originalWidth = img.naturalWidth;
     const originalHeight = img.naturalHeight;
 
+    // Skip processing if image is already small and within size limits
+    // This prevents over-processing already optimized images
+    const alreadySmall = originalSizeKB <= opts.targetMaxSizeKB! &&
+        originalWidth <= opts.maxWidth! &&
+        originalHeight <= opts.maxHeight!;
+
+    if (alreadySmall) {
+        // Return original file without processing
+        const dataUrl = await new Promise<string>((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.readAsDataURL(file);
+        });
+
+        URL.revokeObjectURL(img.src);
+
+        return {
+            blob: file,
+            width: originalWidth,
+            height: originalHeight,
+            originalWidth,
+            originalHeight,
+            originalSizeKB: Math.round(originalSizeKB),
+            processedSizeKB: Math.round(originalSizeKB),
+            dataUrl,
+        };
+    }
+
     // Calculate new dimensions
     const { width, height } = calculateDimensions(
         originalWidth,
