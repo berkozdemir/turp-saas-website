@@ -6,7 +6,9 @@
  */
 
 require_once __DIR__ . '/../../core/tenant/tenant.service.php';
-require_once __DIR__ . '/geo_helper.php';
+require_once __DIR__ . '/../../config/db.php';
+require_once __DIR__ . '/../../core/tenant/tenant.service.php';
+require_once __DIR__ . '/consent.service.php';
 
 /**
  * Handle public consent actions
