@@ -215,7 +215,7 @@ function blog_get_published_posts(int $tenant_id): array
             title_tr, excerpt_tr, content_tr,
             title_en, excerpt_en, content_en,
             title_zh, excerpt_zh, content_zh,
-            featured_image as image_url, published_at as created_at 
+            featured_image as image_url, published_at as created_at, status 
         FROM blog_posts 
         WHERE tenant_id = ? AND status = 'published'
         ORDER BY published_at DESC
