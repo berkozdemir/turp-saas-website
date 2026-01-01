@@ -169,3 +169,26 @@ function handle_consent_public(string $action): bool
 
     return false;
 }
+
+// Helper functions for Consent Controller
+
+function get_region_from_ip($ip)
+{
+    // Basic stub for now, can be expanded or use a real GeoIP library if available
+    return [
+        'region' => 'EU',
+        'country' => 'TR',
+        'is_eu' => true
+    ];
+}
+
+function detect_preferred_language($default = 'tr')
+{
+    if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+        $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+        if (in_array($lang, ['tr', 'en', 'zh'])) {
+            return $lang;
+        }
+    }
+    return $default;
+}
