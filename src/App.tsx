@@ -23,6 +23,10 @@ import { EducationCaseStudy } from "./pages/EducationCaseStudy";
 import { FaqPage } from "./pages/FaqPage";
 import { Contact } from "./pages/Contact";
 import { LegalPage } from "./pages/LegalPage";
+import { EndUserLogin } from "./pages/EndUserLogin";
+import { EndUserSignup } from "./pages/EndUserSignup";
+import { TenantSettingsProvider } from "./hooks/useTenantSettings";
+import { EndUserAuthProvider } from "./hooks/useEndUserAuth";
 import useAnalytics, { trackLanguageChange } from "./lib/analytics";
 import { CookieConsentBanner } from "./components/CookieConsentBanner";
 import { initAnalytics } from "./utils/consent-analytics";
@@ -51,6 +55,14 @@ export default function App() {
     // 2. Contact page check
     if (path === '/iletisim' || path === '/contact') {
       return 'contact';
+    }
+
+    // 3. End-user login/signup check
+    if (path === '/login') {
+      return 'enduser-login';
+    }
+    if (path === '/signup') {
+      return 'enduser-signup';
     }
 
     // 3. Password reset check
@@ -158,6 +170,10 @@ export default function App() {
             window.history.pushState({}, '', '/admin');
           }
           return <Admin />;
+        case "enduser-login":
+          return <EndUserLogin />;
+        case "enduser-signup":
+          return <EndUserSignup />;
         default:
           return <Home setView={setView} />;
       }
@@ -190,30 +206,34 @@ export default function App() {
   };
 
   return (
-    <div className="font-sans text-slate-900 bg-slate-50 min-h-screen flex flex-col selection:bg-rose-200 selection:text-rose-900">
-      <SEO view={view} post={view?.type === 'detail' ? view.post : undefined} />
+    <TenantSettingsProvider>
+      <EndUserAuthProvider>
+        <div className="font-sans text-slate-900 bg-slate-50 min-h-screen flex flex-col selection:bg-rose-200 selection:text-rose-900">
+          <SEO view={view} post={view?.type === 'detail' ? view.post : undefined} />
 
-      {/* --- NAVBAR --- */}
-      <Navigation
-        view={view}
-        setView={setView}
-        session={session}
-        handleLogout={handleLogout}
-        i18n={i18n}
-        changeLanguage={changeLanguage}
-        languages={languages}
-        modules={modules}
-        t={t}
-      />
+          {/* --- NAVBAR --- */}
+          <Navigation
+            view={view}
+            setView={setView}
+            session={session}
+            handleLogout={handleLogout}
+            i18n={i18n}
+            changeLanguage={changeLanguage}
+            languages={languages}
+            modules={modules}
+            t={t}
+          />
 
-      {/* --- ANA İÇERİK --- */}
-      <main className="flex-1">{renderView()}</main>
+          {/* --- ANA İÇERİK --- */}
+          <main className="flex-1">{renderView()}</main>
 
-      {/* --- FOOTER --- */}
-      <Footer setView={setView} />
+          {/* --- FOOTER --- */}
+          <Footer setView={setView} />
 
-      {/* --- COOKIE CONSENT BANNER --- */}
-      <CookieConsentBanner />
-    </div>
+          {/* --- COOKIE CONSENT BANNER --- */}
+          <CookieConsentBanner />
+        </div>
+      </EndUserAuthProvider>
+    </TenantSettingsProvider>
   );
 }
