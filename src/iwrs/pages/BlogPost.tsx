@@ -41,7 +41,9 @@ export default function BlogPost() {
   const fetchPost = async () => {
     try {
       if (slug) {
-        const data = await blogApi.getOne(slug);
+        const response = await blogApi.getOne(slug);
+        // API returns { success: true, data: {...} }
+        const data = response?.data || response;
         setPost(data);
 
         // Check if we're using fallback content
