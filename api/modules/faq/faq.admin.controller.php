@@ -4,6 +4,7 @@
  */
 
 require_once __DIR__ . '/../../core/auth/auth.middleware.php';
+require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/faq.service.php';
 
 function handle_faq_admin(string $action): bool
