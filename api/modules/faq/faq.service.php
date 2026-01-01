@@ -122,14 +122,108 @@ function faq_delete(int $tenant_id, int $id): bool
 /**
  * Get published FAQs (public)
  */
-function faq_get_published(int $tenant_id): array
+function faq_get_published(int $tenant_id, ?string $page_slug = null): array
 {
     $conn = get_db_connection();
-    $stmt = $conn->prepare("
-        SELECT * FROM faqs 
-        WHERE tenant_id = ? AND status = 'published'
-        ORDER BY sort_order ASC, id DESC
-    ");
-    $stmt->execute([$tenant_id]);
+
+    $query = "SELECT * FROM faqs WHERE tenant_id = ? AND status = 'published'";
+    $params = [$tenant_id];
+
+    if ($page_slug) {
+        $query .= " AND page_slug = ?";
+        $params[] = $page_slug;
+    }
+
+    $query .= " ORDER BY sort_order ASC, id DESC";
+
+    $stmt = $conn->prepare($query);
+    $stmt->execute($params);
     return $stmt->fetchAll();
+}
+
+/**
+ * Ensure FAQs table has page_slug column
+ */
+function ensure_faq_table(): void
+{
+    $conn = get_db_connection();
+
+    // Create table if not exists
+    $conn->exec("
+        CREATE TABLE IF NOT EXISTS faqs (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            tenant_id INT NOT NULL,
+            question_tr TEXT,
+            answer_tr TEXT,
+            question_en TEXT,
+            answer_en TEXT,
+            question_zh TEXT,
+            answer_zh TEXT,
+            category VARCHAR(100) DEFAULT 'general',
+            page_slug VARCHAR(100) DEFAULT 'global',
+            sort_order INT DEFAULT 0,
+            status VARCHAR(50) DEFAULT 'published',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_tenant (tenant_id),
+            INDEX idx_tenant_page (tenant_id, page_slug),
+            INDEX idx_status (status)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    ");
+
+    // Add page_slug column if missing
+    try {
+        $stmt = $conn->query("SHOW COLUMNS FROM faqs LIKE 'page_slug'");
+        if ($stmt->rowCount() === 0) {
+            $conn->exec("ALTER TABLE faqs ADD COLUMN page_slug VARCHAR(100) DEFAULT 'global' AFTER category");
+            $conn->exec("CREATE INDEX idx_tenant_page ON faqs(tenant_id, page_slug)");
+        }
+    } catch (Exception $e) {
+        // Ignore if column exists
+    }
+}
+
+/**
+ * Bulk import FAQs for a tenant/page
+ * Only imports if no FAQs exist for the tenant+page combination
+ * 
+ * @param int $tenant_id
+ * @param string $page_slug
+ * @param array $items Array of [question, answer, order]
+ * @return array [imported => int, skipped => bool]
+ */
+function faq_bulk_import(int $tenant_id, string $page_slug, array $items): array
+{
+    $conn = get_db_connection();
+    ensure_faq_table();
+
+    // Check if already imported
+    $stmt = $conn->prepare("SELECT COUNT(*) as cnt FROM faqs WHERE tenant_id = ? AND page_slug = ?");
+    $stmt->execute([$tenant_id, $page_slug]);
+    $count = $stmt->fetch()['cnt'];
+
+    if ($count > 0) {
+        return ['imported' => 0, 'skipped' => true];
+    }
+
+    $imported = 0;
+    foreach ($items as $item) {
+        if (empty($item['question']) || empty($item['answer']))
+            continue;
+
+        $stmt = $conn->prepare("
+            INSERT INTO faqs (tenant_id, page_slug, question_tr, answer_tr, sort_order, status)
+            VALUES (?, ?, ?, ?, ?, 'published')
+        ");
+        $stmt->execute([
+            $tenant_id,
+            $page_slug,
+            $item['question'],
+            $item['answer'],
+            $item['order'] ?? $imported
+        ]);
+        $imported++;
+    }
+
+    return ['imported' => $imported, 'skipped' => false];
 }
