@@ -11,6 +11,7 @@ require_once __DIR__ . '/../modules/blog/blog.public.controller.php';
 require_once __DIR__ . '/../modules/faq/faq.public.controller.php';
 require_once __DIR__ . '/../modules/nipt/doctors.controller.php';
 require_once __DIR__ . '/../modules/contact/contact.public.controller.php';
+require_once __DIR__ . '/../modules/auth/auth.public.controller.php';
 
 /**
  * Route public actions to controllers
@@ -36,11 +37,9 @@ function route_public_action(string $action): bool
         return true;
     if (handle_roi_public($action))
         return true;
-    if (handle_landing_public($action))
-        return true;
-    if (handle_contact_public($action))
-        return true;
     if (handle_legal_public($action))
+        return true;
+    if (handle_auth_public($action))
         return true;
 
     return false;
