@@ -14,7 +14,9 @@ import {
     Star,
     AlertCircle,
     Users,
-    Clock
+    Clock,
+    X,
+    ZoomIn
 } from "lucide-react";
 import { NIPTHeader } from '../components/NIPTHeader';
 import { NIPTFooter } from '../components/NIPTFooter';
@@ -22,6 +24,7 @@ import { NIPTFooter } from '../components/NIPTFooter';
 export const VerifiIntro = () => {
     const navigate = useNavigate();
     const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+    const [showInfographic, setShowInfographic] = useState(false);
 
     const toggleFaq = (index: number) => {
         setOpenFaqIndex(openFaqIndex === index ? null : index);
@@ -204,6 +207,32 @@ export const VerifiIntro = () => {
                                         Cinsiyet kromozomu farklılıkları
                                     </li>
                                 </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            {/* Infographic Section */}
+            <section className="py-16 bg-gradient-to-br from-blue-50 to-white">
+                <div className="container mx-auto px-6">
+                    <div className="text-center mb-8">
+                        <h2 className="text-3xl font-bold text-slate-900 mb-4">Verifi Testleri: Bir Bakışta Karşılaştırma</h2>
+                        <p className="text-slate-600">Resme tıklayarak büyütebilirsiniz</p>
+                    </div>
+                    <div
+                        className="max-w-4xl mx-auto cursor-pointer group relative"
+                        onClick={() => setShowInfographic(true)}
+                    >
+                        <img
+                            src="/images/verifi_infographic.jpg"
+                            alt="Verifi Doğum Öncesi Testleri Karşılaştırma İnfografiği"
+                            className="w-full rounded-2xl shadow-xl border border-slate-200 transition-transform group-hover:scale-[1.02]"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-2xl transition-all flex items-center justify-center">
+                            <div className="opacity-0 group-hover:opacity-100 bg-white/90 backdrop-blur px-4 py-2 rounded-full shadow-lg flex items-center gap-2 transition-opacity">
+                                <ZoomIn size={20} className="text-blue-600" />
+                                <span className="font-semibold text-slate-700">Büyütmek için tıklayın</span>
                             </div>
                         </div>
                     </div>
@@ -420,6 +449,27 @@ export const VerifiIntro = () => {
             </section>
 
             <NIPTFooter />
+
+            {/* Infographic Modal/Lightbox */}
+            {showInfographic && (
+                <div
+                    className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 cursor-pointer"
+                    onClick={() => setShowInfographic(false)}
+                >
+                    <button
+                        className="absolute top-6 right-6 bg-white/20 hover:bg-white/40 text-white p-2 rounded-full transition-colors"
+                        onClick={() => setShowInfographic(false)}
+                    >
+                        <X size={28} />
+                    </button>
+                    <img
+                        src="/images/verifi_infographic.jpg"
+                        alt="Verifi Doğum Öncesi Testleri Karşılaştırma İnfografiği"
+                        className="max-w-full max-h-[90vh] rounded-lg shadow-2xl"
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                </div>
+            )}
         </div>
     );
 };
