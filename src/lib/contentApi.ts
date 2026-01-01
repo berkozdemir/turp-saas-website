@@ -5,27 +5,32 @@ const API_URL = import.meta.env.VITE_API_URL || '/api';
 const API_SECRET = import.meta.env.VITE_API_SECRET;
 
 // API Çekirdek Fonksiyonu
-async function fetchAPI(action: string, params: Record<string, any> = {}, method: 'GET' | 'POST' = 'GET') {
+export async function fetchAPI(action: string, params: Record<string, any> = {}, method: 'GET' | 'POST' = 'GET') {
   // Build the full URL - handle both absolute and relative paths
-  let baseUrl: string;
-  if (API_URL.startsWith('http://') || API_URL.startsWith('https://')) {
-    baseUrl = API_URL;
+  let baseUrl: string = API_URL;
+
+  // Ensure index.php is at the end of the path part (before query string)
+  // Remove any trailing index.php or / for a clean base
+  baseUrl = baseUrl.replace(/\/index\.php\/?$/, '').replace(/\/+$/, '');
+
+  // Use URL constructor with origin if baseUrl is still relative
+  let fullUrl: string;
+  if (typeof window !== 'undefined' && !baseUrl.startsWith('http')) {
+    const origin = window.location.origin;
+    fullUrl = `${origin}${baseUrl.startsWith('/') ? '' : '/'}${baseUrl}/index.php`;
   } else {
-    // Relative path - build full URL from window.location.origin
-    const origin = typeof window !== 'undefined' ? window.location.origin : '';
-    baseUrl = `${origin}${API_URL.startsWith('/') ? '' : '/'}${API_URL}`;
+    fullUrl = `${baseUrl}/index.php`;
   }
 
-  // Ensure we have /index.php in the path
-  if (!baseUrl.includes('index.php')) {
-    baseUrl = `${baseUrl}${baseUrl.endsWith('/') ? '' : '/'}index.php`;
-  }
-
-  const url = new URL(baseUrl);
+  const url = new URL(fullUrl);
   url.searchParams.append("action", action);
 
   if (method === 'GET') {
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+    Object.keys(params).forEach(key => {
+      if (params[key] !== undefined && params[key] !== null) {
+        url.searchParams.append(key, String(params[key]));
+      }
+    });
   }
 
   const headers: HeadersInit = {
@@ -109,7 +114,7 @@ export const fetchBlogPostBySlug = async (
  */
 export const fetchPageBySlug = async (
   slug: string,
-  lang: LangCode
+  _lang: LangCode
 ): Promise<PageContent | null> => {
   console.warn("API üzerinde sayfa yapısı henüz tanımlı değil. (slug: " + slug + ")");
   // Mock veya boş data
@@ -117,7 +122,7 @@ export const fetchPageBySlug = async (
 };
 
 export const fetchContactConfig = async (lang: LangCode, tenantCode: string = "nipt"): Promise<any | null> => {
-  const response = await fetchAPI('get_contact_config', { language: lang, tenant: tenantCode });
+  const response = await fetchAPI('get_contact_config_public', { language: lang, tenant_code: tenantCode });
   if (response?.success && response.data) {
     return response.data;
   }

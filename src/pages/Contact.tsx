@@ -5,8 +5,7 @@ import {
     Facebook, Instagram, Linkedin, Twitter, ArrowLeft
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-
-import { fetchContactConfig } from '../lib/contentApi';
+import { fetchAPI } from '../lib/contentApi';
 
 export const Contact = ({ setView }: { setView: any }) => {
     const { t, i18n } = useTranslation();
@@ -39,17 +38,22 @@ export const Contact = ({ setView }: { setView: any }) => {
     useEffect(() => {
         window.scrollTo(0, 0);
         const loadConfig = async () => {
-            const lang = (i18n.language || 'tr').split('-')[0] as any;
+            const lang = (i18n.language || 'tr').split('-')[0];
             const tenantCode = isWestesti ? 'westesti' : (isTrombofili ? 'trombofili' : 'nipt');
-            const config = await fetchContactConfig(lang, tenantCode);
-            if (config && config.is_active) {
-                setTenantInfo(prev => ({
-                    ...prev,
-                    name: config.contact_title || prev.name,
-                    address: config.address_line1 + (config.city ? `, ${config.city}` : '') || prev.address,
-                    phone: config.phone || prev.phone,
-                    email: config.email || prev.email,
-                }));
+            try {
+                const data = await fetchAPI('get_contact_config_public', { language: lang, tenant_code: tenantCode });
+                if (data && data.success && data.data) {
+                    const config = data.data;
+                    setTenantInfo(prev => ({
+                        ...prev,
+                        name: config.contact_title || prev.name,
+                        address: config.address_line1 + (config.city ? `, ${config.city}` : '') || prev.address,
+                        phone: config.phone || prev.phone,
+                        email: config.email || prev.email,
+                    }));
+                }
+            } catch (err) {
+                console.error("Failed to load contact config:", err);
             }
         };
         loadConfig();

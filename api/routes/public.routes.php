@@ -14,6 +14,8 @@ require_once __DIR__ . '/../modules/contact/contact.public.controller.php';
 require_once __DIR__ . '/../modules/auth/auth.public.controller.php';
 require_once __DIR__ . '/../modules/landing/landing.public.controller.php';
 require_once __DIR__ . '/../modules/consent/consent.public.controller.php';
+require_once __DIR__ . '/../modules/roi/roi.public.controller.php';
+require_once __DIR__ . '/../modules/legal/legal.public.controller.php';
 
 /**
  * Route public actions to controllers

@@ -6,7 +6,7 @@
  */
 
 require_once __DIR__ . '/legal.service.php';
-require_once __DIR__ . '/../../core/tenant/admin_resolver.php';
+require_once __DIR__ . '/../../core/tenant/tenant.service.php';
 
 /**
  * Handle public legal actions

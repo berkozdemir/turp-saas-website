@@ -36,21 +36,18 @@ export interface LandingConfig {
     hero_gradient_bg_angle: number;
 }
 
+import { fetchAPI } from "../lib/contentApi";
+
 export const useLandingConfig = () => {
     const { i18n } = useTranslation();
     const [config, setConfig] = useState<LandingConfig | null>(null);
     const [loading, setLoading] = useState(true);
 
-    const API_URL = import.meta.env.VITE_API_URL || "/api";
-
     useEffect(() => {
         const fetchConfig = async () => {
             try {
-                const response = await fetch(
-                    `${API_URL}/index.php?action=get_landing_config_public&language=${i18n.language}`
-                );
-                const data = await response.json();
-                if (data.success && data.data) {
+                const data = await fetchAPI('get_landing_config_public', { language: i18n.language });
+                if (data && data.success && data.data) {
                     setConfig(data.data);
                 }
             } catch (err) {

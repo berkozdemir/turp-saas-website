@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calculator, TrendingUp, AlertCircle, Settings, ChevronDown, ChevronUp, DollarSign, Users, Calendar, Activity, Clock, Loader2, Stethoscope, Building2, Bus } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { fetchAPI } from '../lib/contentApi';
 
 const CURRENCY_CONFIG = {
     TRY: { label: 'TRY (₺)', locale: 'tr-TR' },
@@ -40,11 +41,9 @@ export const ROICalculator = ({ initialCurrency = 'TRY' }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/index.php';
-                const response = await fetch(`${API_URL}?action=get_roi_settings`);
-                const result = await response.json();
+                const result = await fetchAPI('get_roi_settings');
 
-                if (result.data) {
+                if (result && result.data) {
                     setBaseSettings(result.data);
                     updateCurrencyValues(initialCurrency, result.data);
                 }
@@ -249,3 +248,55 @@ export const ROICalculator = ({ initialCurrency = 'TRY' }) => {
         </div>
     );
 };
+
+const MethodCard = ({ icon, title, value, btnText, link, onClick, isGreen = false }: any) => (
+    <div className="bg-white p-8 rounded-3xl shadow-lg border border-slate-100 hover:-translate-y-2 transition-all duration-300">
+        <div className={`w-14 h-14 ${isGreen ? 'bg-green-50' : 'bg-sky-50'} rounded-2xl flex items-center justify-center mb-6`}>
+            {React.cloneElement(icon, { size: 28 })}
+        </div>
+        <h3 className="font-bold text-slate-900 mb-2">{title}</h3>
+        <p className="text-sm text-slate-500 mb-6 truncate">{value}</p>
+        {link ? (
+            <a href={link} className={`w-full block text-center py-3 ${isGreen ? 'bg-green-600 hover:bg-green-700' : 'bg-sky-600 hover:bg-sky-700'} text-white font-bold rounded-xl transition-colors`}>
+                {btnText}
+            </a>
+        ) : (
+            <button onClick={onClick} className="w-full py-3 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-xl transition-colors">
+                {btnText}
+            </button>
+        )}
+    </div>
+);
+
+const FormGroup = ({ label, id, type, placeholder, value, onChange, required }: { label: string, id: string, type: string, placeholder: string, value: string, onChange: (v: string) => void, required?: boolean }) => (
+    <div className="flex flex-col gap-2">
+        <label htmlFor={id} className="text-sm font-bold text-slate-700">{label}</label>
+        <input
+            type={type}
+            id={id}
+            required={required}
+            className="w-full px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500 transition-all outline-none"
+            placeholder={placeholder}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+        />
+    </div>
+);
+
+const InfoItem = ({ icon, title, content }: any) => (
+    <div className="flex gap-4">
+        <div className="w-10 h-10 bg-sky-50 text-sky-600 rounded-xl flex items-center justify-center shrink-0">
+            {React.cloneElement(icon, { size: 20 })}
+        </div>
+        <div>
+            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">{title}</h4>
+            <div className="text-slate-700 font-medium leading-relaxed">{content}</div>
+        </div>
+    </div>
+);
+
+const SocialLink = ({ icon, href }: any) => (
+    <a href={href} target="_blank" className="w-10 h-10 bg-slate-50 text-slate-400 rounded-xl flex items-center justify-center hover:bg-sky-600 hover:text-white transition-all">
+        {icon}
+    </a>
+);

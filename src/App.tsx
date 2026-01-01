@@ -35,9 +35,16 @@ export default function App() {
   // --- STATE YÖNETİMİ ---
   const [view, setView] = useState<any>(() => {
     const path = window.location.pathname;
+    const hostname = window.location.hostname;
+
+    // Domain based routing
+    if (hostname.includes('iwrs.com.tr')) {
+      if (path === '/auth' || path.startsWith('/auth/')) return 'admin';
+      // Default to home but we could add IWRS specific home here if needed
+    }
 
     // 1. Admin route check
-    if (path === '/admin' || path.startsWith('/admin/')) {
+    if (path === '/admin' || path.startsWith('/admin/') || path === '/auth' || path.startsWith('/auth/')) {
       return 'admin';
     }
 
@@ -144,8 +151,10 @@ export default function App() {
         case "sss":
           return <FaqPage setView={setView} />;
         case "admin":
-          // Ensure URL is /admin when rendering admin
-          if (window.location.pathname !== '/admin') {
+          // Ensure URL is /admin or /auth when rendering admin
+          const isAdminPath = window.location.pathname.startsWith('/admin');
+          const isAuthPath = window.location.pathname.startsWith('/auth');
+          if (!isAdminPath && !isAuthPath) {
             window.history.pushState({}, '', '/admin');
           }
           return <Admin />;

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp, Search, HelpCircle } from "lucide-react";
 
+import { fetchAPI } from "../lib/contentApi";
+
 interface FAQ {
     id: number;
     question: string;
@@ -22,15 +24,12 @@ export const FaqPage = ({ setView: _setView }: FaqPageProps) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all");
 
-    const API_URL = import.meta.env.VITE_API_URL || "/api";
-
     useEffect(() => {
         const fetchFaqs = async () => {
             try {
-                const response = await fetch(`${API_URL}/index.php?action=get_faqs_public&language=${i18n.language}`);
-                const data = await response.json();
-                if (data.success) {
-                    setFaqs(data.data);
+                const data = await fetchAPI('get_faqs_public', { language: i18n.language });
+                if (data && data.success) {
+                    setFaqs(data.data || []);
                     setCategories(data.categories || []);
                 }
             } catch (err) {
@@ -40,7 +39,7 @@ export const FaqPage = ({ setView: _setView }: FaqPageProps) => {
             }
         };
         fetchFaqs();
-    }, [i18n.language, API_URL]);
+    }, [i18n.language]);
 
     const toggleItem = (id: number) => {
         setOpenItems(prev => {

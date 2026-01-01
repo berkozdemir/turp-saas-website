@@ -22,21 +22,18 @@ export interface ContactConfig {
     is_active: number;
 }
 
+import { fetchAPI } from "../lib/contentApi";
+
 export const useContactConfig = () => {
     const { i18n } = useTranslation();
     const [config, setConfig] = useState<ContactConfig | null>(null);
     const [loading, setLoading] = useState(true);
 
-    const API_URL = import.meta.env.VITE_API_URL || "/api";
-
     useEffect(() => {
         const fetchConfig = async () => {
             try {
-                const response = await fetch(
-                    `${API_URL}/index.php?action=get_contact_config_public&language=${i18n.language}`
-                );
-                const data = await response.json();
-                if (data.success && data.data) {
+                const data = await fetchAPI('get_contact_config_public', { language: i18n.language });
+                if (data && data.success && data.data) {
                     setConfig(data.data);
                 }
             } catch (err) {

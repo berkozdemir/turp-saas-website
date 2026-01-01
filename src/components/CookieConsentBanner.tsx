@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { X, Cookie, Shield, Settings } from 'lucide-react';
+import { fetchAPI } from '../lib/contentApi';
 
 interface ConsentConfig {
     show_banner: boolean;
@@ -64,11 +65,9 @@ export const CookieConsentBanner = () => {
 
         // Fetch consent config from API
         try {
-            const API_URL = import.meta.env.VITE_API_URL || '/api';
-            const response = await fetch(`${API_URL}/index.php?action=get_consent_config`);
-            const result = await response.json();
+            const result = await fetchAPI('get_consent_config');
 
-            if (result.success && result.data.show_banner) {
+            if (result && result.success && result.data && result.data.show_banner) {
                 setConfig(result.data);
                 setVisible(true);
             }
@@ -105,12 +104,7 @@ export const CookieConsentBanner = () => {
 
     const saveConsent = async (consent_details: ConsentPreferences) => {
         try {
-            const API_URL = import.meta.env.VITE_API_URL || '/api';
-            await fetch(`${API_URL}/index.php?action=save_consent`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ consent_details }),
-            });
+            await fetchAPI('save_consent', { consent_details }, 'POST');
 
             // Set local cookie (1 year expiry)
             const expiry = new Date();

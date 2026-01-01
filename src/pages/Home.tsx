@@ -64,11 +64,9 @@ export const Home: React.FC<HomeProps> = ({ setView, scrollTo }) => {
     // Fetch showcased FAQs
     useEffect(() => {
         const fetchShowcaseFaqs = async () => {
-            const API_URL = import.meta.env.VITE_API_URL || '/api';
             try {
-                const response = await fetch(`${API_URL}/index.php?action=get_faqs_showcase&language=${i18n.language}&limit=4`);
-                const data = await response.json();
-                if (data.success && data.data) {
+                const data = await fetchAPI('get_faqs_showcase', { language: i18n.language, limit: 4 });
+                if (data && data.success && data.data) {
                     setShowcaseFaqs(data.data);
                 }
             } catch (err) {
@@ -88,22 +86,17 @@ export const Home: React.FC<HomeProps> = ({ setView, scrollTo }) => {
         }
 
         setContactStatus('loading');
-        const API_URL = import.meta.env.VITE_API_URL || '/api';
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=contact`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(contactForm)
-            });
-            const data = await response.json();
+            const data = await fetchAPI('contact', contactForm, 'POST');
 
-            if (data.success) {
+            if (data && data.success) {
                 setContactStatus('success');
                 setContactForm({ full_name: '', email: '', organization: '', subject: '', message_body: '', consent: false });
             } else {
-                console.error("API Error:", data.error);
-                notify.error(data.error || "Bir hata oluştu.");
+                const errorMsg = data?.error || "Bir hata oluştu.";
+                console.error("API Error:", errorMsg);
+                notify.error(errorMsg);
                 setContactStatus('error');
             }
         } catch (err) {

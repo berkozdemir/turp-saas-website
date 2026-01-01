@@ -5,7 +5,7 @@
  * Handles public API requests for cookie consent configuration.
  */
 
-require_once __DIR__ . '/tenant_helper.php';
+require_once __DIR__ . '/../../core/tenant/tenant.service.php';
 require_once __DIR__ . '/geo_helper.php';
 
 /**
@@ -23,7 +23,7 @@ function handle_consent_public(string $action): bool
 
     if ($action === 'get_consent_config' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         try {
-            $tenant_id = get_current_tenant($conn);
+            $tenant_id = get_current_tenant_id();
             $user_ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
 
             // Get region from IP
