@@ -88,37 +88,10 @@ export const VerifiIntro = () => {
                             </div>
                         </div>
                     </div>
-                </div>
             </section>
 
-            {/* Podcast Audio Player */}
-            <section className="py-8 bg-gradient-to-r from-blue-600 to-indigo-700">
-                <div className="container mx-auto px-6">
-                    <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-                        <div className="flex flex-col md:flex-row items-center gap-6">
-                            <div className="flex items-center gap-4">
-                                <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
-                                    <Headphones size={32} className="text-white" />
-                                </div>
-                                <div className="text-white">
-                                    <h3 className="font-bold text-lg">🎧 Bu Sayfayı Dinleyin</h3>
-                                    <p className="text-blue-100 text-sm">Verifi testi hakkında sesli özet</p>
-                                </div>
-                            </div>
-                            <div className="flex-1 w-full">
-                                <audio
-                                    controls
-                                    className="w-full h-12 rounded-lg"
-                                    style={{ filter: 'invert(1) hue-rotate(180deg)' }}
-                                >
-                                    <source src="https://nipt.tr/nipt.tr/NIPT_Verifi.m4a" type="audio/mp4" />
-                                    Tarayıcınız ses oynatıcıyı desteklemiyor.
-                                </audio>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+            {/* TODO: Add audio player back when R2 is configured on subdomain like cdn.nipt.tr */}
+
 
             {/* 2. Verifi ve Verifi Plus Nedir? */}
             <section className="py-20 bg-white">
