@@ -13,6 +13,7 @@ require_once __DIR__ . '/../modules/nipt/doctors.admin.controller.php';
 require_once __DIR__ . '/../modules/user/user.admin.controller.php';
 require_once __DIR__ . '/../modules/settings/settings.admin.controller.php';
 require_once __DIR__ . '/../modules/media/media.admin.controller.php';
+require_once __DIR__ . '/../modules/enduser_auth/enduser_auth.admin.controller.php';
 
 /**
  * Route admin actions to controllers
@@ -67,6 +68,11 @@ function route_admin_action(string $action): bool
 
     // Media module
     if (handle_media_admin($action)) {
+        return true;
+    }
+
+    // End-User Auth module
+    if (handle_enduser_auth_admin($action)) {
         return true;
     }
 
