@@ -108,28 +108,56 @@ function check_user_tenant_access(int $user_id, int $tenant_id): ?array
  * 
  * @return int|null Tenant ID
  */
+
+/**
+ * Safe function to get all headers
+ */
+function get_request_headers()
+{
+    if (function_exists('getallheaders')) {
+        return getallheaders();
+    }
+    $headers = [];
+    foreach ($_SERVER as $name => $value) {
+        if (substr($name, 0, 5) == 'HTTP_') {
+            $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+        }
+    }
+    return $headers;
+}
+
+/**
+ * Get current tenant ID from various sources (backward compatible)
+ * Priority: X-Tenant-Id > X-Tenant-Code > Origin domain
+ * 
+ * @return int|null Tenant ID
+ */
 function get_current_tenant_id(): ?int
 {
     $conn = get_db_connection();
 
-    // Try X-Tenant-Id header
-    $tenant_id = $_SERVER['HTTP_X_TENANT_ID'] ?? null;
+    // 1. Try X-Tenant-Id header
+    // Normalize headers to lowercase keys for case-insensitive lookup
+    $raw_headers = get_request_headers();
+    $headers = [];
+    foreach ($raw_headers as $k => $v) {
+        $headers[strtolower($k)] = $v;
+    }
+
+    $tenant_id = $_SERVER['HTTP_X_TENANT_ID'] ?? $headers['x-tenant-id'] ?? null;
     if ($tenant_id) {
         return (int) $tenant_id;
     }
 
-    // Try X-Tenant-Code header
-    $headers = getallheaders();
-    foreach ($headers as $key => $value) {
-        if (strtolower($key) === 'x-tenant-code') {
-            $tenant = get_tenant_by_code($value);
-            if ($tenant) {
-                return (int) $tenant['id'];
-            }
+    // 2. Try X-Tenant-Code header
+    if (isset($headers['x-tenant-code'])) {
+        $tenant = get_tenant_by_code($headers['x-tenant-code']);
+        if ($tenant) {
+            return (int) $tenant['id'];
         }
     }
 
-    // Try Origin/Referer domain
+    // 3. Try Origin/Referer domain
     $origin = $_SERVER['HTTP_ORIGIN'] ?? $_SERVER['HTTP_REFERER'] ?? '';
     if ($origin) {
         $domain = parse_url($origin, PHP_URL_HOST);
@@ -141,7 +169,9 @@ function get_current_tenant_id(): ?int
         }
     }
 
-    // Fallback to turp tenant
+    // 4. Fallback to turp tenant
+    // Warn if we are stuck here? 
+    // For now, silent fallback but we could log it.
     $tenant = get_tenant_by_code('turp');
     return $tenant ? (int) $tenant['id'] : 1;
 }
@@ -153,23 +183,27 @@ function get_current_tenant_id(): ?int
  */
 function get_current_tenant_code(): ?string
 {
-    // Try X-Tenant-Code header
-    $headers = getallheaders();
-    foreach ($headers as $key => $value) {
-        if (strtolower($key) === 'x-tenant-code') {
-            return $value;
-        }
+    // Normalize headers
+    $raw_headers = get_request_headers();
+    $headers = [];
+    foreach ($raw_headers as $k => $v) {
+        $headers[strtolower($k)] = $v;
     }
 
-    // Try ID to Code resolution if only ID is provided
-    $tenant_id = $_SERVER['HTTP_X_TENANT_ID'] ?? null;
+    // 1. Try X-Tenant-Code header
+    if (isset($headers['x-tenant-code'])) {
+        return $headers['x-tenant-code'];
+    }
+
+    // 2. Try ID to Code resolution
+    $tenant_id = $_SERVER['HTTP_X_TENANT_ID'] ?? $headers['x-tenant-id'] ?? null;
     if ($tenant_id) {
         $tenant = get_tenant_by_id((int) $tenant_id);
         if ($tenant)
             return $tenant['code'];
     }
 
-    // Try Origin/Referer domain
+    // 3. Try Origin/Referer domain
     $origin = $_SERVER['HTTP_ORIGIN'] ?? $_SERVER['HTTP_REFERER'] ?? '';
     if ($origin) {
         $domain = parse_url($origin, PHP_URL_HOST);
