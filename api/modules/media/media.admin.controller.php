@@ -25,6 +25,7 @@ function handle_media_admin(string $action): bool
 {
     switch ($action) {
         case 'upload_media':
+        case 'upload_image': // Alias for blog editor compatibility
             return media_admin_upload();
         case 'get_media_list':
             return media_admin_list();
