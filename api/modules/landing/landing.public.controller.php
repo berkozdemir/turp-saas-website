@@ -7,6 +7,8 @@
 
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../core/tenant/tenant.service.php';
+require_once __DIR__ . '/../../config/db.php';
+require_once __DIR__ . '/../../core/tenant/tenant.service.php';
 require_once __DIR__ . '/landing.service.php';
 require_once __DIR__ . '/../../core/tenant/tenant.service.php';
 
