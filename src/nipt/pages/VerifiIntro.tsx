@@ -91,7 +91,7 @@ export const VerifiIntro = () => {
                 </div>
             </section>
 
-            {/* Podcast Audio Player - Temporarily disabled
+            {/* Podcast Audio Player */}
             <section className="py-8 bg-gradient-to-r from-blue-600 to-indigo-700">
                 <div className="container mx-auto px-6">
                     <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
@@ -106,8 +106,8 @@ export const VerifiIntro = () => {
                                 </div>
                             </div>
                             <div className="flex-1 w-full">
-                                <audio 
-                                    controls 
+                                <audio
+                                    controls
                                     className="w-full h-12 rounded-lg"
                                     style={{ filter: 'invert(1) hue-rotate(180deg)' }}
                                 >
@@ -119,7 +119,6 @@ export const VerifiIntro = () => {
                     </div>
                 </div>
             </section>
-            */}
 
             {/* 2. Verifi ve Verifi Plus Nedir? */}
             <section className="py-20 bg-white">
