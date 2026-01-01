@@ -169,9 +169,25 @@ function get_current_tenant_id(): ?int
         }
     }
 
-    // 4. Fallback to turp tenant
-    // Warn if we are stuck here? 
-    // For now, silent fallback but we could log it.
+    // 4. Try Host header (direct access)
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    if ($host) {
+        $tenant = get_tenant_by_domain($host);
+        if ($tenant) {
+            return (int) $tenant['id'];
+        }
+
+        // Also try cleaning www. prefix just in case
+        if (strpos($host, 'www.') === 0) {
+            $clean_host = substr($host, 4);
+            $tenant = get_tenant_by_domain($clean_host);
+            if ($tenant) {
+                return (int) $tenant['id'];
+            }
+        }
+    }
+
+    // 5. Fallback to turp tenant
     $tenant = get_tenant_by_code('turp');
     return $tenant ? (int) $tenant['id'] : 1;
 }
@@ -209,6 +225,21 @@ function get_current_tenant_code(): ?string
         $domain = parse_url($origin, PHP_URL_HOST);
         if ($domain) {
             $tenant = get_tenant_by_domain($domain);
+            if ($tenant)
+                return $tenant['code'];
+        }
+    }
+
+    // 4. Try Host header
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    if ($host) {
+        $tenant = get_tenant_by_domain($host);
+        if ($tenant)
+            return $tenant['code'];
+
+        if (strpos($host, 'www.') === 0) {
+            $clean_host = substr($host, 4);
+            $tenant = get_tenant_by_domain($clean_host);
             if ($tenant)
                 return $tenant['code'];
         }
