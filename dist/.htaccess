@@ -1,15 +1,43 @@
 # Enable SPA routing for React Router
 # Redirect all non-file requests to index.html
 
-# Fix MIME types for JavaScript files
+# Fix MIME types for JavaScript files - Multiple approaches for compatibility
 <IfModule mod_mime.c>
-    AddType application/javascript .js
-    AddType application/javascript .mjs
+    # Remove any existing handlers
+    RemoveType .js
+    RemoveType .mjs
+    
+    # Add correct MIME types
+    AddType text/javascript .js
+    AddType text/javascript .mjs
     AddType text/css .css
     AddType image/svg+xml .svg
     AddType application/json .json
     AddType font/woff2 .woff2
     AddType font/woff .woff
+</IfModule>
+
+# Force JavaScript MIME type using Files directive
+<FilesMatch "\.js$">
+    ForceType text/javascript
+</FilesMatch>
+
+<FilesMatch "\.mjs$">
+    ForceType text/javascript
+</FilesMatch>
+
+<FilesMatch "\.css$">
+    ForceType text/css
+</FilesMatch>
+
+# Set Content-Type header explicitly for JavaScript files
+<IfModule mod_headers.c>
+    <FilesMatch "\.(js|mjs)$">
+        Header set Content-Type "text/javascript; charset=utf-8"
+    </FilesMatch>
+    <FilesMatch "\.css$">
+        Header set Content-Type "text/css; charset=utf-8"
+    </FilesMatch>
 </IfModule>
 
 <IfModule mod_rewrite.c>
@@ -29,7 +57,7 @@
 
 # Enable compression
 <IfModule mod_deflate.c>
-    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/json
 </IfModule>
 
 # Cache static assets
@@ -39,5 +67,5 @@
     ExpiresByType image/jpeg "access plus 1 month"
     ExpiresByType image/webp "access plus 1 month"
     ExpiresByType text/css "access plus 1 week"
-    ExpiresByType application/javascript "access plus 1 week"
+    ExpiresByType text/javascript "access plus 1 week"
 </IfModule>
