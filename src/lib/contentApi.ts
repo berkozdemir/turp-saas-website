@@ -1,17 +1,27 @@
 // src/lib/contentApi.ts
 import type { BlogPost, LangCode, PageContent } from "../types/content";
 
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 const API_SECRET = import.meta.env.VITE_API_SECRET;
 
 // API Çekirdek Fonksiyonu
 async function fetchAPI(action: string, params: Record<string, any> = {}, method: 'GET' | 'POST' = 'GET') {
-  if (!API_URL) {
-    console.error("VITE_API_URL tanımlı değil!");
-    return null;
+  // Build the full URL - handle both absolute and relative paths
+  let baseUrl: string;
+  if (API_URL.startsWith('http://') || API_URL.startsWith('https://')) {
+    baseUrl = API_URL;
+  } else {
+    // Relative path - build full URL from window.location.origin
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    baseUrl = `${origin}${API_URL.startsWith('/') ? '' : '/'}${API_URL}`;
   }
 
-  const url = new URL(API_URL);
+  // Ensure we have /index.php in the path
+  if (!baseUrl.includes('index.php')) {
+    baseUrl = `${baseUrl}${baseUrl.endsWith('/') ? '' : '/'}index.php`;
+  }
+
+  const url = new URL(baseUrl);
   url.searchParams.append("action", action);
 
   if (method === 'GET') {
