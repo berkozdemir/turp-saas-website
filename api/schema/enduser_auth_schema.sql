@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `enduser_sessions` (
   INDEX `idx_enduser_session_expires` (`expires_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 3. Add end-user auth flags to tenant_configs (if not exists)
-ALTER TABLE `tenant_configs` 
+-- 3. Add end-user auth flags to tenants table (if columns don't exist)
+ALTER TABLE `tenants` 
 ADD COLUMN IF NOT EXISTS `allow_enduser_login` BOOLEAN DEFAULT FALSE,
 ADD COLUMN IF NOT EXISTS `allow_enduser_signup` BOOLEAN DEFAULT FALSE;

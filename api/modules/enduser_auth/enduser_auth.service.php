@@ -57,7 +57,7 @@ function ensure_enduser_tables(): void
 function enduser_signup_allowed(string $tenant_id): bool
 {
     $conn = get_db();
-    $stmt = $conn->prepare("SELECT allow_enduser_signup FROM tenant_configs WHERE tenant_id = ?");
+    $stmt = $conn->prepare("SELECT allow_enduser_signup FROM tenants WHERE code = ?");
     $stmt->execute([$tenant_id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result && $result['allow_enduser_signup'];
@@ -69,7 +69,7 @@ function enduser_signup_allowed(string $tenant_id): bool
 function enduser_login_allowed(string $tenant_id): bool
 {
     $conn = get_db();
-    $stmt = $conn->prepare("SELECT allow_enduser_login FROM tenant_configs WHERE tenant_id = ?");
+    $stmt = $conn->prepare("SELECT allow_enduser_login FROM tenants WHERE code = ?");
     $stmt->execute([$tenant_id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result && $result['allow_enduser_login'];
@@ -246,16 +246,16 @@ function get_tenant_auth_settings(string $tenant_id): array
 
     // Ensure columns exist
     try {
-        $conn->exec("ALTER TABLE tenant_configs ADD COLUMN IF NOT EXISTS allow_enduser_login BOOLEAN DEFAULT FALSE");
-        $conn->exec("ALTER TABLE tenant_configs ADD COLUMN IF NOT EXISTS allow_enduser_signup BOOLEAN DEFAULT FALSE");
+        $conn->exec("ALTER TABLE tenants ADD COLUMN IF NOT EXISTS allow_enduser_login BOOLEAN DEFAULT FALSE");
+        $conn->exec("ALTER TABLE tenants ADD COLUMN IF NOT EXISTS allow_enduser_signup BOOLEAN DEFAULT FALSE");
     } catch (Exception $e) {
         // Columns might already exist
     }
 
     $stmt = $conn->prepare("
-        SELECT tenant_id, tenant_name, allow_enduser_login, allow_enduser_signup
-        FROM tenant_configs 
-        WHERE tenant_id = ?
+        SELECT code as tenant_id, name as tenant_name, allow_enduser_login, allow_enduser_signup
+        FROM tenants 
+        WHERE code = ?
     ");
     $stmt->execute([$tenant_id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -274,9 +274,9 @@ function update_tenant_auth_settings(string $tenant_id, bool $allow_login, bool 
 {
     $conn = get_db();
     $stmt = $conn->prepare("
-        UPDATE tenant_configs 
+        UPDATE tenants 
         SET allow_enduser_login = ?, allow_enduser_signup = ?
-        WHERE tenant_id = ?
+        WHERE code = ?
     ");
     $stmt->execute([$allow_login, $allow_signup, $tenant_id]);
     return $stmt->rowCount() > 0;

@@ -171,9 +171,9 @@ export default function App() {
           }
           return <Admin />;
         case "enduser-login":
-          return <EndUserLogin />;
+          return <EndUserLogin setView={setView} />;
         case "enduser-signup":
-          return <EndUserSignup />;
+          return <EndUserSignup setView={setView} />;
         default:
           return <Home setView={setView} />;
       }

@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, Eye, EyeOff, Sparkles } from 'lucide-react';
 import { useEndUserAuth } from '../hooks/useEndUserAuth';
 import { useTenantSettings } from '../hooks/useTenantSettings';
 
-export const EndUserLogin = () => {
-    const navigate = useNavigate();
+interface Props {
+    setView?: (view: string | object) => void;
+}
+
+export const EndUserLogin = ({ setView }: Props) => {
     const { login } = useEndUserAuth();
     const { settings, loading: settingsLoading } = useTenantSettings();
 
@@ -15,6 +17,22 @@ export const EndUserLogin = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
+    const goHome = () => {
+        if (setView) {
+            setView('home');
+        } else {
+            window.location.href = '/';
+        }
+    };
+
+    const goToSignup = () => {
+        if (setView) {
+            setView('enduser-signup');
+        } else {
+            window.location.href = '/signup';
+        }
+    };
+
     // If login not allowed, show message
     if (!settingsLoading && !settings?.allow_enduser_login) {
         return (
@@ -23,7 +41,7 @@ export const EndUserLogin = () => {
                     <h1 className="text-2xl font-bold text-slate-800 mb-4">Giriş Aktif Değil</h1>
                     <p className="text-slate-600 mb-6">Bu site için kullanıcı girişi şu an aktif değil.</p>
                     <button
-                        onClick={() => navigate('/')}
+                        onClick={goHome}
                         className="text-blue-600 hover:underline"
                     >
                         Ana sayfaya dön
@@ -41,7 +59,8 @@ export const EndUserLogin = () => {
         const result = await login(email, password);
 
         if (result.success) {
-            navigate('/portal');
+            // Redirect to portal or home
+            goHome();
         } else {
             setError(result.error || 'Giriş başarısız');
         }
@@ -129,16 +148,16 @@ export const EndUserLogin = () => {
                     {settings?.allow_enduser_signup && (
                         <p className="text-center text-slate-600 mt-6">
                             Hesabınız yok mu?{' '}
-                            <Link to="/signup" className="text-violet-600 hover:text-violet-700 font-semibold">
+                            <button onClick={goToSignup} className="text-violet-600 hover:text-violet-700 font-semibold">
                                 Kayıt Ol
-                            </Link>
+                            </button>
                         </p>
                     )}
 
                     {/* Back to home */}
                     <div className="text-center mt-4">
                         <button
-                            onClick={() => navigate('/')}
+                            onClick={goHome}
                             className="text-sm text-slate-400 hover:text-slate-600"
                         >
                             ← Ana sayfaya dön
