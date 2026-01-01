@@ -114,10 +114,6 @@ if (empty($action)) {
     exit;
 }
 
-// Legacy-style media controller (uses direct $action checks with exit)
-$conn = get_db_connection();
-require_once __DIR__ . '/modules/media/media.controller.php';
-
 // 7. Try Admin Routes
 // We include admin routes if it looks like an admin action or if a token is present
 require_once __DIR__ . '/routes/admin.routes.php';
