@@ -18,8 +18,10 @@ function resolve_admin_tenant(int $user_id): ?array
 {
     // Check for tenant ID header
     $tenant_id = $_SERVER['HTTP_X_TENANT_ID'] ?? null;
-    if ($tenant_id) {
-        return check_user_tenant_access($user_id, (int) $tenant_id);
+    if ($tenant_id && is_numeric($tenant_id) && (int) $tenant_id > 0) {
+        $access = check_user_tenant_access($user_id, (int) $tenant_id);
+        if ($access)
+            return $access;
     }
 
     // Check for tenant code header
