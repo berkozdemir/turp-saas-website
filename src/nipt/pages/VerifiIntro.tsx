@@ -111,7 +111,7 @@ export const VerifiIntro = () => {
                                     className="w-full h-12 rounded-lg"
                                     style={{ filter: 'invert(1) hue-rotate(180deg)' }}
                                 >
-                                    <source src="/audio/NIPT_Verifi.m4a" type="audio/mp4" />
+                                    <source src="https://nipt.tr/nipt.tr/NIPT_Verifi.m4a" type="audio/mp4" />
                                     Tarayıcınız ses oynatıcıyı desteklemiyor.
                                 </audio>
                             </div>
