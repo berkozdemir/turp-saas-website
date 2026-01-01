@@ -16,6 +16,8 @@
  */
 function handle_blog_public(string $action): bool
 {
+    global $conn;
+    $conn = get_db_connection();
     switch ($action) {
         case 'get_blog_posts':
             return blog_public_list();

@@ -7,6 +7,8 @@
 
 function handle_faq_public(string $action): bool
 {
+    global $conn;
+    $conn = get_db_connection();
     switch ($action) {
         case 'get_faqs_public':
         case 'get_faqs_showcase':

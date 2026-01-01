@@ -121,6 +121,11 @@ export const fetchPageBySlug = async (
   return null;
 };
 
+// Also expose to window for easier global access if needed (optional but helps with the ReferenceError)
+if (typeof window !== 'undefined') {
+  (window as any).fetchAPI = fetchAPI;
+}
+
 export const fetchContactConfig = async (lang: LangCode, tenantCode: string = "nipt"): Promise<any | null> => {
   const response = await fetchAPI('get_contact_config_public', { language: lang, tenant_code: tenantCode });
   if (response?.success && response.data) {

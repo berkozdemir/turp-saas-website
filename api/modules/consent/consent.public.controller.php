@@ -16,9 +16,7 @@
 function handle_consent_public(string $action): bool
 {
     global $conn;
-    if (!isset($conn)) {
-        $conn = get_db_connection();
-    }
+    $conn = get_db_connection();
 
     if ($action === 'get_consent_config' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         try {
