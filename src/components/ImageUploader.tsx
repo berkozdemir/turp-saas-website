@@ -101,7 +101,13 @@ export const ImageUploader = ({
             );
             formData.append('image', processedFile);
 
-            const headers: Record<string, string> = {};
+            // Import getTenantHeader dynamically to avoid circular dependencies
+            const { getTenantHeader } = await import('../context/TenantContext');
+            const tenantHeaders = getTenantHeader();
+
+            const headers: Record<string, string> = {
+                ...tenantHeaders
+            };
             if (token) {
                 headers['Authorization'] = `Bearer ${token}`;
             }
