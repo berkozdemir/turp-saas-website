@@ -76,7 +76,7 @@ export const MomGuardIntro = () => {
                     <div className="relative hidden md:block">
                         <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl border-4 border-white transform rotate-2 hover:rotate-0 transition-all duration-500">
                             <img
-                                src="https://images.unsplash.com/photo-1631557993077-8fa050c93a86?q=80&w=2070&auto=format&fit=crop"
+                                src="/images/labgenomics_illumina_logo.png"
                                 alt="Scientist in lab"
                                 className="object-cover h-[500px] w-full"
                             />
