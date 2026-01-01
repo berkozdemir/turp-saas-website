@@ -19,10 +19,23 @@ import {
 import { NIPTHeader } from '../components/NIPTHeader';
 import { NIPTFooter } from '../components/NIPTFooter';
 import NIPTSEO from '../components/NIPTSEO';
+import { useFaq } from '../../hooks/useFaq';
+
+// Fallback FAQs - will be imported to backend on first load
+const FALLBACK_FAQS = [
+    { question: "NIPT Testi Ne Kadar Güvenli?", answer: "Tamamen güvenli ve risksiz (non-invaziv) bir testtir. Sadece anneden alınan kan örneği ile çalışılır, bebek için hiçbir risk oluşturmaz." },
+    { question: "Sonuç Kaç Günde Gelir?", answer: "Seçtiğiniz teste göre değişmekle birlikte genellikle 7-14 gün içerisinde sonuçlarınız raporlanır." },
+    { question: "Doktor Kodu Nedir?", answer: "Hekiminiz tarafından size verilen indirim kodudur. Randevu oluştururken bu kodu girerek indirimden faydalanabilirsiniz." },
+    { question: "Hizmet Hangi İllerde Var?", answer: "Türkiye'nin 81 ilinde Omega Care hemşire ağımız ile evinizde veya iş yerinizde numune alımı yapabiliyoruz." },
+    { question: "Sonuç Nasıl İletilir?", answer: "Sonuçlarınız hazır olduğunda SMS ve E-posta ile bilgilendirilirsiniz. Hasta portalından veya hekiminiz aracılığıyla raporunuza ulaşabilirsiniz." }
+];
 
 export const NIPTPortal = () => {
     const navigate = useNavigate();
     const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
+    // Fetch FAQs from backend with auto-import fallback
+    const { faqs } = useFaq({ pageSlug: 'nipt-home', fallbackFaqs: FALLBACK_FAQS });
 
     const toggleFaq = (index: number) => {
         setOpenFaqIndex(openFaqIndex === index ? null : index);
@@ -83,13 +96,7 @@ export const NIPTPortal = () => {
         { icon: <UserCheck size={28} />, title: "Uzman Genetik Danışmanlar", desc: "Sonuç yorumlama desteği" },
     ];
 
-    const faqs = [
-        { q: "NIPT Testi Ne Kadar Güvenli?", a: "Tamamen güvenli ve risksiz (non-invaziv) bir testtir. Sadece anneden alınan kan örneği ile çalışılır, bebek için hiçbir risk oluşturmaz." },
-        { q: "Sonuç Kaç Günde Gelir?", a: "Seçtiğiniz teste göre değişmekle birlikte genellikle 7-14 gün içerisinde sonuçlarınız raporlanır." },
-        { q: "Doktor Kodu Nedir?", a: "Hekiminiz tarafından size verilen indirim kodudur. Randevu oluştururken bu kodu girerek indirimden faydalanabilirsiniz." },
-        { q: "Hizmet Hangi İllerde Var?", a: "Türkiye'nin 81 ilinde Omega Care hemşire ağımız ile evinizde veya iş yerinizde numune alımı yapabiliyoruz." },
-        { q: "Sonuç Nasıl İletilir?", a: "Sonuçlarınız hazır olduğunda SMS ve E-posta ile bilgilendirilirsiniz. Hasta portalından veya hekiminiz aracılığıyla raporunuza ulaşabilirsiniz." }
-    ];
+
 
     return (
         <div className="min-h-screen bg-[#FAFBFC] font-sans text-slate-800 selection:bg-blue-100 selection:text-blue-900">
@@ -309,16 +316,16 @@ export const NIPTPortal = () => {
 
                     <div className="space-y-4">
                         {faqs.map((faq, i) => (
-                            <div key={i} className="bg-white border boundary-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                            <div key={faq.id || i} className="bg-white border boundary-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
                                 <button
                                     onClick={() => toggleFaq(i)}
                                     className="w-full flex items-center justify-between p-6 text-left font-semibold text-slate-800"
                                 >
-                                    {faq.q}
+                                    {faq.question}
                                     {openFaqIndex === i ? <ChevronUp className="text-blue-500" /> : <ChevronDown className="text-slate-400" />}
                                 </button>
                                 <div className={`px-6 pb-6 text-slate-600 leading-relaxed ${openFaqIndex === i ? 'block' : 'hidden'}`}>
-                                    {faq.a}
+                                    {faq.answer}
                                 </div>
                             </div>
                         ))}
