@@ -33,6 +33,22 @@ function resolve_admin_tenant(int $user_id): ?array
         }
     }
 
+    // Fallback: Check POST/GET params (for FormData/multipart uploads)
+    $param_tenant_id = $_POST['tenant_id'] ?? $_GET['tenant_id'] ?? null;
+    if ($param_tenant_id && is_numeric($param_tenant_id) && (int) $param_tenant_id > 0) {
+        $access = check_user_tenant_access($user_id, (int) $param_tenant_id);
+        if ($access)
+            return $access;
+    }
+
+    $param_tenant_code = $_POST['tenant_code'] ?? $_GET['tenant_code'] ?? null;
+    if ($param_tenant_code) {
+        $tenant = get_tenant_by_code($param_tenant_code);
+        if ($tenant) {
+            return check_user_tenant_access($user_id, $tenant['id']);
+        }
+    }
+
     return null;
 }
 

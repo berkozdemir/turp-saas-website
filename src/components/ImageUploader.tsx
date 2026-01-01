@@ -105,6 +105,14 @@ export const ImageUploader = ({
             const { getTenantHeader } = await import('../context/TenantContext');
             const tenantHeaders = getTenantHeader();
 
+            // Also add tenant info to FormData as fallback for multipart requests
+            if (tenantHeaders['X-Tenant-Id']) {
+                formData.append('tenant_id', tenantHeaders['X-Tenant-Id']);
+            }
+            if (tenantHeaders['X-Tenant-Code']) {
+                formData.append('tenant_code', tenantHeaders['X-Tenant-Code']);
+            }
+
             const headers: Record<string, string> = {
                 ...tenantHeaders
             };
