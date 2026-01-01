@@ -198,11 +198,19 @@ function media_admin_upload(): bool
         }
     }
 
-    echo json_encode([
+    // Build response - include top-level 'url' for ImageUploader compatibility
+    $response = [
         'success' => count($uploaded) > 0,
         'uploaded' => $uploaded,
         'errors' => $errors
-    ]);
+    ];
+
+    // Add top-level url for single-file uploads (ImageUploader expects this)
+    if (count($uploaded) > 0) {
+        $response['url'] = $uploaded[0]['url'];
+    }
+
+    echo json_encode($response);
     return true;
 }
 
