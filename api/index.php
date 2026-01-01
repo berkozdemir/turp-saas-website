@@ -76,13 +76,17 @@ require_once __DIR__ . '/modules/faq/faq.public.controller.php';
 
 // Landing
 require_once __DIR__ . '/modules/landing/landing.service.php';
+require_once __DIR__ . '/modules/landing/landing.admin.controller.php';
 require_once __DIR__ . '/modules/landing/landing.public.controller.php';
 
 // Contact
 require_once __DIR__ . '/modules/contact/contact.service.php';
+require_once __DIR__ . '/modules/contact/contact.admin.controller.php';
+require_once __DIR__ . '/modules/contact/contact_config.admin.controller.php';
 
 // Legal
 require_once __DIR__ . '/modules/legal/legal.service.php';
+require_once __DIR__ . '/modules/legal/legal.admin.controller.php';
 require_once __DIR__ . '/modules/legal/legal.public.controller.php';
 
 // Media

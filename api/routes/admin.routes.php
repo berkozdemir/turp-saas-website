@@ -34,10 +34,27 @@ function route_admin_action(string $action): bool
         return true;
     }
 
+    // Landing module
+    if (handle_landing_admin($action)) {
+        return true;
+    }
+
+    // Contact module
+    if (handle_contact_admin($action)) {
+        return true;
+    }
+
+    // Contact Config module
+    if (handle_contact_config_admin($action)) {
+        return true;
+    }
+
+    // Legal module
+    if (handle_legal_admin($action)) {
+        return true;
+    }
+
     // TODO: Add other modules as they are fully refactored:
-    // if (handle_landing_admin($action)) return true;
-    // if (handle_contact_admin($action)) return true;
-    // if (handle_legal_admin($action)) return true;
     // if (handle_media_admin($action)) return true;
 
     return false;
