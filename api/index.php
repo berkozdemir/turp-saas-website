@@ -1,11 +1,3 @@
-<?php
-// Ping check for health verification
-if (isset($_GET['ping'])) {
-    http_response_code(200);
-    echo "pong";
-    exit;
-}
-
 // TEMPORARY DEBUG: Force errors to display
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
