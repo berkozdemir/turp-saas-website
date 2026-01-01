@@ -50,7 +50,7 @@ const Index = () => {
   };
 
   const handleLoginClick = () => {
-    navigate('/auth');
+    navigate('/admin');
   };
 
   if (isLoading) {

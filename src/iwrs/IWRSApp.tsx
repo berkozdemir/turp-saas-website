@@ -13,7 +13,7 @@ import TermsOfService from "./pages/TermsOfService";
 import SecurityPolicy from "./pages/SecurityPolicy";
 import IWRSMockup from "./pages/IWRSMockup";
 import NotFound from "./pages/NotFound";
-import Auth from "./pages/Auth";
+import Index from "./pages/Index";
 import { Admin } from "@/pages/Admin";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
@@ -47,7 +47,6 @@ const IWRSApp = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/iwrs" element={<IWRSMockup />} />
-          <Route path="/auth" element={<Auth />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogPost />} />
