@@ -12,6 +12,7 @@ require_once __DIR__ . '/../modules/faq/faq.admin.controller.php';
 require_once __DIR__ . '/../modules/nipt/doctors.admin.controller.php';
 require_once __DIR__ . '/../modules/user/user.admin.controller.php';
 require_once __DIR__ . '/../modules/settings/settings.admin.controller.php';
+require_once __DIR__ . '/../modules/media/media.admin.controller.php';
 
 /**
  * Route admin actions to controllers
@@ -64,8 +65,10 @@ function route_admin_action(string $action): bool
         return true;
     }
 
-    // TODO: Add other modules as they are fully refactored:
-    // if (handle_media_admin($action)) return true;
+    // Media module
+    if (handle_media_admin($action)) {
+        return true;
+    }
 
     return false;
 }
