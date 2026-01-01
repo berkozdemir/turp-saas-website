@@ -29,6 +29,8 @@ function handle_blog_admin(string $action): bool
             return blog_admin_update();
         case 'delete_blog_post':
             return blog_admin_delete();
+        case 'ai_translate_blog_all':
+            return blog_admin_translate_all();
         default:
             return false;
     }
@@ -111,5 +113,97 @@ function blog_admin_delete(): bool
 
     blog_delete_post($ctx['tenant_id'], $id);
     echo json_encode(['success' => true]);
+    return true;
+}
+
+function blog_admin_translate_all(): bool
+{
+    require_admin_context(); // Auth check
+    $data = json_decode(file_get_contents('php://input'), true) ?? [];
+
+    $title_tr = $data['title_tr'] ?? '';
+    // Use either excerpt or content as source if one is missing, but prefer title + content
+    $excerpt_tr = $data['excerpt_tr'] ?? '';
+    $content_tr = $data['content_tr'] ?? '';
+
+    if (empty($title_tr) && empty($content_tr)) {
+        echo json_encode(['error' => 'Turkish content (title or body) required as source']);
+        return true;
+    }
+
+    $apiKey = get_env_strict('DEEPSEEK_API_KEY');
+    if (!$apiKey) {
+        // Fallback for development if env is not loaded correctly, or explicit error
+        echo json_encode(['error' => 'API Key configuration missing (DEEPSEEK_API_KEY)']);
+        return true;
+    }
+
+    // Prepare prompt
+    $prompt = "You are a professional translator for a SaaS website. 
+    Translate the following Turkish blog content into English (EN) and Chinese (ZH).
+    
+    Source Title: " . json_encode($title_tr) . "
+    Source Excerpt: " . json_encode($excerpt_tr) . "
+    Source Content: " . json_encode($content_tr) . "
+    
+    Return ONLY a valid JSON object with this structure:
+    {
+      \"en\": { \"title\": \"...\", \"excerpt\": \"...\", \"content\": \"...\" },
+      \"zh\": { \"title\": \"...\", \"excerpt\": \"...\", \"content\": \"...\" }
+    }
+    
+    Keep the tone professional and SEO-friendly. Preserve HTML tags if any. Do not include markdown code blocks.
+    ";
+
+    $url = 'https://api.deepseek.com/chat/completions';
+
+    $ch = curl_init($url);
+    $payload = json_encode([
+        'model' => 'deepseek-chat',
+        'messages' => [
+            ['role' => 'system', 'content' => 'You are a helpful assistant that outputs strictly valid JSON.'],
+            ['role' => 'user', 'content' => $prompt]
+        ],
+        'temperature' => 0.3,
+        'response_format' => ['type' => 'json_object']
+    ]);
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Content-Type: application/json",
+        "Authorization: Bearer $apiKey"
+    ]);
+
+    $response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        echo json_encode(['error' => 'Curl Error: ' . curl_error($ch)]);
+        curl_close($ch);
+        return true;
+    }
+
+    curl_close($ch);
+
+    $ai_data = json_decode($response, true);
+    $content = $ai_data['choices'][0]['message']['content'] ?? null;
+
+    if ($content) {
+        // Parse JSON from content
+        try {
+            $parsed = json_decode($content, true);
+            if ($parsed) {
+                echo json_encode($parsed);
+            } else {
+                echo json_encode(['error' => 'Failed to parse AI response', 'raw' => $content]);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['error' => 'JSON Error: ' . $e->getMessage()]);
+        }
+    } else {
+        echo json_encode(['error' => 'No content from AI', 'raw' => $response]);
+    }
+
     return true;
 }
