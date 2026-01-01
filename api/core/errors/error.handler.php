@@ -6,6 +6,20 @@
  */
 
 /**
+ * Check if running in production
+ * 
+ * @return bool
+ */
+function is_production(): bool
+{
+    // Adjust path based on file location: api/core/errors/ -> api/env.php
+    return file_exists(__DIR__ . '/../../env.php');
+}
+
+// Register handlers immediately when this file is included
+register_error_handlers();
+
+/**
  * Send JSON error response
  * 
  * @param string $message Error message

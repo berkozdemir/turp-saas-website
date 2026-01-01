@@ -53,6 +53,7 @@ function get_env_strict($key)
 
 // 1. Core Error Handling
 require_once __DIR__ . '/core/errors/error.handler.php';
+register_error_handlers();
 
 // 2. Config
 require_once __DIR__ . '/config/db.php';

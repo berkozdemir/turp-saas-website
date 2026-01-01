@@ -3,7 +3,7 @@
  * FAQ Public Controller
  */
 
-require_once __DIR__ . '/../../core/tenant/admin_resolver.php';
+require_once __DIR__ . '/../../core/tenant/tenant.service.php';
 require_once __DIR__ . '/faq.service.php';
 
 function handle_faq_public(string $action): bool

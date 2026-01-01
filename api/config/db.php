@@ -89,7 +89,9 @@ function get_deepseek_key(): ?string
 /**
  * Check if running in production
  */
-function is_production(): bool
-{
-    return file_exists(__DIR__ . '/../env.php');
+if (!function_exists('is_production')) {
+    function is_production(): bool
+    {
+        return file_exists(__DIR__ . '/../env.php');
+    }
 }
