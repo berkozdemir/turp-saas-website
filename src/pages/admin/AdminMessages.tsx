@@ -40,9 +40,9 @@ export const AdminMessages = ({ token }: AdminMessagesProps) => {
             } else {
                 notify.error("Mesajlar yüklenirken hata oluştu: " + (data.error || "Bilinmeyen hata"));
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
-            notify.error("Bağlantı hatası");
+            notify.error("Mesajlar alınamadı: " + (err.message || "Bağlantı hatası"));
         } finally {
             setLoading(false);
         }

@@ -42,8 +42,9 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
             } else {
                 notify.error(data.error || "Blog yazıları alınamadı");
             }
-        } catch (err) {
-            notify.error("Bağlantı hatası");
+        } catch (err: any) {
+            console.error("Fetch error:", err);
+            notify.error("Veri yüklenemedi: " + (err.message || "Bağlantı hatası"));
         } finally {
             setLoading(false);
         }
