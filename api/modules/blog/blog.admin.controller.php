@@ -171,20 +171,30 @@ function blog_admin_translate_all(): bool
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 120); // 2 minute timeout for long content
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30); // 30 second connection timeout
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         "Content-Type: application/json",
         "Authorization: Bearer $apiKey"
     ]);
 
     $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
     if (curl_errno($ch)) {
-        echo json_encode(['error' => 'Curl Error: ' . curl_error($ch)]);
+        $error = curl_error($ch);
         curl_close($ch);
+        echo json_encode(['error' => 'Curl Error: ' . $error]);
         return true;
     }
 
     curl_close($ch);
+
+    // Check HTTP status
+    if ($httpCode !== 200) {
+        echo json_encode(['error' => 'API Error: HTTP ' . $httpCode, 'raw' => $response]);
+        return true;
+    }
 
     $ai_data = json_decode($response, true);
     $content = $ai_data['choices'][0]['message']['content'] ?? null;
