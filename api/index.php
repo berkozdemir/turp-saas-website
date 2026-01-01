@@ -1,3 +1,4 @@
+<?php
 // TEMPORARY DEBUG: Force errors to display
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
