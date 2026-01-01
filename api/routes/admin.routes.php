@@ -10,6 +10,8 @@
 require_once __DIR__ . '/../modules/blog/blog.admin.controller.php';
 require_once __DIR__ . '/../modules/faq/faq.admin.controller.php';
 require_once __DIR__ . '/../modules/nipt/doctors.admin.controller.php';
+require_once __DIR__ . '/../modules/user/user.admin.controller.php';
+require_once __DIR__ . '/../modules/settings/settings.admin.controller.php';
 
 /**
  * Route admin actions to controllers
@@ -19,6 +21,14 @@ require_once __DIR__ . '/../modules/nipt/doctors.admin.controller.php';
  */
 function route_admin_action(string $action): bool
 {
+    // User Management
+    if (handle_user_admin($action))
+        return true;
+
+    // Settings
+    if (handle_settings_admin($action))
+        return true;
+
     // Blog module
     if (handle_blog_admin($action)) {
         return true;
