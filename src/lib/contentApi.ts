@@ -56,6 +56,9 @@ export async function fetchAPI(action: string, params: Record<string, any> = {},
   };
 
   try {
+    // Cache buster
+    url.searchParams.append("_t", new Date().getTime().toString());
+
     const response = await fetch(url.toString(), {
       method,
       headers,
