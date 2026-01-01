@@ -6,10 +6,7 @@
  * Routes: get_blog_posts, get_blog_post
  */
 
-require_once __DIR__ . '/../../config/db.php';
-require_once __DIR__ . '/../../config/db.php';
-require_once __DIR__ . '/../../core/tenant/tenant.service.php';
-require_once __DIR__ . '/blog.service.php';
+
 
 /**
  * Handle public blog actions

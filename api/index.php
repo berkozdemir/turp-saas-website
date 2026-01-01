@@ -99,6 +99,7 @@ require_once __DIR__ . '/modules/nipt/doctors.controller.php';
 require_once __DIR__ . '/modules/contact/contact.public.controller.php';
 require_once __DIR__ . '/modules/auth/auth.public.controller.php';
 require_once __DIR__ . '/modules/roi/roi.public.controller.php';
+require_once __DIR__ . '/modules/media/media.service.php';
 
 // 5. Initialize CORS
 setup_cors();

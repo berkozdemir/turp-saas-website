@@ -5,12 +5,7 @@
  * Handles public API requests for cookie consent configuration.
  */
 
-require_once __DIR__ . '/../../core/tenant/tenant.service.php';
-require_once __DIR__ . '/../../config/db.php';
-require_once __DIR__ . '/../../core/tenant/tenant.service.php';
-require_once __DIR__ . '/../../config/db.php';
-require_once __DIR__ . '/../../core/tenant/tenant.service.php';
-require_once __DIR__ . '/consent.service.php';
+// Handled by index.php
 
 /**
  * Handle public consent actions

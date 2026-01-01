@@ -5,12 +5,7 @@
  * Handles public API requests for landing page configuration.
  */
 
-require_once __DIR__ . '/../../config/db.php';
-require_once __DIR__ . '/../../core/tenant/tenant.service.php';
-require_once __DIR__ . '/../../config/db.php';
-require_once __DIR__ . '/../../core/tenant/tenant.service.php';
-require_once __DIR__ . '/landing.service.php';
-require_once __DIR__ . '/../../core/tenant/tenant.service.php';
+// Handled by index.php
 
 /**
  * Handle public landing actions
@@ -21,6 +16,7 @@ require_once __DIR__ . '/../../core/tenant/tenant.service.php';
 function handle_landing_public(string $action): bool
 {
     if ($action === 'get_landing_config_public') {
+        $conn = get_db_connection();
         $tenant_code = get_current_tenant_code();
         $config = landing_get_config($tenant_code);
 

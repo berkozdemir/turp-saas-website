@@ -3,20 +3,11 @@
  * ROI Settings Public Controller
  */
 
-require_once __DIR__ . '/../../config/db.php';
-require_once __DIR__ . '/../../core/tenant/tenant.service.php';
-require_once __DIR__ . '/blog.service.php';
-
 function handle_roi_public($action)
 {
     if ($action === 'get_roi_settings') {
         try {
             $conn = get_db_connection();
-            $tenant_id = get_current_tenant_id() ?: 1;
-
-            // Log for debug
-            error_log("ROI Fetch started for tenant: " . $tenant_id);
-
             $stmt = $conn->prepare("SELECT * FROM roi_settings ORDER BY id DESC LIMIT 1");
             $stmt->execute();
             $settings = $stmt->fetch(PDO::FETCH_ASSOC);

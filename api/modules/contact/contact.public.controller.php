@@ -1,9 +1,7 @@
 <?php
 // api/modules/contact/contact.public.controller.php
 
-require_once __DIR__ . '/../../config/db.php';
-require_once __DIR__ . '/../../core/tenant/tenant.service.php';
-require_once __DIR__ . '/contact.service.php';
+// Handled by index.php
 // Temporarily disabled to prevent path issues
 
 function handle_contact_public($action)
