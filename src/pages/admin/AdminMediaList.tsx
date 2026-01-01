@@ -42,6 +42,7 @@ export const AdminMediaList = ({ onBack }: AdminMediaListProps) => {
     const [copiedUrl, setCopiedUrl] = useState<number | null>(null);
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
+    const API_BASE_URL = API_URL.endsWith('/index.php') ? API_URL : `${API_URL}/index.php`;
 
     const fetchAssets = useCallback(async () => {
         setLoading(true);
@@ -54,7 +55,7 @@ export const AdminMediaList = ({ onBack }: AdminMediaListProps) => {
             if (search) params.append("search", search);
             if (category) params.append("category", category);
 
-            const response = await fetch(`${API_URL}/index.php?action=get_media_list&${params}`, {
+            const response = await fetch(`${API_BASE_URL}?action=get_media_list&${params}`, {
                 headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() },
             });
             const data = await response.json();
@@ -72,7 +73,7 @@ export const AdminMediaList = ({ onBack }: AdminMediaListProps) => {
     const fetchCategories = async () => {
         try {
             const token = localStorage.getItem("admin_token");
-            const response = await fetch(`${API_URL}/index.php?action=get_media_categories`, {
+            const response = await fetch(`${API_BASE_URL}?action=get_media_categories`, {
                 headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() },
             });
             const data = await response.json();
@@ -100,7 +101,7 @@ export const AdminMediaList = ({ onBack }: AdminMediaListProps) => {
 
         try {
             const token = localStorage.getItem("admin_token");
-            const response = await fetch(`${API_URL}/index.php?action=upload_media`, {
+            const response = await fetch(`${API_BASE_URL}?action=upload_media`, {
                 method: "POST",
                 headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() },
                 body: formData,
@@ -124,7 +125,7 @@ export const AdminMediaList = ({ onBack }: AdminMediaListProps) => {
 
         try {
             const token = localStorage.getItem("admin_token");
-            const response = await fetch(`${API_URL}/index.php?action=delete_media`, {
+            const response = await fetch(`${API_BASE_URL}?action=delete_media`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -146,7 +147,7 @@ export const AdminMediaList = ({ onBack }: AdminMediaListProps) => {
     const handleUpdateMetadata = async (asset: MediaAsset) => {
         try {
             const token = localStorage.getItem("admin_token");
-            const response = await fetch(`${API_URL}/index.php?action=update_media`, {
+            const response = await fetch(`${API_BASE_URL}?action=update_media`, {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,

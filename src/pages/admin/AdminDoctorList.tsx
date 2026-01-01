@@ -40,11 +40,12 @@ export const AdminDoctorList = ({ token }: AdminDoctorListProps) => {
     const confirm = useConfirm();
     const notify = useNotification();
     const API_URL = import.meta.env.VITE_API_URL || "/api";
+    const API_BASE_URL = API_URL.endsWith('/index.php') ? API_URL : `${API_URL}/index.php`;
 
     const fetchDoctors = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${API_URL}/index.php?action=admin_list_doctors`, {
+            const response = await fetch(`${API_BASE_URL}?action=admin_list_doctors`, {
                 headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
             });
             const data = await response.json();
@@ -92,8 +93,8 @@ export const AdminDoctorList = ({ token }: AdminDoctorListProps) => {
 
         try {
             const url = editingDoctor
-                ? `${API_URL}/index.php?action=admin_update_doctor`
-                : `${API_URL}/index.php?action=admin_create_doctor`;
+                ? `${API_BASE_URL}?action=admin_update_doctor`
+                : `${API_BASE_URL}?action=admin_create_doctor`;
 
             const method = editingDoctor ? 'PUT' : 'POST';
             const body = editingDoctor ? { ...formData, id: editingDoctor.id } : formData;
@@ -135,7 +136,7 @@ export const AdminDoctorList = ({ token }: AdminDoctorListProps) => {
         if (!confirmed) return;
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=admin_delete_doctor&id=${doctor.id}`, {
+            const response = await fetch(`${API_BASE_URL}?action=admin_delete_doctor&id=${doctor.id}`, {
                 method: 'DELETE',
                 headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
             });
@@ -179,7 +180,7 @@ export const AdminDoctorList = ({ token }: AdminDoctorListProps) => {
         setSaving(true);
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=admin_import_doctors`, {
+            const response = await fetch(`${API_BASE_URL}?action=admin_import_doctors`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

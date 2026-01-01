@@ -19,12 +19,13 @@ export const AdminMessages = ({ token }: AdminMessagesProps) => {
     const [actionLoading, setActionLoading] = useState(false);
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
+    const API_BASE_URL = API_URL.endsWith('/index.php') ? API_URL : `${API_URL}/index.php`;
 
     const fetchMessages = async () => {
         setLoading(true);
         try {
             const response = await fetch(
-                `${API_URL}/index.php?action=get_messages&status=${filter}&page=${page}`,
+                `${API_BASE_URL}?action=get_messages&status=${filter}&page=${page}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -54,7 +55,7 @@ export const AdminMessages = ({ token }: AdminMessagesProps) => {
     const updateStatus = async (id: number, status: string) => {
         setActionLoading(true);
         try {
-            const response = await fetch(`${API_URL}/index.php?action=update_message_status`, {
+            const response = await fetch(`${API_BASE_URL}?action=update_message_status`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

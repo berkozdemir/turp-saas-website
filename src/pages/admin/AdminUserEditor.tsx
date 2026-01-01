@@ -55,7 +55,7 @@ export const AdminUserEditor = ({ token, user, onCancel, onSave }: AdminUserEdit
             if (isEditing) payload.id = user!.id;
             if (!isEditing) payload.password = password;
 
-            const response = await fetch(`${API_URL}/index.php?action=${action}`, {
+            const response = await fetch(`${API_BASE_URL}?action=${action}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -90,7 +90,7 @@ export const AdminUserEditor = ({ token, user, onCancel, onSave }: AdminUserEdit
         setSuccess(null);
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=reset_user_password`, {
+            const response = await fetch(`${API_BASE_URL}?action=reset_user_password`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

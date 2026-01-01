@@ -52,6 +52,7 @@ export const AdminContactConfigEditor = ({ editId, onBack }: AdminContactConfigE
     const [saving, setSaving] = useState(false);
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
+    const API_BASE_URL = API_URL.endsWith('/index.php') ? API_URL : `${API_URL}/index.php`;
 
     useEffect(() => {
         if (editId) {
@@ -64,7 +65,7 @@ export const AdminContactConfigEditor = ({ editId, onBack }: AdminContactConfigE
         try {
             const token = localStorage.getItem("admin_token");
             const response = await fetch(
-                `${API_URL}/index.php?action=get_contact_config_detail&id=${editId}`,
+                `${API_BASE_URL}?action=get_contact_config_detail&id=${editId}`,
                 { headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() } }
             );
             const data = await response.json();
@@ -91,7 +92,7 @@ export const AdminContactConfigEditor = ({ editId, onBack }: AdminContactConfigE
         setSaving(true);
         try {
             const token = localStorage.getItem("admin_token");
-            const response = await fetch(`${API_URL}/index.php?action=save_contact_config`, {
+            const response = await fetch(`${API_BASE_URL}?action=save_contact_config`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

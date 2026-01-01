@@ -21,12 +21,13 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
     const [totalPages, setTotalPages] = useState(1);
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
+    const API_BASE_URL = API_URL.endsWith('/index.php') ? API_URL : `${API_URL}/index.php`;
 
     const fetchPosts = async () => {
         setLoading(true);
         try {
             const response = await fetch(
-                `${API_URL}/index.php?action=get_blog_posts_admin&status=${filterStatus}&search=${search}&page=${page}`,
+                `${API_BASE_URL}?action=get_blog_posts_admin&status=${filterStatus}&search=${search}&page=${page}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -67,7 +68,7 @@ export const AdminBlogList = ({ token, onEdit, onCreate }: AdminBlogListProps) =
         if (!isConfirmed) return;
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=delete_blog_post`, {
+            const response = await fetch(`${API_BASE_URL}?action=delete_blog_post`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

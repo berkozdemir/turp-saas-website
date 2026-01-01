@@ -19,11 +19,12 @@ export const AdminLegalList = ({ token, onEdit, onCreate }: AdminLegalListProps)
     const [search, setSearch] = useState("");
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
+    const API_BASE_URL = API_URL.endsWith('/index.php') ? API_URL : `${API_URL}/index.php`;
 
     const fetchDocs = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${API_URL}/index.php?action=get_legal_docs_admin`, {
+            const response = await fetch(`${API_BASE_URL}?action=get_legal_docs_admin`, {
                 headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
             });
             const data = await response.json();
@@ -55,7 +56,7 @@ export const AdminLegalList = ({ token, onEdit, onCreate }: AdminLegalListProps)
         if (!isConfirmed) return;
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=delete_legal_doc`, {
+            const response = await fetch(`${API_BASE_URL}?action=delete_legal_doc`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -87,7 +88,7 @@ export const AdminLegalList = ({ token, onEdit, onCreate }: AdminLegalListProps)
         if (!doc) return;
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=save_legal_doc`, {
+            const response = await fetch(`${API_BASE_URL}?action=save_legal_doc`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

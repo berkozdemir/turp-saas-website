@@ -25,12 +25,13 @@ export const AdminSettings = ({ token, userName, userEmail }: AdminSettingsProps
     const [loadingSettings, setLoadingSettings] = useState(true);
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
+    const API_BASE_URL = API_URL.endsWith('/index.php') ? API_URL : `${API_URL}/index.php`;
 
     // Load settings on mount
     useEffect(() => {
         const loadSettings = async () => {
             try {
-                const response = await fetch(`${API_URL}/index.php?action=get_settings`, {
+                const response = await fetch(`${API_BASE_URL}?action=get_settings`, {
                     headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
                 });
                 const data = await response.json();
@@ -63,7 +64,7 @@ export const AdminSettings = ({ token, userName, userEmail }: AdminSettingsProps
         setPasswordLoading(true);
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=change_password`, {
+            const response = await fetch(`${API_BASE_URL}?action=change_password`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -108,7 +109,7 @@ export const AdminSettings = ({ token, userName, userEmail }: AdminSettingsProps
         setEmailLoading(true);
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=update_settings`, {
+            const response = await fetch(`${API_BASE_URL}?action=update_settings`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -306,7 +307,7 @@ export const AdminSettings = ({ token, userName, userEmail }: AdminSettingsProps
                         onClick={async () => {
                             if (!confirm("Veritabanı güncellemesi başlatılsın mı?")) return;
                             try {
-                                const res = await fetch(`${API_URL}/index.php?action=migrate_db`, {
+                                const res = await fetch(`${API_BASE_URL}?action=migrate_db`, {
                                     headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
                                 });
                                 const txt = await res.text();

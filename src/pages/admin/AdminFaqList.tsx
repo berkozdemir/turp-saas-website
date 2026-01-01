@@ -23,6 +23,7 @@ export const AdminFaqList = ({ token, onEdit, onCreate }: AdminFaqListProps) => 
     const [totalPages, setTotalPages] = useState(1);
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
+    const API_BASE_URL = API_URL.endsWith('/index.php') ? API_URL : `${API_URL}/index.php`;
 
     const fetchFaqs = async () => {
         setLoading(true);
@@ -36,7 +37,7 @@ export const AdminFaqList = ({ token, onEdit, onCreate }: AdminFaqListProps) => 
                 page: String(page)
             });
 
-            const response = await fetch(`${API_URL}/index.php?${params}`, {
+            const response = await fetch(`${API_BASE_URL}?${params}`, {
                 headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
             });
             const data = await response.json();
@@ -70,7 +71,7 @@ export const AdminFaqList = ({ token, onEdit, onCreate }: AdminFaqListProps) => 
         if (!isConfirmed) return;
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=delete_faq`, {
+            const response = await fetch(`${API_BASE_URL}?action=delete_faq`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -95,7 +96,7 @@ export const AdminFaqList = ({ token, onEdit, onCreate }: AdminFaqListProps) => 
         if (!faq) return;
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=update_faq`, {
+            const response = await fetch(`${API_BASE_URL}?action=update_faq`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

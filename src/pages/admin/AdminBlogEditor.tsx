@@ -47,7 +47,7 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
     useEffect(() => {
         if (post?.id) {
             setLoadingPost(true);
-            fetch(`${API_URL}/index.php?action=get_blog_post_detail&id=${post.id}`, {
+            fetch(`${API_BASE_URL}?action=get_blog_post_detail&id=${post.id}`, {
                 headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
             })
                 .then(res => res.json())
@@ -122,7 +122,7 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
         const payload = { ...formData, id: post?.id };
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=${action}`, {
+            const response = await fetch(`${API_BASE_URL}?action=${action}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -154,7 +154,7 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
 
         setTranslateLoading(true);
         try {
-            const response = await fetch(`${API_URL}/index.php?action=ai_translate_blog_all`, {
+            const response = await fetch(`${API_BASE_URL}?action=ai_translate_blog_all`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -290,7 +290,7 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                                 <div>
                                     <ImageUploader
                                         label="Kapak Görseli"
-                                        uploadEndpoint={`${API_URL}/index.php?action=upload_image`}
+                                        uploadEndpoint={`${API_BASE_URL}?action=upload_image`}
                                         token={token}
                                         existingImageUrl={formData.image_url}
                                         preset="blogCover"

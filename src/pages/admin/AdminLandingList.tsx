@@ -29,12 +29,13 @@ export const AdminLandingList = ({ onEdit }: AdminLandingListProps) => {
     const [filterLang, setFilterLang] = useState("all");
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
+    const API_BASE_URL = API_URL.endsWith('/index.php') ? API_URL : `${API_URL}/index.php`;
 
     const fetchConfigs = async () => {
         try {
             const token = localStorage.getItem("admin_token");
             const response = await fetch(
-                `${API_URL}/index.php?action=get_landing_configs_admin&language=${filterLang}`,
+                `${API_BASE_URL}?action=get_landing_configs_admin&language=${filterLang}`,
                 { headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() } }
             );
             const data = await response.json();
@@ -56,7 +57,7 @@ export const AdminLandingList = ({ onEdit }: AdminLandingListProps) => {
         if (!confirm("Bu yapılandırmayı kopyalamak istiyor musunuz?")) return;
         try {
             const token = localStorage.getItem("admin_token");
-            const response = await fetch(`${API_URL}/index.php?action=duplicate_landing_config`, {
+            const response = await fetch(`${API_BASE_URL}?action=duplicate_landing_config`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -78,7 +79,7 @@ export const AdminLandingList = ({ onEdit }: AdminLandingListProps) => {
         if (!confirm("Bu yapılandırmayı silmek istediğinizden emin misiniz?")) return;
         try {
             const token = localStorage.getItem("admin_token");
-            const response = await fetch(`${API_URL}/index.php?action=delete_landing_config`, {
+            const response = await fetch(`${API_BASE_URL}?action=delete_landing_config`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -99,7 +100,7 @@ export const AdminLandingList = ({ onEdit }: AdminLandingListProps) => {
     const handleToggleActive = async (config: LandingConfig) => {
         try {
             const token = localStorage.getItem("admin_token");
-            const response = await fetch(`${API_URL}/index.php?action=save_landing_config`, {
+            const response = await fetch(`${API_BASE_URL}?action=save_landing_config`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -50,12 +50,13 @@ export const AdminUserList = ({ token, userRole, onEdit, onCreate }: AdminUserLi
     const notify = useNotification();
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
+    const API_BASE_URL = API_URL.endsWith('/index.php') ? API_URL : `${API_URL}/index.php`;
 
     const fetchUsers = async () => {
         setLoading(true);
         try {
             const params = new URLSearchParams({ role: roleFilter, status: statusFilter, search: searchQuery });
-            const response = await fetch(`${API_URL}/index.php?action=get_admin_users&${params}`, {
+            const response = await fetch(`${API_BASE_URL}?action=get_admin_users&${params}`, {
                 headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
             });
             const data = await response.json();
@@ -87,7 +88,7 @@ export const AdminUserList = ({ token, userRole, onEdit, onCreate }: AdminUserLi
         if (!confirmed) return;
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=delete_admin_user`, {
+            const response = await fetch(`${API_BASE_URL}?action=delete_admin_user`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -110,7 +111,7 @@ export const AdminUserList = ({ token, userRole, onEdit, onCreate }: AdminUserLi
 
     const handleToggleActive = async (user: AdminUser) => {
         try {
-            const response = await fetch(`${API_URL}/index.php?action=update_admin_user`, {
+            const response = await fetch(`${API_BASE_URL}?action=update_admin_user`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

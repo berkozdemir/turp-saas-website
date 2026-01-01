@@ -35,13 +35,14 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
     const [translateSuccess, setTranslateSuccess] = useState(false);
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
+    const API_BASE_URL = API_URL.endsWith('/index.php') ? API_URL : `${API_URL}/index.php`;
     const isEditing = Boolean(faq?.id);
 
     // Fetch existing categories from settings
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch(`${API_URL}/index.php?action=get_settings`, {
+                const response = await fetch(`${API_BASE_URL}?action=get_settings`, {
                     headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
                 });
                 const data = await response.json();
@@ -69,7 +70,7 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
             setNewCategory("");
             setShowNewCategoryInput(false);
 
-            fetch(`${API_URL}/index.php?action=update_settings`, {
+            fetch(`${API_BASE_URL}?action=update_settings`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -93,7 +94,7 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
         setTranslateSuccess(false);
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=translate_faq_all`, {
+            const response = await fetch(`${API_BASE_URL}?action=translate_faq_all`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -153,7 +154,7 @@ export const AdminFaqEditor = ({ token, faq, onCancel, onSave }: AdminFaqEditorP
 
             if (isEditing) payload.id = faq.id;
 
-            const response = await fetch(`${API_URL}/index.php?action=${action}`, {
+            const response = await fetch(`${API_BASE_URL}?action=${action}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

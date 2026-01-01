@@ -35,6 +35,7 @@ export const AdminLegalEditor = ({ token, doc, onCancel, onSave }: AdminLegalEdi
     const [translateSuccess, setTranslateSuccess] = useState(false);
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
+    const API_BASE_URL = API_URL.endsWith('/index.php') ? API_URL : `${API_URL}/index.php`;
     const isEditing = Boolean(doc?.id);
 
     // AI Translation
@@ -49,7 +50,7 @@ export const AdminLegalEditor = ({ token, doc, onCancel, onSave }: AdminLegalEdi
         setTranslateSuccess(false);
 
         try {
-            const response = await fetch(`${API_URL}/index.php?action=translate_legal`, {
+            const response = await fetch(`${API_BASE_URL}?action=translate_legal`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -112,7 +113,7 @@ export const AdminLegalEditor = ({ token, doc, onCancel, onSave }: AdminLegalEdi
 
             if (isEditing) payload.id = doc.id;
 
-            const response = await fetch(`${API_URL}/index.php?action=save_legal_doc`, {
+            const response = await fetch(`${API_BASE_URL}?action=save_legal_doc`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

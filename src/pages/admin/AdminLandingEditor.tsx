@@ -96,7 +96,7 @@ export const AdminLandingEditor = ({ editId, onBack }: AdminLandingEditorProps) 
         try {
             const token = localStorage.getItem("admin_token");
             const response = await fetch(
-                `${API_URL}/index.php?action=get_landing_config_detail&id=${editId}`,
+                `${API_BASE_URL}?action=get_landing_config_detail&id=${editId}`,
                 { headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() } }
             );
             const data = await response.json();
@@ -125,7 +125,7 @@ export const AdminLandingEditor = ({ editId, onBack }: AdminLandingEditorProps) 
         setSaving(true);
         try {
             const token = localStorage.getItem("admin_token");
-            const response = await fetch(`${API_URL}/index.php?action=save_landing_config`, {
+            const response = await fetch(`${API_BASE_URL}?action=save_landing_config`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -158,7 +158,7 @@ export const AdminLandingEditor = ({ editId, onBack }: AdminLandingEditorProps) 
         setAiLoading(true);
         try {
             const token = localStorage.getItem("admin_token");
-            const response = await fetch(`${API_URL}/index.php?action=translate`, {
+            const response = await fetch(`${API_BASE_URL}?action=translate`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
