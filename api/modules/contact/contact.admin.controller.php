@@ -7,14 +7,16 @@
 
 function handle_contact_admin($action)
 {
-    global $conn;
-    if (!isset($conn)) {
-        $conn = get_db_connection();
+    // First check if this is our action - don't auth for unrelated actions!
+    $supported_actions = ['get_messages', 'update_message_status', 'delete_message'];
+    if (!in_array($action, $supported_actions)) {
+        return false;
     }
 
-    // All admin actions require authentication
-    require_admin_context();
-    $tenant_id = get_current_tenant_id();
+    // Only require auth for OUR actions
+    $ctx = require_admin_context();
+    $tenant_id = $ctx['tenant_id'];
+    $conn = get_db_connection();
 
     switch ($action) {
         case 'get_messages':

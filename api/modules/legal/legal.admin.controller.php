@@ -5,12 +5,16 @@
 
 function handle_legal_admin($action)
 {
-    global $conn;
-    if (!isset($conn))
-        $conn = get_db_connection();
+    // First check if this is our action - don't auth for unrelated actions!
+    $supported_actions = ['get_legal_docs', 'get_legal_doc', 'save_legal_doc', 'delete_legal_doc'];
+    if (!in_array($action, $supported_actions)) {
+        return false;
+    }
 
-    require_admin_context();
-    $tenant_id = get_current_tenant_code();
+    // Only require auth for OUR actions
+    $ctx = require_admin_context();
+    $tenant_id = $ctx['tenant_id'];
+    $conn = get_db_connection();
 
     switch ($action) {
         case 'get_legal_docs':

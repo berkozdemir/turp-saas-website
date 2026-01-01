@@ -5,12 +5,17 @@
 
 function handle_landing_admin($action)
 {
-    global $conn;
-    if (!isset($conn))
-        $conn = get_db_connection();
+    // First check if this is our action - don't auth for unrelated actions!
+    $supported_actions = ['get_landing_configs', 'get_landing_config', 'save_landing_config', 'delete_landing_config'];
+    if (!in_array($action, $supported_actions)) {
+        return false;
+    }
 
-    require_admin_context();
-    $tenant_id = get_current_tenant_code(); // Some modules use code
+    // Only require auth for OUR actions
+    $ctx = require_admin_context();
+    $tenant_id = $ctx['tenant_id'];
+
+    $conn = get_db_connection();
 
     switch ($action) {
         case 'get_landing_configs':
