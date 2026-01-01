@@ -165,7 +165,7 @@ export const About = () => {
                 <div className="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
                     <div className="order-2 md:order-1">
                         <img
-                            src="https://images.unsplash.com/photo-1576091160550-217358c7e618?q=80&w=2070&auto=format&fit=crop"
+                            src="/images/omega_genetik_building.png"
                             alt="Home Healthcare"
                             className="rounded-3xl shadow-xl border-4 border-white"
                         />
