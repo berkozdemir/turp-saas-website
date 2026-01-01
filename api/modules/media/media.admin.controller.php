@@ -10,10 +10,16 @@ require_once __DIR__ . '/../../core/auth/auth.middleware.php';
 require_once __DIR__ . '/../../core/tenant/tenant.service.php';
 require_once __DIR__ . '/../../config/db.php';
 
-// Constants
-define('MEDIA_MAX_FILE_SIZE', 10 * 1024 * 1024); // 10MB
-define('MEDIA_ALLOWED_TYPES', ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml']);
-define('MEDIA_ALLOWED_EXTENSIONS', ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg']);
+// Constants (with guards to prevent redefinition)
+if (!defined('MEDIA_MAX_FILE_SIZE')) {
+    define('MEDIA_MAX_FILE_SIZE', 10 * 1024 * 1024); // 10MB
+}
+if (!defined('MEDIA_ALLOWED_TYPES')) {
+    define('MEDIA_ALLOWED_TYPES', ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml']);
+}
+if (!defined('MEDIA_ALLOWED_EXTENSIONS')) {
+    define('MEDIA_ALLOWED_EXTENSIONS', ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg']);
+}
 
 /**
  * Handle admin media actions
