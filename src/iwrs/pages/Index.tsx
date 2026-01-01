@@ -23,7 +23,6 @@ import { authApi } from "@/iwrs/lib/api";
 
 const Index = () => {
   const [user, setUser] = useState<any>(null);
-  const [profile, setProfile] = useState<{ full_name?: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -33,10 +32,9 @@ const Index = () => {
       const { session } = await authApi.getSession();
       if (session) {
         setUser(session.user);
-        setProfile({ full_name: session.user.name || session.user.email }); // Adapt to local user model
+        setUser(session.user);
       } else {
         setUser(null);
-        setProfile(null);
       }
       setIsLoading(false);
     };

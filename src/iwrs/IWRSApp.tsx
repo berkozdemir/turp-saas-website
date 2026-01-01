@@ -1,4 +1,3 @@
-import React from "react"; // 🔹 React import eklendi
 import { Toaster } from "@/iwrs/components/ui/toaster";
 import { Toaster as Sonner } from "@/iwrs/components/ui/sonner";
 import { TooltipProvider } from "@/iwrs/components/ui/tooltip";
@@ -13,7 +12,6 @@ import TermsOfService from "./pages/TermsOfService";
 import SecurityPolicy from "./pages/SecurityPolicy";
 import IWRSMockup from "./pages/IWRSMockup";
 import NotFound from "./pages/NotFound";
-import Index from "./pages/Index";
 import { Admin } from "@/pages/Admin";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
@@ -37,12 +35,7 @@ const IWRSApp = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter
-        future={{
-          v7_startTransition: true,
-          v7_relativeSplatPath: true,
-        }}
-      >
+      <BrowserRouter>
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Index />} />
