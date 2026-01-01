@@ -30,6 +30,7 @@ function handle_faq_admin(string $action): bool
 function faq_admin_list(): bool
 {
     $ctx = require_admin_context();
+    ensure_faq_table(); // Ensure table exists with page_slug column
     $faqs = faq_list($ctx['tenant_id'], [
         'status' => $_GET['status'] ?? 'all',
         'page' => $_GET['page'] ?? 1
