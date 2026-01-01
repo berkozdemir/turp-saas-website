@@ -84,8 +84,8 @@ function media_admin_upload(): bool
     $tenant_id = $ctx['tenant_id'];
     $user_id = $ctx['user_id'];
 
-    // Check if files were uploaded
-    if (!isset($_FILES['files']) && !isset($_FILES['file'])) {
+    // Check if files were uploaded (support multiple field names)
+    if (!isset($_FILES['files']) && !isset($_FILES['file']) && !isset($_FILES['image'])) {
         echo json_encode(['error' => 'No files uploaded']);
         return true;
     }
@@ -103,8 +103,10 @@ function media_admin_upload(): bool
                 'size' => $_FILES['files']['size'][$i],
             ];
         }
-    } else {
+    } elseif (isset($_FILES['file'])) {
         $files[] = $_FILES['file'];
+    } elseif (isset($_FILES['image'])) {
+        $files[] = $_FILES['image'];
     }
 
     $uploaded = [];
