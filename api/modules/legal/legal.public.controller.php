@@ -17,23 +17,32 @@ require_once __DIR__ . '/../../core/tenant/tenant.service.php';
  */
 function handle_legal_public(string $action): bool
 {
-    if ($action === 'get_legal_doc_public') {
-        $tenant_code = get_current_tenant_code();
-        $key = $_GET['key'] ?? '';
+    global $conn;
+    $conn = get_db_connection();
 
-        if (empty($key)) {
-            echo json_encode(['success' => false, 'error' => 'Key required']);
+    // Legal docs are usually static or handled by service without DB sometimes,
+    // but better safe than sorry if it extends.
+    // Actually legal service might use it.
+
+    switch ($action) {
+        case 'get_legal_doc_public':
+            $tenant_code = get_current_tenant_code();
+            $key = $_GET['key'] ?? '';
+
+            if (empty($key)) {
+                echo json_encode(['success' => false, 'error' => 'Key required']);
+                return true;
+            }
+
+            $doc = legal_get_by_type($tenant_code, $key);
+
+            if ($doc) {
+                echo json_encode(['success' => true, 'data' => $doc]);
+            } else {
+                echo json_encode(['success' => false, 'error' => 'Document not found']);
+            }
             return true;
-        }
-
-        $doc = legal_get_by_type($tenant_code, $key);
-
-        if ($doc) {
-            echo json_encode(['success' => true, 'data' => $doc]);
-        } else {
-            echo json_encode(['success' => false, 'error' => 'Document not found']);
-        }
-        return true;
+        default:
+            return false;
     }
-    return false;
 }

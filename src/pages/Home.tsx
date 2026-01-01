@@ -239,7 +239,7 @@ export const Home: React.FC<HomeProps> = ({ setView, scrollTo }) => {
                     <div className="text-center mt-12 bg-white border border-slate-200 rounded-2xl p-8 max-w-2xl mx-auto shadow-sm">
                         <p className="text-slate-500 mb-4 text-sm font-medium">{t("roi_desc")}</p>
                         <button
-                            onClick={() => setView({ type: 'roi' })}
+                            onClick={() => setView('roi')}
                             className="inline-flex items-center gap-2 px-8 py-3 bg-white border-2 border-slate-100 rounded-full text-slate-700 font-bold hover:border-rose-500 hover:text-rose-600 hover:shadow-lg transition-all"
                         >
                             <Calculator size={20} />
