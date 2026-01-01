@@ -4,6 +4,33 @@
 // Handled by index.php
 // Temporarily disabled to prevent path issues
 
+function ensure_contact_submissions_table($conn): void
+{
+    $conn->exec("
+        CREATE TABLE IF NOT EXISTS contact_submissions (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            tenant_id VARCHAR(50) NOT NULL DEFAULT 'nipt',
+            name VARCHAR(255) NOT NULL,
+            email VARCHAR(255) NOT NULL,
+            phone VARCHAR(50),
+            message TEXT,
+            home_service TINYINT DEFAULT 0,
+            address TEXT,
+            pregnancy_week INT,
+            has_doctor TINYINT DEFAULT 0,
+            doctor_id INT,
+            doctor_name VARCHAR(255),
+            pricing_tier VARCHAR(50) DEFAULT 'direct',
+            status VARCHAR(50) DEFAULT 'new',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            INDEX idx_tenant (tenant_id),
+            INDEX idx_status (status),
+            INDEX idx_created (created_at DESC)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    ");
+}
+
 function handle_contact_public($action)
 {
     // Silence output to prevent non-JSON data
@@ -18,6 +45,9 @@ function handle_contact_public($action)
             if (!isset($conn)) {
                 $conn = get_db_connection();
             }
+
+            // Ensure table exists
+            ensure_contact_submissions_table($conn);
 
             $raw_input = file_get_contents('php://input');
             if (!$raw_input) {
