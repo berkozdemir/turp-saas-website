@@ -2,24 +2,24 @@
 # Required for PHP CGI/FastCGI environments
 
 # Pass Authorization header to PHP
-<IfModule mod_rewrite.c>
-    RewriteEngine On
-    
-    # Pass Authorization header
-    RewriteCond %{HTTP:Authorization} .+
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-</IfModule>
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+#     
+#     # Pass Authorization header
+#     RewriteCond %{HTTP:Authorization} .+
+#     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+# </IfModule>
 
 # Alternative method for mod_setenvif
-<IfModule mod_setenvif.c>
-    SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
-</IfModule>
+# <IfModule mod_setenvif.c>
+#     SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+# </IfModule>
 
 # PHP CGI specific fix
-<IfModule mod_cgi.c>
-    RewriteCond %{HTTP:Authorization} ^(.*)
-    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
-</IfModule>
+# <IfModule mod_cgi.c>
+#     RewriteCond %{HTTP:Authorization} ^(.*)
+#     RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+# </IfModule>
 
 # ========================================
 # SECURITY: Block access to sensitive files
