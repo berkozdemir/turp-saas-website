@@ -10,6 +10,7 @@
 require_once __DIR__ . '/../modules/blog/blog.admin.controller.php';
 require_once __DIR__ . '/../modules/faq/faq.admin.controller.php';
 require_once __DIR__ . '/../modules/nipt/doctors.admin.controller.php';
+require_once __DIR__ . '/../modules/nipt/bookings.admin.controller.php';
 require_once __DIR__ . '/../modules/user/user.admin.controller.php';
 require_once __DIR__ . '/../modules/settings/settings.admin.controller.php';
 require_once __DIR__ . '/../modules/media/media.admin.controller.php';
@@ -78,6 +79,11 @@ function route_admin_action(string $action): bool
 
     // End-User Auth module
     if (handle_enduser_auth_admin($action)) {
+        return true;
+    }
+
+    // NIPT Bookings module
+    if (handle_nipt_bookings_admin($action)) {
         return true;
     }
 

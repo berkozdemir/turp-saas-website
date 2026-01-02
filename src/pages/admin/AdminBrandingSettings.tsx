@@ -3,7 +3,7 @@ import {
     Palette, Type, Share2, Image, Save, RotateCcw,
     Instagram, Facebook, Linkedin, Twitter, Youtube, MessageCircle
 } from 'lucide-react';
-import { fetchAPI } from '../../lib/contentApi';
+import { getTenantHeader } from '../../context/TenantContext';
 
 interface BrandingConfig {
     logo_light_url: string | null;
@@ -81,6 +81,8 @@ const presets = {
     }
 };
 
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
 export const AdminBrandingSettings = () => {
     const [config, setConfig] = useState<BrandingConfig>(defaultBranding);
     const [loading, setLoading] = useState(true);
@@ -91,11 +93,24 @@ export const AdminBrandingSettings = () => {
         loadBranding();
     }, []);
 
+    const getAuthHeaders = () => {
+        const session = localStorage.getItem('admin_session');
+        const token = session ? JSON.parse(session).token : localStorage.getItem('admin_token');
+        return {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            ...getTenantHeader()
+        };
+    };
+
     const loadBranding = async () => {
         try {
-            const res = await fetchAPI('get_branding');
-            if (res.success && res.data) {
-                setConfig({ ...defaultBranding, ...res.data });
+            const res = await fetch(`${API_URL}/index.php?action=get_branding`, {
+                headers: getAuthHeaders()
+            });
+            const data = await res.json();
+            if (data?.success && data.data) {
+                setConfig({ ...defaultBranding, ...data.data });
             }
         } catch (err) {
             console.error('Failed to load branding:', err);
@@ -108,14 +123,16 @@ export const AdminBrandingSettings = () => {
         setSaving(true);
         setMessage(null);
         try {
-            const res = await fetchAPI('save_branding', {
+            const res = await fetch(`${API_URL}/index.php?action=save_branding`, {
                 method: 'POST',
+                headers: getAuthHeaders(),
                 body: JSON.stringify(config)
             });
-            if (res.success) {
+            const data = await res.json();
+            if (data?.success) {
                 setMessage({ type: 'success', text: 'Branding ayarları kaydedildi!' });
             } else {
-                setMessage({ type: 'error', text: res.error || 'Kaydetme başarısız' });
+                setMessage({ type: 'error', text: data?.error || 'Kaydetme başarısız' });
             }
         } catch (err) {
             setMessage({ type: 'error', text: 'Bağlantı hatası' });
