@@ -8,6 +8,25 @@
 require_once __DIR__ . '/../../core/auth/auth.middleware.php';
 require_once __DIR__ . '/../../config/db.php';
 
+/**
+ * Ensure site_settings table exists with tenant_id column
+ */
+function ensure_site_settings_table(PDO $conn): void
+{
+    $conn->exec("
+        CREATE TABLE IF NOT EXISTS `site_settings` (
+            `id` INT AUTO_INCREMENT PRIMARY KEY,
+            `tenant_id` INT NOT NULL DEFAULT 1,
+            `setting_key` VARCHAR(100) NOT NULL,
+            `setting_value` TEXT,
+            `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            UNIQUE KEY `unique_tenant_key` (`tenant_id`, `setting_key`),
+            INDEX `idx_settings_tenant` (`tenant_id`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    ");
+}
+
 function handle_settings_admin(string $action): bool
 {
     $supported_actions = ['get_settings', 'update_settings', 'change_password', 'migrate_db'];
@@ -28,14 +47,25 @@ function handle_settings_admin(string $action): bool
     $conn = get_db_connection();
     $tenant_id = $ctx['tenant_id'];
 
+    // Ensure site_settings table exists with tenant_id column
+    ensure_site_settings_table($conn);
+
     // 1. Get Settings
     if ($action == 'get_settings' && $_SERVER['REQUEST_METHOD'] === 'GET') {
-        // Retrieve settings from settings table (if exists) or mock for now
-        // For now, we return mock settings or tenant info
-        $settings = [
-            'site_title' => $ctx['tenant']['name'] ?? 'Turp SaaS',
-            'contact_email' => $ctx['tenant']['contact_email'] ?? '',
-        ];
+        $stmt = $conn->prepare("SELECT setting_key, setting_value FROM site_settings WHERE tenant_id = ?");
+        $stmt->execute([$tenant_id]);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $settings = [];
+        foreach ($rows as $row) {
+            $settings[$row['setting_key']] = $row['setting_value'];
+        }
+
+        // Add tenant info as defaults if not set
+        if (empty($settings['site_title'])) {
+            $settings['site_title'] = $ctx['tenant']['name'] ?? 'Turp SaaS';
+        }
+
         echo json_encode(['success' => true, 'data' => $settings]);
         return true;
     }
@@ -43,7 +73,32 @@ function handle_settings_admin(string $action): bool
     // 2. Update Settings
     if ($action == 'update_settings' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $data = json_decode(file_get_contents('php://input'), true);
-        // Save to DB (omitted for brevity, just success)
+
+        if (!$data || !is_array($data)) {
+            echo json_encode(['error' => 'Invalid data']);
+            return true;
+        }
+
+        // Upsert each setting
+        foreach ($data as $key => $value) {
+            if (!is_string($key))
+                continue;
+
+            // Check if setting exists
+            $checkStmt = $conn->prepare("SELECT id FROM site_settings WHERE tenant_id = ? AND setting_key = ?");
+            $checkStmt->execute([$tenant_id, $key]);
+
+            if ($checkStmt->fetch()) {
+                // Update
+                $updateStmt = $conn->prepare("UPDATE site_settings SET setting_value = ?, updated_at = NOW() WHERE tenant_id = ? AND setting_key = ?");
+                $updateStmt->execute([$value, $tenant_id, $key]);
+            } else {
+                // Insert
+                $insertStmt = $conn->prepare("INSERT INTO site_settings (tenant_id, setting_key, setting_value, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())");
+                $insertStmt->execute([$tenant_id, $key, $value]);
+            }
+        }
+
         echo json_encode(['success' => true]);
         return true;
     }
