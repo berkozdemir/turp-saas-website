@@ -122,7 +122,6 @@ function blog_admin_translate_all(): bool
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
 
     $title_tr = $data['title_tr'] ?? '';
-    // Use either excerpt or content as source if one is missing, but prefer title + content
     $excerpt_tr = $data['excerpt_tr'] ?? '';
     $content_tr = $data['content_tr'] ?? '';
 
@@ -133,24 +132,46 @@ function blog_admin_translate_all(): bool
 
     $apiKey = get_env_strict('DEEPSEEK_API_KEY');
     if (!$apiKey) {
-        // Fallback for development if env is not loaded correctly, or explicit error
         echo json_encode(['error' => 'API Key configuration missing (DEEPSEEK_API_KEY)']);
         return true;
     }
 
-    // Prepare prompt
-    $prompt = "You are a professional translator for a SaaS website. 
-    Translate the following Turkish blog content into English (EN) and Chinese (ZH).
+    $result = [];
+
+    // Translate to English first
+    $en_result = translate_to_language($apiKey, $title_tr, $excerpt_tr, $content_tr, 'English', 'en');
+    if (isset($en_result['error'])) {
+        echo json_encode(['error' => 'EN çeviri hatası: ' . $en_result['error']]);
+        return true;
+    }
+    $result['en'] = $en_result;
+
+    // Then translate to Chinese
+    $zh_result = translate_to_language($apiKey, $title_tr, $excerpt_tr, $content_tr, 'Chinese', 'zh');
+    if (isset($zh_result['error'])) {
+        echo json_encode(['error' => 'ZH çeviri hatası: ' . $zh_result['error']]);
+        return true;
+    }
+    $result['zh'] = $zh_result;
+
+    echo json_encode($result);
+    return true;
+}
+
+/**
+ * Translate content to a single target language
+ */
+function translate_to_language(string $apiKey, string $title, string $excerpt, string $content, string $langName, string $langCode): array
+{
+    $prompt = "You are a professional translator for a medical/SaaS website. 
+    Translate the following Turkish blog content into $langName.
     
-    Source Title: " . json_encode($title_tr) . "
-    Source Excerpt: " . json_encode($excerpt_tr) . "
-    Source Content: " . json_encode($content_tr) . "
+    Source Title: " . json_encode($title) . "
+    Source Excerpt: " . json_encode($excerpt) . "
+    Source Content: " . json_encode($content) . "
     
     Return ONLY a valid JSON object with this structure:
-    {
-      \"en\": { \"title\": \"...\", \"excerpt\": \"...\", \"content\": \"...\" },
-      \"zh\": { \"title\": \"...\", \"excerpt\": \"...\", \"content\": \"...\" }
-    }
+    { \"title\": \"...\", \"excerpt\": \"...\", \"content\": \"...\" }
     
     Keep the tone professional and SEO-friendly. Preserve HTML tags if any. Do not include markdown code blocks.
     ";
@@ -165,14 +186,15 @@ function blog_admin_translate_all(): bool
             ['role' => 'user', 'content' => $prompt]
         ],
         'temperature' => 0.3,
+        'max_tokens' => 8000,
         'response_format' => ['type' => 'json_object']
     ]);
 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 120); // 2 minute timeout for long content
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30); // 30 second connection timeout
+    curl_setopt($ch, CURLOPT_TIMEOUT, 300); // 5 minute timeout for long content
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60); // 1 minute connection timeout
     curl_setopt($ch, CURLOPT_HTTPHEADER, [
         "Content-Type: application/json",
         "Authorization: Bearer $apiKey"
@@ -184,36 +206,27 @@ function blog_admin_translate_all(): bool
     if (curl_errno($ch)) {
         $error = curl_error($ch);
         curl_close($ch);
-        echo json_encode(['error' => 'Curl Error: ' . $error]);
-        return true;
+        return ['error' => 'Curl Error: ' . $error];
     }
 
     curl_close($ch);
 
-    // Check HTTP status
     if ($httpCode !== 200) {
-        echo json_encode(['error' => 'API Error: HTTP ' . $httpCode, 'raw' => $response]);
-        return true;
+        return ['error' => "API Error: HTTP $httpCode"];
     }
 
     $ai_data = json_decode($response, true);
-    $content = $ai_data['choices'][0]['message']['content'] ?? null;
+    $content_str = $ai_data['choices'][0]['message']['content'] ?? null;
 
-    if ($content) {
-        // Parse JSON from content
-        try {
-            $parsed = json_decode($content, true);
-            if ($parsed) {
-                echo json_encode($parsed);
-            } else {
-                echo json_encode(['error' => 'Failed to parse AI response', 'raw' => $content]);
-            }
-        } catch (Exception $e) {
-            echo json_encode(['error' => 'JSON Error: ' . $e->getMessage()]);
-        }
-    } else {
-        echo json_encode(['error' => 'No content from AI', 'raw' => $response]);
+    if (!$content_str) {
+        return ['error' => 'No content from AI'];
     }
 
-    return true;
+    $parsed = json_decode($content_str, true);
+    if (!$parsed) {
+        return ['error' => 'Failed to parse AI response'];
+    }
+
+    return $parsed;
 }
+
