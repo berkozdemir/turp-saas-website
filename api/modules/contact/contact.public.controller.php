@@ -1,8 +1,9 @@
 <?php
 // api/modules/contact/contact.public.controller.php
 
-// Handled by index.php
-// Temporarily disabled to prevent path issues
+require_once __DIR__ . '/../../config/db.php';
+require_once __DIR__ . '/../../core/tenant/tenant.service.php';
+require_once __DIR__ . '/contact.service.php';
 
 function ensure_contact_submissions_table($conn): void
 {

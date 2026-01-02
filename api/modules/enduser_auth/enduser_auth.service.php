@@ -11,7 +11,7 @@ require_once __DIR__ . '/../../config/db.php';
  */
 function ensure_enduser_tables(): void
 {
-    $conn = get_db();
+    $conn = get_db_connection();
 
     // Create endusers table
     $conn->exec("
@@ -56,7 +56,7 @@ function ensure_enduser_tables(): void
  */
 function enduser_signup_allowed(string $tenant_id): bool
 {
-    $conn = get_db();
+    $conn = get_db_connection();
     $stmt = $conn->prepare("SELECT allow_enduser_signup FROM tenants WHERE code = ?");
     $stmt->execute([$tenant_id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -68,7 +68,7 @@ function enduser_signup_allowed(string $tenant_id): bool
  */
 function enduser_login_allowed(string $tenant_id): bool
 {
-    $conn = get_db();
+    $conn = get_db_connection();
     $stmt = $conn->prepare("SELECT allow_enduser_login FROM tenants WHERE code = ?");
     $stmt->execute([$tenant_id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -99,7 +99,7 @@ function enduser_signup(string $tenant_id, array $data): array
         return ['error' => 'Şifre en az 6 karakter olmalı'];
     }
 
-    $conn = get_db();
+    $conn = get_db_connection();
 
     // Check if email already exists for this tenant
     $stmt = $conn->prepare("SELECT id FROM endusers WHERE email = ? AND tenant_id = ?");
@@ -151,7 +151,7 @@ function enduser_login(string $tenant_id, array $data): array
         return ['error' => 'E-posta ve şifre gerekli'];
     }
 
-    $conn = get_db();
+    $conn = get_db_connection();
     $stmt = $conn->prepare("
         SELECT id, email, password_hash, name, status 
         FROM endusers 
@@ -195,7 +195,7 @@ function enduser_login(string $tenant_id, array $data): array
  */
 function enduser_create_session(int $user_id, string $tenant_id): string
 {
-    $conn = get_db();
+    $conn = get_db_connection();
     $token = bin2hex(random_bytes(32));
     $expires = date('Y-m-d H:i:s', strtotime('+30 days'));
     $ip = $_SERVER['REMOTE_ADDR'] ?? '';
@@ -215,7 +215,7 @@ function enduser_create_session(int $user_id, string $tenant_id): string
  */
 function enduser_verify_token(string $token, string $tenant_id): ?array
 {
-    $conn = get_db();
+    $conn = get_db_connection();
     $stmt = $conn->prepare("
         SELECT u.id, u.email, u.name, u.phone, u.status
         FROM enduser_sessions s
@@ -231,7 +231,7 @@ function enduser_verify_token(string $token, string $tenant_id): ?array
  */
 function enduser_logout(string $token): bool
 {
-    $conn = get_db();
+    $conn = get_db_connection();
     $stmt = $conn->prepare("DELETE FROM enduser_sessions WHERE token = ?");
     $stmt->execute([$token]);
     return $stmt->rowCount() > 0;
@@ -242,7 +242,7 @@ function enduser_logout(string $token): bool
  */
 function get_tenant_auth_settings(string $tenant_id): array
 {
-    $conn = get_db();
+    $conn = get_db_connection();
 
     // Ensure columns exist
     try {
@@ -272,7 +272,7 @@ function get_tenant_auth_settings(string $tenant_id): array
  */
 function update_tenant_auth_settings(string $tenant_id, bool $allow_login, bool $allow_signup): bool
 {
-    $conn = get_db();
+    $conn = get_db_connection();
     $stmt = $conn->prepare("
         UPDATE tenants 
         SET allow_enduser_login = ?, allow_enduser_signup = ?

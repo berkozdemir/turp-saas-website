@@ -94,7 +94,7 @@ function handle_settings_admin(string $action): bool
                 $updateStmt->execute([$value, $tenant_id, $key]);
             } else {
                 // Insert
-                $insertStmt = $conn->prepare("INSERT INTO site_settings (tenant_id, setting_key, setting_value, created_at, updated_at) VALUES (?, ?, ?, NOW(), NOW())");
+                $insertStmt = $conn->prepare("INSERT INTO site_settings (tenant_id, setting_key, setting_value) VALUES (?, ?, ?)");
                 $insertStmt->execute([$tenant_id, $key, $value]);
             }
         }
