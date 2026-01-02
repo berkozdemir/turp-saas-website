@@ -64,47 +64,10 @@ require_once __DIR__ . '/core/tenant/tenant.service.php';
 require_once __DIR__ . '/core/auth/auth.service.php';
 require_once __DIR__ . '/core/auth/auth.middleware.php';
 
-// 4. Modules Setup (Services & Controllers)
-// Blog
-require_once __DIR__ . '/modules/blog/blog.service.php';
-require_once __DIR__ . '/modules/blog/blog.admin.controller.php';
-require_once __DIR__ . '/modules/blog/blog.public.controller.php';
-
-// FAQ
-require_once __DIR__ . '/modules/faq/faq.service.php';
-require_once __DIR__ . '/modules/faq/faq.admin.controller.php';
-require_once __DIR__ . '/modules/faq/faq.public.controller.php';
-
-// Landing
-require_once __DIR__ . '/modules/landing/landing.service.php';
-require_once __DIR__ . '/modules/landing/landing.admin.controller.php';
-require_once __DIR__ . '/modules/landing/landing.public.controller.php';
-
-// Contact
-require_once __DIR__ . '/modules/contact/contact.service.php';
-require_once __DIR__ . '/modules/contact/contact.admin.controller.php';
-require_once __DIR__ . '/modules/contact/contact_config.admin.controller.php';
-
-// Legal
-require_once __DIR__ . '/modules/legal/legal.service.php';
-require_once __DIR__ . '/modules/legal/legal.admin.controller.php';
-require_once __DIR__ . '/modules/legal/legal.public.controller.php';
-
-// Media
-require_once __DIR__ . '/modules/media/media.service.php';
-
-// NIPT
-require_once __DIR__ . '/modules/nipt/nipt.controller.php';
-require_once __DIR__ . '/modules/nipt/doctors.controller.php';
-require_once __DIR__ . '/modules/contact/contact.public.controller.php';
-require_once __DIR__ . '/modules/auth/auth.public.controller.php';
-require_once __DIR__ . '/modules/roi/roi.public.controller.php';
-require_once __DIR__ . '/modules/media/media.service.php';
-
-// 5. Initialize CORS
+// 4. Initialize CORS
 setup_cors();
 
-// 6. Routing Dispatcher
+// 5. Routing Dispatcher
 $token = get_bearer_token();
 $action = $_GET['action'] ?? '';
 
@@ -114,14 +77,13 @@ if (empty($action)) {
     exit;
 }
 
-// 7. Try Admin Routes
-// We include admin routes if it looks like an admin action or if a token is present
+// 6. Try Admin Routes (loads admin controllers internally)
 require_once __DIR__ . '/routes/admin.routes.php';
 if (route_admin_action($action)) {
     exit;
 }
 
-// 8. Try Public Routes
+// 7. Try Public Routes (loads public controllers internally)
 require_once __DIR__ . '/routes/public.routes.php';
 if (route_public_action($action)) {
     exit;
