@@ -9,7 +9,16 @@ require_once __DIR__ . '/../../config/db.php';
 function handle_contact_config_admin($action)
 {
     // First check if this is our action - don't auth for unrelated actions!
-    $supported_actions = ['get_contact_configs', 'get_contact_config', 'save_contact_config', 'delete_contact_config'];
+    $supported_actions = [
+        'get_contact_configs',
+        'get_contact_configs_admin',
+        'get_contact_config',
+        'get_contact_config_admin',
+        'save_contact_config',
+        'save_contact_config_admin',
+        'delete_contact_config',
+        'delete_contact_config_admin'
+    ];
     if (!in_array($action, $supported_actions)) {
         return false;
     }
@@ -21,12 +30,16 @@ function handle_contact_config_admin($action)
 
     switch ($action) {
         case 'get_contact_configs':
+        case 'get_contact_configs_admin':
             return contact_config_admin_list($conn, $tenant_id);
         case 'get_contact_config':
+        case 'get_contact_config_admin':
             return contact_config_admin_get($conn, $tenant_id);
         case 'save_contact_config':
+        case 'save_contact_config_admin':
             return contact_config_admin_save($conn, $tenant_id);
         case 'delete_contact_config':
+        case 'delete_contact_config_admin':
             return contact_config_admin_delete($conn, $tenant_id);
         default:
             return false;

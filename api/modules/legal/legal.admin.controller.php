@@ -9,7 +9,16 @@ require_once __DIR__ . '/../../config/db.php';
 function handle_legal_admin($action)
 {
     // First check if this is our action - don't auth for unrelated actions!
-    $supported_actions = ['get_legal_docs', 'get_legal_doc', 'save_legal_doc', 'delete_legal_doc'];
+    $supported_actions = [
+        'get_legal_docs',
+        'get_legal_docs_admin',
+        'get_legal_doc',
+        'get_legal_doc_admin',
+        'save_legal_doc',
+        'save_legal_doc_admin',
+        'delete_legal_doc',
+        'delete_legal_doc_admin'
+    ];
     if (!in_array($action, $supported_actions)) {
         return false;
     }
@@ -21,12 +30,16 @@ function handle_legal_admin($action)
 
     switch ($action) {
         case 'get_legal_docs':
+        case 'get_legal_docs_admin':
             return legal_admin_list($conn, $tenant_id);
         case 'get_legal_doc':
+        case 'get_legal_doc_admin':
             return legal_admin_get($conn, $tenant_id);
         case 'save_legal_doc':
+        case 'save_legal_doc_admin':
             return legal_admin_save($conn, $tenant_id);
         case 'delete_legal_doc':
+        case 'delete_legal_doc_admin':
             return legal_admin_delete($conn, $tenant_id);
         default:
             return false;

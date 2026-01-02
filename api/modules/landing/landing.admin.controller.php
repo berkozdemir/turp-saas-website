@@ -9,7 +9,16 @@ require_once __DIR__ . '/../../config/db.php';
 function handle_landing_admin($action)
 {
     // First check if this is our action - don't auth for unrelated actions!
-    $supported_actions = ['get_landing_configs', 'get_landing_config', 'save_landing_config', 'delete_landing_config'];
+    $supported_actions = [
+        'get_landing_configs',
+        'get_landing_configs_admin',
+        'get_landing_config',
+        'get_landing_config_admin',
+        'save_landing_config',
+        'save_landing_config_admin',
+        'delete_landing_config',
+        'delete_landing_config_admin'
+    ];
     if (!in_array($action, $supported_actions)) {
         return false;
     }
@@ -22,12 +31,16 @@ function handle_landing_admin($action)
 
     switch ($action) {
         case 'get_landing_configs':
+        case 'get_landing_configs_admin':
             return landing_admin_list($conn, $tenant_id);
         case 'get_landing_config':
+        case 'get_landing_config_admin':
             return landing_admin_get($conn, $tenant_id);
         case 'save_landing_config':
+        case 'save_landing_config_admin':
             return landing_admin_save($conn, $tenant_id);
         case 'delete_landing_config':
+        case 'delete_landing_config_admin':
             return landing_admin_delete($conn, $tenant_id);
         default:
             return false;
