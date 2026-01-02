@@ -3,6 +3,9 @@
  * Contact Config Admin Controller
  */
 
+require_once __DIR__ . '/../../core/auth/auth.middleware.php';
+require_once __DIR__ . '/../../config/db.php';
+
 function handle_contact_config_admin($action)
 {
     // First check if this is our action - don't auth for unrelated actions!
@@ -35,7 +38,11 @@ function contact_config_admin_list($conn, $tenant_id)
     try {
         $stmt = $conn->prepare("SELECT id, config_name, is_active FROM contact_configs WHERE tenant_id = ?");
         $stmt->execute([$tenant_id]);
-        echo json_encode(['success' => true, 'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
+        echo json_encode([
+            'success' => true,
+            'data' => $stmt->fetchAll(PDO::FETCH_ASSOC),
+            '_debug_tenant_id' => $tenant_id
+        ]);
     } catch (Exception $e) {
         echo json_encode(['error' => $e->getMessage()]);
     }
