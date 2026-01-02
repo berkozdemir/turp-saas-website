@@ -12,14 +12,17 @@ require_once __DIR__ . '/../../config/db.php';
  * List FAQs for a tenant
  * 
  * @param int $tenant_id
- * @param array $options [status, search, page, limit]
+ * @param array $options [is_active, is_showcased, search, page, limit]
  * @return array FAQs
  */
 function faq_list(int $tenant_id, array $options = []): array
 {
     $conn = get_db_connection();
 
-    $status = $options['status'] ?? 'all';
+    $is_active = $options['is_active'] ?? 'all';
+    $is_showcased = $options['is_showcased'] ?? 'all';
+    $search = $options['search'] ?? '';
+
     $page = max(1, (int) ($options['page'] ?? 1));
     $limit = min(100, max(1, (int) ($options['limit'] ?? 50)));
     $offset = ($page - 1) * $limit;
@@ -27,16 +30,28 @@ function faq_list(int $tenant_id, array $options = []): array
     $query = "SELECT * FROM faqs WHERE tenant_id = ?";
     $params = [$tenant_id];
 
-    if ($status !== 'all') {
-        $query .= " AND status = ?";
-        $params[] = $status;
+    if ($is_active !== 'all') {
+        $query .= " AND is_active = ?";
+        $params[] = $is_active === 'true' ? 1 : 0;
+    }
+
+    if ($is_showcased !== 'all') {
+        $query .= " AND is_showcased = ?";
+        $params[] = $is_showcased === 'true' ? 1 : 0;
+    }
+
+    if (!empty($search)) {
+        $query .= " AND (question_tr LIKE ? OR question_en LIKE ?)";
+        $term = "%$search%";
+        $params[] = $term;
+        $params[] = $term;
     }
 
     $query .= " ORDER BY sort_order ASC, id DESC LIMIT $limit OFFSET $offset";
 
     $stmt = $conn->prepare($query);
     $stmt->execute($params);
-    return $stmt->fetchAll();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 /**
@@ -47,7 +62,7 @@ function faq_get(int $tenant_id, int $id): ?array
     $conn = get_db_connection();
     $stmt = $conn->prepare("SELECT * FROM faqs WHERE id = ? AND tenant_id = ?");
     $stmt->execute([$id, $tenant_id]);
-    return $stmt->fetch() ?: null;
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 }
 
 /**
@@ -60,8 +75,8 @@ function faq_create(int $tenant_id, array $data): int
     $stmt = $conn->prepare("
         INSERT INTO faqs 
         (question_tr, answer_tr, question_en, answer_en, question_zh, answer_zh, 
-         category, sort_order, status, tenant_id) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         category, sort_order, is_active, is_showcased, tenant_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     $stmt->execute([
@@ -73,7 +88,8 @@ function faq_create(int $tenant_id, array $data): int
         $data['answer_zh'] ?? null,
         $data['category'] ?? 'general',
         $data['sort_order'] ?? 0,
-        $data['status'] ?? 'published',
+        isset($data['is_active']) ? (int) $data['is_active'] : 1,
+        isset($data['is_showcased']) ? (int) $data['is_showcased'] : 0,
         $tenant_id
     ]);
 
@@ -90,7 +106,7 @@ function faq_update(int $tenant_id, int $id, array $data): bool
     $stmt = $conn->prepare("
         UPDATE faqs SET 
             question_tr=?, answer_tr=?, question_en=?, answer_en=?, 
-            question_zh=?, answer_zh=?, category=?, sort_order=?, status=?
+            question_zh=?, answer_zh=?, category=?, sort_order=?, is_active=?, is_showcased=?
         WHERE id=? AND tenant_id=?
     ");
 
@@ -103,7 +119,8 @@ function faq_update(int $tenant_id, int $id, array $data): bool
         $data['answer_zh'] ?? null,
         $data['category'] ?? 'general',
         $data['sort_order'] ?? 0,
-        $data['status'] ?? 'published',
+        isset($data['is_active']) ? (int) $data['is_active'] : 1,
+        isset($data['is_showcased']) ? (int) $data['is_showcased'] : 0,
         $id,
         $tenant_id
     ]);
@@ -126,7 +143,7 @@ function faq_get_published(int $tenant_id, ?string $page_slug = null): array
 {
     $conn = get_db_connection();
 
-    $query = "SELECT * FROM faqs WHERE tenant_id = ? AND status = 'published'";
+    $query = "SELECT * FROM faqs WHERE tenant_id = ? AND is_active = 1";
     $params = [$tenant_id];
 
     if ($page_slug) {
@@ -138,17 +155,17 @@ function faq_get_published(int $tenant_id, ?string $page_slug = null): array
 
     $stmt = $conn->prepare($query);
     $stmt->execute($params);
-    return $stmt->fetchAll();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 /**
- * Ensure FAQs table has page_slug column
+ * Ensure FAQs table has necessary columns
  */
 function ensure_faq_table(): void
 {
     $conn = get_db_connection();
 
-    // Create table if not exists
+    // Create table if not exists with new columns
     $conn->exec("
         CREATE TABLE IF NOT EXISTS faqs (
             id INT AUTO_INCREMENT PRIMARY KEY,
@@ -162,24 +179,32 @@ function ensure_faq_table(): void
             category VARCHAR(100) DEFAULT 'general',
             page_slug VARCHAR(100) DEFAULT 'global',
             sort_order INT DEFAULT 0,
-            status VARCHAR(50) DEFAULT 'published',
+            is_active TINYINT(1) DEFAULT 1,
+            is_showcased TINYINT(1) DEFAULT 0,
+            status VARCHAR(50) DEFAULT 'published', -- Deprecated but kept for compatibility
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             INDEX idx_tenant (tenant_id),
-            INDEX idx_tenant_page (tenant_id, page_slug),
-            INDEX idx_status (status)
+            INDEX idx_active (is_active)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     ");
 
-    // Add page_slug column if missing
+    // Add columns if they don't exist
     try {
-        $stmt = $conn->query("SHOW COLUMNS FROM faqs LIKE 'page_slug'");
-        if ($stmt->rowCount() === 0) {
-            $conn->exec("ALTER TABLE faqs ADD COLUMN page_slug VARCHAR(100) DEFAULT 'global' AFTER category");
-            $conn->exec("CREATE INDEX idx_tenant_page ON faqs(tenant_id, page_slug)");
+        $columns = [
+            'page_slug' => "VARCHAR(100) DEFAULT 'global' AFTER category",
+            'is_active' => "TINYINT(1) DEFAULT 1 AFTER sort_order",
+            'is_showcased' => "TINYINT(1) DEFAULT 0 AFTER is_active"
+        ];
+
+        foreach ($columns as $col => $def) {
+            $stmt = $conn->query("SHOW COLUMNS FROM faqs LIKE '$col'");
+            if ($stmt->rowCount() === 0) {
+                $conn->exec("ALTER TABLE faqs ADD COLUMN $col $def");
+            }
         }
     } catch (Exception $e) {
-        // Ignore if column exists
+        // Ignore errors
     }
 }
 
@@ -200,7 +225,7 @@ function faq_bulk_import(int $tenant_id, string $page_slug, array $items): array
     // Check if already imported
     $stmt = $conn->prepare("SELECT COUNT(*) as cnt FROM faqs WHERE tenant_id = ? AND page_slug = ?");
     $stmt->execute([$tenant_id, $page_slug]);
-    $count = $stmt->fetch()['cnt'];
+    $count = $stmt->fetch(PDO::FETCH_ASSOC)['cnt'];
 
     if ($count > 0) {
         return ['imported' => 0, 'skipped' => true];
@@ -212,8 +237,8 @@ function faq_bulk_import(int $tenant_id, string $page_slug, array $items): array
             continue;
 
         $stmt = $conn->prepare("
-            INSERT INTO faqs (tenant_id, page_slug, question_tr, answer_tr, sort_order, status)
-            VALUES (?, ?, ?, ?, ?, 'published')
+            INSERT INTO faqs (tenant_id, page_slug, question_tr, answer_tr, sort_order, is_active, status)
+            VALUES (?, ?, ?, ?, ?, 1, 'published')
         ");
         $stmt->execute([
             $tenant_id,
@@ -227,3 +252,4 @@ function faq_bulk_import(int $tenant_id, string $page_slug, array $items): array
 
     return ['imported' => $imported, 'skipped' => false];
 }
+
