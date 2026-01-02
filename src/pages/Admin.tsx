@@ -18,6 +18,7 @@ import { AdminContactConfigEditor } from "./admin/AdminContactConfigEditor";
 import { AdminMediaList } from "./admin/AdminMediaList";
 import { AdminNIPTBookings } from "./admin/AdminNIPTBookings";
 import { AdminDoctorList } from "./admin/AdminDoctorList";
+import { AdminBrandingSettings } from "./admin/AdminBrandingSettings";
 import { TenantProvider, useTenant, Tenant } from "../context/TenantContext";
 import { TenantSelector } from "./admin/TenantSelector";
 import { TenantSwitcher } from "../components/TenantSwitcher";
@@ -36,7 +37,8 @@ import {
   Phone,
   Image,
   Clock,
-  Stethoscope
+  Stethoscope,
+  Palette
 } from "lucide-react";
 
 const AdminContent = () => {
@@ -304,6 +306,8 @@ const AdminContent = () => {
         return <AdminNIPTBookings token={session.token} />;
       case "doctors":
         return <AdminDoctorList token={session.token} />;
+      case "branding":
+        return <AdminBrandingSettings />;
       default:
         return <AdminMessages token={session.token} />;
     }
@@ -470,6 +474,19 @@ const AdminContent = () => {
               >
                 <Stethoscope size={20} />
                 <span className="font-medium">Doktorlar</span>
+              </button>
+            )}
+
+            {userRole === 'admin' && (
+              <button
+                onClick={() => { setActiveTab("branding"); setMobileMenuOpen(false); }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "branding"
+                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  }`}
+              >
+                <Palette size={20} />
+                <span className="font-medium">Branding & Social</span>
               </button>
             )}
 
