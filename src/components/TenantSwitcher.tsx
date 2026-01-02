@@ -49,7 +49,7 @@ export const TenantSwitcher = () => {
                                         setCurrentTenant(tenant);
                                         setIsOpen(false);
                                         // Reload page to refresh data for new tenant
-                                        window.location.href = '/admin';
+                                        window.location.reload();
                                     }}
                                     className={`w-full px-4 py-3 text-left flex items-center justify-between hover:bg-slate-50 transition-colors ${tenant.code === currentTenant.code ? 'bg-cyan-50' : ''
                                         }`}
