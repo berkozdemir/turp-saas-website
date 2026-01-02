@@ -3,6 +3,9 @@
  * Landing Admin Controller
  */
 
+require_once __DIR__ . '/../../core/auth/auth.middleware.php';
+require_once __DIR__ . '/../../config/db.php';
+
 function handle_landing_admin($action)
 {
     // First check if this is our action - don't auth for unrelated actions!

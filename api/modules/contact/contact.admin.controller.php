@@ -5,6 +5,9 @@
  * Handles contact message management.
  */
 
+require_once __DIR__ . '/../../core/auth/auth.middleware.php';
+require_once __DIR__ . '/../../config/db.php';
+
 function handle_contact_admin($action)
 {
     // First check if this is our action - don't auth for unrelated actions!
