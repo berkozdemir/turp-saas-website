@@ -35,7 +35,11 @@ function faq_admin_list(): bool
         'status' => $_GET['status'] ?? 'all',
         'page' => $_GET['page'] ?? 1
     ]);
-    echo json_encode(['success' => true, 'data' => $faqs]);
+    echo json_encode([
+        'success' => true,
+        'data' => $faqs,
+        '_debug_tenant_id' => $ctx['tenant_id']
+    ]);
     return true;
 }
 
