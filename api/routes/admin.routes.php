@@ -18,6 +18,7 @@ require_once __DIR__ . '/../modules/contact/contact.admin.controller.php';
 require_once __DIR__ . '/../modules/contact/contact_config.admin.controller.php';
 require_once __DIR__ . '/../modules/legal/legal.admin.controller.php';
 require_once __DIR__ . '/../modules/landing/landing.admin.controller.php';
+require_once __DIR__ . '/../modules/branding/branding.admin.controller.php';
 
 /**
  * Route admin actions to controllers
@@ -77,6 +78,11 @@ function route_admin_action(string $action): bool
 
     // End-User Auth module
     if (handle_enduser_auth_admin($action)) {
+        return true;
+    }
+
+    // Branding module
+    if (handle_branding_admin($action)) {
         return true;
     }
 
