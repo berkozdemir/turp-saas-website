@@ -48,8 +48,8 @@ export const TenantSwitcher = () => {
                                     onClick={() => {
                                         setCurrentTenant(tenant);
                                         setIsOpen(false);
-                                        // Reload page to refresh data for new tenant
-                                        window.location.reload();
+                                        // Navigate to admin root to reload with new tenant context
+                                        window.location.href = '/admin';
                                     }}
                                     className={`w-full px-4 py-3 text-left flex items-center justify-between hover:bg-slate-50 transition-colors ${tenant.code === currentTenant.code ? 'bg-cyan-50' : ''
                                         }`}
