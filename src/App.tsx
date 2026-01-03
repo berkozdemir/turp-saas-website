@@ -219,6 +219,14 @@ export default function App() {
     <TenantSettingsProvider>
       <EndUserAuthProvider>
         <div className="font-sans text-slate-900 bg-slate-50 min-h-screen flex flex-col selection:bg-rose-200 selection:text-rose-900">
+          {/* Skip to main content link for keyboard navigation */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg focus:shadow-lg"
+          >
+            Ana içeriğe atla
+          </a>
+
           <SEO view={view} post={view?.type === 'detail' ? view.post : undefined} />
 
           {/* --- NAVBAR --- */}
@@ -235,7 +243,7 @@ export default function App() {
           />
 
           {/* --- ANA İÇERİK --- */}
-          <main className="flex-1">
+          <main id="main-content" className="flex-1" role="main">
             <Suspense fallback={<PageLoader />}>
               {renderView()}
             </Suspense>

@@ -48,32 +48,41 @@ const IWRSApp = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        {/* Skip to main content link for keyboard navigation */}
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg focus:shadow-lg"
+        >
+          Ana içeriğe atla
+        </a>
         <ScrollToTop />
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/iwrs" element={<IWRSMockup />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/randomization" element={<RandomizationForm />} />
-            <Route path="/inventory-system" element={<InventorySystem />} />
-            <Route path="/data-security" element={<DataSecurity />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/references" element={<References />} />
-            <Route path="/adverse-events-call" element={<AdverseEventsCall />} />
-            <Route path="/medication-reminder" element={<MedicationReminder />} />
-            <Route path="/appointment-reminder" element={<AppointmentReminder />} />
-            <Route path="/patient-survey" element={<PatientSurvey />} />
-            <Route path="/emergency-unblinding" element={<EmergencyUnblinding />} />
-            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-            <Route path="/personal-data-notice" element={<PersonalDataNotice />} />
-            <Route path="/terms-of-service" element={<TermsOfService />} />
-            <Route path="/security-policy" element={<SecurityPolicy />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
+        <main id="main-content" role="main">
+          <Suspense fallback={<PageLoader />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/iwrs" element={<IWRSMockup />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/randomization" element={<RandomizationForm />} />
+              <Route path="/inventory-system" element={<InventorySystem />} />
+              <Route path="/data-security" element={<DataSecurity />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/references" element={<References />} />
+              <Route path="/adverse-events-call" element={<AdverseEventsCall />} />
+              <Route path="/medication-reminder" element={<MedicationReminder />} />
+              <Route path="/appointment-reminder" element={<AppointmentReminder />} />
+              <Route path="/patient-survey" element={<PatientSurvey />} />
+              <Route path="/emergency-unblinding" element={<EmergencyUnblinding />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/personal-data-notice" element={<PersonalDataNotice />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/security-policy" element={<SecurityPolicy />} />
+              <Route path="/contact" element={<ContactPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </main>
         <CookieConsentBanner />
       </BrowserRouter>
     </TooltipProvider>
