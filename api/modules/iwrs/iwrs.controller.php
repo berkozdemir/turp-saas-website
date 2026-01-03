@@ -510,7 +510,7 @@ if ($resource === 'get-messages') {
     if ($request_method === 'GET') {
         require_admin_auth($conn);
         $tenant_id = get_current_tenant($conn);
-        $stmt = $conn->prepare("SELECT * FROM contact_messages WHERE tenant_id = ? ORDER BY created_at DESC");
+        $stmt = $conn->prepare("SELECT * FROM contact_messages WHERE tenant_id = ? ORDER BY created_at DESC LIMIT 100");
         $stmt->execute([$tenant_id]);
         $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
         json_response($messages);
@@ -855,7 +855,7 @@ if ($resource === 'users') {
     // GET /users (List)
     if ($request_method === 'GET') {
         require_admin_auth($conn);
-        $sql = "SELECT id, email, full_name, institution, role, is_active, last_login_at, created_at FROM users ORDER BY created_at DESC";
+        $sql = "SELECT id, email, full_name, institution, role, is_active, last_login_at, created_at FROM users ORDER BY created_at DESC LIMIT 100";
         $stmt = $conn->query($sql);
         json_response($stmt->fetchAll(PDO::FETCH_ASSOC));
     }

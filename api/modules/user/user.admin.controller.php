@@ -59,7 +59,7 @@ function handle_user_admin(string $action): bool
             $params[] = "%$search%";
         }
 
-        $query .= " ORDER BY created_at DESC";
+        $query .= " ORDER BY created_at DESC LIMIT 100";
 
         try {
             $stmt = $conn->prepare($query);
