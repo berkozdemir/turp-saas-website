@@ -437,7 +437,6 @@ export const AdminBlogEditor = ({ token, post, onSave, onCancel }: AdminBlogEdit
                     handleChange('image_url', asset.url);
                     setShowMediaPicker(false);
                 }}
-                category="blog"
             />
         </>
     );
