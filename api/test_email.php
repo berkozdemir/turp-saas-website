@@ -52,6 +52,9 @@ if (!filter_var($to_email, FILTER_VALIDATE_EMAIL)) {
 }
 
 // Generate test email HTML
+$current_date = date('Y-m-d H:i:s');
+$server_name = gethostname() ?: 'unknown';
+
 $test_html = <<<HTML
 <!DOCTYPE html>
 <html>
@@ -77,9 +80,9 @@ $test_html = <<<HTML
         
         <p><strong>Gönderim Detayları:</strong></p>
         <ul>
-            <li>📧 Alıcı: {$to_email}</li>
-            <li>🕐 Tarih: {date('Y-m-d H:i:s')}</li>
-            <li>🌐 Sunucu: {gethostname()}</li>
+            <li>📧 Alıcı: $to_email</li>
+            <li>🕐 Tarih: $current_date</li>
+            <li>🌐 Sunucu: $server_name</li>
         </ul>
         
         <p style="margin-top: 30px; font-size: 14px; color: #64748b;">
