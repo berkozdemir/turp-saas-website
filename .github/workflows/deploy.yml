@@ -1,17 +1,64 @@
-# Triggering deployment after firewall update
+# Optimized Deploy Workflow
 name: Deploy to Plesk
 
 on:
   push:
     branches:
-      - main # Ana branch isminiz farklıysa (master vb.) burayı değiştirin.
+      - main
 
 jobs:
-  build-and-deploy:
+  # Check what changed
+  check-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      api: ${{ steps.filter.outputs.api }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'src/**'
+              - 'package.json'
+              - 'vite.config.ts'
+              - 'tailwind.config.js'
+              - 'index.html'
+            api:
+              - 'api/**'
+              - 'public/**'
+
+  # Deploy API only (fast - ~30 seconds)
+  deploy-api-only:
+    needs: check-changes
+    if: needs.check-changes.outputs.api == 'true' && needs.check-changes.outputs.frontend == 'false'
     runs-on: ubuntu-latest
     steps:
-      - name: 📂 Checkout Code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      
+      - name: 🚀 Deploy API Only (via lftp)
+        run: |
+          sudo apt-get install -y lftp
+          lftp -e "
+            set ftp:passive-mode true;
+            set ftp:ssl-allow no;
+            set net:timeout 10;
+            open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ${{ secrets.FTP_SERVER }};
+            
+            echo 'Uploading API only...';
+            mirror -R ./api/ /api/ --exclude .git/ --exclude env.php;
+            
+            quit;
+          "
+
+  # Full deploy with build (slower - ~5-6 minutes)
+  deploy-full:
+    needs: check-changes
+    if: needs.check-changes.outputs.frontend == 'true' || (needs.check-changes.outputs.api == 'false' && needs.check-changes.outputs.frontend == 'false')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
       - name: 🏗️ Setup Node.js
         uses: actions/setup-node@v3
@@ -24,11 +71,10 @@ jobs:
 
       - name: 🔨 Build Project
         run: |
-          # API URL'sini relative (göreli) yapıyoruz ki her iki domainde de çalışsın
           export VITE_API_URL="/api/index.php"
           npm run build
 
-      - name: 🚀 Deploy to Plesk (via lftp)
+      - name: 🚀 Deploy Full (via lftp)
         run: |
           sudo apt-get install -y lftp
           lftp -e "
@@ -40,14 +86,12 @@ jobs:
             open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ${{ secrets.FTP_SERVER }};
             
             echo 'Uploading Frontend...';
-            # dist klasörünü ana dizine yüklüyoruz. api ve uploads klasörlerine dokunmuyoruz.
             mirror -R ./dist/ / --exclude uploads/ --exclude api/ --exclude .git/ --delete-first;
             
             echo 'Uploading Uploads...';
             mirror -R ./public/uploads/ /uploads/ --ignore-time --only-newer;
             
             echo 'Uploading API...';
-            # env.php sunucuda özel olarak kalmalı, onu silmiyoruz veya ezmiyoruz (zaten git'te yok)
             mirror -R ./api/ /api/ --exclude .git/ --exclude env.php;
             
             quit;
