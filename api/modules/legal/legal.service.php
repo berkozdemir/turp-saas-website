@@ -14,13 +14,14 @@ function legal_list($tenant_id): array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("
-        SELECT id, type, title_tr, title_en, title_zh, updated_at 
+        SELECT id, type, type as `key`, title_tr, title_en, title_zh, updated_at, 
+               is_active, effective_date, sort_order
         FROM legal_documents 
         WHERE tenant_id = ?
-        ORDER BY type ASC
+        ORDER BY sort_order ASC, type ASC
     ");
     $stmt->execute([(string) $tenant_id]);
-    return $stmt->fetchAll();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 /**
@@ -60,6 +61,7 @@ function legal_save($tenant_id, string $type, array $data): int
                 title_tr=?, content_tr=?, 
                 title_en=?, content_en=?, 
                 title_zh=?, content_zh=?,
+                is_active=?, effective_date=?, sort_order=?,
                 updated_at=NOW()
             WHERE tenant_id=? AND type=?
         ");
@@ -70,6 +72,9 @@ function legal_save($tenant_id, string $type, array $data): int
             $data['content_en'] ?? null,
             $data['title_zh'] ?? null,
             $data['content_zh'] ?? null,
+            $data['is_active'] ?? 1,
+            $data['effective_date'] ?? null,
+            $data['sort_order'] ?? 0,
             (string) $tenant_id,
             $type
         ]);
@@ -77,8 +82,8 @@ function legal_save($tenant_id, string $type, array $data): int
     } else {
         $stmt = $conn->prepare("
             INSERT INTO legal_documents 
-            (tenant_id, type, title_tr, content_tr, title_en, content_en, title_zh, content_zh) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            (tenant_id, type, title_tr, content_tr, title_en, content_en, title_zh, content_zh, is_active, effective_date, sort_order) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
         $stmt->execute([
             (string) $tenant_id,
@@ -88,7 +93,10 @@ function legal_save($tenant_id, string $type, array $data): int
             $data['title_en'] ?? null,
             $data['content_en'] ?? null,
             $data['title_zh'] ?? null,
-            $data['content_zh'] ?? null
+            $data['content_zh'] ?? null,
+            $data['is_active'] ?? 1,
+            $data['effective_date'] ?? null,
+            $data['sort_order'] ?? 0
         ]);
         return (int) $conn->lastInsertId();
     }
