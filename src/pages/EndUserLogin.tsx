@@ -17,6 +17,32 @@ export const EndUserLogin = ({ setView }: Props) => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
+    // Theme Detection
+    const isNipt = window.location.hostname.includes('nipt.tr') || window.location.hostname.includes('omega') || settings?.tenant_id === 'nipt';
+
+    // Theme Config
+    const theme = isNipt ? {
+        bgGradient: 'from-slate-50 via-white to-blue-50',
+        cardBorder: 'border-slate-200',
+        cardShadow: 'shadow-slate-200/50',
+        iconBg: 'bg-gradient-to-br from-[#1a365d] to-[#2c5282]', // Omega Navy
+        iconShadow: 'shadow-blue-900/30',
+        inputFocus: 'focus:border-blue-500 focus:ring-blue-200',
+        buttonGradient: 'from-[#1a365d] to-[#2b6cb0] hover:from-[#2c5282] hover:to-[#3182ce]',
+        buttonShadow: 'shadow-blue-900/30',
+        linkText: 'text-blue-600 hover:text-blue-700'
+    } : {
+        bgGradient: 'from-violet-50 via-white to-purple-50',
+        cardBorder: 'border-violet-100',
+        cardShadow: 'shadow-violet-200/50',
+        iconBg: 'bg-gradient-to-br from-violet-500 to-purple-600',
+        iconShadow: 'shadow-violet-300',
+        inputFocus: 'focus:border-violet-500 focus:ring-violet-200',
+        buttonGradient: 'from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700',
+        buttonShadow: 'shadow-violet-300/50',
+        linkText: 'text-violet-600 hover:text-violet-700'
+    };
+
     const goHome = () => {
         if (setView) {
             setView('home');
@@ -36,13 +62,13 @@ export const EndUserLogin = ({ setView }: Props) => {
     // If login not allowed, show message
     if (!settingsLoading && !settings?.allow_enduser_login) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+            <div className={`min-h-screen bg-gradient-to-br ${theme.bgGradient} flex items-center justify-center p-4`}>
                 <div className="text-center">
                     <h1 className="text-2xl font-bold text-slate-800 mb-4">Giriş Aktif Değil</h1>
                     <p className="text-slate-600 mb-6">Bu site için kullanıcı girişi şu an aktif değil.</p>
                     <button
                         onClick={goHome}
-                        className="text-blue-600 hover:underline"
+                        className={`${theme.linkText} hover:underline`}
                     >
                         Ana sayfaya dön
                     </button>
@@ -68,13 +94,13 @@ export const EndUserLogin = ({ setView }: Props) => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-violet-50 via-white to-purple-50 flex items-center justify-center p-4">
+        <div className={`min-h-screen bg-gradient-to-br ${theme.bgGradient} flex items-center justify-center p-4`}>
             <div className="w-full max-w-md">
                 {/* Card */}
-                <div className="bg-white rounded-3xl shadow-2xl shadow-violet-200/50 p-8 border border-violet-100">
+                <div className={`bg-white rounded-3xl shadow-2xl ${theme.cardShadow} p-8 border ${theme.cardBorder}`}>
                     {/* Logo/Header */}
                     <div className="text-center mb-8">
-                        <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-violet-500 to-purple-600 rounded-2xl mb-4 shadow-lg shadow-violet-300">
+                        <div className={`inline-flex items-center justify-center w-16 h-16 ${theme.iconBg} rounded-2xl mb-4 shadow-lg ${theme.iconShadow}`}>
                             <Sparkles className="text-white" size={32} />
                         </div>
                         <h1 className="text-2xl font-bold text-slate-900">Hoş Geldiniz</h1>
@@ -94,7 +120,7 @@ export const EndUserLogin = ({ setView }: Props) => {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-200 transition-all outline-none"
+                                    className={`w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white ${theme.inputFocus} focus:ring-2 transition-all outline-none`}
                                     placeholder="ornek@email.com"
                                     required
                                 />
@@ -112,7 +138,7 @@ export const EndUserLogin = ({ setView }: Props) => {
                                     type={showPassword ? 'text' : 'password'}
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full pl-11 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-200 transition-all outline-none"
+                                    className={`w-full pl-11 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white ${theme.inputFocus} focus:ring-2 transition-all outline-none`}
                                     placeholder="••••••••"
                                     required
                                 />
@@ -137,7 +163,7 @@ export const EndUserLogin = ({ setView }: Props) => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-semibold py-3.5 px-6 rounded-xl shadow-lg shadow-violet-300/50 hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className={`w-full bg-gradient-to-r ${theme.buttonGradient} text-white font-semibold py-3.5 px-6 rounded-xl shadow-lg ${theme.buttonShadow} hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed`}
                         >
                             {isLoading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
                             {!isLoading && <ArrowRight size={20} />}
@@ -148,7 +174,7 @@ export const EndUserLogin = ({ setView }: Props) => {
                     {settings?.allow_enduser_signup && (
                         <p className="text-center text-slate-600 mt-6">
                             Hesabınız yok mu?{' '}
-                            <button onClick={goToSignup} className="text-violet-600 hover:text-violet-700 font-semibold">
+                            <button onClick={goToSignup} className={`${theme.linkText} font-semibold`}>
                                 Kayıt Ol
                             </button>
                         </p>
