@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { getModuleContentTranslated } from "./data/content";
 import { Navigation } from "./components/Navigation";
@@ -9,27 +9,37 @@ import { SEO } from "./components/SEO";
 // IWRS App Import
 
 
-// SAYFALARI IMPORT ET
+// CRITICAL PATH - Load immediately
 import { Home } from "./pages/Home";
-import { About } from "./pages/About";
-import { Blog } from "./pages/Blog";
-import { PostDetail } from "./pages/PostDetail";
-import { ModuleDetail } from "./pages/ModuleDetail";
-import { Admin } from "./pages/Admin";
-import { ResetPassword } from "./pages/ResetPassword";
-import { ROICalculator } from "./pages/ROICalculator";
-import { RheumaCaseStudy } from "./pages/RheumaCaseStudy";
-import { EducationCaseStudy } from "./pages/EducationCaseStudy";
-import { FaqPage } from "./pages/FaqPage";
-import { Contact } from "./pages/Contact";
-import { LegalPage } from "./pages/LegalPage";
-import { EndUserLogin } from "./pages/EndUserLogin";
-import { EndUserSignup } from "./pages/EndUserSignup";
+
+// LAZY LOADED PAGES - Code splitting for better performance
+const About = lazy(() => import("./pages/About").then(m => ({ default: m.About })));
+const Blog = lazy(() => import("./pages/Blog").then(m => ({ default: m.Blog })));
+const PostDetail = lazy(() => import("./pages/PostDetail").then(m => ({ default: m.PostDetail })));
+const ModuleDetail = lazy(() => import("./pages/ModuleDetail").then(m => ({ default: m.ModuleDetail })));
+const Admin = lazy(() => import("./pages/Admin").then(m => ({ default: m.Admin })));
+const ResetPassword = lazy(() => import("./pages/ResetPassword").then(m => ({ default: m.ResetPassword })));
+const ROICalculator = lazy(() => import("./pages/ROICalculator").then(m => ({ default: m.ROICalculator })));
+const RheumaCaseStudy = lazy(() => import("./pages/RheumaCaseStudy").then(m => ({ default: m.RheumaCaseStudy })));
+const EducationCaseStudy = lazy(() => import("./pages/EducationCaseStudy").then(m => ({ default: m.EducationCaseStudy })));
+const FaqPage = lazy(() => import("./pages/FaqPage").then(m => ({ default: m.FaqPage })));
+const Contact = lazy(() => import("./pages/Contact").then(m => ({ default: m.Contact })));
+const LegalPage = lazy(() => import("./pages/LegalPage").then(m => ({ default: m.LegalPage })));
+const EndUserLogin = lazy(() => import("./pages/EndUserLogin").then(m => ({ default: m.EndUserLogin })));
+const EndUserSignup = lazy(() => import("./pages/EndUserSignup").then(m => ({ default: m.EndUserSignup })));
+
 import { TenantSettingsProvider } from "./hooks/useTenantSettings";
 import { EndUserAuthProvider } from "./hooks/useEndUserAuth";
 import useAnalytics, { trackLanguageChange } from "./lib/analytics";
 import { CookieConsentBanner } from "./components/CookieConsentBanner";
 import { initAnalytics } from "./utils/consent-analytics";
+
+// Loading fallback component
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  </div>
+);
 
 export default function App() {
 
@@ -225,7 +235,11 @@ export default function App() {
           />
 
           {/* --- ANA İÇERİK --- */}
-          <main className="flex-1">{renderView()}</main>
+          <main className="flex-1">
+            <Suspense fallback={<PageLoader />}>
+              {renderView()}
+            </Suspense>
+          </main>
 
           {/* --- FOOTER --- */}
           <Footer setView={setView} />
