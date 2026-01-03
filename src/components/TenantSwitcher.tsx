@@ -46,10 +46,14 @@ export const TenantSwitcher = () => {
                                 <button
                                     key={tenant.id}
                                     onClick={() => {
+                                        console.log('[TenantSwitcher] Switching to tenant:', tenant);
                                         setCurrentTenant(tenant);
                                         setIsOpen(false);
-                                        // Navigate to admin root to reload with new tenant context
-                                        window.location.href = '/admin';
+                                        // Small timeout to ensure localStorage is written before navigation
+                                        setTimeout(() => {
+                                            console.log('[TenantSwitcher] Navigating to /admin');
+                                            window.location.href = '/admin';
+                                        }, 100);
                                     }}
                                     className={`w-full px-4 py-3 text-left flex items-center justify-between hover:bg-slate-50 transition-colors ${tenant.code === currentTenant.code ? 'bg-cyan-50' : ''
                                         }`}

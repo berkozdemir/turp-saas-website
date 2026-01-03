@@ -61,7 +61,7 @@ const AdminContent = () => {
   const [pendingTenants, setPendingTenants] = useState<Tenant[] | null>(null);
 
   const { currentTenant, setCurrentTenant, setAvailableTenants, clearTenantContext } = useTenant();
-  const userRole = currentTenant?.role || 'viewer';
+  const userRole = currentTenant?.tenant_role || 'viewer';
 
   // Handle cached session: if session exists but no tenant selected OR user logs in fresh
   useEffect(() => {

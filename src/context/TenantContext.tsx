@@ -24,6 +24,13 @@ const TenantContext = createContext<TenantContextType | undefined>(undefined);
 const TENANT_STORAGE_KEY = 'admin_current_tenant';
 const TENANTS_LIST_KEY = 'admin_available_tenants';
 
+// Debug logging for tenant operations
+const debugLog = (action: string, data?: any) => {
+    if (import.meta.env.DEV || localStorage.getItem('DEBUG_TENANT') === 'true') {
+        console.log(`[TenantContext] ${action}`, data || '');
+    }
+};
+
 export const TenantProvider = ({ children }: { children: ReactNode }) => {
     const [currentTenant, setCurrentTenantState] = useState<Tenant | null>(() => {
         const stored = localStorage.getItem(TENANT_STORAGE_KEY);
@@ -35,9 +42,11 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
     });
 
     const setCurrentTenant = useCallback((tenant: Tenant) => {
+        debugLog('setCurrentTenant called', { tenant, previousTenant: currentTenant });
         setCurrentTenantState(tenant);
         localStorage.setItem(TENANT_STORAGE_KEY, JSON.stringify(tenant));
-    }, []);
+        debugLog('localStorage updated', { key: TENANT_STORAGE_KEY, value: tenant });
+    }, [currentTenant]);
 
     const setAvailableTenants = useCallback((tenants: Tenant[]) => {
         setAvailableTenantsState(tenants);
