@@ -660,7 +660,6 @@ export const AdminPodcastEditor = ({ token, podcast, onSave, onCancel }: AdminPo
                     handleChange("cover_image_url", asset.url);
                     setShowCoverPicker(false);
                 }}
-                category="podcast"
             />
 
             {/* Media Picker for Extra Images */}
@@ -674,7 +673,6 @@ export const AdminPodcastEditor = ({ token, podcast, onSave, onCancel }: AdminPo
                     }));
                     setShowExtraImagesPicker(false);
                 }}
-                category="podcast"
             />
         </>
     );
