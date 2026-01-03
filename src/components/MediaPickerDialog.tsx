@@ -20,7 +20,6 @@ interface MediaPickerDialogProps {
     onClose: () => void;
     onSelect: (asset: { id: number; url: string; alt_text?: string }) => void;
     multiple?: boolean;
-    category?: string;
 }
 
 export const MediaPickerDialog = ({
@@ -28,12 +27,11 @@ export const MediaPickerDialog = ({
     onClose,
     onSelect,
     multiple = false,
-    category: filterCategory,
 }: MediaPickerDialogProps) => {
     const [assets, setAssets] = useState<MediaAsset[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState("");
-    const [category, setCategory] = useState(filterCategory || "");
+    const [category, setCategory] = useState("");
     const [categories, setCategories] = useState<string[]>([]);
     const [selected, setSelected] = useState<MediaAsset[]>([]);
     const [page, setPage] = useState(1);
