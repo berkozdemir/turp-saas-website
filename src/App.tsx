@@ -27,12 +27,16 @@ const Contact = lazy(() => import("./pages/Contact").then(m => ({ default: m.Con
 const LegalPage = lazy(() => import("./pages/LegalPage").then(m => ({ default: m.LegalPage })));
 const EndUserLogin = lazy(() => import("./pages/EndUserLogin").then(m => ({ default: m.EndUserLogin })));
 const EndUserSignup = lazy(() => import("./pages/EndUserSignup").then(m => ({ default: m.EndUserSignup })));
+const PodcastHub = lazy(() => import("./pages/PodcastHub").then(m => ({ default: m.PodcastHub })));
+const PodcastDetail = lazy(() => import("./pages/PodcastDetail").then(m => ({ default: m.PodcastDetail })));
 
 import { TenantSettingsProvider } from "./hooks/useTenantSettings";
 import { EndUserAuthProvider } from "./hooks/useEndUserAuth";
 import useAnalytics, { trackLanguageChange } from "./lib/analytics";
 import { CookieConsentBanner } from "./components/CookieConsentBanner";
 import { initAnalytics } from "./utils/consent-analytics";
+import { PodcastPlayerProvider } from "./context/PodcastPlayerContext";
+import { GlobalPodcastPlayer } from "./components/GlobalPodcastPlayer";
 
 // Loading fallback component
 const PageLoader = () => (
@@ -73,6 +77,15 @@ export default function App() {
     }
     if (path === '/signup') {
       return 'enduser-signup';
+    }
+
+    // 4. Podcast routes
+    if (path === '/podcast') {
+      return 'podcast-hub';
+    }
+    if (path.startsWith('/podcast/')) {
+      const slug = path.replace('/podcast/', '');
+      return { type: 'podcast-detail', slug };
     }
 
     // 3. Password reset check
@@ -184,6 +197,8 @@ export default function App() {
           return <EndUserLogin setView={setView} />;
         case "enduser-signup":
           return <EndUserSignup setView={setView} />;
+        case "podcast-hub":
+          return <PodcastHub />;
         default:
           return <Home setView={setView} />;
       }
@@ -210,52 +225,60 @@ export default function App() {
       if (view.type === "legal") {
         return <LegalPage docKey={view.key} setView={setView} />;
       }
+      if (view.type === "podcast-detail") {
+        return <PodcastDetail />;
+      }
     }
 
     return <Home setView={setView} />;
   };
 
   return (
-    <TenantSettingsProvider>
-      <EndUserAuthProvider>
-        <div className="font-sans text-slate-900 bg-slate-50 min-h-screen flex flex-col selection:bg-rose-200 selection:text-rose-900">
-          {/* Skip to main content link for keyboard navigation */}
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg focus:shadow-lg"
-          >
-            Ana içeriğe atla
-          </a>
+    <PodcastPlayerProvider>
+      <TenantSettingsProvider>
+        <EndUserAuthProvider>
+          <div className="font-sans text-slate-900 bg-slate-50 min-h-screen flex flex-col selection:bg-rose-200 selection:text-rose-900">
+            {/* Skip to main content link for keyboard navigation */}
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg focus:shadow-lg"
+            >
+              Ana içeriğe atla
+            </a>
 
-          <SEO view={view} post={view?.type === 'detail' ? view.post : undefined} />
+            <SEO view={view} post={view?.type === 'detail' ? view.post : undefined} />
 
-          {/* --- NAVBAR --- */}
-          <Navigation
-            view={view}
-            setView={setView}
-            session={session}
-            handleLogout={handleLogout}
-            i18n={i18n}
-            changeLanguage={changeLanguage}
-            languages={languages}
-            modules={modules}
-            t={t}
-          />
+            {/* --- NAVBAR --- */}
+            <Navigation
+              view={view}
+              setView={setView}
+              session={session}
+              handleLogout={handleLogout}
+              i18n={i18n}
+              changeLanguage={changeLanguage}
+              languages={languages}
+              modules={modules}
+              t={t}
+            />
 
-          {/* --- ANA İÇERİK --- */}
-          <main id="main-content" className="flex-1" role="main">
-            <Suspense fallback={<PageLoader />}>
-              {renderView()}
-            </Suspense>
-          </main>
+            {/* --- ANA İÇERİK --- */}
+            <main id="main-content" className="flex-1" role="main">
+              <Suspense fallback={<PageLoader />}>
+                {renderView()}
+              </Suspense>
+            </main>
 
-          {/* --- FOOTER --- */}
-          <Footer setView={setView} />
+            {/* --- FOOTER --- */}
+            <Footer setView={setView} />
 
-          {/* --- COOKIE CONSENT BANNER --- */}
-          <CookieConsentBanner />
-        </div>
-      </EndUserAuthProvider>
-    </TenantSettingsProvider>
+            {/* --- COOKIE CONSENT BANNER --- */}
+            <CookieConsentBanner />
+
+            {/* --- GLOBAL PODCAST PLAYER --- */}
+            <GlobalPodcastPlayer />
+          </div>
+        </EndUserAuthProvider>
+      </TenantSettingsProvider>
+    </PodcastPlayerProvider>
   );
 }
