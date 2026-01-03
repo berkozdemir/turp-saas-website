@@ -40,15 +40,22 @@ export const AdminFaqList = ({ token, onEdit, onCreate }: AdminFaqListProps) => 
             const response = await fetch(`${API_BASE_URL}?${params}`, {
                 headers: { Authorization: `Bearer ${token}`, ...getTenantHeader() }
             });
+
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`API Error: ${response.status} - ${text.substring(0, 100)}`);
+            }
+
             const data = await response.json();
             if (data.success) {
                 setFaqs(data.data);
-                setTotalPages(data.pagination.pages);
+                setTotalPages(data.pagination?.pages || 1);
             } else {
                 notify.error(data.error || "SSS listesi alınamadı");
             }
-        } catch (err) {
-            notify.error("Bağlantı hatası");
+        } catch (err: any) {
+            console.error("FAQ Fetch Error:", err);
+            notify.error(`Hata: ${err.message || "Bağlantı hatası"}`);
         } finally {
             setLoading(false);
         }
