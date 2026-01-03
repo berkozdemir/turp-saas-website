@@ -221,6 +221,9 @@ function media_admin_list(): bool
     $conn = get_db_connection();
     $tenant_id = $ctx['tenant_id'];
 
+    // DEBUG: Log tenant context
+    error_log("[MediaList] tenant_id from context: " . var_export($tenant_id, true));
+
     $search = $_GET['search'] ?? '';
     $category = $_GET['category'] ?? '';
     $page = max(1, (int) ($_GET['page'] ?? 1));
@@ -244,10 +247,17 @@ function media_admin_list(): bool
         $params[] = $category;
     }
 
+    // DEBUG: Log query and params
+    error_log("[MediaList] Query: " . $query);
+    error_log("[MediaList] Params: " . json_encode($params));
+
     $count_query = str_replace("SELECT id, filename_original, filename_stored, url, mime_type, size_bytes, width, height, alt_text, title, tags, category, created_at", "SELECT COUNT(*) as total", $query);
     $stmt = $conn->prepare($count_query);
     $stmt->execute($params);
     $total = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+
+    // DEBUG: Log count
+    error_log("[MediaList] Total count: " . $total);
 
     $query .= " ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
     $stmt = $conn->prepare($query);
@@ -266,6 +276,10 @@ function media_admin_list(): bool
             'page' => $page,
             'limit' => $limit,
             'pages' => ceil($total / $limit)
+        ],
+        '_debug' => [
+            'tenant_id_used' => $tenant_id,
+            'query_count' => $total
         ]
     ]);
     return true;
