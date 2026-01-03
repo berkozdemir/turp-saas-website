@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { Globe, ChevronDown, FileText, Lock, Menu, X, BookOpen } from "lucide-react";
+import { useEndUserAuth } from "../hooks/useEndUserAuth";
+import { Globe, ChevronDown, FileText, Lock, Menu, X, BookOpen, Mic } from "lucide-react";
 
 interface NavigationProps {
     view: any;
@@ -24,6 +25,7 @@ export function Navigation({
     modules,
     t,
 }: NavigationProps) {
+    const { user, isAuthenticated, logout } = useEndUserAuth();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isModulesDropdownOpen, setIsModulesDropdownOpen] = useState(false);
     const [isMobileModulesExpanded, setIsMobileModulesExpanded] = useState(false);
@@ -178,6 +180,17 @@ export function Navigation({
                                 {t("nav_contact")}
                             </button>
 
+                            {/* Podcast */}
+                            <button
+                                onClick={() => handleNavigation("podcast-hub")}
+                                className={`px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-1 ${view === "podcast-hub"
+                                    ? "bg-slate-900 text-white shadow-md"
+                                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                                    }`}
+                            >
+                                <Mic size={16} /> Podcast
+                            </button>
+
                             {/* FAQ (SSS) */}
                             <button
                                 onClick={() => handleNavigation("sss")}
@@ -208,6 +221,38 @@ export function Navigation({
                             >
                                 <Lock size={18} />
                             </button>
+
+                            {/* End User Auth (Desktop) */}
+                            <div className="flex items-center gap-2 ml-2 pl-2 border-l border-slate-200">
+                                {isAuthenticated && user ? (
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs font-bold text-slate-600 hidden xl:block">
+                                            {user.name}
+                                        </span>
+                                        <button
+                                            onClick={logout}
+                                            className="px-3 py-1.5 rounded-full text-xs font-bold text-slate-500 hover:bg-red-50 hover:text-red-600 transition-colors border border-slate-200"
+                                        >
+                                            Çıkış
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <button
+                                            onClick={() => handleNavigation("enduser-login")}
+                                            className="px-4 py-2 rounded-full text-sm font-bold text-slate-600 hover:bg-slate-100 transition-colors"
+                                        >
+                                            Giriş
+                                        </button>
+                                        <button
+                                            onClick={() => handleNavigation("enduser-signup")}
+                                            className="px-4 py-2 rounded-full text-sm font-bold bg-rose-600 text-white shadow-md hover:bg-rose-700 hover:shadow-lg transition-all"
+                                        >
+                                            Kayıt Ol
+                                        </button>
+                                    </>
+                                )}
+                            </div>
                         </div>
 
                         {/* Language Selector (Desktop) */}
@@ -347,6 +392,14 @@ export function Navigation({
                         ❓ {t("nav_faq")}
                     </button>
 
+                    {/* Podcast */}
+                    <button
+                        onClick={() => handleNavigation("podcast-hub")}
+                        className={`text-left px-4 py-3 rounded-lg text-base font-bold transition-colors flex items-center gap-2 ${view === "podcast-hub" ? "bg-slate-100 text-purple-600" : "text-slate-700 hover:bg-slate-50"}`}
+                    >
+                        <Mic size={18} /> Podcast
+                    </button>
+
                     {/* Contact */}
                     <button
                         onClick={() => handleNavigation("contact")}
@@ -363,13 +416,47 @@ export function Navigation({
                         ℹ️ {t("nav_about")}
                     </button>
 
-                    {/* Admin */}
                     <button
                         onClick={() => handleNavigation("admin")}
                         className="text-left px-4 py-3 rounded-lg text-base font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
                     >
                         🔒 Admin
                     </button>
+
+                    {/* End User Auth (Mobile) */}
+                    <div className="pt-4 mt-4 border-t border-slate-200">
+                        {isAuthenticated && user ? (
+                            <>
+                                <div className="px-4 py-2 text-sm text-slate-500 font-bold">
+                                    👋 {user.name}
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        logout();
+                                        setIsMobileMenuOpen(false);
+                                    }}
+                                    className="w-full text-left px-4 py-3 rounded-lg text-base font-bold text-red-600 hover:bg-red-50 transition-colors"
+                                >
+                                    Çıkış Yap
+                                </button>
+                            </>
+                        ) : (
+                            <div className="flex flex-col gap-2 p-2">
+                                <button
+                                    onClick={() => handleNavigation("enduser-login")}
+                                    className="w-full py-3 rounded-lg text-base font-bold text-slate-700 bg-slate-100 hover:bg-slate-200"
+                                >
+                                    Giriş Yap
+                                </button>
+                                <button
+                                    onClick={() => handleNavigation("enduser-signup")}
+                                    className="w-full py-3 rounded-lg text-base font-bold text-white bg-rose-600 hover:bg-rose-700 shadow-md"
+                                >
+                                    Kayıt Ol
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </div>
 
                 {/* Language Selector (Mobile - Bottom) */}

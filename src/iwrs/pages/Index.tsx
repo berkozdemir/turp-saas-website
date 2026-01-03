@@ -48,7 +48,7 @@ const Index = () => {
   };
 
   const handleLoginClick = () => {
-    navigate('/admin');
+    navigate('/login');
   };
 
   if (isLoading) {

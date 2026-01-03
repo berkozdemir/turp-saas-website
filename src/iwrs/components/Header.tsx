@@ -10,12 +10,12 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/iwrs/components/ui/navigation-menu";
-import { Menu, ChevronDown } from "lucide-react"; 
+import { Menu, ChevronDown } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/iwrs/components/ui/sheet";
 
 export const Header = () => {
   const { t } = useTranslation();
-  
+
   const mobileModules = [
     { href: "/iwrs", title: t('header.iwrsInterface'), description: t('header.iwrsInterfaceDesc') },
     { href: "/emergency-unblinding", title: t('header.emergencyUnblinding'), description: t('header.emergencyUnblindingDesc') },
@@ -26,7 +26,7 @@ export const Header = () => {
     { href: "/appointment-reminder", title: t('header.appointmentReminder'), description: t('header.appointmentReminderDesc') },
     { href: "/patient-survey", title: t('header.patientSurvey'), description: t('header.patientSurveyDesc') },
   ];
-  
+
   const mobileResources = [
     { href: "/references", title: t('header.references') },
     { href: "/faq", title: t('header.faq') },
@@ -39,16 +39,16 @@ export const Header = () => {
         <div className="flex items-center space-x-2">
           <a href="/" className="block">
             {/* GÜNCELLEME: w-32 ve object-contain eklendi. Genişlik artık sabit. */}
-            <img src={omegaLogo} alt="Omega CRO" className="h-12 w-32 flex-shrink-0 object-contain" /> 
+            <img src={omegaLogo} alt="Omega CRO" className="h-12 w-32 flex-shrink-0 object-contain" />
           </a>
         </div>
-        
+
         {/* MASAÜSTÜ MENÜ (md ve üstünde görünür) */}
         <div className="hidden md:flex items-center space-x-8">
           <a href="/#platform" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
             {t('header.platform')}
           </a>
-          
+
           <NavigationMenu>
             <NavigationMenuList>
               {/* MODÜLLER DROPDOWN */}
@@ -78,7 +78,7 @@ export const Header = () => {
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-              
+
               {/* KAYNAKLAR DROPDOWN */}
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-sm font-medium text-muted-foreground hover:text-foreground bg-transparent">
@@ -110,7 +110,7 @@ export const Header = () => {
           <a href="/contact" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
             {t('header.contact')}
           </a>
-          
+
           {/* DİĞER LİNKLER */}
           <a href="/randomization" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
             {t('header.randomizationBot')}
@@ -120,11 +120,11 @@ export const Header = () => {
             {t('header.demo')}
           </a>
         </div>
-        
+
         {/* MOBİL VE BUTONLAR */}
         <div className="flex items-center space-x-4">
           <LanguageSwitcher />
-          
+
           {/* HAMBURGER MENÜ TETİKLEYİCİSİ (md altı için) */}
           <Sheet>
             <SheetTrigger asChild className="md:hidden">
@@ -132,10 +132,10 @@ export const Header = () => {
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            
+
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <div className="flex flex-col space-y-6 pt-10">
-                
+
                 {/* Ana Linkler */}
                 <SheetClose asChild>
                   <a href="/#platform" className="text-lg font-semibold text-foreground hover:text-primary transition-colors">
@@ -157,7 +157,7 @@ export const Header = () => {
                     {t('header.demo')}
                   </a>
                 </SheetClose>
-                
+
                 {/* Modüller (Basitleştirilmiş Liste) */}
                 <h3 className="text-sm font-bold uppercase text-muted-foreground pt-4 border-t">
                   {t('header.modules')}
@@ -181,11 +181,11 @@ export const Header = () => {
                     </a>
                   </SheetClose>
                 ))}
-                
+
                 {/* Butonlar */}
                 <div className="flex flex-col space-y-3 pt-6 border-t">
                   <SheetClose asChild>
-                    <a href="/auth">
+                    <a href="/login">
                       <Button variant="ghost" className="w-full">
                         {t('header.login')}
                       </Button>
@@ -202,9 +202,9 @@ export const Header = () => {
               </div>
             </SheetContent>
           </Sheet>
-          
+
           {/* MASAÜSTÜ BUTONLARI */}
-          <a href="/auth" className="hidden md:block">
+          <a href="/login" className="hidden md:block">
             <Button variant="ghost" size="sm">
               {t('header.login')}
             </Button>
