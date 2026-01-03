@@ -6,6 +6,7 @@
 
 require_once __DIR__ . '/db_connection.php';
 require_once __DIR__ . '/email_service.php';
+require_once __DIR__ . '/core/security/rate_limiter.php';
 
 // Get database connection
 $conn = get_db_connection();
@@ -22,10 +23,22 @@ if ($action === 'login' && $request_method === 'POST') {
     $email = $request_body['email'] ?? '';
     $password = $request_body['password'] ?? '';
     $remember_me = $request_body['remember_me'] ?? false;
+    $ip_address = $_SERVER['REMOTE_ADDR'] ?? '';
 
     // Validate inputs
     if (empty($email) || empty($password)) {
         echo json_encode(['error' => 'E-posta ve şifre gereklidir']);
+        exit;
+    }
+
+    // Rate limiting check
+    $rate_check = check_login_rate_limit($email, $ip_address);
+    if (!$rate_check['allowed']) {
+        http_response_code(429); // Too Many Requests
+        echo json_encode([
+            'error' => 'Çok fazla başarısız deneme. Lütfen ' . ceil($rate_check['retry_after'] / 60) . ' dakika sonra tekrar deneyin.',
+            'retry_after' => $rate_check['retry_after']
+        ]);
         exit;
     }
 
@@ -36,15 +49,20 @@ if ($action === 'login' && $request_method === 'POST') {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$user) {
+            record_login_attempt($email, $ip_address);
             echo json_encode(['error' => 'Hatalı e-posta veya şifre']);
             exit;
         }
 
         // Verify password
         if (!password_verify($password, $user['password_hash'])) {
+            record_login_attempt($email, $ip_address);
             echo json_encode(['error' => 'Hatalı e-posta veya şifre']);
             exit;
         }
+
+        // Success - clear rate limit
+        clear_login_attempts($email, $ip_address);
 
         // Generate session token
         $token = bin2hex(random_bytes(32));
