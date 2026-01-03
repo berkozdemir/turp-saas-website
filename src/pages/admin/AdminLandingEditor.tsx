@@ -631,7 +631,6 @@ export const AdminLandingEditor = ({ editId, onBack }: AdminLandingEditorProps) 
                     setConfig({ ...config, hero_image_url: asset.url });
                     setShowMediaPicker(false);
                 }}
-                category="hero"
             />
         </>);
 };
