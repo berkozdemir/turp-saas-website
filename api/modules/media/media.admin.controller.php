@@ -261,6 +261,10 @@ function media_admin_list(): bool
     error_log("[MediaList] Params: " . json_encode($params));
 
     $count_query = str_replace("SELECT id, filename_original, filename_stored, url, mime_type, size_bytes, width, height, alt_text, title, tags, category, created_at", "SELECT COUNT(*) as total", $query);
+
+    // DEBUG: Show exact count query
+    error_log("[MediaList] Count Query: " . $count_query);
+
     $stmt = $conn->prepare($count_query);
     $stmt->execute($params);
     $total = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
@@ -288,10 +292,12 @@ function media_admin_list(): bool
         ],
         '_debug' => [
             'tenant_id_used' => $tenant_id,
+            'tenant_id_safe' => $tenant_id_safe,
             'query_count' => $total,
             'db_name' => $db_name,
             'raw_total' => (int) $raw_count,
-            'raw_t3' => (int) $raw_count_t3
+            'raw_t3' => (int) $raw_count_t3,
+            'count_query' => $count_query
         ]
     ]);
     return true;
