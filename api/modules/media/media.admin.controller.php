@@ -221,8 +221,13 @@ function media_admin_list(): bool
     $conn = get_db_connection();
     $tenant_id = $ctx['tenant_id'];
 
-    // DEBUG: Log tenant context
-    error_log("[MediaList] tenant_id from context: " . var_export($tenant_id, true));
+    // DEBUG: Check actual database and raw count
+    $db_name = $conn->query("SELECT DATABASE()")->fetchColumn();
+    $raw_count = $conn->query("SELECT COUNT(*) FROM media_assets")->fetchColumn();
+    $raw_count_t3 = $conn->query("SELECT COUNT(*) FROM media_assets WHERE tenant_id = 3")->fetchColumn();
+
+    error_log("[MediaList] DB: $db_name, Raw total: $raw_count, Raw t3: $raw_count_t3, Context tenant: $tenant_id");
+
 
     $search = $_GET['search'] ?? '';
     $category = $_GET['category'] ?? '';
@@ -279,7 +284,10 @@ function media_admin_list(): bool
         ],
         '_debug' => [
             'tenant_id_used' => $tenant_id,
-            'query_count' => $total
+            'query_count' => $total,
+            'db_name' => $db_name,
+            'raw_total' => (int) $raw_count,
+            'raw_t3' => (int) $raw_count_t3
         ]
     ]);
     return true;
