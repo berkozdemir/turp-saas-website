@@ -199,3 +199,135 @@ function generate_reset_email_html($reset_url, $name)
 </html>
 HTML;
 }
+
+/**
+ * Send password reset email for end-users (not admin)
+ */
+function send_enduser_password_reset_email($to_email, $to_name, $reset_token, $tenant_id)
+{
+    // Load Brevo API key from env.php
+    $brevo_api_key = null;
+    $env_php_path = __DIR__ . '/../../env.php';
+
+    if (file_exists($env_php_path)) {
+        $config = include $env_php_path;
+        if (is_array($config) && isset($config['BREVO_API_KEY'])) {
+            $brevo_api_key = $config['BREVO_API_KEY'];
+        }
+    }
+
+    if (!$brevo_api_key) {
+        error_log('BREVO_API_KEY not configured for enduser password reset');
+        return false;
+    }
+
+    // Build reset URL based on tenant
+    $app_base_url = 'https://ct.turp.health';
+    if ($tenant_id === 'iwrs') {
+        $app_base_url = 'https://iwrs.com.tr';
+    }
+    $reset_url = $app_base_url . "/reset-password?token=" . $reset_token;
+
+    // Get tenant name for branding
+    $brand_name = 'Turp Health';
+    if ($tenant_id === 'iwrs') {
+        $brand_name = 'IWRS Portal';
+    }
+
+    // Generate HTML email
+    $greeting_name = $to_name ? ' ' . htmlspecialchars($to_name) : '';
+    $html_content = <<<HTML
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; color: #334155; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; border-radius: 12px 12px 0 0; text-align: center; }
+        .content { background: #ffffff; padding: 40px; border: 1px solid #e2e8f0; border-top: none; }
+        .button { display: inline-block; background: #10b981; color: white !important; padding: 14px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 20px 0; }
+        .footer { text-align: center; margin-top: 20px; font-size: 14px; color: #64748b; }
+        .warning { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 12px; margin: 20px 0; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 style="margin: 0;">🔐 Şifre Sıfırlama</h1>
+            <p style="margin: 10px 0 0 0; opacity: 0.9;">{$brand_name}</p>
+        </div>
+        <div class="content">
+            <p><strong>Merhaba{$greeting_name},</strong></p>
+            
+            <p>Hesabınız için bir şifre sıfırlama talebi aldık.</p>
+            
+            <p>Şifrenizi sıfırlamak için aşağıdaki butona tıklayın:</p>
+            
+            <div style="text-align: center;">
+                <a href="{$reset_url}" class="button">Şifremi Sıfırla</a>
+            </div>
+            
+            <p style="font-size: 14px; color: #64748b;">
+                Eğer buton çalışmıyorsa, aşağıdaki linki tarayıcınıza kopyalayabilirsiniz:<br>
+                <a href="{$reset_url}" style="word-break: break-all; color: #10b981;">{$reset_url}</a>
+            </p>
+            
+            <div class="warning">
+                <strong>⏱️ Önemli:</strong> Bu bağlantı güvenlik nedeniyle <strong>1 saat</strong> içinde geçerliliğini yitirecektir.
+            </div>
+            
+            <div style="background: #f1f5f9; padding: 16px; border-radius: 8px; margin-top: 20px;">
+                <p style="margin: 0; font-size: 14px;">
+                    <strong>🔒 Güvenlik Notu:</strong><br>
+                    Eğer bu şifre sıfırlama talebini siz yapmadıysanız, bu e-postayı güvenle görmezden gelebilirsiniz.
+                </p>
+            </div>
+        </div>
+        <div class="footer">
+            <p>{$brand_name}</p>
+            <p style="font-size: 12px;">© 2024 {$brand_name}. Tüm hakları saklıdır.</p>
+        </div>
+    </div>
+</body>
+</html>
+HTML;
+
+    // Send via Brevo API
+    $email_data = [
+        'sender' => [
+            'email' => 'noreply@turp.health',
+            'name' => $brand_name
+        ],
+        'to' => [
+            ['email' => $to_email, 'name' => $to_name ?: '']
+        ],
+        'subject' => 'Şifre Sıfırlama - ' . $brand_name,
+        'htmlContent' => $html_content,
+        'textContent' => "Merhaba,\n\nŞifre sıfırlama talebiniz alındı. Şifrenizi sıfırlamak için bu linki kullanın:\n\n$reset_url\n\nBu bağlantı 1 saat içinde geçerliliğini yitirecektir.\n\nSaygılarımızla,\n$brand_name"
+    ];
+
+    $ch = curl_init('https://api.brevo.com/v3/smtp/email');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'api-key: ' . $brevo_api_key,
+        'Content-Type: application/json',
+        'Accept: application/json'
+    ]);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($email_data));
+
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($http_code >= 200 && $http_code < 300) {
+        error_log("[send_enduser_password_reset_email] Email sent to: $to_email");
+        return true;
+    } else {
+        error_log("[send_enduser_password_reset_email] Failed: HTTP $http_code - $response");
+        return false;
+    }
+}
+

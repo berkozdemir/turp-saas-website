@@ -26,6 +26,12 @@ function handle_enduser_auth_public(string $action): bool
             return enduser_verify_email_action();
         case 'enduser_resend_verification':
             return enduser_resend_verification_action();
+        case 'enduser_forgot_password':
+            return enduser_forgot_password_action();
+        case 'enduser_reset_password':
+            return enduser_reset_password_action();
+        case 'enduser_verify_reset_token':
+            return enduser_verify_reset_token_action();
         default:
             return false;
     }
@@ -174,3 +180,93 @@ function enduser_resend_verification_action(): bool
     echo json_encode($result);
     return true;
 }
+
+/**
+ * POST /api?action=enduser_forgot_password
+ * Request password reset email
+ */
+function enduser_forgot_password_action(): bool
+{
+    $tenant_id = get_current_tenant_id();
+    if (!$tenant_id) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Tenant not found']);
+        return true;
+    }
+
+    $data = json_decode(file_get_contents('php://input'), true) ?? [];
+    $email = trim($data['email'] ?? '');
+
+    if (empty($email)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'E-posta adresi gerekli']);
+        return true;
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Geçerli bir e-posta adresi girin']);
+        return true;
+    }
+
+    $result = enduser_request_password_reset($email, $tenant_id);
+    echo json_encode($result);
+    return true;
+}
+
+/**
+ * POST /api?action=enduser_reset_password
+ * Reset password with token
+ */
+function enduser_reset_password_action(): bool
+{
+    $data = json_decode(file_get_contents('php://input'), true) ?? [];
+    $token = trim($data['token'] ?? '');
+    $new_password = $data['new_password'] ?? '';
+
+    if (empty($token)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Token gerekli']);
+        return true;
+    }
+
+    if (empty($new_password)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Yeni şifre gerekli']);
+        return true;
+    }
+
+    $result = enduser_reset_password($token, $new_password);
+
+    if (isset($result['error'])) {
+        http_response_code(400);
+    }
+
+    echo json_encode($result);
+    return true;
+}
+
+/**
+ * GET /api?action=enduser_verify_reset_token&token=xxx
+ * Verify if reset token is valid
+ */
+function enduser_verify_reset_token_action(): bool
+{
+    $token = $_GET['token'] ?? '';
+
+    if (empty($token)) {
+        http_response_code(400);
+        echo json_encode(['valid' => false, 'error' => 'Token gerekli']);
+        return true;
+    }
+
+    $result = enduser_verify_reset_token($token);
+
+    if (!$result['valid']) {
+        http_response_code(400);
+    }
+
+    echo json_encode($result);
+    return true;
+}
+

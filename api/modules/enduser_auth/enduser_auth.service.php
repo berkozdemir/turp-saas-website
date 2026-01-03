@@ -400,3 +400,139 @@ function resend_verification_email(string $email, string $tenant_id): array
         'message' => 'Doğrulama e-postası tekrar gönderildi. Lütfen gelen kutunuzu kontrol edin.'
     ];
 }
+
+/**
+ * Request password reset - generates token and sends email
+ */
+function enduser_request_password_reset(string $email, string $tenant_id): array
+{
+    $conn = get_db_connection();
+
+    // Find user
+    $stmt = $conn->prepare("
+        SELECT id, name, email, status
+        FROM endusers
+        WHERE email = ? AND tenant_id = ?
+    ");
+    $stmt->execute([$email, $tenant_id]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        // Don't reveal if email exists - always return success for security
+        return [
+            'success' => true,
+            'message' => 'Eğer bu e-posta adresi sistemde kayıtlıysa, şifre sıfırlama linki gönderilecektir.'
+        ];
+    }
+
+    if ($user['status'] === 'disabled') {
+        return [
+            'success' => true,
+            'message' => 'Eğer bu e-posta adresi sistemde kayıtlıysa, şifre sıfırlama linki gönderilecektir.'
+        ];
+    }
+
+    // Generate reset token (valid for 1 hour)
+    $reset_token = bin2hex(random_bytes(32));
+    $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
+
+    // Ensure reset columns exist
+    try {
+        $conn->exec("ALTER TABLE endusers ADD COLUMN IF NOT EXISTS reset_token VARCHAR(64) NULL");
+        $conn->exec("ALTER TABLE endusers ADD COLUMN IF NOT EXISTS reset_token_expires TIMESTAMP NULL");
+    } catch (Exception $e) {
+        // Columns might already exist
+    }
+
+    // Save token
+    $stmt = $conn->prepare("
+        UPDATE endusers
+        SET reset_token = ?, reset_token_expires = ?
+        WHERE id = ?
+    ");
+    $stmt->execute([$reset_token, $expires, $user['id']]);
+
+    // Send reset email
+    require_once __DIR__ . '/../../core/utils/email.service.php';
+    $email_result = send_enduser_password_reset_email($user['email'], $user['name'], $reset_token, $tenant_id);
+
+    if (!$email_result) {
+        error_log("[enduser_forgot_password] Failed to send reset email to: " . $user['email']);
+    }
+
+    return [
+        'success' => true,
+        'message' => 'Eğer bu e-posta adresi sistemde kayıtlıysa, şifre sıfırlama linki gönderilecektir.'
+    ];
+}
+
+/**
+ * Verify reset token validity
+ */
+function enduser_verify_reset_token(string $token): array
+{
+    $conn = get_db_connection();
+
+    $stmt = $conn->prepare("
+        SELECT id, email, reset_token_expires
+        FROM endusers
+        WHERE reset_token = ?
+    ");
+    $stmt->execute([$token]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        return ['valid' => false, 'error' => 'Geçersiz şifre sıfırlama linki'];
+    }
+
+    if (strtotime($user['reset_token_expires']) < time()) {
+        return ['valid' => false, 'error' => 'Şifre sıfırlama linkinin süresi dolmuş'];
+    }
+
+    return ['valid' => true, 'email' => $user['email']];
+}
+
+/**
+ * Reset password with token
+ */
+function enduser_reset_password(string $token, string $new_password): array
+{
+    // Validate password
+    if (strlen($new_password) < 6) {
+        return ['error' => 'Şifre en az 6 karakter olmalı'];
+    }
+
+    $conn = get_db_connection();
+
+    // Find user with valid token
+    $stmt = $conn->prepare("
+        SELECT id, email, reset_token_expires
+        FROM endusers
+        WHERE reset_token = ?
+    ");
+    $stmt->execute([$token]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        return ['error' => 'Geçersiz şifre sıfırlama linki'];
+    }
+
+    if (strtotime($user['reset_token_expires']) < time()) {
+        return ['error' => 'Şifre sıfırlama linkinin süresi dolmuş. Lütfen yeni bir link talep edin.'];
+    }
+
+    // Update password and clear token
+    $password_hash = password_hash($new_password, PASSWORD_BCRYPT);
+
+    $stmt = $conn->prepare("
+        UPDATE endusers
+        SET password_hash = ?, reset_token = NULL, reset_token_expires = NULL
+        WHERE id = ?
+    ");
+    $stmt->execute([$password_hash, $user['id']]);
+
+    return [
+        'success' => true,
+        'message' => 'Şifreniz başarıyla güncellendi. Şimdi giriş yapabilirsiniz.'
+    ];
+}

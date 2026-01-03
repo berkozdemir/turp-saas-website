@@ -13,12 +13,15 @@ CREATE TABLE IF NOT EXISTS `endusers` (
   `status` ENUM('active', 'pending', 'disabled') DEFAULT 'pending',
   `email_verified` BOOLEAN DEFAULT FALSE,
   `verification_token` VARCHAR(64) NULL,
+  `reset_token` VARCHAR(64) NULL,
+  `reset_token_expires` TIMESTAMP NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `last_login` TIMESTAMP NULL,
   UNIQUE KEY `unique_email_tenant` (`email`, `tenant_id`),
   INDEX `idx_enduser_tenant` (`tenant_id`),
-  INDEX `idx_enduser_email` (`email`)
+  INDEX `idx_enduser_email` (`email`),
+  INDEX `idx_enduser_reset_token` (`reset_token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- 2. End User Sessions Table
@@ -40,3 +43,9 @@ CREATE TABLE IF NOT EXISTS `enduser_sessions` (
 ALTER TABLE `tenants` 
 ADD COLUMN IF NOT EXISTS `allow_enduser_login` BOOLEAN DEFAULT FALSE,
 ADD COLUMN IF NOT EXISTS `allow_enduser_signup` BOOLEAN DEFAULT FALSE;
+
+-- 4. Add reset token columns to existing endusers table (migration)
+ALTER TABLE `endusers` 
+ADD COLUMN IF NOT EXISTS `reset_token` VARCHAR(64) NULL,
+ADD COLUMN IF NOT EXISTS `reset_token_expires` TIMESTAMP NULL,
+ADD INDEX IF NOT EXISTS `idx_enduser_reset_token` (`reset_token`);
