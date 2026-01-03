@@ -89,7 +89,7 @@ function auth_public_login(): bool
 
         // Get user tenants
         $stmt = $conn->prepare("
-            SELECT t.id, t.code, t.name, t.title, t.primary_domain, t.logo_url, t.primary_color, aut.role as tenant_role
+            SELECT t.id, t.code, t.name, t.primary_domain, t.logo_url, t.primary_color, aut.role as tenant_role
             FROM tenants t
             JOIN admin_user_tenants aut ON t.id = aut.tenant_id
             WHERE aut.user_id = ?
