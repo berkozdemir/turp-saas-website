@@ -14,6 +14,31 @@ if (getenv('APP_ENV') === 'production' && !isset($_GET['force'])) {
 
 require_once __DIR__ . '/core/utils/email.service.php';
 
+// Debug: Check if API key is accessible
+$brevo_key = getenv('BREVO_API_KEY');
+$env_file = __DIR__ . '/config/.env';
+$env_exists = file_exists($env_file);
+
+echo "🔍 Debug Info:\n";
+echo "  - getenv('BREVO_API_KEY'): " . ($brevo_key ? substr($brevo_key, 0, 10) . '...' : 'NOT SET') . "\n";
+echo "  - .env file exists at config/.env: " . ($env_exists ? 'YES' : 'NO') . "\n";
+
+// Try to load from .env file
+if (!$brevo_key && $env_exists) {
+    $lines = file($env_file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (strpos(trim($line), 'BREVO_API_KEY=') === 0) {
+            $brevo_key = trim(substr($line, 14));
+            echo "  - Loaded from .env: " . substr($brevo_key, 0, 10) . "...\n";
+            break;
+        }
+    }
+}
+
+if (!$brevo_key) {
+    die("\n❌ ERROR: BREVO_API_KEY not found anywhere!\n");
+}
+
 // Get recipient email
 $to_email = $argv[1] ?? $_GET['to'] ?? null;
 

@@ -70,12 +70,19 @@ function send_notification_email($to_emails, $subject, $html_body)
     $brevo_api_key = getenv('BREVO_API_KEY');
     if (!$brevo_api_key) {
         // Try loading from env file if not in env
-        if (file_exists(__DIR__ . '/../.env')) {
-            $lines = file(__DIR__ . '/../.env', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            foreach ($lines as $line) {
-                if (strpos(trim($line), 'BREVO_API_KEY=') === 0) {
-                    $brevo_api_key = trim(substr($line, 14));
-                    break;
+        $env_paths = [
+            __DIR__ . '/../.env',
+            __DIR__ . '/../../.env',
+            __DIR__ . '/../config/.env',
+        ];
+        foreach ($env_paths as $env_path) {
+            if (file_exists($env_path)) {
+                $lines = file($env_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                foreach ($lines as $line) {
+                    if (strpos(trim($line), 'BREVO_API_KEY=') === 0) {
+                        $brevo_api_key = trim(substr($line, 14));
+                        break 2;
+                    }
                 }
             }
         }
