@@ -55,10 +55,10 @@ function ensure_enduser_tables(): void
 /**
  * Check if tenant allows end-user signup
  */
-function enduser_signup_allowed(string $tenant_id): bool
+function enduser_signup_allowed($tenant_id): bool
 {
     $conn = get_db_connection();
-    $stmt = $conn->prepare("SELECT allow_enduser_signup FROM tenants WHERE code = ?");
+    $stmt = $conn->prepare("SELECT allow_enduser_signup FROM tenants WHERE id = ?");
     $stmt->execute([$tenant_id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result && $result['allow_enduser_signup'];
@@ -67,10 +67,10 @@ function enduser_signup_allowed(string $tenant_id): bool
 /**
  * Check if tenant allows end-user login
  */
-function enduser_login_allowed(string $tenant_id): bool
+function enduser_login_allowed($tenant_id): bool
 {
     $conn = get_db_connection();
-    $stmt = $conn->prepare("SELECT allow_enduser_login FROM tenants WHERE code = ?");
+    $stmt = $conn->prepare("SELECT allow_enduser_login FROM tenants WHERE id = ?");
     $stmt->execute([$tenant_id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result && $result['allow_enduser_login'];
