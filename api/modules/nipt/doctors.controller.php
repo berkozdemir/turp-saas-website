@@ -12,20 +12,17 @@ function handle_doctors_public($action)
             $conn = get_db_connection();
 
         try {
-            $stmt = $conn->prepare("SELECT id, name, specialty, city, phone, email FROM doctors WHERE is_active = 1 ORDER BY name ASC");
+            // specialty removed, added clinic if needed, but let's stick to what exists
+            $stmt = $conn->prepare("SELECT id, name, city, phone, email FROM doctors WHERE is_active = 1 ORDER BY name ASC");
             $stmt->execute();
             $doctors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             // Return clean JSON
-            echo json_encode($doctors); // Frontend expects array directly based on prompt, or object?
-            // Prompt JS says: `const doctors = await response.json(); doctors.forEach...` -> Array
+            echo json_encode($doctors);
             return true;
         } catch (Exception $e) {
             http_response_code(500);
-            echo json_encode([
-                'error' => 'Failed to fetch doctors',
-                'debug_message' => $e->getMessage()
-            ]);
+            echo json_encode(['error' => 'Failed to fetch doctors']);
             return true;
         }
     }
