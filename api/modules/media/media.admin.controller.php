@@ -235,9 +235,13 @@ function media_admin_list(): bool
     $limit = min(50, max(12, (int) ($_GET['limit'] ?? 24)));
     $offset = ($page - 1) * $limit;
 
+    // TEMPORARY FIX: Use direct value instead of prepared statement for tenant_id
+    // This is a diagnostic test to isolate the PDO parameter binding issue
+    $tenant_id_safe = (int) $tenant_id; // Ensure integer
+
     $query = "SELECT id, filename_original, filename_stored, url, mime_type, size_bytes, width, height, alt_text, title, tags, category, created_at 
-              FROM media_assets WHERE tenant_id = ?";
-    $params = [$tenant_id];
+              FROM media_assets WHERE tenant_id = {$tenant_id_safe}";
+    $params = [];
 
     if (!empty($search)) {
         $query .= " AND (filename_original LIKE ? OR title LIKE ? OR alt_text LIKE ?)";
@@ -258,10 +262,6 @@ function media_admin_list(): bool
 
     $count_query = str_replace("SELECT id, filename_original, filename_stored, url, mime_type, size_bytes, width, height, alt_text, title, tags, category, created_at", "SELECT COUNT(*) as total", $query);
     $stmt = $conn->prepare($count_query);
-
-    // Cast tenant_id to string for consistent PDO binding
-    $params[0] = (string) $tenant_id;
-
     $stmt->execute($params);
     $total = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
