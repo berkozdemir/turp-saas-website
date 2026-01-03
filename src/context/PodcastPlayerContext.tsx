@@ -71,6 +71,9 @@ export const PodcastPlayerProvider = ({ children }: PodcastPlayerProviderProps) 
 
         audio.addEventListener("play", () => setIsPlaying(true));
         audio.addEventListener("pause", () => setIsPlaying(false));
+        audio.addEventListener("error", () => {
+            console.error("[PodcastPlayer] Audio error:", audio.error);
+        });
 
         return () => {
             audio.pause();
@@ -79,24 +82,38 @@ export const PodcastPlayerProvider = ({ children }: PodcastPlayerProviderProps) 
     }, []);
 
     const playEpisode = (episode: Episode) => {
-        if (!episode.audio_url) return;
+        if (!episode.audio_url) {
+            console.warn("[PodcastPlayer] No audio_url provided for episode:", episode.title);
+            return;
+        }
 
         const audio = audioRef.current;
-        if (!audio) return;
+        if (!audio) {
+            console.warn("[PodcastPlayer] Audio element not initialized");
+            return;
+        }
 
         // If same episode, just resume
         if (currentEpisode?.id === episode.id && audio.src) {
-            audio.play();
+            audio.play().catch(err => console.error("[PodcastPlayer] Resume failed:", err));
             setIsPlaying(true);
             setIsVisible(true);
             return;
         }
 
         // New episode
+        console.log("[PodcastPlayer] Playing new episode:", episode.title, episode.audio_url);
         setCurrentEpisode(episode);
         audio.src = episode.audio_url;
         audio.load();
-        audio.play();
+        audio.play()
+            .then(() => {
+                console.log("[PodcastPlayer] Playback started successfully");
+            })
+            .catch(err => {
+                console.error("[PodcastPlayer] Play failed:", err);
+                // Still show player so user can manually click play
+            });
         setIsPlaying(true);
         setIsVisible(true);
         setCurrentTime(0);
