@@ -1,4 +1,4 @@
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { Toaster } from "@/iwrs/components/ui/toaster";
 import { Toaster as Sonner } from "@/iwrs/components/ui/sonner";
 import { TooltipProvider } from "@/iwrs/components/ui/tooltip";
@@ -34,6 +34,9 @@ const EndUserLogin = lazy(() => import("../pages/EndUserLogin").then(m => ({ def
 const EndUserSignup = lazy(() => import("../pages/EndUserSignup").then(m => ({ default: m.EndUserSignup })));
 
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
+import { TenantSettingsProvider } from "../hooks/useTenantSettings";
+import { EndUserAuthProvider } from "../hooks/useEndUserAuth";
+import { fetchTenants } from "../hooks/useTenants";
 
 const queryClient = new QueryClient();
 
@@ -44,30 +47,41 @@ const PageLoader = () => (
   </div>
 );
 
-const IWRSApp = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        {/* Skip to main content link for keyboard navigation */}
-        <a
-          href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg focus:shadow-lg"
-        >
-          Ana içeriğe atla
-        </a>
-        <ScrollToTop />
-        <main id="main-content" role="main">
-          <Suspense fallback={<PageLoader />}>
-            <RoutesWrapper />
-          </Suspense>
-        </main>
-        <CookieConsentBanner />
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const IWRSApp = () => {
+  // Preload tenant mapping on app init
+  useEffect(() => {
+    fetchTenants().catch(err => console.error('Failed to preload tenants:', err));
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <TenantSettingsProvider>
+          <EndUserAuthProvider>
+            <BrowserRouter>
+            {/* Skip to main content link for keyboard navigation */}
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-lg focus:shadow-lg"
+            >
+              Ana içeriğe atla
+            </a>
+            <ScrollToTop />
+            <main id="main-content" role="main">
+              <Suspense fallback={<PageLoader />}>
+                <RoutesWrapper />
+              </Suspense>
+            </main>
+            <CookieConsentBanner />
+            </BrowserRouter>
+          </EndUserAuthProvider>
+        </TenantSettingsProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 const RoutesWrapper = () => {
   // We need a hook to use navigate, so we extract Routes to a component inside BrowserRouter

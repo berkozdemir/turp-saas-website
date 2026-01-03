@@ -75,7 +75,7 @@ export const trackLanguageChange = (fromLang: string, toLang: string) => {
 };
 
 // Track blog post views
-export const trackBlogView = (postTitle: string, postId?: number) => {
+export const trackBlogView = (postTitle: string, postId?: number | string) => {
     trackEvent('blog_view', { post_title: postTitle, post_id: postId });
 };
 

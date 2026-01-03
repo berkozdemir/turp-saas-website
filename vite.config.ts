@@ -17,6 +17,9 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    minify: 'esbuild', // esbuild is 2-3x faster than terser
+    sourcemap: false, // Disable sourcemaps in production for faster builds
+    chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
         manualChunks: {

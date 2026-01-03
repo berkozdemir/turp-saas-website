@@ -35,12 +35,21 @@ export async function fetchAPI(action: string, params: Record<string, any> = {},
 
 
   // Helper to determine tenant code from hostname for public API calls
+  // Note: This is a synchronous function, so it uses a cached tenant map
+  // The cache is populated by the useTenants hook on app initialization
   function getPublicTenantCode(): string {
     if (typeof window === 'undefined') return 'turp';
 
     const host = window.location.hostname;
 
-    // Check for IWRS domain
+    // Try to get from dynamic tenant cache first
+    const cachedTenantCode = (window as any).__TENANT_CODE_CACHE__?.[host];
+    if (cachedTenantCode) {
+      return cachedTenantCode;
+    }
+
+    // Fallback to hardcoded mapping for backward compatibility
+    // TODO: Remove this once all tenants are in database
     if (host.includes('iwrs.com.tr') || host.includes('iwrs')) {
       return 'iwrs';
     }

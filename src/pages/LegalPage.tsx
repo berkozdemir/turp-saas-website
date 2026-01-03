@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, Loader2, Calendar } from 'lucide-react';
 
+import { AppView } from '../types/view';
+
 interface LegalPageProps {
     docKey: string;
-    setView: (view: any) => void;
+    setView: (view: AppView) => void;
 }
 
 export const LegalPage = ({ docKey, setView }: LegalPageProps) => {

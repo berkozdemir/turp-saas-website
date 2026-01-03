@@ -3,8 +3,10 @@ import { Mail, Lock, ArrowRight, Eye, EyeOff, Sparkles } from 'lucide-react';
 import { useEndUserAuth } from '../hooks/useEndUserAuth';
 import { useTenantSettings } from '../hooks/useTenantSettings';
 
+import { AppView } from '../types/view';
+
 interface Props {
-    setView?: (view: string | object) => void;
+    setView?: (view: AppView) => void;
 }
 
 export const EndUserLogin = ({ setView }: Props) => {
@@ -16,6 +18,8 @@ export const EndUserLogin = ({ setView }: Props) => {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const [showResendLink, setShowResendLink] = useState(false);
+    const [unverifiedEmail, setUnverifiedEmail] = useState('');
 
     // Theme Detection
     const isNipt = window.location.hostname.includes('nipt.tr') || window.location.hostname.includes('omega') || settings?.tenant_id === 'nipt';
@@ -80,6 +84,7 @@ export const EndUserLogin = ({ setView }: Props) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setShowResendLink(false);
         setIsLoading(true);
 
         const result = await login(email, password);
@@ -89,8 +94,18 @@ export const EndUserLogin = ({ setView }: Props) => {
             goHome();
         } else {
             setError(result.error || 'Giriş başarısız');
+
+            // If email not verified, show resend link
+            if (result.email_not_verified) {
+                setShowResendLink(true);
+                setUnverifiedEmail(result.email || email);
+            }
         }
         setIsLoading(false);
+    };
+
+    const handleResendVerification = () => {
+        window.location.href = `/email-verification?email=${encodeURIComponent(unverifiedEmail)}`;
     };
 
     return (
@@ -154,8 +169,21 @@ export const EndUserLogin = ({ setView }: Props) => {
 
                         {/* Error */}
                         {error && (
-                            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
-                                {error}
+                            <div className="space-y-2">
+                                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                                    {error}
+                                </div>
+                                {showResendLink && (
+                                    <div className="text-center">
+                                        <button
+                                            type="button"
+                                            onClick={handleResendVerification}
+                                            className="text-sm text-blue-600 hover:text-blue-700 underline font-medium"
+                                        >
+                                            Doğrulama e-postasını tekrar gönder
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         )}
 

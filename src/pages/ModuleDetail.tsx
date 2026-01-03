@@ -4,9 +4,11 @@ import { ArrowLeft, CheckCircle, FileText } from "lucide-react";
 import { getModuleContentTranslated } from "../data/content";
 import { OptimizedImage } from "../components/OptimizedImage";
 
+import { AppView } from "../types/view";
+
 interface ModuleDetailProps {
   moduleId: string;
-  setView: (view: any) => void;
+  setView: (view: AppView) => void;
 }
 
 export const ModuleDetail: React.FC<ModuleDetailProps> = ({ moduleId, setView }) => {

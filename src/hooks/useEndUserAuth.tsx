@@ -1,20 +1,24 @@
 import { useState, useEffect, createContext, useContext, ReactNode } from 'react';
 import { useTenantSettings } from './useTenantSettings';
 
-interface EndUser {
-    id: number;
+export interface EndUser {
+    id: number | string;
     email: string;
     name: string;
     phone?: string;
+    // Add flexible properties for Supabase or other auth providers if needed
+    [key: string]: any;
 }
 
 interface EndUserAuthContextValue {
     user: EndUser | null;
     loading: boolean;
-    login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-    signup: (data: SignupData) => Promise<{ success: boolean; error?: string }>;
+    login: (email: string, password: string) => Promise<{ success: boolean; error?: string; email_not_verified?: boolean; email?: string }>;
+    signup: (data: SignupData) => Promise<{ success: boolean; error?: string; message?: string }>;
     logout: () => void;
     isAuthenticated: boolean;
+    verifyEmail: (token: string) => Promise<{ success: boolean; error?: string; message?: string }>;
+    resendVerification: (email: string) => Promise<{ success: boolean; error?: string; message?: string }>;
 }
 
 interface SignupData {
@@ -79,7 +83,13 @@ export function EndUserAuthProvider({ children }: { children: ReactNode }) {
                 setUser(data.user);
                 return { success: true };
             }
-            return { success: false, error: data.error || 'Giriş başarısız' };
+            // Return all error details including email_not_verified flag
+            return {
+                success: false,
+                error: data.error || 'Giriş başarısız',
+                email_not_verified: data.email_not_verified,
+                email: data.email
+            };
         } catch {
             return { success: false, error: 'Bağlantı hatası' };
         }
@@ -98,12 +108,38 @@ export function EndUserAuthProvider({ children }: { children: ReactNode }) {
             });
             const data = await res.json();
 
-            if (data.success && data.token) {
-                localStorage.setItem('enduser_token', data.token);
-                setUser(data.user);
-                return { success: true };
+            // DON'T auto-login - user must verify email first
+            if (data.success) {
+                return {
+                    success: true,
+                    message: data.message || 'Kayıt başarılı! Lütfen e-postanızı kontrol edin.'
+                };
             }
             return { success: false, error: data.error || 'Kayıt başarısız' };
+        } catch {
+            return { success: false, error: 'Bağlantı hatası' };
+        }
+    }
+
+    async function verifyEmail(token: string) {
+        try {
+            const res = await fetch(`${API_URL}/index.php?action=enduser_verify_email&token=${encodeURIComponent(token)}`);
+            const data = await res.json();
+            return data;
+        } catch {
+            return { success: false, error: 'Bağlantı hatası' };
+        }
+    }
+
+    async function resendVerification(email: string) {
+        try {
+            const res = await fetch(`${API_URL}/index.php?action=enduser_resend_verification`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            });
+            const data = await res.json();
+            return data;
         } catch {
             return { success: false, error: 'Bağlantı hatası' };
         }
@@ -128,7 +164,9 @@ export function EndUserAuthProvider({ children }: { children: ReactNode }) {
             login,
             signup,
             logout,
-            isAuthenticated: !!user
+            isAuthenticated: !!user,
+            verifyEmail,
+            resendVerification
         }}>
             {children}
         </EndUserAuthContext.Provider>

@@ -11,8 +11,10 @@ interface FAQ {
     category: string;
 }
 
+import { AppView } from "../types/view";
+
 interface FaqPageProps {
-    setView: (view: string) => void;
+    setView: (view: AppView) => void;
 }
 
 export const FaqPage = ({ setView: _setView }: FaqPageProps) => {

@@ -22,6 +22,10 @@ function handle_enduser_auth_public(string $action): bool
             return enduser_me_action();
         case 'get_tenant_settings':
             return get_tenant_settings_action();
+        case 'enduser_verify_email':
+            return enduser_verify_email_action();
+        case 'enduser_resend_verification':
+            return enduser_resend_verification_action();
         default:
             return false;
     }
@@ -125,5 +129,48 @@ function get_tenant_settings_action(): bool
         'allow_enduser_login' => (bool) ($settings['allow_enduser_login'] ?? false),
         'allow_enduser_signup' => (bool) ($settings['allow_enduser_signup'] ?? false)
     ]);
+    return true;
+}
+
+/**
+ * GET /api?action=enduser_verify_email&token=xxx
+ * Verifies user email with token
+ */
+function enduser_verify_email_action(): bool
+{
+    $token = $_GET['token'] ?? '';
+
+    if (empty($token)) {
+        echo json_encode(['error' => 'Token gerekli']);
+        return true;
+    }
+
+    $result = verify_email_token($token);
+    echo json_encode($result);
+    return true;
+}
+
+/**
+ * POST /api?action=enduser_resend_verification
+ * Resends verification email to user
+ */
+function enduser_resend_verification_action(): bool
+{
+    $tenant_id = get_current_tenant_id();
+    if (!$tenant_id) {
+        echo json_encode(['error' => 'Tenant not found']);
+        return true;
+    }
+
+    $data = json_decode(file_get_contents('php://input'), true) ?? [];
+    $email = $data['email'] ?? '';
+
+    if (empty($email)) {
+        echo json_encode(['error' => 'E-posta adresi gerekli']);
+        return true;
+    }
+
+    $result = resend_verification_email($email, $tenant_id);
+    echo json_encode($result);
     return true;
 }

@@ -7,6 +7,7 @@
  */
 
 // Load module controllers
+require_once __DIR__ . '/../modules/tenant/tenant.public.controller.php';
 require_once __DIR__ . '/../modules/blog/blog.public.controller.php';
 require_once __DIR__ . '/../modules/faq/faq.public.controller.php';
 require_once __DIR__ . '/../modules/nipt/doctors.controller.php';
@@ -28,6 +29,11 @@ require_once __DIR__ . '/../modules/podcast/podcast.public.controller.php';
  */
 function route_public_action(string $action): bool
 {
+    // Tenant module (must be first for tenant resolution)
+    if (handle_tenant_public($action)) {
+        return true;
+    }
+
     // Blog module
     if (handle_blog_public($action)) {
         return true;

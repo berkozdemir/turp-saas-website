@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { Lock, CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
 
+import { AppView } from "../types/view";
+
 interface ResetPasswordProps {
     token: string;
-    setView: (view: any) => void;
+    setView: (view: AppView) => void;
 }
 
 export const ResetPassword = ({ token, setView }: ResetPasswordProps) => {

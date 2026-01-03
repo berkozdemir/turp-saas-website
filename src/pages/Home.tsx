@@ -13,8 +13,10 @@ import { useNotification } from '../components/NotificationProvider';
 // ---> 1. EmailJS import edildi
 import emailjs from '@emailjs/browser';
 
+import { AppView } from '../types/view';
+
 interface HomeProps {
-    setView: (view: any) => void;
+    setView: (view: AppView) => void;
     scrollTo?: string;
 }
 

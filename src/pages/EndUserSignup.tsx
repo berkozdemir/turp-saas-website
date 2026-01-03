@@ -3,8 +3,10 @@ import { Mail, Lock, User, Phone, ArrowRight, Eye, EyeOff, Sparkles, CheckCircle
 import { useEndUserAuth } from '../hooks/useEndUserAuth';
 import { useTenantSettings } from '../hooks/useTenantSettings';
 
+import { AppView } from '../types/view';
+
 interface Props {
-    setView?: (view: string | object) => void;
+    setView?: (view: AppView) => void;
 }
 
 export const EndUserSignup = ({ setView }: Props) => {
@@ -111,7 +113,8 @@ export const EndUserSignup = ({ setView }: Props) => {
         });
 
         if (result.success) {
-            goHome();
+            // Redirect to email verification page instead of home
+            window.location.href = `/email-verification?email=${encodeURIComponent(formData.email)}`;
         } else {
             setError(result.error || 'Kayıt başarısız');
         }

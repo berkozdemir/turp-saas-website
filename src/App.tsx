@@ -27,11 +27,14 @@ const Contact = lazy(() => import("./pages/Contact").then(m => ({ default: m.Con
 const LegalPage = lazy(() => import("./pages/LegalPage").then(m => ({ default: m.LegalPage })));
 const EndUserLogin = lazy(() => import("./pages/EndUserLogin").then(m => ({ default: m.EndUserLogin })));
 const EndUserSignup = lazy(() => import("./pages/EndUserSignup").then(m => ({ default: m.EndUserSignup })));
+const EmailVerification = lazy(() => import("./pages/EmailVerification").then(m => ({ default: m.default })));
+const VerifyEmail = lazy(() => import("./pages/VerifyEmail").then(m => ({ default: m.default })));
 const PodcastHub = lazy(() => import("./pages/PodcastHub").then(m => ({ default: m.PodcastHub })));
 const PodcastDetail = lazy(() => import("./pages/PodcastDetail").then(m => ({ default: m.PodcastDetail })));
 
 import { TenantSettingsProvider } from "./hooks/useTenantSettings";
 import { EndUserAuthProvider } from "./hooks/useEndUserAuth";
+import { fetchTenants } from "./hooks/useTenants";
 import useAnalytics, { trackLanguageChange } from "./lib/analytics";
 import { CookieConsentBanner } from "./components/CookieConsentBanner";
 import { initAnalytics } from "./utils/consent-analytics";
@@ -45,13 +48,17 @@ const PageLoader = () => (
   </div>
 );
 
+import { AppView, PostDetailView } from "./types/view";
+
+// ... imports
+
 export default function App() {
 
 
   // --- TURP APP LOGIC BELOW ---
 
   // --- STATE YÖNETİMİ ---
-  const [view, setView] = useState<any>(() => {
+  const [view, setView] = useState<AppView>(() => {
     const path = window.location.pathname;
     const hostname = window.location.hostname;
 
@@ -77,6 +84,12 @@ export default function App() {
     }
     if (path === '/signup') {
       return 'enduser-signup';
+    }
+    if (path === '/email-verification') {
+      return 'email-verification';
+    }
+    if (path === '/verify-email') {
+      return 'verify-email';
     }
 
     // 4. Podcast routes
@@ -143,6 +156,9 @@ export default function App() {
     // Initialize analytics with consent check
     initAnalytics();
 
+    // Preload tenant mapping for dynamic tenant resolution
+    fetchTenants().catch(err => console.error('Failed to preload tenants:', err));
+
     return () => {
       // window.removeEventListener("scroll", handleScroll);
     };
@@ -197,6 +213,10 @@ export default function App() {
           return <EndUserLogin setView={setView} />;
         case "enduser-signup":
           return <EndUserSignup setView={setView} />;
+        case "email-verification":
+          return <EmailVerification />;
+        case "verify-email":
+          return <VerifyEmail />;
         case "podcast-hub":
           return <PodcastHub />;
         default:
@@ -246,7 +266,7 @@ export default function App() {
               Ana içeriğe atla
             </a>
 
-            <SEO view={view} post={view?.type === 'detail' ? view.post : undefined} />
+            <SEO view={view} post={(typeof view === 'object' && view !== null && view.type === 'detail') ? (view as PostDetailView).post : undefined} />
 
             {/* --- NAVBAR --- */}
             <Navigation

@@ -2,9 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { useEndUserAuth } from "../hooks/useEndUserAuth";
 import { Globe, ChevronDown, FileText, Lock, Menu, X, BookOpen, Mic } from "lucide-react";
 
+import { AppView } from "../types/view";
+
 interface NavigationProps {
-    view: any;
-    setView: (view: any) => void;
+    view: AppView;
+    setView: (view: AppView) => void;
     session: any;
     handleLogout: () => void;
     i18n: any;
@@ -278,7 +280,7 @@ export function Navigation({
                             className="md:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100 transition-colors"
                             aria-label="Toggle menu"
                         >
-                            <Menu size={24} />
+                            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
                     </div>
                 </div>
@@ -297,184 +299,166 @@ export function Navigation({
             {/* Mobile Menu Slide-in Panel */}
             <div
                 ref={mobileMenuRef}
-                className={`fixed top-0 right-0 h-full w-80 bg-white shadow-2xl z-50 md:hidden transform transition-transform duration-300 ${isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
+                className={`fixed inset-0 top-16 bg-white z-50 md:hidden transition-all duration-300 ease-in-out ${isMobileMenuOpen
+                    ? "opacity-100 pointer-events-auto translate-y-0"
+                    : "opacity-0 pointer-events-none -translate-y-4"
                     }`}
+                style={{ height: 'calc(100vh - 64px)' }} // Ensure it takes full available height below header
             >
-                {/* Mobile Menu Header */}
-                <div className="flex items-center justify-between p-4 border-b border-slate-200">
-                    <div className="flex items-center gap-2 text-xl font-black text-slate-900">
-                        <img src="/logo.png" alt="TURP" className="h-8 w-auto" />
-                    </div>
-                    <button
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="p-2 rounded-lg hover:bg-slate-100 transition-colors"
-                        aria-label="Close menu"
-                    >
-                        <X size={24} />
-                    </button>
-                </div>
-
-                {/* Mobile Menu Items */}
-                <div className="flex flex-col p-4 space-y-2 overflow-y-auto h-[calc(100%-180px)]">
-                    {/* Home */}
-                    <button
-                        onClick={() => handleNavigation("home")}
-                        className="text-left px-4 py-3 rounded-lg text-base font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
-                    >
-                        🏠 {t("nav_home") || "Ana Sayfa"}
-                    </button>
-
-                    {/* Modüller (Accordion) */}
-                    <div className="border border-slate-200 rounded-lg overflow-hidden">
+                {/* Mobile Menu Items - Full Height Scrollable */}
+                <div className="flex flex-col h-full overflow-y-auto pb-20">
+                    <div className="flex flex-col p-4 space-y-2">
+                        {/* Home */}
                         <button
-                            onClick={() => setIsMobileModulesExpanded(!isMobileModulesExpanded)}
-                            className="w-full flex items-center justify-between px-4 py-3 text-base font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+                            onClick={() => handleNavigation("home")}
+                            className="text-left px-4 py-3 rounded-lg text-lg font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
                         >
-                            <span>📦 {t("nav_modules")}</span>
-                            <ChevronDown
-                                size={18}
-                                className={`transform transition-transform ${isMobileModulesExpanded ? "rotate-180" : ""
-                                    }`}
-                            />
+                            🏠 {t("nav_home") || "Ana Sayfa"}
                         </button>
-                        {isMobileModulesExpanded && (
-                            <div className="bg-slate-50 border-t border-slate-200">
-                                {Object.entries(modules ?? {}).map(([key, val]) => (
-                                    <button
-                                        key={key}
-                                        onClick={() => handleNavigation({ type: "module", id: key })}
-                                        className="block w-full text-left px-6 py-2 text-sm text-slate-600 hover:text-rose-600 hover:bg-white transition-colors"
-                                    >
-                                        • {val?.title ?? key}
-                                    </button>
-                                ))}
-                            </div>
-                        )}
-                    </div>
 
-                    {/* ROI */}
-                    <button
-                        onClick={() => handleNavigation("roi")}
-                        className="text-left px-4 py-3 rounded-lg text-base font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
-                    >
-                        💰 ROI
-                    </button>
-
-                    {/* Senaryolar */}
-                    <div className="grid grid-cols-2 gap-2">
-                        <button
-                            onClick={() => handleNavigation("case-rheuma")}
-                            className={`text-left px-4 py-3 rounded-lg text-sm font-bold transition-colors ${view === "case-rheuma" ? "bg-slate-900 text-white" : "text-slate-700 bg-slate-50 hover:bg-slate-100"}`}
-                        >
-                            📊 Romatoloji
-                        </button>
-                        <button
-                            onClick={() => handleNavigation("case-education")}
-                            className={`text-left px-4 py-3 rounded-lg text-sm font-bold transition-colors ${view === "case-education" ? "bg-sky-600 text-white" : "text-sky-600 bg-sky-50 hover:bg-sky-100"}`}
-                        >
-                            📚 {t("mod_edu_title")}
-                        </button>
-                    </div>
-
-                    {/* Blog */}
-                    <button
-                        onClick={() => handleNavigation("blog")}
-                        className="text-left px-4 py-3 rounded-lg text-base font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
-                    >
-                        📝 {t("nav_blog")}
-                    </button>
-
-                    {/* FAQ (SSS) */}
-                    <button
-                        onClick={() => handleNavigation("sss")}
-                        className={`text-left px-4 py-3 rounded-lg text-base font-bold transition-colors ${view === "sss" ? "bg-slate-100 text-rose-600" : "text-slate-700 hover:bg-slate-50"}`}
-                    >
-                        ❓ {t("nav_faq")}
-                    </button>
-
-                    {/* Podcast */}
-                    <button
-                        onClick={() => handleNavigation("podcast-hub")}
-                        className={`text-left px-4 py-3 rounded-lg text-base font-bold transition-colors flex items-center gap-2 ${view === "podcast-hub" ? "bg-slate-100 text-purple-600" : "text-slate-700 hover:bg-slate-50"}`}
-                    >
-                        <Mic size={18} /> Podcast
-                    </button>
-
-                    {/* Contact */}
-                    <button
-                        onClick={() => handleNavigation("contact")}
-                        className={`text-left px-4 py-3 rounded-lg text-base font-bold transition-colors ${view === "contact" ? "bg-slate-100 text-rose-600" : "text-slate-700 hover:bg-slate-50"}`}
-                    >
-                        📞 {t("nav_contact")}
-                    </button>
-
-                    {/* Hakkımızda */}
-                    <button
-                        onClick={() => handleNavigation("about")}
-                        className="text-left px-4 py-3 rounded-lg text-base font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
-                    >
-                        ℹ️ {t("nav_about")}
-                    </button>
-
-                    <button
-                        onClick={() => handleNavigation("admin")}
-                        className="text-left px-4 py-3 rounded-lg text-base font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
-                    >
-                        🔒 Admin
-                    </button>
-
-                    {/* End User Auth (Mobile) */}
-                    <div className="pt-4 mt-4 border-t border-slate-200">
-                        {isAuthenticated && user ? (
-                            <>
-                                <div className="px-4 py-2 text-sm text-slate-500 font-bold">
-                                    👋 {user.name}
-                                </div>
-                                <button
-                                    onClick={() => {
-                                        logout();
-                                        setIsMobileMenuOpen(false);
-                                    }}
-                                    className="w-full text-left px-4 py-3 rounded-lg text-base font-bold text-red-600 hover:bg-red-50 transition-colors"
-                                >
-                                    Çıkış Yap
-                                </button>
-                            </>
-                        ) : (
-                            <div className="flex flex-col gap-2 p-2">
-                                <button
-                                    onClick={() => handleNavigation("enduser-login")}
-                                    className="w-full py-3 rounded-lg text-base font-bold text-slate-700 bg-slate-100 hover:bg-slate-200"
-                                >
-                                    Giriş Yap
-                                </button>
-                                <button
-                                    onClick={() => handleNavigation("enduser-signup")}
-                                    className="w-full py-3 rounded-lg text-base font-bold text-white bg-rose-600 hover:bg-rose-700 shadow-md"
-                                >
-                                    Kayıt Ol
-                                </button>
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                {/* Language Selector (Mobile - Bottom) */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-slate-200 bg-white">
-                    <div className="flex items-center justify-center gap-2">
-                        <Globe size={18} className="text-slate-400" />
-                        {languages.map((lang) => (
+                        {/* Modüller (Accordion) */}
+                        <div className="border border-slate-200 rounded-lg overflow-hidden">
                             <button
-                                key={lang.code}
-                                onClick={() => changeLanguage(lang.code)}
-                                className={`w-12 h-12 rounded-full text-sm font-bold flex items-center justify-center transition-all ${i18n.language === lang.code
-                                    ? "bg-rose-600 text-white shadow-lg"
-                                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                                    }`}
+                                onClick={() => setIsMobileModulesExpanded(!isMobileModulesExpanded)}
+                                className="w-full flex items-center justify-between px-4 py-3 text-lg font-bold text-slate-700 hover:bg-slate-50 transition-colors"
                             >
-                                {lang.label}
+                                <span>📦 {t("nav_modules")}</span>
+                                <ChevronDown
+                                    size={20}
+                                    className={`transform transition-transform ${isMobileModulesExpanded ? "rotate-180" : ""
+                                        }`}
+                                />
                             </button>
-                        ))}
+                            {isMobileModulesExpanded && (
+                                <div className="bg-slate-50 border-t border-slate-200">
+                                    {Object.entries(modules ?? {}).map(([key, val]) => (
+                                        <button
+                                            key={key}
+                                            onClick={() => handleNavigation({ type: "module", id: key })}
+                                            className="block w-full text-left px-6 py-3 text-base text-slate-600 hover:text-rose-600 hover:bg-white transition-colors border-b border-slate-100 last:border-0"
+                                        >
+                                            • {val?.title ?? key}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Other Mobile Nav Items */}
+                        <button
+                            onClick={() => handleNavigation("roi")}
+                            className="text-left px-4 py-3 rounded-lg text-lg font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
+                        >
+                            💰 ROI
+                        </button>
+
+                        <div className="grid grid-cols-2 gap-2">
+                            <button
+                                onClick={() => handleNavigation("case-rheuma")}
+                                className={`text-left px-4 py-3 rounded-lg text-sm font-bold transition-colors ${view === "case-rheuma" ? "bg-slate-900 text-white" : "text-slate-700 bg-slate-50 hover:bg-slate-100"}`}
+                            >
+                                📊 Romatoloji
+                            </button>
+                            <button
+                                onClick={() => handleNavigation("case-education")}
+                                className={`text-left px-4 py-3 rounded-lg text-sm font-bold transition-colors ${view === "case-education" ? "bg-sky-600 text-white" : "text-sky-600 bg-sky-50 hover:bg-sky-100"}`}
+                            >
+                                📚 {t("mod_edu_title")}
+                            </button>
+                        </div>
+
+                        <button
+                            onClick={() => handleNavigation("blog")}
+                            className="text-left px-4 py-3 rounded-lg text-lg font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
+                        >
+                            📝 {t("nav_blog")}
+                        </button>
+
+                        <button
+                            onClick={() => handleNavigation("sss")}
+                            className={`text-left px-4 py-3 rounded-lg text-lg font-bold transition-colors ${view === "sss" ? "bg-slate-100 text-rose-600" : "text-slate-700 hover:bg-slate-50"}`}
+                        >
+                            ❓ {t("nav_faq")}
+                        </button>
+
+                        <button
+                            onClick={() => handleNavigation("podcast-hub")}
+                            className={`text-left px-4 py-3 rounded-lg text-lg font-bold transition-colors flex items-center gap-2 ${view === "podcast-hub" ? "bg-slate-100 text-purple-600" : "text-slate-700 hover:bg-slate-50"}`}
+                        >
+                            <Mic size={20} /> Podcast
+                        </button>
+
+                        <button
+                            onClick={() => handleNavigation("contact")}
+                            className={`text-left px-4 py-3 rounded-lg text-lg font-bold transition-colors ${view === "contact" ? "bg-slate-100 text-rose-600" : "text-slate-700 hover:bg-slate-50"}`}
+                        >
+                            📞 {t("nav_contact")}
+                        </button>
+
+                        <button
+                            onClick={() => handleNavigation("about")}
+                            className="text-left px-4 py-3 rounded-lg text-lg font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
+                        >
+                            ℹ️ {t("nav_about")}
+                        </button>
+
+                        <button
+                            onClick={() => handleNavigation("admin")}
+                            className="text-left px-4 py-3 rounded-lg text-lg font-bold text-slate-700 hover:bg-slate-100 hover:text-rose-600 transition-colors"
+                        >
+                            🔒 Admin
+                        </button>
+
+                        {/* End User Auth (Mobile) */}
+                        <div className="pt-4 mt-4 border-t border-slate-200">
+                            {isAuthenticated && user ? (
+                                <>
+                                    <div className="px-4 py-2 text-sm text-slate-500 font-bold">
+                                        👋 {user.name}
+                                    </div>
+                                    <button
+                                        onClick={() => {
+                                            logout();
+                                            setIsMobileMenuOpen(false);
+                                        }}
+                                        className="w-full text-left px-4 py-3 rounded-lg text-base font-bold text-red-600 hover:bg-red-50 transition-colors"
+                                    >
+                                        Çıkış Yap
+                                    </button>
+                                </>
+                            ) : (
+                                <div className="flex flex-col gap-2 p-2">
+                                    <button
+                                        onClick={() => handleNavigation("enduser-login")}
+                                        className="w-full py-3 rounded-lg text-base font-bold text-slate-700 bg-slate-100 hover:bg-slate-200"
+                                    >
+                                        Giriş Yap
+                                    </button>
+                                    <button
+                                        onClick={() => handleNavigation("enduser-signup")}
+                                        className="w-full py-3 rounded-lg text-base font-bold text-white bg-rose-600 hover:bg-rose-700 shadow-md"
+                                    >
+                                        Kayıt Ol
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Language Selector (Mobile - Spaced out) */}
+                        <div className="pt-6 pb-12 flex justify-center gap-4">
+                            {languages.map((lang) => (
+                                <button
+                                    key={lang.code}
+                                    onClick={() => changeLanguage(lang.code)}
+                                    className={`w-12 h-12 rounded-full text-base font-bold flex items-center justify-center transition-all ${i18n.language === lang.code
+                                        ? "bg-rose-600 text-white shadow-lg"
+                                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                        }`}
+                                >
+                                    {lang.label}
+                                </button>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

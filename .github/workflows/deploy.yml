@@ -44,16 +44,19 @@ jobs:
             set net:timeout 10;
             set net:max-retries 3;
             set net:reconnect-interval-base 5;
+            set xfer:clobber on;
+            set mirror:parallel-transfer-count 4;
+            set mirror:use-pget-n 4;
             open -u '${{ secrets.FTP_USERNAME }}','${{ secrets.FTP_PASSWORD }}' ${{ secrets.FTP_SERVER }};
-            
+
             echo 'Uploading Frontend...';
-            mirror -R ./dist/ / --exclude uploads/ --exclude api/ --exclude .git/ --delete-first;
-            
+            mirror -R ./dist/ / --exclude uploads/ --exclude api/ --exclude .git/ --delete-first --parallel=4;
+
             echo 'Uploading Uploads...';
-            mirror -R ./public/uploads/ /uploads/ --ignore-time --only-newer;
-            
+            mirror -R ./public/uploads/ /uploads/ --ignore-time --only-newer --parallel=4;
+
             echo 'Uploading API...';
-            mirror -R ./api/ /api/ --exclude .git/ --exclude env.php;
-            
+            mirror -R ./api/ /api/ --exclude .git/ --exclude env.php --parallel=4;
+
             quit;
           "

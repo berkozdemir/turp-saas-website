@@ -33,12 +33,19 @@ export function TenantSettingsProvider({ children }: { children: ReactNode }) {
                     setSettings({
                         tenant_id: data.tenant_id,
                         tenant_name: data.tenant_name,
-                        allow_enduser_login: data.allow_enduser_login,
-                        allow_enduser_signup: data.allow_enduser_signup
+                        allow_enduser_login: data.allow_enduser_login ?? false,
+                        allow_enduser_signup: data.allow_enduser_signup ?? false
                     });
                 }
             } catch (err) {
                 setError('Ayarlar yüklenemedi');
+                // Fallback for development/testing if API fails
+                setSettings({
+                    tenant_id: 'iwrs',
+                    tenant_name: 'Omega IWRS',
+                    allow_enduser_login: false,
+                    allow_enduser_signup: false
+                });
             } finally {
                 setLoading(false);
             }

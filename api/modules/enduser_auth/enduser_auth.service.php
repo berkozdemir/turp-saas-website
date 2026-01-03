@@ -5,6 +5,7 @@
  */
 
 require_once __DIR__ . '/../../config/db.php';
+require_once __DIR__ . '/../../services/email.service.php';
 
 /**
  * Ensure endusers and enduser_sessions tables exist
@@ -108,23 +109,30 @@ function enduser_signup(string $tenant_id, array $data): array
         return ['error' => 'Bu e-posta adresi zaten kayıtlı'];
     }
 
-    // Create user
+    // Create user with pending status
     $password_hash = password_hash($password, PASSWORD_BCRYPT);
     $verification_token = bin2hex(random_bytes(32));
 
     $stmt = $conn->prepare("
-        INSERT INTO endusers (tenant_id, email, password_hash, name, phone, status, verification_token)
-        VALUES (?, ?, ?, ?, ?, 'active', ?)
+        INSERT INTO endusers (tenant_id, email, password_hash, name, phone, status, email_verified, verification_token)
+        VALUES (?, ?, ?, ?, ?, 'pending', FALSE, ?)
     ");
     $stmt->execute([$tenant_id, $email, $password_hash, $name, $phone, $verification_token]);
     $user_id = $conn->lastInsertId();
 
-    // Auto-login after signup
-    $token = enduser_create_session($user_id, $tenant_id);
+    // Send verification email
+    $email_result = send_verification_email($email, $name, $verification_token, $tenant_id);
 
+    if (!$email_result['success']) {
+        error_log("[enduser_signup] Failed to send verification email: " . $email_result['error']);
+        // Don't fail signup if email fails, user can resend
+    }
+
+    // Return success without auto-login (user must verify email first)
     return [
         'success' => true,
-        'token' => $token,
+        'message' => 'Kayıt başarılı! Lütfen e-postanızı kontrol edin ve hesabınızı doğrulayın.',
+        'email_sent' => $email_result['success'],
         'user' => [
             'id' => $user_id,
             'email' => $email,
@@ -153,8 +161,8 @@ function enduser_login(string $tenant_id, array $data): array
 
     $conn = get_db_connection();
     $stmt = $conn->prepare("
-        SELECT id, email, password_hash, name, status 
-        FROM endusers 
+        SELECT id, email, password_hash, name, status, email_verified
+        FROM endusers
         WHERE email = ? AND tenant_id = ?
     ");
     $stmt->execute([$email, $tenant_id]);
@@ -166,6 +174,15 @@ function enduser_login(string $tenant_id, array $data): array
 
     if (!password_verify($password, $user['password_hash'])) {
         return ['error' => 'E-posta veya şifre hatalı'];
+    }
+
+    // Check email verification
+    if (!$user['email_verified']) {
+        return [
+            'error' => 'E-posta adresiniz doğrulanmamış. Lütfen gelen kutunuzu kontrol edin.',
+            'email_not_verified' => true,
+            'email' => $user['email']
+        ];
     }
 
     if ($user['status'] !== 'active') {
@@ -274,10 +291,112 @@ function update_tenant_auth_settings(string $tenant_id, bool $allow_login, bool 
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("
-        UPDATE tenants 
+        UPDATE tenants
         SET allow_enduser_login = ?, allow_enduser_signup = ?
         WHERE code = ?
     ");
     $stmt->execute([$allow_login, $allow_signup, $tenant_id]);
     return $stmt->rowCount() > 0;
+}
+
+/**
+ * Verify email with token
+ */
+function verify_email_token(string $token): array
+{
+    $conn = get_db_connection();
+
+    // Find user with this token
+    $stmt = $conn->prepare("
+        SELECT id, email, name, tenant_id, created_at
+        FROM endusers
+        WHERE verification_token = ? AND email_verified = FALSE
+    ");
+    $stmt->execute([$token]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        return ['error' => 'Geçersiz veya süresi dolmuş doğrulama linki'];
+    }
+
+    // Check if token is expired (24 hours)
+    $created = strtotime($user['created_at']);
+    $now = time();
+    $hours_passed = ($now - $created) / 3600;
+
+    if ($hours_passed > 24) {
+        return [
+            'error' => 'Doğrulama linki süresi doldu. Lütfen yeni bir doğrulama e-postası isteyin.',
+            'expired' => true,
+            'email' => $user['email']
+        ];
+    }
+
+    // Verify email and activate account
+    $stmt = $conn->prepare("
+        UPDATE endusers
+        SET email_verified = TRUE, status = 'active', verification_token = NULL
+        WHERE id = ?
+    ");
+    $stmt->execute([$user['id']]);
+
+    return [
+        'success' => true,
+        'message' => 'E-posta adresiniz başarıyla doğrulandı. Şimdi giriş yapabilirsiniz.',
+        'user' => [
+            'id' => $user['id'],
+            'email' => $user['email'],
+            'name' => $user['name']
+        ]
+    ];
+}
+
+/**
+ * Resend verification email
+ */
+function resend_verification_email(string $email, string $tenant_id): array
+{
+    $conn = get_db_connection();
+
+    $stmt = $conn->prepare("
+        SELECT id, name, email_verified, status
+        FROM endusers
+        WHERE email = ? AND tenant_id = ?
+    ");
+    $stmt->execute([$email, $tenant_id]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        return ['error' => 'Kullanıcı bulunamadı'];
+    }
+
+    if ($user['email_verified']) {
+        return ['error' => 'E-posta adresi zaten doğrulanmış'];
+    }
+
+    // Generate new token
+    $new_token = bin2hex(random_bytes(32));
+
+    $stmt = $conn->prepare("
+        UPDATE endusers
+        SET verification_token = ?
+        WHERE id = ?
+    ");
+    $stmt->execute([$new_token, $user['id']]);
+
+    // Send verification email
+    $email_result = send_verification_email($email, $user['name'], $new_token, $tenant_id);
+
+    if (!$email_result['success']) {
+        error_log("[resend_verification] Failed to send email: " . $email_result['error']);
+        return [
+            'error' => 'E-posta gönderilemedi. Lütfen daha sonra tekrar deneyin.',
+            'email_error' => $email_result['error']
+        ];
+    }
+
+    return [
+        'success' => true,
+        'message' => 'Doğrulama e-postası tekrar gönderildi. Lütfen gelen kutunuzu kontrol edin.'
+    ];
 }

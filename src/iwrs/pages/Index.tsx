@@ -18,11 +18,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/iwr
 import { useTranslation } from "react-i18next";
 
 import { authApi } from "@/iwrs/lib/api";
+import { EndUser } from "@/hooks/useEndUserAuth";
 
 // ...
 
 const Index = () => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<EndUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const { t } = useTranslation();

@@ -6,16 +6,12 @@ import remarkGfm from "remark-gfm";
 import { useEffect } from "react";
 import { trackBlogView } from "../lib/analytics";
 
+import { AppView } from "../types/view";
+import { BlogPost } from "../types/content";
+
 interface PostDetailProps {
-  post: {
-    title: string;
-    content: string;
-    created_at: string;
-    image_url?: string | null;
-    [key: string]: any;
-  } | null;
-  setView: (view: any) => void;
-  // onEdit: (post: any) => void; // Removed
+  post: BlogPost | null;
+  setView: (view: AppView) => void;
 }
 
 export const PostDetail: React.FC<PostDetailProps> = ({ post, setView }) => {
