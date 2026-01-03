@@ -14,37 +14,31 @@ if (getenv('APP_ENV') === 'production' && !isset($_GET['force'])) {
 
 require_once __DIR__ . '/core/utils/email.service.php';
 
-// Debug: Check if API key is accessible
-// First try env.php (Plesk pattern)
+// Load env.php (returns array format)
 $env_php_path = __DIR__ . '/env.php';
 $brevo_key = null;
 
 echo "🔍 Debug Info:\n";
-echo "  - Looking for env.php at: $env_php_path\n";
 
 if (file_exists($env_php_path)) {
     echo "  - env.php exists: YES\n";
-    require_once $env_php_path;
+    $config = include $env_php_path;
 
-    // Check if it's a constant or environment variable
-    if (defined('BREVO_API_KEY')) {
-        $brevo_key = BREVO_API_KEY;
-        echo "  - BREVO_API_KEY (constant): " . substr($brevo_key, 0, 15) . "...\n";
+    if (is_array($config) && isset($config['BREVO_API_KEY'])) {
+        $brevo_key = $config['BREVO_API_KEY'];
+        echo "  - BREVO_API_KEY found: " . substr($brevo_key, 0, 15) . "...\n";
     } else {
-        $brevo_key = getenv('BREVO_API_KEY');
-        echo "  - BREVO_API_KEY via getenv(): " . ($brevo_key ? substr($brevo_key, 0, 15) . '...' : 'NOT SET') . "\n";
+        echo "  - BREVO_API_KEY: NOT FOUND in config array\n";
     }
 } else {
     echo "  - env.php exists: NO\n";
-    $brevo_key = getenv('BREVO_API_KEY');
-    echo "  - Fallback getenv('BREVO_API_KEY'): " . ($brevo_key ? substr($brevo_key, 0, 15) . '...' : 'NOT SET') . "\n";
 }
 
 if (!$brevo_key) {
-    die("\n❌ ERROR: BREVO_API_KEY not found anywhere!\n");
+    die("\n❌ ERROR: BREVO_API_KEY not found!\n");
 }
 
-echo "  ✅ API Key found!\n\n";
+echo "  ✅ API Key loaded!\n\n";
 
 // Get recipient email
 $to_email = $argv[1] ?? $_GET['to'] ?? null;

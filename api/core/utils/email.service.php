@@ -67,15 +67,18 @@ function send_password_reset_email($to_email, $to_name, $reset_token)
  */
 function send_notification_email($to_emails, $subject, $html_body)
 {
-    // First try to load from env.php (Plesk deployment pattern)
+    // Load from env.php (returns array format)
     $brevo_api_key = null;
     $env_php_path = __DIR__ . '/../../env.php';
+
     if (file_exists($env_php_path)) {
-        require_once $env_php_path;
-        $brevo_api_key = defined('BREVO_API_KEY') ? BREVO_API_KEY : (getenv('BREVO_API_KEY') ?: null);
+        $config = include $env_php_path;
+        if (is_array($config) && isset($config['BREVO_API_KEY'])) {
+            $brevo_api_key = $config['BREVO_API_KEY'];
+        }
     }
 
-    // Fallback to getenv if not found
+    // Fallback to getenv
     if (!$brevo_api_key) {
         $brevo_api_key = getenv('BREVO_API_KEY');
     }
