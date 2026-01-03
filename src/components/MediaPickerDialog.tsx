@@ -45,6 +45,9 @@ export const MediaPickerDialog = ({
         setLoading(true);
         try {
             const token = localStorage.getItem("admin_token");
+            if (!token) {
+                console.warn("[MediaPicker] No admin_token found in localStorage");
+            }
             const params = new URLSearchParams({
                 page: page.toString(),
                 limit: "24",
@@ -52,16 +55,23 @@ export const MediaPickerDialog = ({
             if (search) params.append("search", search);
             if (category) params.append("category", category);
 
-            const response = await fetch(`${API_URL}/index.php?action=get_media_list&${params}`, {
+            const url = `${API_URL}/index.php?action=get_media_list&${params}`;
+            console.log("[MediaPicker] Fetching:", url);
+
+            const response = await fetch(url, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     ...getTenantHeader() // Inject tenant header
                 },
             });
             const data = await response.json();
+            console.log("[MediaPicker] Response:", data);
+
             if (data.success) {
                 setAssets(data.data);
                 setTotalPages(data.pagination.pages);
+            } else {
+                console.error("[MediaPicker] API Error:", data.error);
             }
         } catch (err) {
             console.error("Failed to fetch media:", err);
