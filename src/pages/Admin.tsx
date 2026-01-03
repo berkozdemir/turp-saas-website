@@ -19,6 +19,8 @@ import { AdminMediaList } from "./admin/AdminMediaList";
 import { AdminNIPTBookings } from "./admin/AdminNIPTBookings";
 import { AdminDoctorList } from "./admin/AdminDoctorList";
 import { AdminBrandingSettings } from "./admin/AdminBrandingSettings";
+import { AdminPodcastList } from "./admin/AdminPodcastList";
+import { AdminPodcastEditor } from "./admin/AdminPodcastEditor";
 import { TenantProvider, useTenant, Tenant } from "../context/TenantContext";
 import { TenantSelector } from "./admin/TenantSelector";
 import { TenantSwitcher } from "../components/TenantSwitcher";
@@ -38,7 +40,8 @@ import {
   Image,
   Clock,
   Stethoscope,
-  Palette
+  Palette,
+  Mic
 } from "lucide-react";
 
 const AdminContent = () => {
@@ -57,6 +60,7 @@ const AdminContent = () => {
   const [editingLegalDoc, setEditingLegalDoc] = useState<any | null>(null);
   const [editingLandingId, setEditingLandingId] = useState<number | null>(null);
   const [editingContactConfigId, setEditingContactConfigId] = useState<number | null>(null);
+  const [editingPodcast, setEditingPodcast] = useState<any | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [pendingTenants, setPendingTenants] = useState<Tenant[] | null>(null);
 
@@ -308,6 +312,29 @@ const AdminContent = () => {
         return <AdminDoctorList token={session.token} />;
       case "branding":
         return <AdminBrandingSettings />;
+      case "podcast_list":
+        return (
+          <AdminPodcastList
+            token={session.token}
+            onEdit={(podcast) => {
+              setEditingPodcast(podcast);
+              setActiveTab("podcast_edit");
+            }}
+            onCreate={() => {
+              setEditingPodcast(null);
+              setActiveTab("podcast_edit");
+            }}
+          />
+        );
+      case "podcast_edit":
+        return (
+          <AdminPodcastEditor
+            token={session.token}
+            podcast={editingPodcast}
+            onCancel={() => setActiveTab("podcast_list")}
+            onSave={() => setActiveTab("podcast_list")}
+          />
+        );
       default:
         return <AdminMessages token={session.token} />;
     }
@@ -372,6 +399,19 @@ const AdminContent = () => {
               <HelpCircle size={20} />
               <span className="font-medium">SSS</span>
             </button>
+
+            {(userRole === 'admin' || userRole === 'editor') && (
+              <button
+                onClick={() => { setActiveTab("podcast_list"); setMobileMenuOpen(false); }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab.startsWith("podcast")
+                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  }`}
+              >
+                <Mic size={20} />
+                <span className="font-medium">Podcastler</span>
+              </button>
+            )}
 
             {userRole === 'admin' && (
               <button
@@ -532,8 +572,9 @@ const AdminContent = () => {
               {activeTab === 'analytics_seo' && "Analytics & SEO"}
               {activeTab === 'legal_list' && "Hukuki Dokümanlar"}
               {activeTab === 'legal_edit' && "Doküman Düzenleyici"}
-              {activeTab === 'legal_edit' && "Doküman Düzenleyici"}
               {activeTab === 'nipt_bookings' && "NIPT Randevu Yönetimi"}
+              {activeTab === 'podcast_list' && "Podcast Yönetimi"}
+              {activeTab === 'podcast_edit' && "Podcast Düzenleyici"}
               {activeTab === 'settings' && "Hesap Ayarları"}
             </h1>
             <p className="text-slate-500 text-sm mt-1">Hoşgeldin, {session.user.name}</p>
