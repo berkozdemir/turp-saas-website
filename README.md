@@ -1,6 +1,6 @@
 # 🚀 TURP SaaS Platform
 
-Multi-tenant SaaS platform built with **React + Vite + TypeScript** (Frontend) and **PHP** (Backend API).
+Multi-tenant SaaS platform built with **React + Vite + TypeScript** (Frontend) and **PHP** (Backend API)..
 
 ---
 
@@ -388,3 +388,4 @@ Built by **Turp Health** team.
 - ✅ Internationalization (TR/EN/ZH)
 - ✅ SEO optimization
 - ✅ Cookie consent (KVKK/GDPR)
+
