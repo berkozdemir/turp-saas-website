@@ -39,7 +39,7 @@ export const initGA = () => {
   `;
     document.head.appendChild(script2);
 
-    console.log('✅ Google Analytics initialized:', GA_MEASUREMENT_ID);
+    import.meta.env.DEV && console.log('✅ Google Analytics initialized:', GA_MEASUREMENT_ID);
 };
 
 // Track page view

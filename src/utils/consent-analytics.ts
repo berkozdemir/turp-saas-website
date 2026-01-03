@@ -3,6 +3,8 @@
  * Ensures Google Analytics only loads if user has given consent
  */
 
+const isDev = import.meta.env.DEV;
+
 export const getConsentPreferences = () => {
     const cookie = document.cookie
         .split('; ')
@@ -25,24 +27,24 @@ export const getConsentPreferences = () => {
 export const loadGoogleAnalytics = () => {
     const GA_ID = import.meta.env.VITE_GA_ID;
     if (!GA_ID) {
-        console.log('[Analytics] No GA_ID configured');
+        isDev && console.log('[Analytics] No GA_ID configured');
         return;
     }
 
     // Check consent
     const consent = getConsentPreferences();
     if (!consent.analytics) {
-        console.log('[Analytics] Analytics blocked by user consent');
+        isDev && console.log('[Analytics] Analytics blocked by user consent');
         return;
     }
 
     // Check if already loaded
     if (window.dataLayer && window.dataLayer.length > 0) {
-        console.log('[Analytics] Already loaded');
+        isDev && console.log('[Analytics] Already loaded');
         return;
     }
 
-    console.log('[Analytics] Loading Google Analytics...');
+    isDev && console.log('[Analytics] Loading Google Analytics...');
 
     // Load GA script
     const script = document.createElement('script');
@@ -62,7 +64,7 @@ export const loadGoogleAnalytics = () => {
         cookie_flags: 'SameSite=None;Secure'
     });
 
-    console.log('[Analytics] Google Analytics loaded successfully');
+    isDev && console.log('[Analytics] Google Analytics loaded successfully');
 };
 
 /**
@@ -75,7 +77,7 @@ export const initAnalytics = () => {
 
     // Listen for consent updates
     window.addEventListener('consent-analytics-enabled', () => {
-        console.log('[Analytics] Consent granted, loading analytics...');
+        isDev && console.log('[Analytics] Consent granted, loading analytics...');
         loadGoogleAnalytics();
     });
 };
@@ -87,3 +89,4 @@ declare global {
         gtag?: (...args: any[]) => void;
     }
 }
+

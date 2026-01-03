@@ -462,12 +462,14 @@ if ($resource === 'contact') {
         }
 
         try {
-            $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, subject, message, created_at) VALUES (?, ?, ?, ?, NOW())");
+            $tenant_id = get_current_tenant($conn);
+            $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, subject, message, tenant_id, created_at) VALUES (?, ?, ?, ?, ?, NOW())");
             $stmt->execute([
                 $data['name'],
                 $data['email'],
                 $data['subject'] ?? 'Contact Form',
-                $data['message']
+                $data['message'],
+                $tenant_id
             ]);
             json_response(['message' => 'Message sent successfully']);
 
@@ -506,8 +508,10 @@ if ($resource === 'contact') {
 // --- GET MESSAGES (Admin) ---
 if ($resource === 'get-messages') {
     if ($request_method === 'GET') {
-        // TODO: Add admin authentication check here
-        $stmt = $conn->query("SELECT * FROM contact_messages ORDER BY created_at DESC");
+        require_admin_auth($conn);
+        $tenant_id = get_current_tenant($conn);
+        $stmt = $conn->prepare("SELECT * FROM contact_messages WHERE tenant_id = ? ORDER BY created_at DESC");
+        $stmt->execute([$tenant_id]);
         $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
         json_response($messages);
     }
@@ -521,8 +525,9 @@ if ($resource === 'delete-message') {
             json_response(['error' => 'ID required'], 400);
         }
 
-        $stmt = $conn->prepare("DELETE FROM contact_messages WHERE id = ?");
-        $stmt->execute([$data['id']]);
+        $tenant_id = get_current_tenant($conn);
+        $stmt = $conn->prepare("DELETE FROM contact_messages WHERE id = ? AND tenant_id = ?");
+        $stmt->execute([$data['id'], $tenant_id]);
         json_response(['success' => true]);
     }
 }
@@ -606,10 +611,12 @@ if ($resource === 'change_password') {
 
 // --- FAQ ---
 if ($resource === 'faq') {
+    $tenant_id = get_current_tenant($conn);
+
     if ($request_method === 'GET') {
         try {
-            $sql = "SELECT * FROM faqs ORDER BY sort_order ASC, created_at DESC";
-            $stmt = $conn->query($sql);
+            $stmt = $conn->prepare("SELECT * FROM faqs WHERE tenant_id = ? ORDER BY sort_order ASC, created_at DESC");
+            $stmt->execute([$tenant_id]);
             $faqs = $stmt->fetchAll(PDO::FETCH_ASSOC);
             json_response($faqs);
         } catch (Exception $e) {
@@ -639,8 +646,8 @@ if ($resource === 'faq') {
         ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
 
         if (isset($data['id'])) {
-            // Update
-            $sql = "UPDATE faqs SET question=?, answer=?, language=?, category=?, sort_order=?, is_active=?, is_showcased=? WHERE id=?";
+            // Update - with tenant isolation
+            $sql = "UPDATE faqs SET question=?, answer=?, language=?, category=?, sort_order=?, is_active=?, is_showcased=? WHERE id=? AND tenant_id=?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([
                 $data['question'],
@@ -650,12 +657,13 @@ if ($resource === 'faq') {
                 $data['sort_order'] ?? 0,
                 $data['is_active'] ?? 1,
                 $data['is_showcased'] ?? 0,
-                $data['id']
+                $data['id'],
+                $tenant_id
             ]);
             json_response(['message' => 'FAQ updated']);
         } else {
-            // Create
-            $sql = "INSERT INTO faqs (question, answer, language, category, sort_order, is_active, is_showcased) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            // Create - with tenant isolation
+            $sql = "INSERT INTO faqs (question, answer, language, category, sort_order, is_active, is_showcased, tenant_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             $stmt->execute([
                 $data['question'],
@@ -664,7 +672,8 @@ if ($resource === 'faq') {
                 $data['category'] ?? 'general',
                 $data['sort_order'] ?? 0,
                 $data['is_active'] ?? 1,
-                $data['is_showcased'] ?? 0
+                $data['is_showcased'] ?? 0,
+                $tenant_id
             ]);
             json_response(['message' => 'FAQ created'], 201);
         }
@@ -672,8 +681,9 @@ if ($resource === 'faq') {
 
     if ($request_method === 'DELETE' && $id) {
         require_admin_auth($conn);
-        $stmt = $conn->prepare("DELETE FROM faqs WHERE id = ?");
-        $stmt->execute([$id]);
+        $tenant_id = get_current_tenant($conn);
+        $stmt = $conn->prepare("DELETE FROM faqs WHERE id = ? AND tenant_id = ?");
+        $stmt->execute([$id, $tenant_id]);
         json_response(['message' => 'FAQ deleted']);
     }
 }
