@@ -22,7 +22,10 @@ function handle_doctors_public($action)
             return true;
         } catch (Exception $e) {
             http_response_code(500);
-            echo json_encode(['error' => 'Failed to fetch doctors']);
+            echo json_encode([
+                'error' => 'Failed to fetch doctors',
+                'debug_message' => $e->getMessage()
+            ]);
             return true;
         }
     }
