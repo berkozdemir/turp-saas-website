@@ -259,17 +259,10 @@ function media_admin_list(): bool
     $count_query = str_replace("SELECT id, filename_original, filename_stored, url, mime_type, size_bytes, width, height, alt_text, title, tags, category, created_at", "SELECT COUNT(*) as total", $query);
     $stmt = $conn->prepare($count_query);
 
-    // Bind tenant_id explicitly as INT
-    $stmt->bindValue(1, (int) $tenant_id, PDO::PARAM_INT);
+    // Cast tenant_id to string for consistent PDO binding
+    $params[0] = (string) $tenant_id;
 
-    // Bind remaining params if any
-    $param_index = 2;
-    for ($i = 1; $i < count($params); $i++) {
-        $stmt->bindValue($param_index, $params[$i], PDO::PARAM_STR);
-        $param_index++;
-    }
-
-    $stmt->execute();
+    $stmt->execute($params);
     $total = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
     // DEBUG: Log count
@@ -277,18 +270,7 @@ function media_admin_list(): bool
 
     $query .= " ORDER BY created_at DESC LIMIT $limit OFFSET $offset";
     $stmt = $conn->prepare($query);
-
-    // Bind tenant_id explicitly as INT
-    $stmt->bindValue(1, (int) $tenant_id, PDO::PARAM_INT);
-
-    // Bind remaining params if any
-    $param_index = 2;
-    for ($i = 1; $i < count($params); $i++) {
-        $stmt->bindValue($param_index, $params[$i], PDO::PARAM_STR);
-        $param_index++;
-    }
-
-    $stmt->execute();
+    $stmt->execute($params);
     $assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($assets as &$asset) {
