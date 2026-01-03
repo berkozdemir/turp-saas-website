@@ -297,7 +297,10 @@ function media_admin_list(): bool
             'db_name' => $db_name,
             'raw_total' => (int) $raw_count,
             'raw_t3' => (int) $raw_count_t3,
-            'count_query' => $count_query
+            'count_query' => $count_query,
+            'params' => $params,
+            'category_raw' => $category,
+            'search_raw' => $search
         ]
     ]);
     return true;
