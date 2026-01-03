@@ -20,10 +20,11 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Vendor chunks
-          'vendor-react': ['react', 'react-dom'],
+          // Core React
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          // i18n
           'vendor-i18n': ['i18next', 'react-i18next', 'i18next-browser-languagedetector'],
-          // UI library chunk
+          // UI library - Radix components
           'vendor-radix': [
             '@radix-ui/react-dialog',
             '@radix-ui/react-dropdown-menu',
@@ -31,9 +32,19 @@ export default defineConfig({
             '@radix-ui/react-tooltip',
             '@radix-ui/react-select',
             '@radix-ui/react-accordion',
+            '@radix-ui/react-checkbox',
+            '@radix-ui/react-switch',
+            '@radix-ui/react-popover',
+            '@radix-ui/react-toast',
           ],
-          // Utility chunks
-          'vendor-utils': ['date-fns', 'clsx', 'class-variance-authority'],
+          // Charts - only loaded on pages that need it
+          'vendor-charts': ['recharts'],
+          // Markdown - only for blog/podcast
+          'vendor-markdown': ['react-markdown', 'remark-gfm'],
+          // Forms
+          'vendor-forms': ['react-hook-form', '@hookform/resolvers', 'zod'],
+          // Utilities
+          'vendor-utils': ['date-fns', 'clsx', 'class-variance-authority', 'tailwind-merge'],
         }
       }
     }
