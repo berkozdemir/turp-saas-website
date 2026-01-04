@@ -42,6 +42,7 @@ export const AdminPodcastEditor = ({ token, podcast, onSave, onCancel }: AdminPo
         short_description: "",
         full_description: "",
         audio_url: "",
+        preview_clip_url: "",
         duration_seconds: 0,
         cover_image_url: "",
         tags: [] as string[],
@@ -80,6 +81,7 @@ export const AdminPodcastEditor = ({ token, podcast, onSave, onCancel }: AdminPo
                             short_description: p.short_description || "",
                             full_description: p.full_description || "",
                             audio_url: p.audio_url || "",
+                            preview_clip_url: p.preview_clip_url || "",
                             duration_seconds: p.duration_seconds || 0,
                             cover_image_url: p.cover_image_url || "",
                             tags: p.tags || [],
@@ -416,6 +418,23 @@ export const AdminPodcastEditor = ({ token, podcast, onSave, onCancel }: AdminPo
                                             onChange={(e) => handleChange("audio_url", e.target.value)}
                                             placeholder="https://cdn.example.com/podcast-bolum-1.mp3"
                                         />
+                                    </div>
+
+                                    {/* Preview Clip URL (30 seconds for guests) */}
+                                    <div>
+                                        <label className="block text-sm font-bold text-slate-700 mb-2 flex items-center gap-1">
+                                            <Play size={14} /> Ön İzleme Klip URL (30 saniye - Misafirler İçin)
+                                        </label>
+                                        <input
+                                            type="url"
+                                            className="w-full p-3 border border-slate-200 rounded-xl focus:border-purple-500 outline-none"
+                                            value={formData.preview_clip_url}
+                                            onChange={(e) => handleChange("preview_clip_url", e.target.value)}
+                                            placeholder="https://cdn.example.com/podcast-bolum-1-preview.mp3"
+                                        />
+                                        <p className="text-xs text-slate-500 mt-1">
+                                            Üye olmayan kullanıcılar yalnızca bu 30 saniyelik ön izlemeyi dinleyebilecektir.
+                                        </p>
                                     </div>
 
                                     {/* Duration */}
