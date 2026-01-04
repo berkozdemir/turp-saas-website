@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { NIPTPortal } from "./pages/NIPTPortal";
 import { BookingForm } from "./pages/BookingForm";
@@ -8,10 +8,12 @@ import { VerifiIntro } from "./pages/VerifiIntro";
 import { TestsList } from "./pages/TestsList";
 import { About } from "./pages/About";
 import { VeritasIntro } from "./pages/VeritasIntro";
-import { PodcastHub } from "../pages/PodcastHub";
-import { PodcastDetail } from "../pages/PodcastDetail";
-import { Contact } from "../pages/Contact";
+import { NIPTContact } from "./pages/NIPTContact";
+import { NIPTPodcastHub } from "./pages/NIPTPodcastHub";
+import { NIPTPodcastDetail } from "./pages/NIPTPodcastDetail";
 import ScrollToTop from "../iwrs/components/ScrollToTop";
+import { PodcastPlayerProvider } from "../context/PodcastPlayerContext";
+import { GlobalPodcastPlayer } from "../components/GlobalPodcastPlayer";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -23,18 +25,7 @@ const queryClient = new QueryClient({
     },
 });
 
-const ContactWithNav = () => {
-    const navigate = useNavigate();
-    return <Contact setView={(view: any) => { if (view === 'home') navigate('/'); }} />;
-};
-
-import { PodcastPlayerProvider } from "../context/PodcastPlayerContext";
-import { GlobalPodcastPlayer } from "../components/GlobalPodcastPlayer";
-
 const NIPTApp: React.FC = () => {
-    // Force refresh check
-    // If running on subpath /nipt, we need to set basename
-    // If running on nipt.tr, basename is /
     const isNiptPath = window.location.pathname.startsWith('/nipt');
     const basename = isNiptPath ? '/nipt' : '/';
 
@@ -44,31 +35,35 @@ const NIPTApp: React.FC = () => {
                 <PodcastPlayerProvider>
                     <ScrollToTop />
                     <Routes>
-                        {/* Unified Home */}
+                        {/* Home */}
                         <Route path="/" element={<NIPTPortal />} />
 
-                        {/* Unified Booking */}
+                        {/* Booking */}
                         <Route path="/booking" element={<BookingForm />} />
 
-                        {/* Unified Test Details - Redirect old paths if needed, or just new structure */}
+                        {/* Tests */}
                         <Route path="/testler" element={<TestsList />} />
                         <Route path="/testler/momguard" element={<MomGuardIntro />} />
                         <Route path="/testler/verifi" element={<VerifiIntro />} />
                         <Route path="/testler/veritas" element={<VeritasIntro />} />
 
-                        {/* Legacy/Direct Brand Access redirects to new structure or keeps working */}
-                        <Route path="momguard" element={<Navigate to="/testler/momguard" replace />} />
-                        <Route path="verifi" element={<Navigate to="/testler/verifi" replace />} />
-                        <Route path="veritas" element={<Navigate to="/testler/veritas" replace />} />
+                        {/* Legacy redirects */}
+                        <Route path="/momguard" element={<Navigate to="/testler/momguard" replace />} />
+                        <Route path="/verifi" element={<Navigate to="/testler/verifi" replace />} />
+                        <Route path="/veritas" element={<Navigate to="/testler/veritas" replace />} />
 
-                        <Route path="about" element={<About />} />
-                        <Route path="hakkimizda" element={<About />} />
-                        <Route path="hakkimizda" element={<About />} />
-                        <Route path="iletisim" element={<ContactWithNav />} />
+                        {/* About */}
+                        <Route path="/about" element={<About />} />
+                        <Route path="/hakkimizda" element={<About />} />
 
-                        <Route path="podcast" element={<PodcastHub />} />
-                        <Route path="podcast/:slug" element={<PodcastDetail />} />
+                        {/* Contact - NIPT specific */}
+                        <Route path="/iletisim" element={<NIPTContact />} />
 
+                        {/* Podcast - NIPT specific */}
+                        <Route path="/podcast" element={<NIPTPodcastHub />} />
+                        <Route path="/podcast/:slug" element={<NIPTPodcastDetail />} />
+
+                        {/* Catch all */}
                         <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                     <GlobalPodcastPlayer />
@@ -79,3 +74,4 @@ const NIPTApp: React.FC = () => {
 };
 
 export default NIPTApp;
+
