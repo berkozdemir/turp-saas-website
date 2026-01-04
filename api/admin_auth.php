@@ -4,7 +4,7 @@
  * Endpoints: login, forgot-password, verify-reset-token, reset-password
  */
 
-require_once __DIR__ . '/db_connection.php';
+require_once __DIR__ . '/legacy/db_connection.php';
 require_once __DIR__ . '/email_service.php';
 require_once __DIR__ . '/core/security/rate_limiter.php';
 
@@ -83,6 +83,16 @@ if ($action === 'login' && $request_method === 'POST') {
         $stmt = $conn->prepare("UPDATE admin_users SET last_login = NOW() WHERE id = ?");
         $stmt->execute([$user['id']]);
 
+        // Get user's tenants
+        $stmt = $conn->prepare(
+            "SELECT t.id, t.code, t.name, t.primary_domain, aut.role as tenant_role
+             FROM admin_user_tenants aut
+             JOIN tenants t ON aut.tenant_id = t.id
+             WHERE aut.user_id = ? AND t.is_active = 1"
+        );
+        $stmt->execute([$user['id']]);
+        $tenants = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
         // Return success
         echo json_encode([
             'success' => true,
@@ -91,7 +101,8 @@ if ($action === 'login' && $request_method === 'POST') {
                 'id' => $user['id'],
                 'email' => $user['email'],
                 'name' => $user['name']
-            ]
+            ],
+            'tenants' => $tenants
         ]);
     } catch (Exception $e) {
         echo json_encode(['error' => 'Bir hata oluştu: ' . $e->getMessage()]);

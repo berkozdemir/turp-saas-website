@@ -18,6 +18,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 interface LoginFormProps {
   onSuccess?: (data: any) => void;
   onError?: (error: string) => void;
+  isAdmin?: boolean;
 }
 
 type ViewType = 'login' | 'forgot-password' | 'success';
@@ -28,7 +29,7 @@ const forgotPasswordSchema = z.object({
 
 type ForgotPasswordData = z.infer<typeof forgotPasswordSchema>;
 
-export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
+export const LoginForm = ({ onSuccess, onError, isAdmin = false }: LoginFormProps) => {
   const { branding } = useBranding();
   const { i18n } = useTranslation();
   const [view, setView] = useState<ViewType>('login');
@@ -38,6 +39,7 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
   const [successMessage, setSuccessMessage] = useState('');
 
   const API_URL = import.meta.env.VITE_API_URL || '/api';
+  const loginEndpoint = isAdmin ? '/admin_auth.php' : '/index.php';
 
   // Login form
   const {
@@ -64,7 +66,7 @@ export const LoginForm = ({ onSuccess, onError }: LoginFormProps) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`${API_URL}/index.php?action=login`, {
+      const response = await fetch(`${API_URL}${loginEndpoint}?action=login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

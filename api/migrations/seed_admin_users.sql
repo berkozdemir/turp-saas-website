@@ -8,21 +8,21 @@ VALUES
     (
         'Admin User',
         'admin@turp.health',
-        '$2y$10$p8z8J8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8p',
+        '$2y$10$2ORSh.atdPtifAVuWyUeMO68BMHVIffDvlxWRJBRbrnPaba4PhGke',
         'admin',
         1
     ),
     (
         'Editor User',
         'editor@turp.health',
-        '$2y$10$p8z8J8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8p',
+        '$2y$10$2ORSh.atdPtifAVuWyUeMO68BMHVIffDvlxWRJBRbrnPaba4PhGke',
         'editor',
         1
     ),
     (
         'Viewer User',
         'viewer@turp.health',
-        '$2y$10$p8z8J8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8pJ8p',
+        '$2y$10$2ORSh.atdPtifAVuWyUeMO68BMHVIffDvlxWRJBRbrnPaba4PhGke',
         'viewer',
         1
     )

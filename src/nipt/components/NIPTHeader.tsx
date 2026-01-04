@@ -18,6 +18,7 @@ export const NIPTHeader = () => {
                 <nav className="hidden md:flex items-center gap-8 font-medium text-slate-600">
                     <a href="/nipt#sss" className="hover:text-blue-600 transition-colors">S.S.S.</a>
                     <button onClick={() => navigate('/about')} className="hover:text-blue-600 transition-colors">Hakkımızda</button>
+                    <button onClick={() => navigate('/podcast')} className="hover:text-blue-600 transition-colors">Podcast</button>
                     <button onClick={() => navigate('/iletisim')} className="hover:text-blue-600 transition-colors">İletişim</button>
                 </nav>
 
@@ -40,6 +41,7 @@ export const NIPTHeader = () => {
                 <div className="md:hidden bg-white border-t border-slate-100 p-4 absolute w-full shadow-xl">
                     <nav className="flex flex-col gap-4 text-center">
                         <a href="/nipt#testler" onClick={() => setIsMenuOpen(false)} className="py-2 text-slate-600">Testler</a>
+                        <button onClick={() => { navigate('/podcast'); setIsMenuOpen(false); }} className="py-2 text-slate-600">Podcast</button>
                         <a href="/nipt#nasil-calisir" onClick={() => setIsMenuOpen(false)} className="py-2 text-slate-600">Nasıl Çalışır?</a>
                         <button
                             onClick={() => { navigate('/booking'); setIsMenuOpen(false); }}

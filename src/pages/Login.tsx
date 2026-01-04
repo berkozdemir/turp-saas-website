@@ -46,6 +46,7 @@ export const Login = ({ onLogin }: LoginProps) => {
             <LoginForm
               onSuccess={handleLoginSuccess}
               onError={handleLoginError}
+              isAdmin={true}
             />
           </div>
         </div>

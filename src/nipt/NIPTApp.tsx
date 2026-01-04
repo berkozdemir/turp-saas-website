@@ -7,8 +7,9 @@ import { MomGuardIntro } from "./pages/MomGuardIntro";
 import { VerifiIntro } from "./pages/VerifiIntro";
 import { TestsList } from "./pages/TestsList";
 import { About } from "./pages/About";
-import { Contact } from "./pages/Contact";
 import { VeritasIntro } from "./pages/VeritasIntro";
+import { PodcastHub } from "../pages/PodcastHub";
+import { PodcastDetail } from "../pages/PodcastDetail";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -51,6 +52,9 @@ const NIPTApp: React.FC = () => {
                     <Route path="about" element={<About />} />
                     <Route path="hakkimizda" element={<About />} />
                     <Route path="iletisim" element={<Contact />} />
+
+                    <Route path="podcast" element={<PodcastHub />} />
+                    <Route path="podcast/:slug" element={<PodcastDetail />} />
 
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
