@@ -7,12 +7,20 @@ interface ChatInterfaceProps {
   sessionId: string;
   conversationId: number;
   userName: string;
+  title?: string;
+  suggestions?: string[];
 }
 
 export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   sessionId,
   conversationId,
   userName,
+  title = "NIPT Bilgi Asistanı",
+  suggestions = [
+    "NIPT testi nedir?",
+    "NIPT testi nasıl yapılır?",
+    "NIPT test fiyatları nedir?"
+  ]
 }) => {
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -43,7 +51,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
     <div className="flex flex-col h-[600px] bg-white rounded-lg shadow-lg">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-4 rounded-t-lg">
-        <h3 className="font-semibold text-lg">NIPT Bilgi Asistanı</h3>
+        <h3 className="font-semibold text-lg">{title}</h3>
         <p className="text-sm text-blue-100">Merhaba {userName}, size nasıl yardımcı olabilirim?</p>
       </div>
 
@@ -68,27 +76,18 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
             </div>
             <h4 className="font-semibold text-gray-900 mb-2">Sorularınızı sorabilirsiniz</h4>
             <p className="text-sm text-gray-600 max-w-sm">
-              NIPT testi, hamilelik süreci, Omega Genetik hakkında merak ettiklerinizi sorabilirsiniz.
+              Merhaba, ben {title}. Size nasıl yardımcı olabilirim?
             </p>
             <div className="mt-6 grid grid-cols-1 gap-2 w-full max-w-md">
-              <button
-                onClick={() => setInput('NIPT testi nedir?')}
-                className="text-left px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg text-sm text-gray-700 transition-colors"
-              >
-                💭 NIPT testi nedir?
-              </button>
-              <button
-                onClick={() => setInput('NIPT testi nasıl yapılır?')}
-                className="text-left px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg text-sm text-gray-700 transition-colors"
-              >
-                🔬 NIPT testi nasıl yapılır?
-              </button>
-              <button
-                onClick={() => setInput('NIPT test fiyatları nedir?')}
-                className="text-left px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg text-sm text-gray-700 transition-colors"
-              >
-                💰 NIPT test fiyatları nedir?
-              </button>
+              {suggestions.map((s, i) => (
+                <button
+                  key={i}
+                  onClick={() => setInput(s)}
+                  className="text-left px-4 py-2 bg-gray-50 hover:bg-gray-100 rounded-lg text-sm text-gray-700 transition-colors"
+                >
+                  💭 {s}
+                </button>
+              ))}
             </div>
           </div>
         ) : (

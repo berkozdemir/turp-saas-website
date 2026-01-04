@@ -43,7 +43,8 @@ import {
   Clock,
   Stethoscope,
   Palette,
-  Mic
+  Mic,
+  HardDrive
 } from "lucide-react";
 
 const AdminContent = () => {
@@ -498,6 +499,19 @@ const AdminContent = () => {
 
             {userRole === 'admin' && (
               <button
+                onClick={() => { setActiveTab("image_optimizer"); setMobileMenuOpen(false); }}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "image_optimizer"
+                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
+                  : "text-slate-400 hover:bg-white/5 hover:text-white"
+                  }`}
+              >
+                <HardDrive size={20} />
+                <span className="font-medium">Görsel Optimizasyonu</span>
+              </button>
+            )}
+
+            {userRole === 'admin' && (
+              <button
                 onClick={() => { setActiveTab("nipt_bookings"); setMobileMenuOpen(false); }}
                 className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "nipt_bookings"
                   ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
@@ -580,6 +594,7 @@ const AdminContent = () => {
               {activeTab === 'nipt_bookings' && "NIPT Randevu Yönetimi"}
               {activeTab === 'podcast_list' && "Podcast Yönetimi"}
               {activeTab === 'podcast_edit' && "Podcast Düzenleyici"}
+              {activeTab === 'image_optimizer' && "Görsel Optimizasyonu"}
               {activeTab === 'settings' && "Hesap Ayarları"}
             </h1>
             <p className="text-slate-500 text-sm mt-1">Hoşgeldin, {session.user.name}</p>

@@ -5,8 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { getModuleContentTranslated } from '../data/content';
 import { useLandingConfig } from '../hooks/useLandingConfig';
 import { useContactConfig } from '../hooks/useContactConfig';
-// Calculator ikonunu ekledik
-import { ShieldCheck, ArrowRight, XCircle, CheckCircle, Loader2, Send, Calculator, MapPin, Phone, Mail, Clock } from 'lucide-react';
+import { useEndUserAuth } from '../hooks/useEndUserAuth';
+import { ChatInterface } from '../components/chatbot/ChatInterface';
+import { ShieldCheck, ArrowRight, XCircle, CheckCircle, Loader2, Send, Calculator, MapPin, Phone, Mail, Clock, MessageCircle, X, Sparkles } from 'lucide-react';
 import { FAQItem } from '../components/FAQItem';
 import { useNotification } from '../components/NotificationProvider';
 
@@ -25,6 +26,10 @@ export const Home: React.FC<HomeProps> = ({ setView, scrollTo }) => {
     const notify = useNotification();
     const { config: landingConfig } = useLandingConfig();
     const { config: contactConfig } = useContactConfig();
+    const { isAuthenticated, user } = useEndUserAuth();
+
+    // Chat State
+    const [isChatOpen, setIsChatOpen] = useState(false);
 
     // Auto-scroll effect
     useEffect(() => {
@@ -109,90 +114,132 @@ export const Home: React.FC<HomeProps> = ({ setView, scrollTo }) => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 text-slate-900 overflow-hidden">
+        <div className="min-h-screen bg-slate-50 text-slate-900 overflow-hidden relative">
 
-            {/* 1. HERO SECTION */}
-            <section
-                className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6"
-                style={landingConfig?.hero_use_gradient_background ? {
-                    background: `linear-gradient(${landingConfig.hero_gradient_bg_angle || 180}deg, ${landingConfig.hero_gradient_bg_from || '#1E293B'}, ${landingConfig.hero_gradient_bg_to || '#0F172A'})`,
-                } : undefined}
-            >
-                <div className={`absolute inset-0 z-0 ${landingConfig?.hero_use_gradient_background ? '' : 'bg-slate-900'} overflow-hidden`}>
-                    <img src={landingConfig?.hero_image_url || "https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=2070&auto=format&fit=crop"} className="w-full h-full object-cover opacity-20 blur-sm scale-105 animate-pulse-slow" />
-                    {!landingConfig?.hero_use_gradient_background && (
-                        <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/80 to-slate-50"></div>
-                    )}
-                </div>
+            {/* DASHBOARD MODE (Logged In) */}
+            {isAuthenticated ? (
+                <>
+                    <section className="pt-32 pb-12 px-6">
+                        <div className="max-w-7xl mx-auto">
+                            <div className="flex items-center justify-between mb-8">
+                                <div>
+                                    <h1 className="text-3xl font-bold text-slate-900">Hoş Geldiniz, {user?.name || 'Kullanıcı'}</h1>
+                                    <p className="text-slate-500">Çalışma yönetim panelinize erişebilirsiniz.</p>
+                                </div>
+                            </div>
 
-                <div className="relative z-10 max-w-6xl mx-auto text-center">
-                    <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-green-400 px-4 py-1.5 rounded-full text-xs font-bold mb-8 shadow-2xl tracking-wide uppercase">
-                        <ShieldCheck size={14} /> {heroBadge}
-                    </div>
-                    <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-extrabold text-slate-900 mb-8 leading-tight tracking-tight">
-                        {landingConfig?.hero_title_line1 ? (
-                            <>
-                                {/* Line 1 */}
-                                <span
-                                    style={landingConfig.hero_line1_use_gradient_text ? {
-                                        background: `linear-gradient(${landingConfig.hero_line1_gradient_angle || 90}deg, ${landingConfig.hero_line1_gradient_from || '#4F46E5'}, ${landingConfig.hero_line1_gradient_to || '#22C55E'})`,
-                                        WebkitBackgroundClip: 'text',
-                                        WebkitTextFillColor: 'transparent',
-                                        backgroundClip: 'text',
-                                    } : { color: landingConfig.hero_line1_solid_color || '#FFFFFF' }}
-                                >
-                                    {landingConfig.hero_title_line1}
-                                </span>
-                                {landingConfig.hero_title_line2 && (
-                                    <>
-                                        <br />
-                                        {/* Line 2 */}
-                                        <span
-                                            style={landingConfig.hero_line2_use_gradient_text ? {
-                                                background: `linear-gradient(${landingConfig.hero_line2_gradient_angle || 90}deg, ${landingConfig.hero_line2_gradient_from || '#EC4899'}, ${landingConfig.hero_line2_gradient_to || '#8B5CF6'})`,
-                                                WebkitBackgroundClip: 'text',
-                                                WebkitTextFillColor: 'transparent',
-                                                backgroundClip: 'text',
-                                            } : { color: landingConfig.hero_line2_solid_color || '#EC4899' }}
-                                        >
-                                            {landingConfig.hero_title_line2}
-                                        </span>
-                                    </>
-                                )}
-                            </>
-                        ) : (
-                            <>
-                                <span className="text-white">{t("hero_title_1")}</span> <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-purple-500 to-indigo-500">{t("hero_title_2")}</span>
-                            </>
+                            {/* AI Assistant CTA Card */}
+                            <div className="bg-gradient-to-r from-slate-900 to-blue-900 rounded-3xl p-8 mb-12 shadow-xl relative overflow-hidden group">
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 group-hover:bg-blue-500/30 transition-all duration-700"></div>
+                                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                                    <div className="flex items-start gap-6">
+                                        <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center text-blue-300 shadow-inner shrink-0">
+                                            <Sparkles size={32} />
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl font-bold text-white mb-2">AI Randomizasyon Asistanı</h2>
+                                            <p className="text-slate-300 max-w-xl leading-relaxed">
+                                                Çalışmanızdaki randomizasyon ve iwrs akışlarıyla ilgili sorularınızı yapay zekâ destekli asistanımıza sorabilirsiniz.
+                                                Sorularınızı Türkçe veya İngilizce olarak yazabilirsiniz.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => setIsChatOpen(true)}
+                                        className="px-8 py-4 bg-white text-slate-900 font-bold rounded-xl hover:bg-blue-50 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 flex items-center gap-2 whitespace-nowrap"
+                                    >
+                                        Asistanı Aç
+                                        <ArrowRight size={18} />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </>
+            ) : (
+                /* 1. HERO SECTION (Public) */
+                <section
+                    className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6"
+                    style={landingConfig?.hero_use_gradient_background ? {
+                        background: `linear-gradient(${landingConfig.hero_gradient_bg_angle || 180}deg, ${landingConfig.hero_gradient_bg_from || '#1E293B'}, ${landingConfig.hero_gradient_bg_to || '#0F172A'})`,
+                    } : undefined}
+                >
+                    <div className={`absolute inset-0 z-0 ${landingConfig?.hero_use_gradient_background ? '' : 'bg-slate-900'} overflow-hidden`}>
+                        <img src={landingConfig?.hero_image_url || "https://images.unsplash.com/photo-1551076805-e1869033e561?q=80&w=2070&auto=format&fit=crop"} className="w-full h-full object-cover opacity-20 blur-sm scale-105 animate-pulse-slow" />
+                        {!landingConfig?.hero_use_gradient_background && (
+                            <div className="absolute inset-0 bg-gradient-to-b from-slate-900/50 via-slate-900/80 to-slate-50"></div>
                         )}
-                    </h1>
-                    <p className="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-8 leading-relaxed font-light">
-                        {heroSubtitle}
-                    </p>
+                    </div>
 
-                    {/* Omega Trust Line */}
-                    <div className="flex items-center justify-center gap-2 mb-10 opacity-80">
-                        <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Supported by</span>
-                        <img src="/omega_logo.png" alt="Omega CRO" className="h-4 w-auto grayscale opacity-60" />
-                        <span className="text-sm text-slate-500 font-medium">Omega Araştırma’nın 25+ yıllık klinik araştırma tecrübesi</span>
+                    <div className="relative z-10 max-w-6xl mx-auto text-center">
+                        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-green-400 px-4 py-1.5 rounded-full text-xs font-bold mb-8 shadow-2xl tracking-wide uppercase">
+                            <ShieldCheck size={14} /> {heroBadge}
+                        </div>
+                        <h1 className="font-heading text-5xl md:text-7xl lg:text-8xl font-extrabold text-slate-900 mb-8 leading-tight tracking-tight">
+                            {landingConfig?.hero_title_line1 ? (
+                                <>
+                                    {/* Line 1 */}
+                                    <span
+                                        style={landingConfig.hero_line1_use_gradient_text ? {
+                                            background: `linear-gradient(${landingConfig.hero_line1_gradient_angle || 90}deg, ${landingConfig.hero_line1_gradient_from || '#4F46E5'}, ${landingConfig.hero_line1_gradient_to || '#22C55E'})`,
+                                            WebkitBackgroundClip: 'text',
+                                            WebkitTextFillColor: 'transparent',
+                                            backgroundClip: 'text',
+                                        } : { color: landingConfig.hero_line1_solid_color || '#FFFFFF' }}
+                                    >
+                                        {landingConfig.hero_title_line1}
+                                    </span>
+                                    {landingConfig.hero_title_line2 && (
+                                        <>
+                                            <br />
+                                            {/* Line 2 */}
+                                            <span
+                                                style={landingConfig.hero_line2_use_gradient_text ? {
+                                                    background: `linear-gradient(${landingConfig.hero_line2_gradient_angle || 90}deg, ${landingConfig.hero_line2_gradient_from || '#EC4899'}, ${landingConfig.hero_line2_gradient_to || '#8B5CF6'})`,
+                                                    WebkitBackgroundClip: 'text',
+                                                    WebkitTextFillColor: 'transparent',
+                                                    backgroundClip: 'text',
+                                                } : { color: landingConfig.hero_line2_solid_color || '#EC4899' }}
+                                            >
+                                                {landingConfig.hero_title_line2}
+                                            </span>
+                                        </>
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    <span className="text-white">{t("hero_title_1")}</span> <br />
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-500 via-purple-500 to-indigo-500">{t("hero_title_2")}</span>
+                                </>
+                            )}
+                        </h1>
+                        <p className="text-lg md:text-2xl text-slate-400 max-w-3xl mx-auto mb-8 leading-relaxed font-light">
+                            {heroSubtitle}
+                        </p>
+
+                        {/* Omega Trust Line */}
+                        <div className="flex items-center justify-center gap-2 mb-10 opacity-80">
+                            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">Supported by</span>
+                            <img src="/omega_logo.png" alt="Omega CRO" className="h-4 w-auto grayscale opacity-60" />
+                            <span className="text-sm text-slate-500 font-medium">Omega Araştırma’nın 25+ yıllık klinik araştırma tecrübesi</span>
+                        </div>
+                        <div className="flex flex-col sm:flex-row justify-center gap-4">
+                            <button onClick={() => {
+                                const target = primaryCtaUrl.startsWith('#') ? primaryCtaUrl.slice(1) : 'contact';
+                                document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' });
+                            }} className="px-8 py-4 bg-rose-600 text-white font-bold rounded-xl shadow-xl hover:bg-rose-500 hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                                {primaryCtaLabel} <ArrowRight size={18} />
+                            </button>
+                            <button onClick={() => {
+                                const target = secondaryCtaUrl.startsWith('#') ? secondaryCtaUrl.slice(1) : 'features';
+                                document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' });
+                            }} className="px-8 py-4 bg-white/10 backdrop-blur text-white border border-white/20 font-bold rounded-xl hover:bg-white/20 transition-all">
+                                {secondaryCtaLabel}
+                            </button>
+                        </div>
                     </div>
-                    <div className="flex flex-col sm:flex-row justify-center gap-4">
-                        <button onClick={() => {
-                            const target = primaryCtaUrl.startsWith('#') ? primaryCtaUrl.slice(1) : 'contact';
-                            document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' });
-                        }} className="px-8 py-4 bg-rose-600 text-white font-bold rounded-xl shadow-xl hover:bg-rose-500 hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
-                            {primaryCtaLabel} <ArrowRight size={18} />
-                        </button>
-                        <button onClick={() => {
-                            const target = secondaryCtaUrl.startsWith('#') ? secondaryCtaUrl.slice(1) : 'features';
-                            document.getElementById(target)?.scrollIntoView({ behavior: 'smooth' });
-                        }} className="px-8 py-4 bg-white/10 backdrop-blur text-white border border-white/20 font-bold rounded-xl hover:bg-white/20 transition-all">
-                            {secondaryCtaLabel}
-                        </button>
-                    </div>
-                </div>
-            </section>
+                </section>
+            )}
 
             {/* 2. PARTNERLER */}
             <section className="py-10 bg-white border-b border-slate-100">
@@ -480,6 +527,47 @@ export const Home: React.FC<HomeProps> = ({ setView, scrollTo }) => {
                     )}
                 </div>
             </section>
+
+            {/* FLOATING AI CHAT for Authenticated Users */}
+            {isAuthenticated && (
+                <>
+                    {/* Floating Toggle Button */}
+                    <button
+                        onClick={() => setIsChatOpen(!isChatOpen)}
+                        className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-tr from-blue-600 to-purple-600 text-white rounded-full shadow-2xl hover:scale-105 hover:shadow-blue-500/30 transition-all duration-300 group"
+                        title="Çalışmanız için AI Randomizasyon Asistanı'nı açmak için tıklayın."
+                    >
+                        {isChatOpen ? (
+                            <X size={28} />
+                        ) : (
+                            <MessageCircle size={28} className="group-hover:animate-pulse" />
+                        )}
+                        {/* Tooltip on hover */}
+                        <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
+                            AI Randomizasyon Asistanı
+                        </div>
+                    </button>
+
+                    {/* Chat Panel */}
+                    {isChatOpen && (
+                        <div className="fixed bottom-24 right-6 w-[380px] max-w-[calc(100vw-48px)] z-40 animate-in slide-in-from-bottom-10 fade-in duration-300 shadow-2xl rounded-xl border border-white/20">
+                            <ChatInterface
+                                sessionId={`session-${user?.id || 'guest'}`}
+                                conversationId={1} // TODO: Dynamic?
+                                userName={user?.name || 'Kullanıcı'}
+                                title="AI Randomizasyon Asistanı"
+                                suggestions={[
+                                    "Randomizasyon nasıl yapılır?",
+                                    "Stok takibi yapabilir miyim?",
+                                    "Gönüllü kaydı nasıl açılır?",
+                                    "IWRS destek hattı nedir?"
+                                ]}
+                            />
+                        </div>
+                    )}
+                </>
+            )}
+
         </div>
     );
 };
