@@ -31,6 +31,7 @@ interface BrandingData {
         dark: string | null;
     };
     favicon: string | null;
+    loginHeroImage: string | null;
     colors: BrandingColors;
     typography: BrandingTypography;
     social: BrandingSocial;
@@ -39,6 +40,7 @@ interface BrandingData {
 const defaultBranding: BrandingData = {
     logo: { light: null, dark: null },
     favicon: null,
+    loginHeroImage: null,
     colors: {
         primary: '#6366f1',
         secondary: '#8b5cf6',

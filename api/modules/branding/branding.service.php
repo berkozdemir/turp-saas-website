@@ -16,6 +16,7 @@ function get_default_branding(): array
         'logo_light_url' => null,
         'logo_dark_url' => null,
         'favicon_url' => null,
+        'login_hero_image' => null,
         'primary_color' => '#6366f1',
         'secondary_color' => '#8b5cf6',
         'accent_color' => '#10b981',
@@ -48,6 +49,7 @@ function ensure_branding_table(): void
             `logo_light_url` VARCHAR(500),
             `logo_dark_url` VARCHAR(500),
             `favicon_url` VARCHAR(500),
+            `login_hero_image` VARCHAR(500),
             `primary_color` VARCHAR(7) DEFAULT '#6366f1',
             `secondary_color` VARCHAR(7) DEFAULT '#8b5cf6',
             `accent_color` VARCHAR(7) DEFAULT '#10b981',
@@ -124,6 +126,7 @@ function save_branding_config(int $tenant_id, array $data, ?int $user_id = null)
         'logo_light_url',
         'logo_dark_url',
         'favicon_url',
+        'login_hero_image',
         'primary_color',
         'secondary_color',
         'accent_color',
@@ -199,6 +202,7 @@ function get_public_branding(int $tenant_id): array
             'dark' => $config['logo_dark_url']
         ],
         'favicon' => $config['favicon_url'],
+        'loginHeroImage' => $config['login_hero_image'],
         'colors' => [
             'primary' => $config['primary_color'],
             'secondary' => $config['secondary_color'],
