@@ -94,11 +94,6 @@ function route_admin_action(string $action): bool
         return true;
     }
 
-    // Branding module
-    if (handle_branding_admin($action)) {
-        return true;
-    }
-
     // Podcast module
     if (handle_podcast_admin($action)) {
         return true;
