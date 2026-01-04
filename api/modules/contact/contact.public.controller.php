@@ -76,11 +76,11 @@ function handle_contact_public($action)
             }
 
             $tenant_id = get_current_tenant_id();
-            if (!$tenant_id) {
-                // Fallback for safety, or error. 
-                // Given existing data has 'nipt', and tenant ID 3 is 'nipt'.
-                // Ideally this should fail if no tenant, but for robustness:
-                $tenant_id = 3;
+
+            // Fix for NIPT domain resolution ambiguity
+            // Domain nipt.tr resolves to 3 (MomGuard) but Main Tenant is 21 (NIPT Platform)
+            if ($tenant_id === 3 || !$tenant_id) {
+                $tenant_id = 21;
             }
 
             // DB Insert
