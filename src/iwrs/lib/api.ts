@@ -1,10 +1,12 @@
-// import { toast } from "@/iwrs/hooks/use-toast"; // Removed unused
+
+import { toast } from "../hooks/use-toast"; // Re-importing if toast is needed, or remove if truly unused
 
 const API_BASE = '/api/index.php';
 
 // Helper to get headers with token
 const getHeaders = () => {
-    const token = localStorage.getItem('auth_token');
+    // CHANGE: Use 'enduser_token' instead of legacy 'auth_token'
+    const token = localStorage.getItem('enduser_token');
     return {
         'Content-Type': 'application/json',
         'X-Tenant-Code': 'iwrs', // Explicitly set tenant
@@ -35,51 +37,38 @@ async function fetchInfo<T>(endpoint: string, options: RequestInit = {}): Promis
     return data;
 }
 
-// --- AUTH ---
+// --- AUTH (Legacy Wrapper - Now delegates to useEndUserAuth hook in components) ---
+// We keep this structure but empty it out or redirect because
+// the actual Login/Signup is now handled by the shared pages.
 export const authApi = {
-    login: async (email: string, password: string) => {
-        const response = await fetch(`${API_BASE}?action=login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
-        });
-        const data = await response.json();
-        if (data.token) {
-            localStorage.setItem('auth_token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
-        }
-        return data;
-    },
+    // These should ideally not be used anymore, but kept for safe refactoring
+    // if any component still calls them, we log a warning.
+    login: async () => { console.warn("Use useEndUserAuth().login instead"); },
     logout: async () => {
-        localStorage.removeItem('auth_token');
-        localStorage.removeItem('user');
+        localStorage.removeItem('enduser_token');
+        localStorage.removeItem('enduser');
     },
     getSession: async () => {
-        const token = localStorage.getItem('auth_token');
-        const user = localStorage.getItem('user');
-        if (token && user) {
-            return { session: { access_token: token, user: JSON.parse(user) } };
+        const token = localStorage.getItem('enduser_token');
+        const userStr = localStorage.getItem('enduser');
+        if (token && userStr) {
+            return { session: { access_token: token, user: JSON.parse(userStr) } };
         }
         return { session: null };
     },
-    register: async (data: any) => {
-        // Not implemented in backend yet, keeping placeholder
-        return { success: false, error: "Not implemented" };
-    }
+    register: async () => { console.warn("Use useEndUserAuth().signup instead"); }
 };
 
 // --- BLOG ---
 export const blogApi = {
     getAll: async () => {
-        // Map resource=blog_posts to action=get_blog_posts
         return fetchInfo<any[]>(`${API_BASE}?action=get_blog_posts`);
     },
     getOne: async (slug: string) => {
-        // Map resource=blog_posts&id=... to action=get_blog_post&slug=...
         return fetchInfo<any>(`${API_BASE}?action=get_blog_post&slug=${slug}`);
     },
+    // Admin actions remain same (assuming admin.routes handles them via 'action')
     create: async (data: any) => {
-        // Admin only
         return fetchInfo(`${API_BASE}?action=create_blog_post`, {
             method: 'POST',
             body: JSON.stringify(data),
@@ -93,17 +82,17 @@ export const blogApi = {
     },
     delete: async (id: string) => {
         return fetchInfo(`${API_BASE}?action=delete_blog_post`, {
-            method: 'POST', // PHP API usually expects POST for actions
+            method: 'POST',
             body: JSON.stringify({ id })
         });
     }
 };
 
 // --- RANDOMIZATION ---
-// --- RANDOMIZATION ---
 export const randomizationApi = {
     submit: async (data: any) => {
-        return fetchInfo(`${API_BASE}?resource=randomization`, {
+        // CHANGE: resource=randomization -> action=iwrs_randomization
+        return fetchInfo(`${API_BASE}?action=iwrs_randomization`, {
             method: 'POST',
             body: JSON.stringify(data),
         });
@@ -112,18 +101,21 @@ export const randomizationApi = {
 
 export const contactApi = {
     send: async (data: any) => {
-        return fetchInfo(`${API_BASE}?resource=contact`, {
+        // CHANGE: resource=contact -> action=iwrs_contact
+        return fetchInfo(`${API_BASE}?action=iwrs_contact`, {
             method: 'POST',
             body: JSON.stringify(data),
         });
     },
     getMessages: async () => {
-        return fetchInfo<any[]>(`${API_BASE}?resource=get-messages`, {
+        // CHANGE: resource=get-messages -> action=iwrs_get_messages
+        return fetchInfo<any[]>(`${API_BASE}?action=iwrs_get_messages`, {
             method: 'GET',
         });
     },
     deleteMessage: async (id: number) => {
-        return fetchInfo(`${API_BASE}?resource=delete-message`, {
+        // CHANGE: resource=delete-message -> action=iwrs_delete_message
+        return fetchInfo(`${API_BASE}?action=iwrs_delete_message`, {
             method: 'POST',
             body: JSON.stringify({ id }),
         });
@@ -132,28 +124,29 @@ export const contactApi = {
 
 export const chatApi = {
     sendMessage: async (message: string) => {
-        return fetchInfo<any>(`${API_BASE}?resource=ai-chat`, {
+        // CHANGE: resource=ai-chat -> action=chatbot_query (use shared chatbot)
+        return fetchInfo<any>(`${API_BASE}?action=chatbot_query`, {
             method: 'POST',
-            body: JSON.stringify({ message }),
+            body: JSON.stringify({ message, context: 'iwrs_general' }),
         });
     },
 };
 
 export const translationApi = {
     translateBlog: async (data: { title?: string, excerpt?: string, content?: string, target_language?: string }) => {
-        return fetchInfo<any>(`${API_BASE}?resource=ai-translate-blog`, {
+        return fetchInfo<any>(`${API_BASE}?action=ai_translate_blog`, { // Check if this action exists in admin routes
             method: 'POST',
             body: JSON.stringify(data),
         });
     },
     translateBlogAll: async (data: { title_tr: string, excerpt_tr?: string, content_tr: string }) => {
-        return fetchInfo<{ en: { title?: string, excerpt?: string, content?: string }, zh: { title?: string, excerpt?: string, content?: string } }>(`${API_BASE}?resource=ai-translate-blog-all`, {
+        return fetchInfo<{ en: { title?: string, excerpt?: string, content?: string }, zh: { title?: string, excerpt?: string, content?: string } }>(`${API_BASE}?action=ai_translate_blog_all`, {
             method: 'POST',
             body: JSON.stringify(data),
         });
     },
     translateFaq: async (data: { question: string, answer: string, target_language?: string }) => {
-        return fetchInfo<any>(`${API_BASE}?resource=ai-translate-faq`, {
+        return fetchInfo<any>(`${API_BASE}?action=ai_translate_faq`, {
             method: 'POST',
             body: JSON.stringify(data),
         });
@@ -162,16 +155,18 @@ export const translationApi = {
 
 export const settingsApi = {
     get: async () => {
-        return fetchInfo<any>(`${API_BASE}?resource=settings&action=GET`); // explicit action for clarity/consistency if needed, though PHP relies on method
+        // CHANGE: resource=settings -> action=get_settings (if implemented)
+        // For now fallback or map to correct admin action
+        return fetchInfo<any>(`${API_BASE}?action=get_site_settings`);
     },
     update: async (data: any) => {
-        return fetchInfo(`${API_BASE}?resource=settings`, {
+        return fetchInfo(`${API_BASE}?action=update_site_settings`, {
             method: 'POST',
             body: JSON.stringify(data),
         });
     },
     changePassword: async (data: any) => {
-        return fetchInfo(`${API_BASE}?resource=change_password`, {
+        return fetchInfo(`${API_BASE}?action=change_admin_password`, {
             method: 'POST',
             body: JSON.stringify(data),
         });
@@ -180,39 +175,40 @@ export const settingsApi = {
 
 export const faqApi = {
     getAll: async () => {
-        return fetchInfo<any[]>(`${API_BASE}?resource=faq`);
+        return fetchInfo<any[]>(`${API_BASE}?action=get_faqs_public`);
     },
     create: async (data: any) => {
-        return fetchInfo(`${API_BASE}?resource=faq`, {
+        return fetchInfo(`${API_BASE}?action=create_faq`, {
             method: 'POST',
             body: JSON.stringify(data),
         });
     },
     update: async (id: number, data: any) => {
-        return fetchInfo(`${API_BASE}?resource=faq`, {
+        return fetchInfo(`${API_BASE}?action=update_faq`, {
             method: 'POST',
             body: JSON.stringify({ ...data, id }),
         });
     },
     delete: async (id: number) => {
-        return fetchInfo(`${API_BASE}?resource=faq&id=${id}`, {
-            method: 'DELETE',
+        return fetchInfo(`${API_BASE}?action=delete_faq`, {
+            method: 'POST', // Use POST for safer deletes in this PHP router
+            body: JSON.stringify({ id })
         });
     }
 };
 
 export const adminApi = {
     getUsers: async () => {
-        return fetchInfo<any[]>(`${API_BASE}?resource=users`);
+        return fetchInfo<any[]>(`${API_BASE}?action=get_users`);
     },
     getLogs: async (limit: number = 100) => {
-        return fetchInfo<any[]>(`${API_BASE}?resource=api-logs&limit=${limit}`);
+        return fetchInfo<any[]>(`${API_BASE}?action=get_logs&limit=${limit}`);
     }
 };
 
 export const formApi = {
     submit: async (formName: string, data: any) => {
-        return fetchInfo(`${API_BASE}?resource=submit-form`, {
+        return fetchInfo(`${API_BASE}?action=submit_form`, {
             method: 'POST',
             body: JSON.stringify({ form_name: formName, ...data }),
         });

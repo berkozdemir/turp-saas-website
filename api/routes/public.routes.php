@@ -71,5 +71,10 @@ function route_public_action(string $action): bool
     if (handle_chatbot_public($action))
         return true;
 
+    // IWRS module
+    require_once __DIR__ . '/../modules/iwrs/iwrs.public.controller.php';
+    if (handle_iwrs_public($action))
+        return true;
+
     return false;
 }

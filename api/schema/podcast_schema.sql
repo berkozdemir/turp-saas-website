@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `podcasts` (
   `short_description` text COLLATE utf8mb4_unicode_ci,
   `full_description` mediumtext COLLATE utf8mb4_unicode_ci,
   `audio_url` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Cloudflare R2 or External URL',
+  `preview_clip_url` varchar(1024) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT '30 second preview for non-members',
   `external_links` json DEFAULT NULL COMMENT 'JSON: spotify, apple, google, etc.',
   `duration_seconds` int(11) DEFAULT 0,
   `publish_date` datetime DEFAULT NULL,
