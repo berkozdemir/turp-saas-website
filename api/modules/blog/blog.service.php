@@ -220,6 +220,6 @@ function blog_get_published_posts(int $tenant_id): array
         WHERE tenant_id = ? AND status = 'published'
         ORDER BY published_at DESC
     ");
-    $stmt->execute([(string) $tenant_id]);
+    $stmt->execute([$tenant_id]);
     return $stmt->fetchAll();
 }
