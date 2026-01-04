@@ -36,14 +36,26 @@ export function TenantSettingsProvider({ children }: { children: ReactNode }) {
                         allow_enduser_login: data.allow_enduser_login ?? false,
                         allow_enduser_signup: data.allow_enduser_signup ?? false
                     });
+                } else {
+                    // API returned error, use domain-based fallback
+                    const hostname = window.location.hostname;
+                    const isIwrs = hostname.includes('iwrs');
+                    setSettings({
+                        tenant_id: isIwrs ? 'iwrs' : 'turp',
+                        tenant_name: isIwrs ? 'Omega IWRS' : 'Turp Health',
+                        allow_enduser_login: isIwrs, // IWRS allows enduser login
+                        allow_enduser_signup: false
+                    });
                 }
             } catch (err) {
                 setError('Ayarlar yüklenemedi');
-                // Fallback for development/testing if API fails
+                // Fallback for development/testing if API fails - detect domain
+                const hostname = window.location.hostname;
+                const isIwrs = hostname.includes('iwrs');
                 setSettings({
-                    tenant_id: 'iwrs',
-                    tenant_name: 'Omega IWRS',
-                    allow_enduser_login: false,
+                    tenant_id: isIwrs ? 'iwrs' : 'turp',
+                    tenant_name: isIwrs ? 'Omega IWRS' : 'Turp Health',
+                    allow_enduser_login: isIwrs, // IWRS allows enduser login
                     allow_enduser_signup: false
                 });
             } finally {
