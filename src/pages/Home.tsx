@@ -13,6 +13,7 @@ import { useNotification } from '../components/NotificationProvider';
 
 // ---> 1. EmailJS import edildi
 import emailjs from '@emailjs/browser';
+import { fetchAPI } from '../lib/contentApi';
 
 import { AppView } from '../types/view';
 
