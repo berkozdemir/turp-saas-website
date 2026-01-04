@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { NIPTPortal } from "./pages/NIPTPortal";
 import { BookingForm } from "./pages/BookingForm";
@@ -21,6 +21,11 @@ const queryClient = new QueryClient({
         },
     },
 });
+
+const ContactWithNav = () => {
+    const navigate = useNavigate();
+    return <Contact setView={(view: any) => { if (view === 'home') navigate('/'); }} />;
+};
 
 const NIPTApp: React.FC = () => {
     // Force refresh check
@@ -52,7 +57,8 @@ const NIPTApp: React.FC = () => {
 
                     <Route path="about" element={<About />} />
                     <Route path="hakkimizda" element={<About />} />
-                    <Route path="iletisim" element={<Contact />} />
+                    <Route path="hakkimizda" element={<About />} />
+                    <Route path="iletisim" element={<ContactWithNav />} />
 
                     <Route path="podcast" element={<PodcastHub />} />
                     <Route path="podcast/:slug" element={<PodcastDetail />} />
