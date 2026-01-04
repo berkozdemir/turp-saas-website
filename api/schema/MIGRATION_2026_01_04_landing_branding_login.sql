@@ -145,3 +145,35 @@ SELECT id, code, name, primary_domain FROM tenants WHERE primary_domain = 'nipt.
 -- ========================================
 -- END OF MIGRATION
 -- ========================================
+
+-- ========================================
+-- 8. CREATE TEST USERS FOR ALL TENANTS
+-- ========================================
+-- Password: test123456 (bcrypt hashed)
+-- $2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi
+
+-- Enable enduser login/signup for all tenants
+UPDATE tenants SET allow_enduser_login = 1, allow_enduser_signup = 1 WHERE is_active = 1;
+
+-- Test User for TURP (tenant_id = 1)
+INSERT INTO endusers (tenant_id, email, password_hash, name, status, email_verified)
+VALUES ('1', 'test@turp.health', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Test User Turp', 'active', 1)
+ON DUPLICATE KEY UPDATE status = 'active', email_verified = 1;
+
+-- Test User for IWRS (tenant_id = 2)
+INSERT INTO endusers (tenant_id, email, password_hash, name, status, email_verified)
+VALUES ('2', 'test@iwrs.com.tr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Test User IWRS', 'active', 1)
+ON DUPLICATE KEY UPDATE status = 'active', email_verified = 1;
+
+-- Test User for NIPT (tenant_id = 3)
+INSERT INTO endusers (tenant_id, email, password_hash, name, status, email_verified)
+VALUES ('3', 'test@nipt.tr', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Test User NIPT', 'active', 1)
+ON DUPLICATE KEY UPDATE status = 'active', email_verified = 1;
+
+-- Test User for WESTESTI (tenant_id = 4)
+INSERT INTO endusers (tenant_id, email, password_hash, name, status, email_verified)
+VALUES ('4', 'test@westesti.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Test User Westesti', 'active', 1)
+ON DUPLICATE KEY UPDATE status = 'active', email_verified = 1;
+
+-- Verification: Check created users
+-- SELECT id, tenant_id, email, name, status FROM endusers WHERE email LIKE 'test@%';
