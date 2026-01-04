@@ -46,6 +46,7 @@ import {
 
 const AdminContent = () => {
   // Initialize session from localStorage to prevent flash of login screen
+  console.log('[DEBUG] Admin Component Mounting');
   const [session, setSession] = useState<any>(() => {
     const storedSession = localStorage.getItem("admin_session");
     return storedSession ? JSON.parse(storedSession) : null;

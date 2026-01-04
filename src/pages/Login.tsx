@@ -8,6 +8,7 @@ interface LoginProps {
 }
 
 export const Login = ({ onLogin }: LoginProps) => {
+  console.log('[DEBUG] Login Component Mounting');
   const { branding, loading } = useBranding();
 
   const handleLoginSuccess = (data: any) => {

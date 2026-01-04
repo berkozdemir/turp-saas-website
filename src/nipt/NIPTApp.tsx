@@ -27,6 +27,9 @@ const ContactWithNav = () => {
     return <Contact setView={(view: any) => { if (view === 'home') navigate('/'); }} />;
 };
 
+import { PodcastPlayerProvider } from "../context/PodcastPlayerContext";
+import { GlobalPodcastPlayer } from "../components/GlobalPodcastPlayer";
+
 const NIPTApp: React.FC = () => {
     // Force refresh check
     // If running on subpath /nipt, we need to set basename
@@ -37,34 +40,38 @@ const NIPTApp: React.FC = () => {
     return (
         <QueryClientProvider client={queryClient}>
             <BrowserRouter basename={basename}>
-                <Routes>
-                    {/* Unified Home */}
-                    <Route path="/" element={<NIPTPortal />} />
+                <PodcastPlayerProvider>
+                    <ScrollToTop />
+                    <Routes>
+                        {/* Unified Home */}
+                        <Route path="/" element={<NIPTPortal />} />
 
-                    {/* Unified Booking */}
-                    <Route path="/booking" element={<BookingForm />} />
+                        {/* Unified Booking */}
+                        <Route path="/booking" element={<BookingForm />} />
 
-                    {/* Unified Test Details - Redirect old paths if needed, or just new structure */}
-                    <Route path="/testler" element={<TestsList />} />
-                    <Route path="/testler/momguard" element={<MomGuardIntro />} />
-                    <Route path="/testler/verifi" element={<VerifiIntro />} />
-                    <Route path="/testler/veritas" element={<VeritasIntro />} />
+                        {/* Unified Test Details - Redirect old paths if needed, or just new structure */}
+                        <Route path="/testler" element={<TestsList />} />
+                        <Route path="/testler/momguard" element={<MomGuardIntro />} />
+                        <Route path="/testler/verifi" element={<VerifiIntro />} />
+                        <Route path="/testler/veritas" element={<VeritasIntro />} />
 
-                    {/* Legacy/Direct Brand Access redirects to new structure or keeps working */}
-                    <Route path="momguard" element={<Navigate to="/testler/momguard" replace />} />
-                    <Route path="verifi" element={<Navigate to="/testler/verifi" replace />} />
-                    <Route path="veritas" element={<Navigate to="/testler/veritas" replace />} />
+                        {/* Legacy/Direct Brand Access redirects to new structure or keeps working */}
+                        <Route path="momguard" element={<Navigate to="/testler/momguard" replace />} />
+                        <Route path="verifi" element={<Navigate to="/testler/verifi" replace />} />
+                        <Route path="veritas" element={<Navigate to="/testler/veritas" replace />} />
 
-                    <Route path="about" element={<About />} />
-                    <Route path="hakkimizda" element={<About />} />
-                    <Route path="hakkimizda" element={<About />} />
-                    <Route path="iletisim" element={<ContactWithNav />} />
+                        <Route path="about" element={<About />} />
+                        <Route path="hakkimizda" element={<About />} />
+                        <Route path="hakkimizda" element={<About />} />
+                        <Route path="iletisim" element={<ContactWithNav />} />
 
-                    <Route path="podcast" element={<PodcastHub />} />
-                    <Route path="podcast/:slug" element={<PodcastDetail />} />
+                        <Route path="podcast" element={<PodcastHub />} />
+                        <Route path="podcast/:slug" element={<PodcastDetail />} />
 
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
+                        <Route path="*" element={<Navigate to="/" replace />} />
+                    </Routes>
+                    <GlobalPodcastPlayer />
+                </PodcastPlayerProvider>
             </BrowserRouter>
         </QueryClientProvider>
     );

@@ -10,6 +10,7 @@ interface Props {
 }
 
 export const EndUserSignup = ({ setView }: Props) => {
+    console.log('[DEBUG] EndUserSignup Component Mounting');
     const { signup } = useEndUserAuth();
     const { settings, loading: settingsLoading } = useTenantSettings();
 
