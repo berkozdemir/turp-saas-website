@@ -61,6 +61,7 @@ export default function App() {
   const [view, setView] = useState<AppView>(() => {
     const path = window.location.pathname;
     const hostname = window.location.hostname;
+    console.log('[DEBUG] App Init - Path:', path, 'Hostname:', hostname);
 
     // Domain based routing
     if (hostname.includes('iwrs.com.tr')) {
@@ -183,6 +184,7 @@ export default function App() {
 
   // --- SAYFA YÖNLENDİRİCİSİ (ROUTER) ---
   const renderView = () => {
+    console.log('[DEBUG] Rendering view:', view);
     if (typeof view === "string") {
       switch (view) {
         case "home":
