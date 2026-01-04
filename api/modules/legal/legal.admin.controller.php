@@ -49,7 +49,7 @@ function handle_legal_admin($action)
 function legal_admin_list($conn, $tenant_id)
 {
     try {
-        $stmt = $conn->prepare("SELECT id, doc_key, title_tr, is_active, updated_at FROM legal_documents WHERE tenant_id = ?");
+        $stmt = $conn->prepare("SELECT id, `key`, title_tr, is_active, updated_at FROM legal_documents WHERE tenant_id = ?");
         $stmt->execute([$tenant_id]);
         echo json_encode(['success' => true, 'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
     } catch (Exception $e) {
@@ -78,11 +78,11 @@ function legal_admin_save($conn, $tenant_id)
 
     try {
         if ($id > 0) {
-            $stmt = $conn->prepare("UPDATE legal_documents SET doc_key=?, title_tr=?, content_tr=?, is_active=? WHERE id=? AND tenant_id=?");
-            $stmt->execute([$data['doc_key'], $data['title_tr'], $data['content_tr'], $data['is_active'], $id, $tenant_id]);
+            $stmt = $conn->prepare("UPDATE legal_documents SET `key`=?, title_tr=?, content_tr=?, is_active=? WHERE id=? AND tenant_id=?");
+            $stmt->execute([$data['key'], $data['title_tr'], $data['content_tr'], $data['is_active'], $id, $tenant_id]);
         } else {
-            $stmt = $conn->prepare("INSERT INTO legal_documents (tenant_id, doc_key, title_tr, content_tr, is_active) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$tenant_id, $data['doc_key'], $data['title_tr'], $data['content_tr'], $data['is_active']]);
+            $stmt = $conn->prepare("INSERT INTO legal_documents (tenant_id, `key`, title_tr, content_tr, is_active) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$tenant_id, $data['key'], $data['title_tr'], $data['content_tr'], $data['is_active']]);
         }
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
