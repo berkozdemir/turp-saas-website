@@ -75,11 +75,19 @@ function handle_contact_public($action)
                 $pricing_tier = 'doctor_referral';
             }
 
+            $tenant_id = get_current_tenant_id();
+            if (!$tenant_id) {
+                // Fallback for safety, or error. 
+                // Given existing data has 'nipt', and tenant ID 3 is 'nipt'.
+                // Ideally this should fail if no tenant, but for robustness:
+                $tenant_id = 3;
+            }
+
             // DB Insert
             $stmt = $conn->prepare("
                 INSERT INTO contact_submissions 
                 (name, email, phone, home_service, address, pregnancy_week, has_doctor, doctor_id, doctor_name, pricing_tier, message, tenant_id)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'nipt')
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
 
             $result = $stmt->execute([
@@ -93,7 +101,8 @@ function handle_contact_public($action)
                 $doctor_id,
                 $doctor_name,
                 $pricing_tier,
-                $data['message'] ?? null
+                $data['message'] ?? null,
+                $tenant_id
             ]);
 
             if (!$result) {

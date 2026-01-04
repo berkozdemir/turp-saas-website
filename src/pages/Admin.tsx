@@ -21,6 +21,7 @@ import { AdminDoctorList } from "./admin/AdminDoctorList";
 import { AdminBrandingSettings } from "./admin/AdminBrandingSettings";
 import { AdminPodcastList } from "./admin/AdminPodcastList";
 import { AdminPodcastEditor } from "./admin/AdminPodcastEditor";
+import { ImageOptimizerPanel } from "./admin/ImageOptimizerPanel";
 import { TenantProvider, useTenant, Tenant } from "../context/TenantContext";
 import { BrandingProvider } from "../hooks/useBrandingConfig";
 import { TenantSelector } from "./admin/TenantSelector";
@@ -308,6 +309,8 @@ const AdminContent = () => {
         );
       case "media":
         return <AdminMediaList />;
+      case "image_optimizer":
+        return <ImageOptimizerPanel />;
       case "nipt_bookings":
         return <AdminNIPTBookings token={session.token} />;
       case "doctors":

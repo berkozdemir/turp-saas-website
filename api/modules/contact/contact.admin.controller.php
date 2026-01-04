@@ -40,7 +40,13 @@ function contact_admin_list_messages($conn, $tenant_id)
     $limit = 20;
     $offset = ($page - 1) * $limit;
 
-    $query = "SELECT * FROM contact_messages WHERE tenant_id = ?";
+    // Handle legacy tenant_id (string code) vs new tenant_id (int id)
+    // For now, check for BOTH just in case data migration isn't 100% done
+    // But since we are migrating data, simple check on ID should eventually be enough.
+    // However, safest query is: WHERE (tenant_id = ? OR tenant_id = (SELECT code FROM tenants WHERE id = ?))
+
+    // Simpler approach: Just query by ID. We will migrate data 'nipt' -> '3'
+    $query = "SELECT * FROM contact_submissions WHERE tenant_id = ?";
     $params = [$tenant_id];
 
     if ($status !== 'all') {
@@ -55,7 +61,7 @@ function contact_admin_list_messages($conn, $tenant_id)
         $stmt->execute($params);
         $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $count_query = "SELECT COUNT(*) as total FROM contact_messages WHERE tenant_id = ?";
+        $count_query = "SELECT COUNT(*) as total FROM contact_submissions WHERE tenant_id = ?";
         $count_params = [$tenant_id];
         if ($status !== 'all') {
             $count_query .= " AND status = ?";
@@ -94,7 +100,7 @@ function contact_admin_update_status($conn, $tenant_id)
     }
 
     try {
-        $stmt = $conn->prepare("UPDATE contact_messages SET status = ? WHERE id = ? AND tenant_id = ?");
+        $stmt = $conn->prepare("UPDATE contact_submissions SET status = ? WHERE id = ? AND tenant_id = ?");
         $stmt->execute([$status, $id, $tenant_id]);
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
@@ -111,7 +117,7 @@ function contact_admin_delete($conn, $tenant_id)
     $id = $data['id'] ?? 0;
 
     try {
-        $stmt = $conn->prepare("DELETE FROM contact_messages WHERE id = ? AND tenant_id = ?");
+        $stmt = $conn->prepare("DELETE FROM contact_submissions WHERE id = ? AND tenant_id = ?");
         $stmt->execute([$id, $tenant_id]);
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
