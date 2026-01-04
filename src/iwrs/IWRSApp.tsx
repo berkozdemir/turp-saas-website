@@ -42,6 +42,7 @@ const EmergencyUnblinding = lazy(() => import("./pages/EmergencyUnblinding"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const EndUserLogin = lazy(() => import("../pages/EndUserLogin").then(m => ({ default: m.EndUserLogin })));
 const EndUserSignup = lazy(() => import("../pages/EndUserSignup").then(m => ({ default: m.EndUserSignup })));
+const EmailVerification = lazy(() => import("../pages/EmailVerification").then(m => ({ default: m.default })));
 
 import { useState } from "react";
 import { Bot, X } from "lucide-react";
@@ -118,6 +119,7 @@ const RoutesWrapper = () => {
         <Route path="/admin" element={<Admin />} />
         <Route path="/login" element={<EndUserLogin setView={handleAuthNav} />} />
         <Route path="/signup" element={<EndUserSignup setView={handleAuthNav} />} />
+        <Route path="/email-verification" element={<EmailVerification />} />
         <Route path="/auth" element={<EndUserLogin setView={handleAuthNav} />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />

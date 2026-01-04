@@ -250,6 +250,14 @@ export const EndUserLogin = ({ setView }: Props) => {
                         </form>
 
                         <div className="mt-8 pt-6 border-t border-slate-100">
+                            {settings?.allow_enduser_signup && (
+                                <p className="text-center text-slate-600 mb-4">
+                                    Hesabınız yok mu?{' '}
+                                    <a href="/signup" className={`${theme.linkText} font-semibold`}>
+                                        Kayıt Ol
+                                    </a>
+                                </p>
+                            )}
                             <p className="text-center text-xs text-slate-400 font-medium">
                                 Yalnızca yetkilendirilmiş araştırma ekibi üyeleri için erişim.
                             </p>

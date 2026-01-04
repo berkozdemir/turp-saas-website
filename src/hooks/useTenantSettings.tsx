@@ -44,7 +44,7 @@ export function TenantSettingsProvider({ children }: { children: ReactNode }) {
                         tenant_id: isIwrs ? 'iwrs' : 'turp',
                         tenant_name: isIwrs ? 'Omega IWRS' : 'Turp Health',
                         allow_enduser_login: isIwrs, // IWRS allows enduser login
-                        allow_enduser_signup: false
+                        allow_enduser_signup: isIwrs // IWRS allows enduser signup
                     });
                 }
             } catch (err) {
@@ -56,7 +56,7 @@ export function TenantSettingsProvider({ children }: { children: ReactNode }) {
                     tenant_id: isIwrs ? 'iwrs' : 'turp',
                     tenant_name: isIwrs ? 'Omega IWRS' : 'Turp Health',
                     allow_enduser_login: isIwrs, // IWRS allows enduser login
-                    allow_enduser_signup: false
+                    allow_enduser_signup: isIwrs // IWRS allows enduser signup
                 });
             } finally {
                 setLoading(false);
