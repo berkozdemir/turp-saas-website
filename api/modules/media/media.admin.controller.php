@@ -43,6 +43,10 @@ function handle_media_admin(string $action): bool
             return media_admin_delete();
         case 'get_media_categories':
             return media_admin_categories();
+        case 'optimize_media_batch':
+            return media_admin_optimize_batch();
+        case 'get_media_optimization_stats':
+            return media_admin_optimization_stats();
         default:
             return false;
     }
@@ -60,6 +64,9 @@ function ensure_media_table(): void
         url VARCHAR(500) NOT NULL,
         mime_type VARCHAR(100),
         size_bytes INT,
+        original_size_bytes INT NULL,
+        optimized TINYINT(1) DEFAULT 0,
+        optimized_at DATETIME NULL,
         width INT,
         height INT,
         alt_text VARCHAR(500) DEFAULT '',
@@ -71,9 +78,26 @@ function ensure_media_table(): void
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         INDEX idx_tenant (tenant_id),
         INDEX idx_tenant_category (tenant_id, category),
-        INDEX idx_tenant_created (tenant_id, created_at DESC)
+        INDEX idx_tenant_created (tenant_id, created_at DESC),
+        INDEX idx_tenant_optimized (tenant_id, optimized)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
     $conn->exec($sql);
+
+    // Add optimization columns if they don't exist (for existing tables)
+    try {
+        $conn->exec("ALTER TABLE media_assets ADD COLUMN original_size_bytes INT NULL AFTER size_bytes");
+    } catch (PDOException $e) { /* Column exists */
+    }
+
+    try {
+        $conn->exec("ALTER TABLE media_assets ADD COLUMN optimized TINYINT(1) DEFAULT 0 AFTER original_size_bytes");
+    } catch (PDOException $e) { /* Column exists */
+    }
+
+    try {
+        $conn->exec("ALTER TABLE media_assets ADD COLUMN optimized_at DATETIME NULL AFTER optimized");
+    } catch (PDOException $e) { /* Column exists */
+    }
 }
 
 function media_admin_upload(): bool
@@ -151,6 +175,36 @@ function media_admin_upload(): bool
             continue;
         }
 
+        // ============================================
+        // IMAGE OPTIMIZATION (if enabled)
+        // ============================================
+        $original_size = $file['size'];
+        $optimized_size = $file['size'];
+        $was_optimized = false;
+
+        if (
+            defined('IMAGE_OPTIMIZE_ON_UPLOAD') && IMAGE_OPTIMIZE_ON_UPLOAD
+            && in_array($mime, ['image/jpeg', 'image/png', 'image/webp'])
+        ) {
+
+            require_once __DIR__ . '/../../core/services/ImageOptimizerService.php';
+
+            try {
+                $optimizer = new ImageOptimizerService();
+                $result = $optimizer->optimize($full_path);
+
+                if ($result['success']) {
+                    $optimized_size = $result['optimized_size'];
+                    $was_optimized = true;
+                    error_log("[MediaUpload] Optimized {$file['name']}: {$result['original_size']} -> {$result['optimized_size']} ({$result['percentage_saved']}% saved)");
+                } else {
+                    error_log("[MediaUpload] Optimization failed for {$file['name']}: " . ($result['error'] ?? 'Unknown error'));
+                }
+            } catch (Exception $e) {
+                error_log("[MediaUpload] Optimization exception for {$file['name']}: " . $e->getMessage());
+            }
+        }
+
         $width = null;
         $height = null;
         if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif'])) {
@@ -165,8 +219,8 @@ function media_admin_upload(): bool
 
         try {
             $stmt = $conn->prepare("INSERT INTO media_assets 
-                (tenant_id, filename_original, filename_stored, file_path, url, mime_type, size_bytes, width, height, uploaded_by)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                (tenant_id, filename_original, filename_stored, file_path, url, mime_type, size_bytes, original_size_bytes, optimized, optimized_at, width, height, uploaded_by)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $tenant_id,
                 $file['name'],
@@ -174,7 +228,10 @@ function media_admin_upload(): bool
                 $file_path,
                 $url,
                 $mime,
-                $file['size'],
+                $optimized_size,
+                $was_optimized ? $original_size : null,
+                $was_optimized ? 1 : 0,
+                $was_optimized ? date('Y-m-d H:i:s') : null,
                 $width,
                 $height,
                 $user_id
@@ -186,7 +243,9 @@ function media_admin_upload(): bool
                 'filename' => $file['name'],
                 'url' => $url,
                 'mime_type' => $mime,
-                'size_bytes' => $file['size'],
+                'size_bytes' => $optimized_size,
+                'original_size_bytes' => $original_size,
+                'optimized' => $was_optimized,
                 'width' => $width,
                 'height' => $height
             ];
@@ -424,3 +483,167 @@ function media_admin_categories(): bool
     echo json_encode(['success' => true, 'data' => $categories]);
     return true;
 }
+
+/**
+ * Batch optimize existing images
+ * Super-admins can optimize all tenants, regular admins only their tenant
+ */
+function media_admin_optimize_batch(): bool
+{
+    $ctx = require_admin_context();
+    ensure_media_table();
+    $conn = get_db_connection();
+
+    $data = json_decode(file_get_contents('php://input'), true) ?? [];
+    $request_tenant_id = $data['tenant_id'] ?? null;
+    $limit = min(100, max(1, (int) ($data['limit'] ?? 50)));
+    $only_unoptimized = $data['only_unoptimized'] ?? true;
+
+    // Determine scope - regular admins can only optimize their own tenant
+    $is_super_admin = ($ctx['role'] ?? '') === 'super_admin';
+
+    if ($request_tenant_id === null && !$is_super_admin) {
+        // Non-super-admin trying to optimize all tenants - restrict to their own
+        $target_tenant_id = $ctx['tenant_id'];
+    } elseif ($request_tenant_id !== null) {
+        // Specific tenant requested
+        if (!$is_super_admin && (string) $request_tenant_id !== (string) $ctx['tenant_id']) {
+            echo json_encode(['error' => 'Access denied: cannot optimize other tenants']);
+            return true;
+        }
+        $target_tenant_id = $request_tenant_id;
+    } else {
+        // Super-admin optimizing all tenants
+        $target_tenant_id = null;
+    }
+
+    require_once __DIR__ . '/../../core/services/ImageOptimizerService.php';
+    $optimizer = new ImageOptimizerService();
+
+    // Build query
+    $query = "SELECT id, tenant_id, file_path, size_bytes, filename_original FROM media_assets WHERE mime_type IN ('image/jpeg', 'image/png', 'image/webp')";
+    $params = [];
+
+    if ($target_tenant_id !== null) {
+        $query .= " AND tenant_id = ?";
+        $params[] = $target_tenant_id;
+    }
+
+    if ($only_unoptimized) {
+        $query .= " AND (optimized = 0 OR optimized IS NULL)";
+    }
+
+    $query .= " ORDER BY size_bytes DESC LIMIT $limit";
+
+    $stmt = $conn->prepare($query);
+    $stmt->execute($params);
+    $assets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $processed = 0;
+    $optimized = 0;
+    $skipped = 0;
+    $bytes_saved = 0;
+    $errors = [];
+
+    foreach ($assets as $asset) {
+        $processed++;
+        $full_path = __DIR__ . '/../../uploads/' . $asset['file_path'];
+
+        if (!file_exists($full_path)) {
+            $skipped++;
+            $errors[] = ['id' => $asset['id'], 'error' => 'File not found'];
+            continue;
+        }
+
+        try {
+            $result = $optimizer->optimize($full_path);
+
+            if ($result['success']) {
+                // Update database
+                $update_stmt = $conn->prepare("UPDATE media_assets SET 
+                    size_bytes = ?, 
+                    original_size_bytes = COALESCE(original_size_bytes, ?),
+                    optimized = 1, 
+                    optimized_at = NOW() 
+                    WHERE id = ?");
+                $update_stmt->execute([
+                    $result['optimized_size'],
+                    $result['original_size'],
+                    $asset['id']
+                ]);
+
+                $optimized++;
+                $bytes_saved += $result['bytes_saved'];
+            } else {
+                $skipped++;
+                $errors[] = ['id' => $asset['id'], 'error' => $result['error'] ?? 'Optimization failed'];
+            }
+        } catch (Exception $e) {
+            $skipped++;
+            $errors[] = ['id' => $asset['id'], 'error' => $e->getMessage()];
+        }
+    }
+
+    // Count remaining
+    $remaining_query = "SELECT COUNT(*) FROM media_assets WHERE mime_type IN ('image/jpeg', 'image/png', 'image/webp') AND (optimized = 0 OR optimized IS NULL)";
+    if ($target_tenant_id !== null) {
+        $remaining_query .= " AND tenant_id = " . (int) $target_tenant_id;
+    }
+    $remaining = (int) $conn->query($remaining_query)->fetchColumn();
+
+    echo json_encode([
+        'success' => true,
+        'processed' => $processed,
+        'optimized' => $optimized,
+        'skipped' => $skipped,
+        'bytes_saved' => $bytes_saved,
+        'remaining' => $remaining,
+        'errors' => count($errors) > 0 ? $errors : null
+    ]);
+    return true;
+}
+
+/**
+ * Get optimization statistics for the admin panel
+ */
+function media_admin_optimization_stats(): bool
+{
+    $ctx = require_admin_context();
+    ensure_media_table();
+    $conn = get_db_connection();
+    $tenant_id = $ctx['tenant_id'];
+
+    // Stats for current tenant
+    $stmt = $conn->prepare("SELECT 
+        COUNT(*) as total_images,
+        SUM(CASE WHEN optimized = 1 THEN 1 ELSE 0 END) as optimized_count,
+        SUM(CASE WHEN optimized = 0 OR optimized IS NULL THEN 1 ELSE 0 END) as unoptimized_count,
+        COALESCE(SUM(size_bytes), 0) as total_size,
+        COALESCE(SUM(original_size_bytes), 0) as total_original_size,
+        COALESCE(SUM(original_size_bytes - size_bytes), 0) as total_saved
+        FROM media_assets 
+        WHERE tenant_id = ? AND mime_type IN ('image/jpeg', 'image/png', 'image/webp')");
+    $stmt->execute([$tenant_id]);
+    $stats = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Calculate percentage saved
+    $percentage_saved = 0;
+    if ((int) $stats['total_original_size'] > 0) {
+        $percentage_saved = round(((int) $stats['total_saved'] / (int) $stats['total_original_size']) * 100, 1);
+    }
+
+    echo json_encode([
+        'success' => true,
+        'data' => [
+            'total_images' => (int) $stats['total_images'],
+            'optimized_count' => (int) $stats['optimized_count'],
+            'unoptimized_count' => (int) $stats['unoptimized_count'],
+            'total_size_bytes' => (int) $stats['total_size'],
+            'total_original_size_bytes' => (int) $stats['total_original_size'],
+            'bytes_saved' => (int) $stats['total_saved'],
+            'percentage_saved' => $percentage_saved
+        ]
+    ]);
+    return true;
+}
+

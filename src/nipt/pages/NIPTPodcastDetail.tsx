@@ -58,7 +58,11 @@ export const NIPTPodcastDetail = () => {
     const fetchEpisode = async () => {
         try {
             setLoading(true);
-            const res = await fetch(`${API_URL}/index.php?action=get_podcast_detail&slug=${slug}`);
+            const res = await fetch(`${API_URL}/index.php?action=get_podcast_detail&slug=${slug}`, {
+                headers: {
+                    'X-Tenant-Id': '3', // NIPT tenant
+                }
+            });
             const data = await res.json();
             if (data.success && data.data) {
                 setEpisode(data.data);
