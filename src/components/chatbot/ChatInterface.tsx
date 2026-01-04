@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Loader2 } from 'lucide-react';
 import { ChatMessage } from './ChatMessage';
-import { useChatbot, ChatMessage as ChatMessageType } from '../../hooks/useChatbot';
+import { useChatbot } from '../../hooks/useChatbot';
 
 interface ChatInterfaceProps {
   sessionId: string;
-  conversationId: number;
   userName: string;
   title?: string;
   suggestions?: string[];
@@ -13,7 +12,6 @@ interface ChatInterfaceProps {
 
 export const ChatInterface: React.FC<ChatInterfaceProps> = ({
   sessionId,
-  conversationId,
   userName,
   title = "NIPT Bilgi Asistanı",
   suggestions = [
@@ -24,7 +22,13 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
 }) => {
   const [input, setInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { messages, isLoading, sendMessage } = useChatbot();
+  const { messages, isLoading, sendMessage, getHistory } = useChatbot(sessionId);
+
+  useEffect(() => {
+    if (sessionId) {
+      getHistory(sessionId);
+    }
+  }, [sessionId, getHistory]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {

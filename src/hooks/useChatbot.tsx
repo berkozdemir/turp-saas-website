@@ -31,9 +31,9 @@ export interface ConversationState {
   error: string | null;
 }
 
-export function useChatbot() {
+export function useChatbot(initialSessionId: string | null = null) {
   const [state, setState] = useState<ConversationState>({
-    sessionId: null,
+    sessionId: initialSessionId,
     conversationId: null,
     messages: [],
     isLoading: false,

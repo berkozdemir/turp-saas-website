@@ -34,15 +34,7 @@ function handle_legal_public(string $action): bool
                 return true;
             }
 
-            // Resolve ID from Code
-            $tenant = get_tenant_by_code($tenant_code);
-            if (!$tenant) {
-                echo json_encode(['success' => false, 'error' => 'Tenant not found']);
-                return true;
-            }
-            $tenant_id = $tenant['id'];
-
-            $doc = legal_get_by_type($tenant_id, $key);
+            $doc = legal_get_by_type($tenant_code, $key);
 
             if ($doc) {
                 echo json_encode(['success' => true, 'data' => $doc]);

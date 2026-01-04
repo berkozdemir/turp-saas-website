@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mail, Lock, ArrowRight, Eye, EyeOff, Sparkles } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useEndUserAuth } from '../hooks/useEndUserAuth';
 import { useTenantSettings } from '../hooks/useTenantSettings';
 
@@ -55,13 +55,7 @@ export const EndUserLogin = ({ setView }: Props) => {
         }
     };
 
-    const goToSignup = () => {
-        if (setView) {
-            setView('enduser-signup');
-        } else {
-            window.location.href = '/signup';
-        }
-    };
+
 
     // If login not allowed, show message
     if (!settingsLoading && !settings?.allow_enduser_login) {

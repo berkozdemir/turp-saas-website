@@ -554,7 +554,6 @@ export const Home: React.FC<HomeProps> = ({ setView, scrollTo }) => {
                         <div className="fixed bottom-24 right-6 w-[380px] max-w-[calc(100vw-48px)] z-40 animate-in slide-in-from-bottom-10 fade-in duration-300 shadow-2xl rounded-xl border border-white/20">
                             <ChatInterface
                                 sessionId={`session-${user?.id || 'guest'}`}
-                                conversationId={1} // TODO: Dynamic?
                                 userName={user?.name || 'Kullanıcı'}
                                 title="AI Randomizasyon Asistanı"
                                 suggestions={[
