@@ -265,11 +265,10 @@ export const PodcastDetail = () => {
                             <div className="flex gap-2 mb-6 border-b border-gray-200">
                                 <button
                                     onClick={() => setActiveTab('content')}
-                                    className={`pb-4 px-6 font-medium transition-colors ${
-                                        activeTab === 'content'
+                                    className={`pb-4 px-6 font-medium transition-colors ${activeTab === 'content'
                                             ? 'border-b-2 border-purple-600 text-purple-600'
                                             : 'text-gray-600 hover:text-gray-900'
-                                    }`}
+                                        }`}
                                 >
                                     <span className="flex items-center gap-2">
                                         <Mic size={18} />
@@ -278,11 +277,10 @@ export const PodcastDetail = () => {
                                 </button>
                                 <button
                                     onClick={() => setActiveTab('chat')}
-                                    className={`pb-4 px-6 font-medium transition-colors ${
-                                        activeTab === 'chat'
+                                    className={`pb-4 px-6 font-medium transition-colors ${activeTab === 'chat'
                                             ? 'border-b-2 border-purple-600 text-purple-600'
                                             : 'text-gray-600 hover:text-gray-900'
-                                    }`}
+                                        }`}
                                 >
                                     <span className="flex items-center gap-2">
                                         <MessageCircle size={18} />
@@ -294,90 +292,91 @@ export const PodcastDetail = () => {
                             {/* Content Tab */}
                             {activeTab === 'content' && (
                                 <>
-                            {/* Short Description */}
-                            {episode.short_description && (
-                                <p className="text-lg text-slate-600 mb-8 leading-relaxed">
-                                    {episode.short_description}
-                                </p>
-                            )}
-
-                            {/* Full Description / Show Notes */}
-                            {episode.full_description && (
-                                <div className="mb-12">
-                                    <h2 className="text-xl font-bold text-slate-800 mb-4">Bölüm Notları</h2>
-                                    <div
-                                        className="prose prose-slate max-w-none"
-                                        dangerouslySetInnerHTML={{ __html: episode.full_description }}
-                                    />
-                                </div>
-                            )}
-
-                            {/* Extra Images */}
-                            {episode.extra_images && episode.extra_images.length > 0 && (
-                                <div className="mb-12">
-                                    <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-                                        <Image size={20} />
-                                        Ek Görseller
-                                    </h2>
-                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                        {episode.extra_images.map((url, i) => (
-                                            <button
-                                                key={i}
-                                                onClick={() => setLightboxImage(url)}
-                                                className="aspect-video rounded-lg overflow-hidden bg-slate-100 hover:opacity-90 transition-opacity"
-                                            >
-                                                <img src={url} alt={`Görsel ${i + 1}`} className="w-full h-full object-cover" />
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Extra Videos */}
-                            {episode.extra_videos && episode.extra_videos.length > 0 && (
-                                <div className="mb-12">
-                                    <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
-                                        <Video size={20} />
-                                        Ek Videolar
-                                    </h2>
-                                    <div className="space-y-4">
-                                        {episode.extra_videos.map((url, i) => (
-                                            <div key={i} className="aspect-video rounded-lg overflow-hidden bg-slate-900">
-                                                {url.includes("youtube.com") || url.includes("youtu.be") ? (
-                                                    <iframe
-                                                        src={url.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/")}
-                                                        className="w-full h-full"
-                                                        allowFullScreen
-                                                        title={`Video ${i + 1}`}
-                                                    />
-                                                ) : url.includes("vimeo.com") ? (
-                                                    <iframe
-                                                        src={url.replace("vimeo.com", "player.vimeo.com/video")}
-                                                        className="w-full h-full"
-                                                        allowFullScreen
-                                                        title={`Video ${i + 1}`}
-                                                    />
-                                                ) : (
-                                                    <video src={url} controls className="w-full h-full" />
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Disclaimer */}
-                            <div className="mt-12 p-6 bg-amber-50 border border-amber-200 rounded-xl">
-                                <div className="flex items-start gap-3">
-                                    <AlertTriangle size={24} className="text-amber-600 flex-shrink-0 mt-0.5" />
-                                    <div>
-                                        <h3 className="font-bold text-amber-800 mb-1">Önemli Bilgilendirme</h3>
-                                        <p className="text-amber-700 text-sm leading-relaxed">
-                                            Bu podcast bölümü genel bilgilendirme amaçlıdır ve kişisel tıbbi tavsiye yerine
-                                            geçmez. Kararlarınızı her zaman kendi hekiminizle birlikte verin.
+                                    {/* Short Description */}
+                                    {episode.short_description && (
+                                        <p className="text-lg text-slate-600 mb-8 leading-relaxed">
+                                            {episode.short_description}
                                         </p>
+                                    )}
+
+                                    {/* Full Description / Show Notes */}
+                                    {episode.full_description && (
+                                        <div className="mb-12">
+                                            <h2 className="text-xl font-bold text-slate-800 mb-4">Bölüm Notları</h2>
+                                            <div
+                                                className="prose prose-slate max-w-none"
+                                                dangerouslySetInnerHTML={{ __html: episode.full_description }}
+                                            />
+                                        </div>
+                                    )}
+
+                                    {/* Extra Images */}
+                                    {episode.extra_images && episode.extra_images.length > 0 && (
+                                        <div className="mb-12">
+                                            <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                                <Image size={20} />
+                                                Ek Görseller
+                                            </h2>
+                                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                                {episode.extra_images.map((url, i) => (
+                                                    <button
+                                                        key={i}
+                                                        onClick={() => setLightboxImage(url)}
+                                                        className="aspect-video rounded-lg overflow-hidden bg-slate-100 hover:opacity-90 transition-opacity"
+                                                    >
+                                                        <img src={url} alt={`Görsel ${i + 1}`} className="w-full h-full object-cover" />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Extra Videos */}
+                                    {episode.extra_videos && episode.extra_videos.length > 0 && (
+                                        <div className="mb-12">
+                                            <h2 className="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2">
+                                                <Video size={20} />
+                                                Ek Videolar
+                                            </h2>
+                                            <div className="space-y-4">
+                                                {episode.extra_videos.map((url, i) => (
+                                                    <div key={i} className="aspect-video rounded-lg overflow-hidden bg-slate-900">
+                                                        {url.includes("youtube.com") || url.includes("youtu.be") ? (
+                                                            <iframe
+                                                                src={url.replace("watch?v=", "embed/").replace("youtu.be/", "youtube.com/embed/")}
+                                                                className="w-full h-full"
+                                                                allowFullScreen
+                                                                title={`Video ${i + 1}`}
+                                                            />
+                                                        ) : url.includes("vimeo.com") ? (
+                                                            <iframe
+                                                                src={url.replace("vimeo.com", "player.vimeo.com/video")}
+                                                                className="w-full h-full"
+                                                                allowFullScreen
+                                                                title={`Video ${i + 1}`}
+                                                            />
+                                                        ) : (
+                                                            <video src={url} controls className="w-full h-full" />
+                                                        )}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Disclaimer */}
+                                    <div className="mt-12 p-6 bg-amber-50 border border-amber-200 rounded-xl">
+                                        <div className="flex items-start gap-3">
+                                            <AlertTriangle size={24} className="text-amber-600 flex-shrink-0 mt-0.5" />
+                                            <div>
+                                                <h3 className="font-bold text-amber-800 mb-1">Önemli Bilgilendirme</h3>
+                                                <p className="text-amber-700 text-sm leading-relaxed">
+                                                    Bu podcast bölümü genel bilgilendirme amaçlıdır ve kişisel tıbbi tavsiye yerine
+                                                    geçmez. Kararlarınızı her zaman kendi hekiminizle birlikte verin.
+                                                </p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
                                 </>
                             )}
 

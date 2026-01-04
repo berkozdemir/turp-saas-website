@@ -266,11 +266,10 @@ export const PodcastHub = () => {
                     <div className="flex gap-2 mb-8 border-b border-gray-200">
                         <button
                             onClick={() => setActiveTab('episodes')}
-                            className={`pb-4 px-6 font-medium transition-colors ${
-                                activeTab === 'episodes'
+                            className={`pb-4 px-6 font-medium transition-colors ${activeTab === 'episodes'
                                     ? 'border-b-2 border-purple-600 text-purple-600'
                                     : 'text-gray-600 hover:text-gray-900'
-                            }`}
+                                }`}
                         >
                             <span className="flex items-center gap-2">
                                 <Mic size={18} />
@@ -279,11 +278,10 @@ export const PodcastHub = () => {
                         </button>
                         <button
                             onClick={() => setActiveTab('chat')}
-                            className={`pb-4 px-6 font-medium transition-colors ${
-                                activeTab === 'chat'
+                            className={`pb-4 px-6 font-medium transition-colors ${activeTab === 'chat'
                                     ? 'border-b-2 border-purple-600 text-purple-600'
                                     : 'text-gray-600 hover:text-gray-900'
-                            }`}
+                                }`}
                         >
                             <span className="flex items-center gap-2">
                                 <MessageCircle size={18} />
@@ -297,56 +295,57 @@ export const PodcastHub = () => {
                         <>
                             {/* Tag Filters */}
                             {availableTags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-8">
-                            <button
-                                onClick={() => setSelectedTag(null)}
-                                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${!selectedTag
-                                    ? "bg-purple-600 text-white"
-                                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                                    }`}
-                            >
-                                Tümü
-                            </button>
-                            {availableTags.map((tag) => (
-                                <button
-                                    key={tag}
-                                    onClick={() => setSelectedTag(tag)}
-                                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedTag === tag
-                                        ? "bg-purple-600 text-white"
-                                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                                        }`}
-                                >
-                                    {tag}
-                                </button>
-                            ))}
-                        </div>
-                    )}
+                                <div className="flex flex-wrap gap-2 mb-8">
+                                    <button
+                                        onClick={() => setSelectedTag(null)}
+                                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${!selectedTag
+                                            ? "bg-purple-600 text-white"
+                                            : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                            }`}
+                                    >
+                                        Tümü
+                                    </button>
+                                    {availableTags.map((tag) => (
+                                        <button
+                                            key={tag}
+                                            onClick={() => setSelectedTag(tag)}
+                                            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${selectedTag === tag
+                                                ? "bg-purple-600 text-white"
+                                                : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                                                }`}
+                                        >
+                                            {tag}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
 
-                    {/* Episode List */}
-                    {loading ? (
-                        <div className="flex items-center justify-center py-20">
-                            <Loader2 className="animate-spin text-purple-600" size={40} />
-                        </div>
-                    ) : episodes.length === 0 ? (
-                        <div className="text-center py-20">
-                            <Mic size={64} className="mx-auto text-slate-300 mb-4" />
-                            <h3 className="text-xl font-bold text-slate-700 mb-2">Yakında Yeni Bölümler</h3>
-                            <p className="text-slate-500">
-                                Podcast bölümlerimiz hazırlanıyor. Yakında burada dinleyebileceksiniz!
-                            </p>
-                        </div>
-                    ) : (
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {episodes.map((episode) => (
-                                <EpisodeCard
-                                    key={episode.id}
-                                    episode={episode}
-                                    isActive={currentEpisode?.id === episode.id}
-                                    isPlaying={currentEpisode?.id === episode.id && isPlaying}
-                                    onPlay={() => playEpisode(episode)}
-                                />
-                            ))}
-                        </div>
+                            {/* Episode List */}
+                            {loading ? (
+                                <div className="flex items-center justify-center py-20">
+                                    <Loader2 className="animate-spin text-purple-600" size={40} />
+                                </div>
+                            ) : episodes.length === 0 ? (
+                                <div className="text-center py-20">
+                                    <Mic size={64} className="mx-auto text-slate-300 mb-4" />
+                                    <h3 className="text-xl font-bold text-slate-700 mb-2">Yakında Yeni Bölümler</h3>
+                                    <p className="text-slate-500">
+                                        Podcast bölümlerimiz hazırlanıyor. Yakında burada dinleyebileceksiniz!
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {episodes.map((episode) => (
+                                        <EpisodeCard
+                                            key={episode.id}
+                                            episode={episode}
+                                            isActive={currentEpisode?.id === episode.id}
+                                            isPlaying={currentEpisode?.id === episode.id && isPlaying}
+                                            onPlay={() => playEpisode(episode)}
+                                        />
+                                    ))}
+                                </div>
+                            )}
                         </>
                     )}
 
