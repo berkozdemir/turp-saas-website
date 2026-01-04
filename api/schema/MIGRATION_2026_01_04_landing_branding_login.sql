@@ -111,5 +111,37 @@ ADD COLUMN IF NOT EXISTS `reset_token_expires` TIMESTAMP NULL;
 -- SHOW COLUMNS FROM endusers;
 
 -- ========================================
+-- 5. PODCASTS - Add preview_clip_url column (if missing)
+-- ========================================
+
+ALTER TABLE `podcasts` 
+ADD COLUMN IF NOT EXISTS `preview_clip_url` VARCHAR(1024) NULL COMMENT '30 second preview for non-members' AFTER `audio_url`;
+
+-- ========================================
+-- 6. VERIFY/CREATE NIPT.TR TENANT
+-- ========================================
+
+-- Check if nipt.tr tenant exists:
+SELECT id, code, name, primary_domain FROM tenants WHERE primary_domain = 'nipt.tr';
+
+-- If nipt.tr tenant doesn't exist, create one:
+-- INSERT INTO tenants (code, name, primary_domain, is_active) 
+-- VALUES ('nipt', 'NIPT Portal', 'nipt.tr', 1)
+-- ON DUPLICATE KEY UPDATE primary_domain = 'nipt.tr';
+
+-- Or update existing tenant to use nipt.tr domain:
+-- UPDATE tenants SET primary_domain = 'nipt.tr' WHERE code = 'momguard';
+
+-- ========================================
+-- 7. DEBUG: Check podcast data for nipt tenant
+-- ========================================
+
+-- Find podcasts for nipt-related tenants:
+-- SELECT p.id, p.title, p.status, p.tenant_id, t.code, t.primary_domain 
+-- FROM podcasts p 
+-- JOIN tenants t ON p.tenant_id = t.id 
+-- WHERE t.code IN ('momguard', 'verifi', 'veritas', 'nipt');
+
+-- ========================================
 -- END OF MIGRATION
 -- ========================================
