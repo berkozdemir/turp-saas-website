@@ -10,7 +10,7 @@ require_once __DIR__ . '/../../config/db.php';
 /**
  * List legal documents for tenant
  */
-function legal_list($tenant_id): array
+function legal_list(int $tenant_id): array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("
@@ -27,7 +27,7 @@ function legal_list($tenant_id): array
 /**
  * Get legal document by type
  */
-function legal_get_by_type($tenant_id, string $key): ?array
+function legal_get_by_type(int $tenant_id, string $key): ?array
 {
     $conn = get_db_connection();
 
@@ -51,7 +51,7 @@ function legal_get_by_type($tenant_id, string $key): ?array
 /**
  * Get legal document by ID
  */
-function legal_get($tenant_id, int $id): ?array
+function legal_get(int $tenant_id, int $id): ?array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("SELECT * FROM legal_documents WHERE id = ? AND tenant_id = ?");
@@ -62,7 +62,7 @@ function legal_get($tenant_id, int $id): ?array
 /**
  * Create or update legal document
  */
-function legal_save($tenant_id, string $key, array $data): int
+function legal_save(int $tenant_id, string $key, array $data): int
 {
     $conn = get_db_connection();
 

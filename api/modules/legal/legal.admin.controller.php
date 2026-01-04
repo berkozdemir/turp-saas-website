@@ -27,27 +27,25 @@ function handle_legal_admin($action)
     $ctx = require_admin_context();
     $tenant_id = $ctx['tenant_id'];
 
-    // Resolve Tenant Code because Legal Docs use Slug (String) in DB
-    require_once __DIR__ . '/../../core/tenant/tenant.service.php';
-    $tenant_data = get_tenant_by_id($tenant_id);
-    // Use Code as the storage identifier (e.g. 'nipt' instead of 21)
-    $storage_tenant_id = $tenant_data ? $tenant_data['code'] : 'turp';
+    // 2. Get Tenant Context (Standardized: INT)
+    $tenant_id = (int) $tenant_id;
 
     $conn = get_db_connection();
 
+    // 3. Route Action
     switch ($action) {
         case 'get_legal_docs':
         case 'get_legal_docs_admin':
-            return legal_admin_list($conn, $storage_tenant_id);
+            return legal_admin_list($conn, $tenant_id);
         case 'get_legal_doc':
         case 'get_legal_doc_admin':
-            return legal_admin_get($conn, $storage_tenant_id);
+            return legal_admin_get($conn, $tenant_id);
         case 'save_legal_doc':
         case 'save_legal_doc_admin':
-            return legal_admin_save($conn, $storage_tenant_id);
+            return legal_admin_save($conn, $tenant_id);
         case 'delete_legal_doc':
         case 'delete_legal_doc_admin':
-            return legal_admin_delete($conn, $storage_tenant_id);
+            return legal_admin_delete($conn, $tenant_id);
         default:
             return false;
     }

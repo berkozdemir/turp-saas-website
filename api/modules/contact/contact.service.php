@@ -10,7 +10,7 @@ require_once __DIR__ . '/../../config/db.php';
 /**
  * Get contact config for tenant
  */
-function contact_get_config($tenant_id): ?array
+function contact_get_config(int $tenant_id): ?array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("SELECT * FROM contact_configs WHERE tenant_id = ?");
@@ -21,7 +21,7 @@ function contact_get_config($tenant_id): ?array
 /**
  * Save contact config
  */
-function contact_save_config($tenant_id, array $data): bool
+function contact_save_config(int $tenant_id, array $data): bool
 {
     $conn = get_db_connection();
 
@@ -76,7 +76,7 @@ function contact_save_config($tenant_id, array $data): bool
 /**
  * List contact messages for tenant
  */
-function contact_list_messages($tenant_id, array $options = []): array
+function contact_list_messages(int $tenant_id, array $options = []): array
 {
     $conn = get_db_connection();
 
@@ -103,7 +103,7 @@ function contact_list_messages($tenant_id, array $options = []): array
 /**
  * Create contact message
  */
-function contact_create_message($tenant_id, array $data): int
+function contact_create_message(int $tenant_id, array $data): int
 {
     $conn = get_db_connection();
 

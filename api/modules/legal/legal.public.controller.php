@@ -26,20 +26,22 @@ function handle_legal_public(string $action): bool
 
     switch ($action) {
         case 'get_legal_doc_public':
-            $tenant_code = get_current_tenant_code();
-            $key = $_GET['key'] ?? '';
+            // 1. Resolve Tenant ID (Standardized: INT)
+            $tenant_id = get_current_tenant_id();
 
-            if (empty($key)) {
-                echo json_encode(['success' => false, 'error' => 'Key required']);
-                return true;
-            }
+            // 2. Fetch Documents using ID
+            $type = $_GET['type'] ?? 'all';
 
-            $doc = legal_get_by_type($tenant_code, $key);
-
-            if ($doc) {
-                echo json_encode(['success' => true, 'data' => $doc]);
+            if ($type === 'all') {
+                $docs = legal_list($tenant_id);
+                json_response($docs);
             } else {
-                echo json_encode(['success' => false, 'error' => 'Document not found']);
+                $doc = legal_get_by_type($tenant_id, $type);
+                if ($doc) {
+                    json_response($doc);
+                } else {
+                    json_response(['error' => 'Document not found'], 404);
+                }
             }
             return true;
         default:
