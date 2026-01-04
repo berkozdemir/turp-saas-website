@@ -525,7 +525,12 @@ if ($action == 'update_booking_status' && $_SERVER['REQUEST_METHOD'] === 'POST')
             throw new Exception('Invalid status');
         }
 
-        $stmt = $conn->prepare("UPDATE nipt_bookings SET status = ? WHERE id = ?");
+        // SECURITY FIX: Restrict update to NIPT tenants only
+        $stmt = $conn->prepare("
+            UPDATE nipt_bookings SET status = ? 
+            WHERE id = ? 
+            AND tenant_id IN (SELECT id FROM tenants WHERE code IN ('momguard', 'verifi', 'veritas', 'nipt', 'westesti'))
+        ");
         $stmt->execute([$data['status'], $data['id']]);
 
         // TODO: Trigger Email notification based on status (e.g. 'confirmed', 'completed')
