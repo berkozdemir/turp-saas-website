@@ -5,6 +5,13 @@ require_once __DIR__ . '/../config/db.php';
 
 header('Content-Type: text/plain');
 
+// Security Gate: Prevent unauthorized execution
+$key = $_GET['key'] ?? '';
+if ($key !== 'turp_fix_admin_2026') {
+    http_response_code(403);
+    die("Erişim Reddedildi. (Access Denied). SSH erişimi yoksa '?key=turp_fix_admin_2026' parametresini kullanın.");
+}
+
 function log_msg($msg)
 {
     echo $msg . "\n";
