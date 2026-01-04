@@ -311,7 +311,7 @@ const AdminContent = () => {
       case "media":
         return <AdminMediaList />;
       case "image_optimizer":
-        return <ImageOptimizerPanel />;
+        return <ImageOptimizerPanel token={session.token} />;
       case "nipt_bookings":
         return <AdminNIPTBookings token={session.token} />;
       case "doctors":

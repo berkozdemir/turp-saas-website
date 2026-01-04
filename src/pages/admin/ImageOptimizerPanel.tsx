@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { Settings, Play, Pause, CheckCircle2, AlertCircle, Loader2, HardDrive, Image as ImageIcon } from "lucide-react";
 import { getTenantHeader } from "../../context/TenantContext";
 
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+const ENV_API_URL = import.meta.env.VITE_API_URL || '/api';
+const API_URL = ENV_API_URL.endsWith('/index.php') ? ENV_API_URL : `${ENV_API_URL}/index.php`;
 
 interface OptimizationStats {
     total_images: number;
@@ -24,7 +25,11 @@ interface BatchResult {
     errors?: { id: number; error: string }[];
 }
 
-export function ImageOptimizerPanel() {
+interface Props {
+    token: string;
+}
+
+export function ImageOptimizerPanel({ token }: Props) {
     const [stats, setStats] = useState<OptimizationStats | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isOptimizing, setIsOptimizing] = useState(false);
@@ -35,7 +40,7 @@ export function ImageOptimizerPanel() {
     const [onlyUnoptimized, setOnlyUnoptimized] = useState(true);
     const [batchSize] = useState(25);
 
-    const authToken = localStorage.getItem('authToken');
+
     const tenantHeader = getTenantHeader();
 
     const formatBytes = (bytes: number) => {
@@ -48,9 +53,9 @@ export function ImageOptimizerPanel() {
 
     const fetchStats = useCallback(async () => {
         try {
-            const res = await fetch(`${API_URL}/index.php?action=get_media_optimization_stats`, {
+            const res = await fetch(`${API_URL}?action=get_media_optimization_stats`, {
                 headers: {
-                    'Authorization': `Bearer ${authToken}`,
+                    'Authorization': `Bearer ${token}`,
                     ...tenantHeader
                 }
             });
@@ -63,7 +68,7 @@ export function ImageOptimizerPanel() {
         } finally {
             setIsLoading(false);
         }
-    }, [authToken, tenantHeader]);
+    }, [token, tenantHeader]);
 
     useEffect(() => {
         fetchStats();
@@ -71,10 +76,10 @@ export function ImageOptimizerPanel() {
 
     const runBatch = async (): Promise<BatchResult | null> => {
         try {
-            const res = await fetch(`${API_URL}/index.php?action=optimize_media_batch`, {
+            const res = await fetch(`${API_URL}?action=optimize_media_batch`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${authToken}`,
+                    'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
                     ...tenantHeader
                 },
