@@ -1,3 +1,13 @@
+/**
+ * Page: MomGuard Intro (NIPT)
+ * Route: /t/momguard
+ * Tenant: NIPT
+ * Description:
+ *   - Landing page for MomGuard product (LabGenomics).
+ *   - Includes embedded Podcast Player with AI Disclaimer.
+ * Related:
+ *   - Components: PodcastAIDisclaimer, NIPTHeader
+ */
 import React from 'react';
 import { useNavigate } from "react-router-dom";
 import {
@@ -11,10 +21,9 @@ import {
     Stethoscope,
     FileText,
     Microscope,
-    Baby,
+
     ChevronDown,
     ChevronUp,
-    AlertCircle,
     Headphones
 } from "lucide-react";
 import { NIPTHeader } from '../components/NIPTHeader';

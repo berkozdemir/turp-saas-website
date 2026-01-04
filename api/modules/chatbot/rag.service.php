@@ -1,7 +1,12 @@
 <?php
 /**
- * RAG (Retrieval-Augmented Generation) Service
- * Handles content indexing and search for chatbot knowledge base
+ * Service: RAG Service (Retrieval-Augmented Generation)
+ * Scope: API Internal
+ * Description:
+ *   - Handles vector search and context retrieval for the Chatbot.
+ *   - Embeds podcast transcripts and documents for AI context.
+ * Related:
+ *   - Service: chatbot.service.php
  */
 
 require_once __DIR__ . '/../../config/db.php';

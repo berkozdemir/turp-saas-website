@@ -1,3 +1,12 @@
+/**
+ * Hook: useChatbot
+ * Description:
+ *   - Manages chatbot state, message history, and API interactions.
+ *   - Handles streaming responses from the AI backend.
+ * Related:
+ *   - API: ?action=chatbot_send_message
+ *   - Component: ChatWidget
+ */
 import { useState, useCallback } from 'react';
 import { fetchAPI } from '../lib/contentApi';
 

@@ -1,5 +1,15 @@
 <?php
 /**
+ * Module: Legal Documents Admin Controller
+ * Endpoint: ?action=legal_admin_list, ?action=legal_admin_save
+ * Tenant: All (Admin Context)
+ * Description:
+ *   - Backend for managing legal texts (KVKK, Terms, etc.).
+ *   - Handles CRUD operations and multilingual content storage.
+ * Related:
+ *   - Page: AdminLegalList.tsx
+ */
+/**
  * Legal Admin Controller
  */
 
@@ -28,7 +38,7 @@ function handle_legal_admin($action)
     $tenant_id = $ctx['tenant_id'];
 
     // 2. Get Tenant Context (Standardized: INT)
-    $tenant_id = (int) $tenant_id;
+    // $tenant_id = (int) $tenant_id; // REMOVED to support string IDs like 'iwrs'
 
     $conn = get_db_connection();
 
@@ -55,7 +65,7 @@ function legal_admin_list($conn, $tenant_id)
 {
     try {
         // Fetch ALL fields so the editor has data to show
-        $stmt = $conn->prepare("SELECT * FROM legal_documents WHERE tenant_id = ? ORDER BY type, version DESC");
+        $stmt = $conn->prepare("SELECT * FROM legal_documents WHERE tenant_id = ? ORDER BY sort_order ASC, `key` ASC");
         $stmt->execute([$tenant_id]);
         echo json_encode(['success' => true, 'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
     } catch (Exception $e) {

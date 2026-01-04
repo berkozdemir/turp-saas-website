@@ -1,7 +1,13 @@
 <?php
 /**
- * Chatbot Service
- * Main business logic for chatbot conversations and lead management
+ * Service: Chatbot Service
+ * Scope: Public / Admin API
+ * Description:
+ *   - Core logic for AI Chatbot interactions.
+ *   - Manages conversation history, RAG integration, and message persistence.
+ * Related:
+ *   - Service: rag.service.php
+ *   - Controller: chatbot.public.controller.php
  */
 
 require_once __DIR__ . '/../../config/db.php';

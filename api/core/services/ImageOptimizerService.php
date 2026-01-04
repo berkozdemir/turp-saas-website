@@ -1,5 +1,13 @@
 <?php
 /**
+ * Service: Image Optimizer Service
+ * Scope: Core / Shared
+ * Description:
+ *   - Provides GD-based image resizing and compression.
+ *   - Converts uploads to WebP format for performance.
+ *   - Used during media upload and batch optimization.
+ */
+/**
  * ImageOptimizerService
  * 
  * Multi-tenant image optimization service using GD library.

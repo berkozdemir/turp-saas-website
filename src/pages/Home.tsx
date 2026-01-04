@@ -1,6 +1,16 @@
-// src/pages/Home.tsx
 // @ts-nocheck
 import React, { useState, useEffect } from 'react';
+/**
+ * Page: Home
+ * Route: /
+ * Tenant: All (Dynamic Content)
+ * Description:
+ *   - Landing page. Displays different content based on Tenant.
+ *   - Turp: Corporate overview. NIPT: NIPT landing. IWRS: IWRS specific.
+ * Related:
+ *   - Components: Hero, Features, Footer
+ */
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { getModuleContentTranslated } from '../data/content';
 import { useLandingConfig } from '../hooks/useLandingConfig';

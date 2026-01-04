@@ -1,3 +1,14 @@
+/**
+ * Page: Podcast Hub (NIPT)
+ * Route: /podcast
+ * Tenant: NIPT
+ * Description:
+ *   - Main landing for podcast episodes.
+ *   - Lists latest episodes with filtering capabilities.
+ * Related:
+ *   - API: ?action=get_podcasts_public
+ *   - Components: StickyAudioPlayer
+ */
 import { NIPTHeader } from '../components/NIPTHeader';
 import { NIPTFooter } from '../components/NIPTFooter';
 import { PodcastAIDisclaimer } from '../components/PodcastAIDisclaimer';

@@ -1,3 +1,14 @@
+/**
+ * Page: Admin Media List
+ * Route: /admin (Tab: Media)
+ * Tenant: All (Admin Context)
+ * Description:
+ *   - Comprehensive media management interface.
+ *   - Supports drag-and-drop upload, listing, and batch optimization.
+ * Related:
+ *   - Component: ImageOptimizerPanel
+ *   - API: ?action=media_list
+ */
 import { useState, useEffect, useCallback } from "react";
 import { ArrowLeft, Upload, Search, Trash2, Copy, Check, X, Image as ImageIcon, Loader2, FolderOpen } from "lucide-react";
 import { getTenantHeader } from "../../context/TenantContext";

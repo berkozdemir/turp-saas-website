@@ -1,3 +1,14 @@
+/**
+ * Page: Podcast Detail (NIPT)
+ * Route: /podcast/:slug
+ * Tenant: NIPT
+ * Description:
+ *   - Displays detailed info about a podcast episode.
+ *   - Features sticky player integration and AI Disclaimer.
+ * Related:
+ *   - API: ?action=get_podcast_detail
+ *   - Components: PodcastAIDisclaimer
+ */
 import { NIPTHeader } from '../components/NIPTHeader';
 import { NIPTFooter } from '../components/NIPTFooter';
 import { PodcastAIDisclaimer } from '../components/PodcastAIDisclaimer';

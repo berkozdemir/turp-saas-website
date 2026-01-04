@@ -1,3 +1,14 @@
+/**
+ * Page: IWRS Public Landing
+ * Route: / (iwrs.com.tr)
+ * Tenant: IWRS
+ * Description:
+ *   - Public homepage for IWRS functionality.
+ *   - Shows login prompts or dashboard link based on auth state.
+ *   - Hosts the `RandomizationBot` widget.
+ * Related:
+ *   - Component: RandomizationBot
+ */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import { supabase } from "@/iwrs/integrations/supabase/client"; // Removed

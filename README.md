@@ -4,7 +4,11 @@ Multi-tenant SaaS platform built with **React + Vite + TypeScript** (Frontend) a
 
 ---
 
-## 🏗️ Architecture Overview
+## Turp SaaS Website
+
+> **See [ARCHITECTURE.md](./ARCHITECTURE.md) for detailed comprehensive documentation on Project Structure, Multi-Tenant Logic, and Key Modules.**
+
+## Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

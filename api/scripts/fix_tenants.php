@@ -1,5 +1,14 @@
 <?php
-// api/scripts/fix_tenants.php
+/**
+ * Script: Fix Tenant IDs (Migration)
+ * Type: Maintenance / Migration
+ * Description:
+ *   - Standardizes `tenant_id` column values to Integer.
+ *   - Updates legacy string IDs (e.g. 'nipt') to Integers (e.g. 3).
+ * Usage:
+ *   - CLI: php api/scripts/fix_tenants.php
+ *   - Web: ?action=fix_tenants&key=...
+ */
 
 require_once __DIR__ . '/../config/db.php';
 

@@ -1,3 +1,13 @@
+/**
+ * Page: Verifi Intro (NIPT)
+ * Route: /t/verifi
+ * Tenant: NIPT
+ * Description:
+ *   - Landing page for Verifi product.
+ *   - Includes embedded Podcast Player with AI Disclaimer.
+ * Related:
+ *   - Components: PodcastAIDisclaimer, NIPTHeader
+ */
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import {

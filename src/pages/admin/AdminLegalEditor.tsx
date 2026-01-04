@@ -1,4 +1,13 @@
-import { useState, useEffect } from "react";
+/**
+ * Component: Admin Legal Editor
+ * Context: Modal in Admin Legal List
+ * Description:
+ *   - Form to edit legal document content.
+ *   - Supports multilingual AI translation (TR -> EN, etc.).
+ * Related:
+ *   - API: ?action=legal_admin_save
+ */
+import React, { useState } from 'react';
 import { ArrowLeft, Save, Loader2, Globe, Eye, Hash, Languages, Sparkles, Calendar } from "lucide-react";
 import { getTenantHeader } from "../../context/TenantContext";
 

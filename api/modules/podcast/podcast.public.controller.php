@@ -1,5 +1,15 @@
 <?php
 /**
+ * Module: Podcast Public Controller
+ * Endpoint: ?action=get_podcasts_public, ?action=get_podcast_detail
+ * Tenant: All (Filtered by Tenant ID)
+ * Description:
+ *   - Public API for fetching podcast episodes.
+ *   - Supports filtering by category/tag and detailed view.
+ * Related:
+ *   - Service: podcast.service.php
+ */
+/**
  * Podcast Public Controller
  */
 

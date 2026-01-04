@@ -1,3 +1,14 @@
+/**
+ * Page: App Root
+ * Route: /
+ * Tenant: All (Dynamic Resolution)
+ * Description:
+ *   - Main application entry point handling client-side routing.
+ *   - Implements Multi-Tenant Logic via `useTenantSettings`.
+ *   - Lazy loads page chunks for performance.
+ * Related:
+ *   - Context: TenantSettingsProvider, PodcastPlayerProvider
+ */
 import { useState, useEffect, lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { getModuleContentTranslated } from "./data/content";

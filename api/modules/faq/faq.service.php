@@ -11,11 +11,11 @@ require_once __DIR__ . '/../../config/db.php';
 /**
  * List FAQs for a tenant
  * 
- * @param int $tenant_id
+ * @param mixed $tenant_id
  * @param array $options [is_active, is_showcased, search, page, limit]
  * @return array FAQs
  */
-function faq_list(int $tenant_id, array $options = []): array
+function faq_list($tenant_id, array $options = []): array
 {
     $conn = get_db_connection();
 
@@ -57,7 +57,7 @@ function faq_list(int $tenant_id, array $options = []): array
 /**
  * Get single FAQ
  */
-function faq_get(int $tenant_id, int $id): ?array
+function faq_get($tenant_id, int $id): ?array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("SELECT * FROM faqs WHERE id = ? AND tenant_id = ?");
@@ -68,7 +68,7 @@ function faq_get(int $tenant_id, int $id): ?array
 /**
  * Create FAQ
  */
-function faq_create(int $tenant_id, array $data): int
+function faq_create($tenant_id, array $data): int
 {
     $conn = get_db_connection();
 
@@ -99,7 +99,7 @@ function faq_create(int $tenant_id, array $data): int
 /**
  * Update FAQ
  */
-function faq_update(int $tenant_id, int $id, array $data): bool
+function faq_update($tenant_id, int $id, array $data): bool
 {
     $conn = get_db_connection();
 
@@ -129,7 +129,7 @@ function faq_update(int $tenant_id, int $id, array $data): bool
 /**
  * Delete FAQ
  */
-function faq_delete(int $tenant_id, int $id): bool
+function faq_delete($tenant_id, int $id): bool
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("DELETE FROM faqs WHERE id = ? AND tenant_id = ?");
@@ -139,7 +139,7 @@ function faq_delete(int $tenant_id, int $id): bool
 /**
  * Get published FAQs (public)
  */
-function faq_get_published(int $tenant_id, ?string $page_slug = null): array
+function faq_get_published($tenant_id, ?string $page_slug = null): array
 {
     $conn = get_db_connection();
 
@@ -169,7 +169,7 @@ function ensure_faq_table(): void
     $conn->exec("
         CREATE TABLE IF NOT EXISTS faqs (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            tenant_id INT NOT NULL,
+            tenant_id VARCHAR(50) NOT NULL,
             question_tr TEXT,
             answer_tr TEXT,
             question_en TEXT,
@@ -212,12 +212,12 @@ function ensure_faq_table(): void
  * Bulk import FAQs for a tenant/page
  * Only imports if no FAQs exist for the tenant+page combination
  * 
- * @param int $tenant_id
+ * @param mixed $tenant_id
  * @param string $page_slug
  * @param array $items Array of [question, answer, order]
  * @return array [imported => int, skipped => bool]
  */
-function faq_bulk_import(int $tenant_id, string $page_slug, array $items): array
+function faq_bulk_import($tenant_id, string $page_slug, array $items): array
 {
     $conn = get_db_connection();
     ensure_faq_table();

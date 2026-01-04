@@ -1,5 +1,15 @@
+/**
+ * Page: Admin Legal Documents List
+ * Route: /admin (Tab: Legal)
+ * Tenant: All (Admin Context)
+ * Description:
+ *   - Lists legal policy documents (KVKK, Terms, Privacy) per tenant.
+ *   - Allows editing via AdminLegalEditor.
+ * Related:
+ *   - API: ?action=legal_admin_list
+ */
 import { useState, useEffect } from "react";
-import { Search, Plus, Edit2, Trash2, Globe, Star, StarOff, Eye, EyeOff, Loader2, ChevronLeft, ChevronRight, FileText } from "lucide-react";
+import { Search, Plus, Edit2, Trash2, Eye, EyeOff, Loader2, FileText } from "lucide-react";
 import { useNotification } from "../../components/NotificationProvider";
 import { useConfirm } from "../../components/ConfirmProvider";
 import { getTenantHeader } from "../../context/TenantContext";
@@ -15,7 +25,6 @@ export const AdminLegalList = ({ token, onEdit, onCreate }: AdminLegalListProps)
     const [loading, setLoading] = useState(true);
     const notify = useNotification();
     const confirm = useConfirm();
-    const [page, setPage] = useState(1);
     const [search, setSearch] = useState("");
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";

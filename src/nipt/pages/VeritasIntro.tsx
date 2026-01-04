@@ -1,3 +1,13 @@
+/**
+ * Page: Veritas Intro (NIPT)
+ * Route: /t/veritas
+ * Tenant: NIPT
+ * Description:
+ *   - Landing page for Veritas product (Whole Genome Sequencing).
+ *   - Includes embedded Podcast Player with AI Disclaimer.
+ * Related:
+ *   - Components: PodcastAIDisclaimer, NIPTHeader
+ */
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import {
