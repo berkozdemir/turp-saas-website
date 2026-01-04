@@ -58,7 +58,8 @@ function ensure_enduser_tables(): void
 function enduser_signup_allowed($tenant_id): bool
 {
     $conn = get_db_connection();
-    $stmt = $conn->prepare("SELECT allow_enduser_signup FROM tenants WHERE id = ?");
+    // Use 'code' column since tenant_id is a string code like 'iwrs', 'nipt', etc.
+    $stmt = $conn->prepare("SELECT allow_enduser_signup FROM tenants WHERE code = ?");
     $stmt->execute([$tenant_id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result && $result['allow_enduser_signup'];
@@ -70,7 +71,8 @@ function enduser_signup_allowed($tenant_id): bool
 function enduser_login_allowed($tenant_id): bool
 {
     $conn = get_db_connection();
-    $stmt = $conn->prepare("SELECT allow_enduser_login FROM tenants WHERE id = ?");
+    // Use 'code' column since tenant_id is a string code like 'iwrs', 'nipt', etc.
+    $stmt = $conn->prepare("SELECT allow_enduser_login FROM tenants WHERE code = ?");
     $stmt->execute([$tenant_id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result && $result['allow_enduser_login'];
