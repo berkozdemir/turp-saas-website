@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { NIPTHeader } from '../components/NIPTHeader';
 import { NIPTFooter } from '../components/NIPTFooter';
+import { PodcastAIDisclaimer } from '../components/PodcastAIDisclaimer';
 
 export const VerifiIntro = () => {
     const navigate = useNavigate();
@@ -114,6 +115,7 @@ export const VerifiIntro = () => {
                                     <source src="https://cdn.nipt.tr/nipt.tr/NIPT_Verifi.m4a" type="audio/mp4" />
                                     Tarayıcınız ses oynatıcıyı desteklemiyor.
                                 </audio>
+                                <PodcastAIDisclaimer variant="dark" />
                             </div>
                         </div>
                     </div>
