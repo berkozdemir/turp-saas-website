@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { FlaskConical, Headphones, HelpCircle, Building2, Phone, Calendar } from 'lucide-react';
+import { FlaskConical, HelpCircle, Building2, Phone, Calendar } from 'lucide-react';
 
 // ============================================
 // FOOTER CONFIG

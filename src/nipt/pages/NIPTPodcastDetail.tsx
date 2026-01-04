@@ -44,7 +44,7 @@ const formatDate = (dateStr?: string) => {
 export const NIPTPodcastDetail = () => {
     const { slug } = useParams<{ slug: string }>();
     const navigate = useNavigate();
-    const { playEpisode, currentEpisode, isPlaying, togglePlayPause } = usePodcastPlayer();
+    const { playEpisode, currentEpisode, isPlaying, togglePlay } = usePodcastPlayer();
 
     const [episode, setEpisode] = useState<Episode | null>(null);
     const [loading, setLoading] = useState(true);
@@ -77,15 +77,15 @@ export const NIPTPodcastDetail = () => {
         if (!episode) return;
 
         if (currentEpisode?.id === episode.id) {
-            togglePlayPause();
+            togglePlay();
         } else {
             playEpisode({
                 id: episode.id,
                 slug: episode.slug,
                 title: episode.title,
-                audioUrl: episode.preview_clip_url || episode.audio_url,
-                coverImageUrl: episode.cover_image_url,
-                isPreview: !!episode.preview_clip_url && !episode.audio_url
+                audio_url: episode.audio_url,
+                preview_clip_url: episode.preview_clip_url,
+                cover_image_url: episode.cover_image_url,
             });
         }
     };
