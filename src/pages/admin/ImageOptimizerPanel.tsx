@@ -24,11 +24,7 @@ interface BatchResult {
     errors?: { id: number; error: string }[];
 }
 
-interface ImageOptimizerPanelProps {
-    onBack?: () => void;
-}
-
-export function ImageOptimizerPanel({ onBack }: ImageOptimizerPanelProps) {
+export function ImageOptimizerPanel() {
     const [stats, setStats] = useState<OptimizationStats | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isOptimizing, setIsOptimizing] = useState(false);

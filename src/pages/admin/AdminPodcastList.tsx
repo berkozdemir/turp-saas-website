@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import {
     Search, Plus, Edit2, Trash2, Clock, Mic, Loader2,
-    ChevronLeft, ChevronRight, Filter, Globe, Tag
+    ChevronLeft, ChevronRight
 } from "lucide-react";
 import { useNotification } from "../../components/NotificationProvider";
 import { useConfirm } from "../../components/ConfirmProvider";
