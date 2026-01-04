@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Mic, Play, ChevronRight, Calendar, Clock, Loader2, ExternalLink } from "lucide-react";
+import { Mic, Play, ChevronRight, Calendar, Clock, Loader2, ExternalLink, MessageCircle } from "lucide-react";
 import { usePodcastPlayer } from "../context/PodcastPlayerContext";
+import { PodcastChatTab } from "../components/chatbot/PodcastChatTab";
 
 interface Episode {
     id: number;
@@ -145,6 +146,7 @@ export const PodcastHub = () => {
     const [loading, setLoading] = useState(true);
     const [selectedTag, setSelectedTag] = useState<string | null>(null);
     const [availableTags, setAvailableTags] = useState<string[]>([]);
+    const [activeTab, setActiveTab] = useState<'episodes' | 'chat'>('episodes');
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
     const API_BASE_URL = API_URL.endsWith("/index.php") ? API_URL : `${API_URL}/index.php`;
@@ -260,8 +262,41 @@ export const PodcastHub = () => {
 
                 {/* Content */}
                 <section className="max-w-6xl mx-auto px-4 py-12">
-                    {/* Tag Filters */}
-                    {availableTags.length > 0 && (
+                    {/* Tab Navigation */}
+                    <div className="flex gap-2 mb-8 border-b border-gray-200">
+                        <button
+                            onClick={() => setActiveTab('episodes')}
+                            className={`pb-4 px-6 font-medium transition-colors ${
+                                activeTab === 'episodes'
+                                    ? 'border-b-2 border-purple-600 text-purple-600'
+                                    : 'text-gray-600 hover:text-gray-900'
+                            }`}
+                        >
+                            <span className="flex items-center gap-2">
+                                <Mic size={18} />
+                                Podcast Bölümleri
+                            </span>
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('chat')}
+                            className={`pb-4 px-6 font-medium transition-colors ${
+                                activeTab === 'chat'
+                                    ? 'border-b-2 border-purple-600 text-purple-600'
+                                    : 'text-gray-600 hover:text-gray-900'
+                            }`}
+                        >
+                            <span className="flex items-center gap-2">
+                                <MessageCircle size={18} />
+                                Soru & Cevap
+                            </span>
+                        </button>
+                    </div>
+
+                    {/* Episodes Tab */}
+                    {activeTab === 'episodes' && (
+                        <>
+                            {/* Tag Filters */}
+                            {availableTags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-8">
                             <button
                                 onClick={() => setSelectedTag(null)}
@@ -312,6 +347,12 @@ export const PodcastHub = () => {
                                 />
                             ))}
                         </div>
+                        </>
+                    )}
+
+                    {/* Chat Tab */}
+                    {activeTab === 'chat' && (
+                        <PodcastChatTab contextType="podcast_hub" />
                     )}
                 </section>
             </div>

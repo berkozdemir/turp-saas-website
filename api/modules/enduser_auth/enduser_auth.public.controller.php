@@ -6,6 +6,7 @@
 
 require_once __DIR__ . '/../../core/tenant/public_resolver.php';
 require_once __DIR__ . '/enduser_auth.service.php';
+require_once __DIR__ . '/../../core/utils/rate_limiter.php';
 
 function handle_enduser_auth_public(string $action): bool
 {
@@ -44,12 +45,18 @@ function enduser_signup_action(): bool
 {
     $tenant_id = get_current_tenant_id();
     if (!$tenant_id) {
+        http_response_code(400);
         echo json_encode(['error' => 'Tenant not found']);
         return true;
     }
 
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
     $result = enduser_signup($tenant_id, $data);
+
+    if (isset($result['error'])) {
+        http_response_code(400);
+    }
+
     echo json_encode($result);
     return true;
 }
@@ -61,12 +68,40 @@ function enduser_login_action(): bool
 {
     $tenant_id = get_current_tenant_id();
     if (!$tenant_id) {
+        http_response_code(400);
         echo json_encode(['error' => 'Tenant not found']);
+        return true;
+    }
+
+    // Rate limiting: 10 attempts per 15 minutes per IP
+    $ip = get_client_ip();
+    $rate_check = check_rate_limit($ip, 'login', 10, 900);
+    if (!$rate_check['allowed']) {
+        http_response_code(429);
+        echo json_encode([
+            'error' => 'Çok fazla giriş denemesi. Lütfen 15 dakika sonra tekrar deneyin.',
+            'retry_after' => $rate_check['reset_at'] - time()
+        ]);
         return true;
     }
 
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
     $result = enduser_login($tenant_id, $data);
+
+    // Record attempt if failed
+    if (isset($result['error'])) {
+        record_attempt($ip, 'login');
+
+        if (isset($result['email_not_verified'])) {
+            http_response_code(403);
+        } else {
+            http_response_code(401);
+        }
+    } else {
+        // Clear rate limit on successful login
+        clear_rate_limit($ip, 'login');
+    }
+
     echo json_encode($result);
     return true;
 }
@@ -209,6 +244,18 @@ function enduser_forgot_password_action(): bool
         return true;
     }
 
+    // Rate limiting: 5 attempts per 15 minutes per email
+    $rate_check = check_rate_limit($email, 'forgot_password', 5, 900);
+    if (!$rate_check['allowed']) {
+        http_response_code(429);
+        echo json_encode([
+            'error' => 'Çok fazla şifre sıfırlama talebi. Lütfen 15 dakika sonra tekrar deneyin.',
+            'retry_after' => $rate_check['reset_at'] - time()
+        ]);
+        return true;
+    }
+
+    record_attempt($email, 'forgot_password');
     $result = enduser_request_password_reset($email, $tenant_id);
     echo json_encode($result);
     return true;

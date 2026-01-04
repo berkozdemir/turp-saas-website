@@ -226,7 +226,7 @@ function send_enduser_password_reset_email($to_email, $to_name, $reset_token, $t
     if ($tenant_id === 'iwrs') {
         $app_base_url = 'https://iwrs.com.tr';
     }
-    $reset_url = $app_base_url . "/reset-password?token=" . $reset_token;
+    $reset_url = $app_base_url . "/reset-password?token=" . urlencode($reset_token);
 
     // Get tenant name for branding
     $brand_name = 'Turp Health';

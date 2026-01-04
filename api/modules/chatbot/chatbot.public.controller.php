@@ -7,70 +7,74 @@
 require_once __DIR__ . '/../../core/tenant/public_resolver.php';
 require_once __DIR__ . '/chatbot.service.php';
 
-// Resolve tenant
-$tenant = require_public_tenant();
-$tenant_id = $tenant['id'];
-
-// Get request method and data
-$method = $_SERVER['REQUEST_METHOD'];
-$data = $method === 'POST' ? json_decode(file_get_contents('php://input'), true) ?? [] : [];
-
 /**
- * Start a new chatbot conversation
- * POST /api/index.php?action=chatbot_start
+ * Handle chatbot public actions
  *
- * Body: {
- *   email: string,
- *   name: string,
- *   phone: string (optional),
- *   context_type: 'podcast_hub' | 'podcast_detail',
- *   context_id: number (optional, podcast_id if detail page)
- * }
+ * @param string $action Action name
+ * @return bool True if action was handled
  */
-if ($action === 'chatbot_start' && $method === 'POST') {
-    $result = chatbot_start_conversation($tenant_id, $data);
-    echo json_encode($result);
-    exit;
+function handle_chatbot_public(string $action): bool
+{
+    $chatbot_actions = [
+        'chatbot_start',
+        'chatbot_send_message',
+        'chatbot_get_history'
+    ];
+
+    if (!in_array($action, $chatbot_actions)) {
+        return false;
+    }
+
+    // Resolve tenant
+    $tenant = require_public_tenant();
+    $tenant_id = $tenant['id'];
+
+    // Get request method and data
+    $method = $_SERVER['REQUEST_METHOD'];
+    $data = $method === 'POST' ? json_decode(file_get_contents('php://input'), true) ?? [] : [];
+
+    handle_chatbot_action($action, $method, $tenant_id, $data);
+    return true;
 }
 
 /**
- * Send a message in existing conversation
- * POST /api/index.php?action=chatbot_send_message
- *
- * Body: {
- *   session_id: string,
- *   message: string
- * }
+ * Handle individual chatbot action
  */
-if ($action === 'chatbot_send_message' && $method === 'POST') {
-    $session_id = $data['session_id'] ?? '';
-    $message = $data['message'] ?? '';
+function handle_chatbot_action(string $action, string $method, int $tenant_id, array $data): void
+{
 
-    if (empty($session_id) || empty($message)) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Session ID ve mesaj gereklidir']);
+    if ($action === 'chatbot_start' && $method === 'POST') {
+        $result = chatbot_start_conversation($tenant_id, $data);
+        echo json_encode($result);
         exit;
     }
 
-    $result = chatbot_send_message($tenant_id, $session_id, $message);
-    echo json_encode($result);
-    exit;
-}
+    if ($action === 'chatbot_send_message' && $method === 'POST') {
+        $session_id = $data['session_id'] ?? '';
+        $message = $data['message'] ?? '';
 
-/**
- * Get conversation history
- * GET /api/index.php?action=chatbot_get_history&session_id=xxx
- */
-if ($action === 'chatbot_get_history' && $method === 'GET') {
-    $session_id = $_GET['session_id'] ?? '';
+        if (empty($session_id) || empty($message)) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Session ID ve mesaj gereklidir']);
+            exit;
+        }
 
-    if (empty($session_id)) {
-        http_response_code(400);
-        echo json_encode(['error' => 'Session ID gereklidir']);
+        $result = chatbot_send_message($tenant_id, $session_id, $message);
+        echo json_encode($result);
         exit;
     }
 
-    $result = chatbot_get_history($tenant_id, $session_id);
-    echo json_encode($result);
-    exit;
+    if ($action === 'chatbot_get_history' && $method === 'GET') {
+        $session_id = $_GET['session_id'] ?? '';
+
+        if (empty($session_id)) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Session ID gereklidir']);
+            exit;
+        }
+
+        $result = chatbot_get_history($tenant_id, $session_id);
+        echo json_encode($result);
+        exit;
+    }
 }

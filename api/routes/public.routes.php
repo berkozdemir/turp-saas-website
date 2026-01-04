@@ -20,6 +20,7 @@ require_once __DIR__ . '/../modules/legal/legal.public.controller.php';
 require_once __DIR__ . '/../modules/enduser_auth/enduser_auth.public.controller.php';
 require_once __DIR__ . '/../modules/branding/branding.public.controller.php';
 require_once __DIR__ . '/../modules/podcast/podcast.public.controller.php';
+require_once __DIR__ . '/../modules/chatbot/chatbot.public.controller.php';
 
 /**
  * Route public actions to controllers
@@ -66,6 +67,8 @@ function route_public_action(string $action): bool
     if (handle_branding_public($action))
         return true;
     if (handle_podcast_public($action))
+        return true;
+    if (handle_chatbot_public($action))
         return true;
 
     return false;

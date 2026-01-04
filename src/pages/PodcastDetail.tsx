@@ -2,9 +2,10 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import {
-    Play, Pause, Calendar, Clock, ArrowLeft, Mic, ExternalLink, AlertTriangle, Image, Video, Loader2
+    Play, Pause, Calendar, Clock, ArrowLeft, Mic, ExternalLink, AlertTriangle, Image, Video, Loader2, MessageCircle
 } from "lucide-react";
 import { usePodcastPlayer } from "../context/PodcastPlayerContext";
+import { PodcastChatTab } from "../components/chatbot/PodcastChatTab";
 
 interface Episode {
     id: number;
@@ -36,6 +37,7 @@ export const PodcastDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+    const [activeTab, setActiveTab] = useState<'content' | 'chat'>('content');
 
     const API_URL = import.meta.env.VITE_API_URL || "/api";
     const API_BASE_URL = API_URL.endsWith("/index.php") ? API_URL : `${API_URL}/index.php`;
@@ -259,6 +261,39 @@ export const PodcastDetail = () => {
                         <div className="lg:col-span-2">
                             <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">{episode.title}</h1>
 
+                            {/* Tab Navigation */}
+                            <div className="flex gap-2 mb-6 border-b border-gray-200">
+                                <button
+                                    onClick={() => setActiveTab('content')}
+                                    className={`pb-4 px-6 font-medium transition-colors ${
+                                        activeTab === 'content'
+                                            ? 'border-b-2 border-purple-600 text-purple-600'
+                                            : 'text-gray-600 hover:text-gray-900'
+                                    }`}
+                                >
+                                    <span className="flex items-center gap-2">
+                                        <Mic size={18} />
+                                        Bölüm İçeriği
+                                    </span>
+                                </button>
+                                <button
+                                    onClick={() => setActiveTab('chat')}
+                                    className={`pb-4 px-6 font-medium transition-colors ${
+                                        activeTab === 'chat'
+                                            ? 'border-b-2 border-purple-600 text-purple-600'
+                                            : 'text-gray-600 hover:text-gray-900'
+                                    }`}
+                                >
+                                    <span className="flex items-center gap-2">
+                                        <MessageCircle size={18} />
+                                        Soru & Cevap
+                                    </span>
+                                </button>
+                            </div>
+
+                            {/* Content Tab */}
+                            {activeTab === 'content' && (
+                                <>
                             {/* Short Description */}
                             {episode.short_description && (
                                 <p className="text-lg text-slate-600 mb-8 leading-relaxed">
@@ -343,7 +378,17 @@ export const PodcastDetail = () => {
                                         </p>
                                     </div>
                                 </div>
-                            </div>
+                                </>
+                            )}
+
+                            {/* Chat Tab */}
+                            {activeTab === 'chat' && (
+                                <PodcastChatTab
+                                    contextType="podcast_detail"
+                                    contextId={episode.id}
+                                    contextTitle={episode.title}
+                                />
+                            )}
                         </div>
                     </div>
                 </div>

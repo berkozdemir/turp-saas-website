@@ -21,6 +21,7 @@ require_once __DIR__ . '/../modules/legal/legal.admin.controller.php';
 require_once __DIR__ . '/../modules/landing/landing.admin.controller.php';
 require_once __DIR__ . '/../modules/branding/branding.admin.controller.php';
 require_once __DIR__ . '/../modules/podcast/podcast.admin.controller.php';
+require_once __DIR__ . '/../modules/chatbot/chatbot.admin.controller.php';
 
 /**
  * Route admin actions to controllers
@@ -100,6 +101,11 @@ function route_admin_action(string $action): bool
 
     // Podcast module
     if (handle_podcast_admin($action)) {
+        return true;
+    }
+
+    // Chatbot module
+    if (handle_chatbot_admin($action)) {
         return true;
     }
 
