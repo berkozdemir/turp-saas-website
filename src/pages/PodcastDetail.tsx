@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import {
-    Play, Pause, Calendar, Clock, ArrowLeft, Mic, ExternalLink, AlertTriangle, Image, Video, Loader2, MessageCircle
+    Play, Pause, Calendar, Clock, ArrowLeft, Mic, ExternalLink, Lock, AlertTriangle, Image, Video, Loader2, MessageCircle
 } from "lucide-react";
 import { usePodcastPlayer } from "../context/PodcastPlayerContext";
 import { PodcastChatTab } from "../components/chatbot/PodcastChatTab";
@@ -24,6 +24,7 @@ interface Episode {
         youtube?: string;
         other?: string;
     };
+    preview_clip_url?: string;
     extra_images?: string[];
     extra_videos?: string[];
 }
@@ -31,11 +32,16 @@ interface Episode {
 export const PodcastDetail = () => {
     const { slug } = useParams<{ slug: string }>();
     const navigate = useNavigate();
-    const { playEpisode, currentEpisode, isPlaying, togglePlay } = usePodcastPlayer();
+    const { playEpisode, currentEpisode, isPlaying } = usePodcastPlayer();
 
     const [episode, setEpisode] = useState<Episode | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+
+    // Derived state
+    const isAuthenticated = !!localStorage.getItem('enduser_token');
+    const isPreview = !isAuthenticated && !!episode?.preview_clip_url;
+
     const [lightboxImage, setLightboxImage] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'content' | 'chat'>('content');
 
@@ -66,6 +72,8 @@ export const PodcastDetail = () => {
         fetchEpisode();
     }, [slug]);
 
+
+
     const formatDuration = (seconds?: number) => {
         if (!seconds) return "";
         const mins = Math.floor(seconds / 60);
@@ -82,17 +90,9 @@ export const PodcastDetail = () => {
         });
     };
 
-    const handlePlay = () => {
-        if (!episode?.audio_url) return;
 
-        if (currentEpisode?.id === episode.id) {
-            togglePlay();
-        } else {
-            playEpisode(episode);
-        }
-    };
 
-    const isCurrentEpisode = currentEpisode?.id === episode?.id;
+
 
     if (loading) {
         return (
@@ -167,23 +167,43 @@ export const PodcastDetail = () => {
                                 {/* Play Button */}
                                 {episode.audio_url ? (
                                     <button
-                                        onClick={handlePlay}
+                                        onClick={() => episode && playEpisode(episode)}
                                         className="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-3 shadow-lg"
                                     >
-                                        {isCurrentEpisode && isPlaying ? (
+                                        {isPlaying && currentEpisode?.id === episode.id ? (
                                             <>
                                                 <Pause size={24} />
-                                                Duraklat
+                                                {isPreview ? "Önizleme Çalıyor..." : "Dinlemeye Devam Et"}
                                             </>
                                         ) : (
                                             <>
-                                                <Play size={24} />
-                                                Dinle
+                                                <Play size={24} className="fill-current" />
+                                                {isPreview ? "Önizlemeyi Dinle" : "Bölümü Dinle"}
                                             </>
                                         )}
                                     </button>
                                 ) : (
                                     <p className="text-center text-slate-500 text-sm">Ses dosyası mevcut değil</p>
+                                )}
+
+                                {/* Preview Notice */}
+                                {isPreview && (
+                                    <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl max-w-md mx-auto md:mx-0">
+                                        <div className="flex items-start gap-3">
+                                            <div className="p-2 bg-amber-100 rounded-full text-amber-600">
+                                                <Lock size={20} />
+                                            </div>
+                                            <div>
+                                                <h4 className="font-bold text-amber-900 text-sm">Sadece Önizleme</h4>
+                                                <p className="text-amber-700 text-xs mt-1">
+                                                    Bu bölümün tamamını dinlemek için ücretsiz üye olun veya giriş yapın.
+                                                </p>
+                                                <a href="/login" className="inline-block mt-2 text-xs font-bold text-purple-600 hover:underline">
+                                                    Giriş Yap / Üye Ol
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 )}
 
                                 {/* External Links */}
@@ -266,8 +286,8 @@ export const PodcastDetail = () => {
                                 <button
                                     onClick={() => setActiveTab('content')}
                                     className={`pb-4 px-6 font-medium transition-colors ${activeTab === 'content'
-                                            ? 'border-b-2 border-purple-600 text-purple-600'
-                                            : 'text-gray-600 hover:text-gray-900'
+                                        ? 'border-b-2 border-purple-600 text-purple-600'
+                                        : 'text-gray-600 hover:text-gray-900'
                                         }`}
                                 >
                                     <span className="flex items-center gap-2">
@@ -278,8 +298,8 @@ export const PodcastDetail = () => {
                                 <button
                                     onClick={() => setActiveTab('chat')}
                                     className={`pb-4 px-6 font-medium transition-colors ${activeTab === 'chat'
-                                            ? 'border-b-2 border-purple-600 text-purple-600'
-                                            : 'text-gray-600 hover:text-gray-900'
+                                        ? 'border-b-2 border-purple-600 text-purple-600'
+                                        : 'text-gray-600 hover:text-gray-900'
                                         }`}
                                 >
                                     <span className="flex items-center gap-2">

@@ -1,7 +1,6 @@
 import { useBranding } from '@/hooks/useBrandingConfig';
 import LoginLeftPanel from '@/components/LoginLeftPanel';
 import LoginForm from '@/components/LoginForm';
-import { useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 
 interface LoginProps {
@@ -9,15 +8,11 @@ interface LoginProps {
 }
 
 export const Login = ({ onLogin }: LoginProps) => {
-  const navigate = useNavigate();
   const { branding, loading } = useBranding();
 
   const handleLoginSuccess = (data: any) => {
     if (onLogin) {
       onLogin(data);
-    } else {
-      // Redirect to admin dashboard
-      navigate('/admin');
     }
   };
 

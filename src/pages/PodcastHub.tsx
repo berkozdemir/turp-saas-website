@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
-import { Mic, Play, ChevronRight, Calendar, Clock, Loader2, ExternalLink, MessageCircle } from "lucide-react";
+import { Mic, Play, ChevronRight, Calendar, Clock, Loader2, ExternalLink, MessageCircle, Lock } from "lucide-react";
 import { usePodcastPlayer } from "../context/PodcastPlayerContext";
 import { PodcastChatTab } from "../components/chatbot/PodcastChatTab";
 
@@ -19,6 +19,7 @@ interface Episode {
         apple?: string;
         youtube?: string;
     };
+    preview_clip_url?: string;
 }
 
 // Helper: Format duration
@@ -34,9 +35,12 @@ interface EpisodeCardProps {
     isActive: boolean;
     isPlaying: boolean;
     onPlay: () => void;
+    isAuthenticated: boolean;
 }
 
-function EpisodeCard({ episode, isActive, isPlaying, onPlay }: EpisodeCardProps) {
+function EpisodeCard({ episode, isActive, isPlaying, onPlay, isAuthenticated }: EpisodeCardProps) {
+    const isPreviewOnly = !isAuthenticated && !!episode.preview_clip_url;
+
     return (
         <div
             className={`bg-white rounded-2xl shadow-sm border overflow-hidden hover:shadow-lg transition-shadow group ${isActive ? "border-purple-500 ring-2 ring-purple-100" : "border-slate-200"
@@ -53,6 +57,14 @@ function EpisodeCard({ episode, isActive, isPlaying, onPlay }: EpisodeCardProps)
                 ) : (
                     <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-100">
                         <Mic size={48} className="text-purple-300" />
+                    </div>
+                )}
+
+                {/* Preview Badge */}
+                {isPreviewOnly && (
+                    <div className="absolute top-2 right-2 px-2 py-1 bg-amber-400 text-amber-950 text-xs font-bold rounded flex items-center gap-1 shadow-sm z-10">
+                        <Lock size={10} />
+                        ÖNİZLEME
                     </div>
                 )}
 
@@ -122,7 +134,7 @@ function EpisodeCard({ episode, isActive, isPlaying, onPlay }: EpisodeCardProps)
                             }`}
                     >
                         <Play size={16} />
-                        {isPlaying ? "Çalıyor..." : "Dinle"}
+                        {isPlaying ? (isPreviewOnly && isActive ? "Önizleme Çalıyor..." : "Çalıyor...") : (isPreviewOnly ? "Önizlemeyi Dinle" : "Dinle")}
                     </button>
 
                     <a
@@ -267,8 +279,8 @@ export const PodcastHub = () => {
                         <button
                             onClick={() => setActiveTab('episodes')}
                             className={`pb-4 px-6 font-medium transition-colors ${activeTab === 'episodes'
-                                    ? 'border-b-2 border-purple-600 text-purple-600'
-                                    : 'text-gray-600 hover:text-gray-900'
+                                ? 'border-b-2 border-purple-600 text-purple-600'
+                                : 'text-gray-600 hover:text-gray-900'
                                 }`}
                         >
                             <span className="flex items-center gap-2">
@@ -279,8 +291,8 @@ export const PodcastHub = () => {
                         <button
                             onClick={() => setActiveTab('chat')}
                             className={`pb-4 px-6 font-medium transition-colors ${activeTab === 'chat'
-                                    ? 'border-b-2 border-purple-600 text-purple-600'
-                                    : 'text-gray-600 hover:text-gray-900'
+                                ? 'border-b-2 border-purple-600 text-purple-600'
+                                : 'text-gray-600 hover:text-gray-900'
                                 }`}
                         >
                             <span className="flex items-center gap-2">
@@ -342,6 +354,7 @@ export const PodcastHub = () => {
                                             isActive={currentEpisode?.id === episode.id}
                                             isPlaying={currentEpisode?.id === episode.id && isPlaying}
                                             onPlay={() => playEpisode(episode)}
+                                            isAuthenticated={!!localStorage.getItem('enduser_token')}
                                         />
                                     ))}
                                 </div>

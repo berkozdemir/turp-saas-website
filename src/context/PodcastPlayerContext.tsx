@@ -8,6 +8,7 @@ interface Episode {
     audio_url: string;
     cover_image_url?: string;
     duration_seconds?: number;
+    preview_clip_url?: string;
 }
 
 interface PodcastPlayerContextType {
@@ -17,6 +18,7 @@ interface PodcastPlayerContextType {
     duration: number;
     volume: number;
     isVisible: boolean;
+    isPreviewPlaying: boolean;
     playEpisode: (episode: Episode) => void;
     pause: () => void;
     resume: () => void;
@@ -81,8 +83,24 @@ export const PodcastPlayerProvider = ({ children }: PodcastPlayerProviderProps) 
         };
     }, []);
 
+    const [isPreviewPlaying, setIsPreviewPlaying] = useState(false);
+
+    // Simple auth check - In real app, import useEndUserAuth()
+    // Since this is a Context, let's assume we can check localStorage token for now
+    // or rely on a helper.
+    const isAuthenticated = !!localStorage.getItem('enduser_token');
+
     const playEpisode = (episode: Episode) => {
-        if (!episode.audio_url) {
+        let urlToPlay = episode.audio_url;
+        let isPreview = false;
+
+        if (!isAuthenticated && episode.preview_clip_url) {
+            console.log("[PodcastPlayer] Guest user, checking preview availability...");
+            urlToPlay = episode.preview_clip_url;
+            isPreview = true;
+        }
+
+        if (!urlToPlay) {
             console.warn("[PodcastPlayer] No audio_url provided for episode:", episode.title);
             return;
         }
@@ -93,18 +111,21 @@ export const PodcastPlayerProvider = ({ children }: PodcastPlayerProviderProps) 
             return;
         }
 
-        // If same episode, just resume
-        if (currentEpisode?.id === episode.id && audio.src) {
+        // If same episode and same mode (preview vs full), just resume
+        const isSameMode = isPreview === isPreviewPlaying;
+        if (currentEpisode?.id === episode.id && audio.src && isSameMode) {
             audio.play().catch(err => console.error("[PodcastPlayer] Resume failed:", err));
             setIsPlaying(true);
             setIsVisible(true);
             return;
         }
 
-        // New episode
-        console.log("[PodcastPlayer] Playing new episode:", episode.title, episode.audio_url);
+        // New episode or mode switch
+        console.log(`[PodcastPlayer] Playing ${isPreview ? 'preview' : 'full'} episode:`, episode.title);
         setCurrentEpisode(episode);
-        audio.src = episode.audio_url;
+        setIsPreviewPlaying(isPreview);
+
+        audio.src = urlToPlay;
         audio.load();
         audio.play()
             .then(() => {
@@ -112,7 +133,6 @@ export const PodcastPlayerProvider = ({ children }: PodcastPlayerProviderProps) 
             })
             .catch(err => {
                 console.error("[PodcastPlayer] Play failed:", err);
-                // Still show player so user can manually click play
             });
         setIsPlaying(true);
         setIsVisible(true);
@@ -183,6 +203,7 @@ export const PodcastPlayerProvider = ({ children }: PodcastPlayerProviderProps) 
                 duration,
                 volume,
                 isVisible,
+                isPreviewPlaying,
                 playEpisode,
                 pause,
                 resume,

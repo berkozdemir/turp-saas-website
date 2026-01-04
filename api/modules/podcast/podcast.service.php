@@ -141,10 +141,10 @@ function podcast_create(int $tenant_id, array $data, int $user_id): int
 
     $stmt = $conn->prepare("
         INSERT INTO podcasts 
-        (tenant_id, slug, title, short_description, full_description, audio_url, external_links, 
+        (tenant_id, slug, title, short_description, full_description, audio_url, preview_clip_url, external_links, 
          duration_seconds, publish_date, status, cover_image_url, tags, language, 
          extra_images, extra_videos, created_by, updated_by)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
 
     $stmt->execute([
@@ -154,6 +154,7 @@ function podcast_create(int $tenant_id, array $data, int $user_id): int
         $data['short_description'] ?? null,
         $data['full_description'] ?? null,
         $data['audio_url'] ?? null,
+        $data['preview_clip_url'] ?? null,
         json_encode($data['external_links'] ?? []),
         (int) ($data['duration_seconds'] ?? 0),
         $data['publish_date'] ?? date('Y-m-d H:i:s'),
@@ -206,7 +207,8 @@ function podcast_update(int $tenant_id, int $id, array $data, int $user_id): boo
         'publish_date',
         'status',
         'cover_image_url',
-        'language'
+        'language',
+        'preview_clip_url'
     ];
     foreach ($map as $k) {
         if (array_key_exists($k, $data)) {
