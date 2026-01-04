@@ -266,6 +266,9 @@ export default function App() {
     return <Home setView={setView} />;
   };
 
+  // Check if current view is admin (hide public nav and footer for admin)
+  const isAdminView = view === 'admin';
+
   return (
     <PodcastPlayerProvider>
       <TenantSettingsProvider>
@@ -281,18 +284,20 @@ export default function App() {
 
             <SEO view={view} post={(typeof view === 'object' && view !== null && view.type === 'detail') ? (view as PostDetailView).post : undefined} />
 
-            {/* --- NAVBAR --- */}
-            <Navigation
-              view={view}
-              setView={setView}
-              session={session}
-              handleLogout={handleLogout}
-              i18n={i18n}
-              changeLanguage={changeLanguage}
-              languages={languages}
-              modules={modules}
-              t={t}
-            />
+            {/* --- NAVBAR (hide for admin - admin has its own sidebar) --- */}
+            {!isAdminView && (
+              <Navigation
+                view={view}
+                setView={setView}
+                session={session}
+                handleLogout={handleLogout}
+                i18n={i18n}
+                changeLanguage={changeLanguage}
+                languages={languages}
+                modules={modules}
+                t={t}
+              />
+            )}
 
             {/* --- ANA İÇERİK --- */}
             <main id="main-content" className="flex-1" role="main">
@@ -301,14 +306,14 @@ export default function App() {
               </Suspense>
             </main>
 
-            {/* --- FOOTER --- */}
-            <Footer setView={setView} />
+            {/* --- FOOTER (hide for admin) --- */}
+            {!isAdminView && <Footer setView={setView} />}
 
             {/* --- COOKIE CONSENT BANNER --- */}
             <CookieConsentBanner />
 
-            {/* --- GLOBAL PODCAST PLAYER --- */}
-            <GlobalPodcastPlayer />
+            {/* --- GLOBAL PODCAST PLAYER (hide for admin) --- */}
+            {!isAdminView && <GlobalPodcastPlayer />}
           </div>
         </EndUserAuthProvider>
       </TenantSettingsProvider>
