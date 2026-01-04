@@ -146,7 +146,15 @@ function get_current_tenant_id(): ?int
 
     $tenant_id = $_SERVER['HTTP_X_TENANT_ID'] ?? $headers['x-tenant-id'] ?? null;
     if ($tenant_id) {
-        return (int) $tenant_id;
+        if (is_numeric($tenant_id)) {
+            return (int) $tenant_id;
+        } else {
+            // It might be a slug/code (e.g. 'iwrs')
+            $tenant = get_tenant_by_code($tenant_id);
+            if ($tenant) {
+                return (int) $tenant['id'];
+            }
+        }
     }
 
     // 2. Try X-Tenant-Code header
