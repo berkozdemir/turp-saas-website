@@ -27,7 +27,6 @@ import { BrandingProvider } from "../hooks/useBrandingConfig";
 import { TenantSelector } from "./admin/TenantSelector";
 import { TenantSwitcher } from "../components/TenantSwitcher";
 import {
-  Mail,
   FileText,
   LogOut,
   ExternalLink,
@@ -36,16 +35,75 @@ import {
   Settings,
   HelpCircle,
   Users,
-  BarChart3,
+  BarChart,
   Layout,
   Phone,
-  Image,
-  Clock,
+  Image as ImageIcon,
   Stethoscope,
   Palette,
   Mic,
-  HardDrive
+  HardDrive,
+  Scale,
+  ChevronDown,
+  ChevronRight,
+  PenTool,
+  MessageCircle,
+  Calendar
 } from "lucide-react";
+
+// Menu Configuration
+const MENU_GROUPS = [
+  {
+    id: 'content',
+    title: 'İçerik & İletişim',
+    icon: FileText,
+    items: [
+      { id: 'messages', label: 'Mesajlar', icon: MessageCircle },
+      { id: 'blog_list', label: 'İçerik / Blog', icon: PenTool },
+      { id: 'faq_list', label: 'SSS', icon: HelpCircle },
+      { id: 'podcast_list', label: 'Podcastler', icon: Mic },
+      { id: 'landing_list', label: 'Landing Builder', icon: Layout },
+      { id: 'media', label: 'Medya', icon: ImageIcon },
+      { id: 'image_optimizer', label: 'Görsel Optimizasyonu', icon: HardDrive }
+    ]
+  },
+  {
+    id: 'users',
+    title: 'Kullanıcı & Klinik İşlemler',
+    icon: Users,
+    items: [
+      { id: 'user_list', label: 'Kullanıcılar', icon: Users },
+      { id: 'doctors', label: 'Doktorlar', icon: Stethoscope },
+      { id: 'nipt_bookings', label: 'NIPT Randevuları', icon: Calendar }
+    ]
+  },
+  {
+    id: 'marketing',
+    title: 'Pazarlama & Analitik',
+    icon: BarChart,
+    items: [
+      { id: 'analytics_seo', label: 'Analytics & SEO', icon: BarChart },
+      { id: 'branding', label: 'Branding & Social', icon: Palette }
+    ]
+  },
+  {
+    id: 'legal',
+    title: 'Hukuki & Uyumluluk',
+    icon: Scale,
+    items: [
+      { id: 'legal_list', label: 'Hukuki Dokümanlar', icon: Scale },
+      { id: 'contact_config_list', label: 'İletişim Ayarları', icon: Phone }
+    ]
+  },
+  {
+    id: 'system',
+    title: 'Sistem & Genel Ayarlar',
+    icon: Settings,
+    items: [
+      { id: 'settings', label: 'Ayarlar', icon: Settings }
+    ]
+  }
+];
 
 const AdminContent = () => {
   // Initialize session from localStorage to prevent flash of login screen
@@ -66,6 +124,16 @@ const AdminContent = () => {
   const [editingContactConfigId, setEditingContactConfigId] = useState<number | null>(null);
   const [editingPodcast, setEditingPodcast] = useState<any | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openGroups, setOpenGroups] = useState<string[]>(['content', 'users', 'marketing', 'legal', 'system']);
+
+  const toggleGroup = (groupId: string) => {
+    setOpenGroups(prev =>
+      prev.includes(groupId)
+        ? prev.filter(id => id !== groupId)
+        : [...prev, groupId]
+    );
+  };
+
   const [pendingTenants, setPendingTenants] = useState<Tenant[] | null>(null);
 
   const { currentTenant, setCurrentTenant, setAvailableTenants, clearTenantContext } = useTenant();
@@ -373,206 +441,71 @@ const AdminContent = () => {
           </div>
 
           <nav className="space-y-2">
-            <button
-              onClick={() => { setActiveTab("messages"); setMobileMenuOpen(false); }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "messages"
-                ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                : "text-slate-400 hover:bg-white/5 hover:text-white"
-                }`}
-            >
-              <Mail size={20} />
-              <span className="font-medium">Mesajlar</span>
-            </button>
+            {MENU_GROUPS.map(group => {
+              const isGroupActive = group.items.some(item => activeTab === item.id || activeTab.startsWith(item.id.replace('_list', '')));
+              return (
+                <div key={group.id} className="mb-2">
+                  <button
+                    onClick={() => toggleGroup(group.id)}
+                    className={`w-full flex items-center justify-between px-4 py-2 transition-colors ${isGroupActive ? "text-white" : "text-slate-400 hover:text-white"
+                      }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <group.icon size={18} className={isGroupActive ? "text-rose-400" : ""} />
+                      <span className="font-semibold text-sm uppercase tracking-wider">{group.title}</span>
+                    </div>
+                    {openGroups.includes(group.id) ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+                  </button>
 
-            <button
-              onClick={() => { setActiveTab("blog_list"); setMobileMenuOpen(false); }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab.startsWith("blog")
-                ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                : "text-slate-400 hover:bg-white/5 hover:text-white"
-                }`}
-            >
-              <FileText size={20} />
-              <span className="font-medium">İçerik / Blog</span>
-            </button>
+                  {openGroups.includes(group.id) && (
+                    <div className="mt-1 space-y-1 pl-4 border-l border-white/10 ml-4">
+                      {group.items.map(item => {
+                        // Visibility Check
+                        const isAdmin = userRole === 'admin';
+                        let isVisible = isAdmin;
+                        if (item.id === 'messages') isVisible = true;
+                        if (item.id === 'settings') isVisible = true;
 
-            <button
-              onClick={() => { setActiveTab("faq_list"); setMobileMenuOpen(false); }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab.startsWith("faq")
-                ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                : "text-slate-400 hover:bg-white/5 hover:text-white"
-                }`}
-            >
-              <HelpCircle size={20} />
-              <span className="font-medium">SSS</span>
-            </button>
+                        if (!isVisible) return null;
 
-            {(userRole === 'admin' || userRole === 'editor') && (
-              <button
-                onClick={() => { setActiveTab("podcast_list"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab.startsWith("podcast")
-                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
-                  }`}
-              >
-                <Mic size={20} />
-                <span className="font-medium">Podcastler</span>
-              </button>
-            )}
-
-            {userRole === 'admin' && (
-              <button
-                onClick={() => { setActiveTab("user_list"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab.startsWith("user")
-                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
-                  }`}
-              >
-                <Users size={20} />
-                <span className="font-medium">Kullanıcılar</span>
-              </button>
-            )}
-
-            {userRole === 'admin' && (
-              <button
-                onClick={() => { setActiveTab("analytics_seo"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "analytics_seo"
-                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
-                  }`}
-              >
-                <BarChart3 size={20} />
-                <span className="font-medium">Analytics & SEO</span>
-              </button>
-            )}
-
-            {(userRole === 'admin' || userRole === 'editor') && (
-              <button
-                onClick={() => { setActiveTab("legal_list"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab.startsWith("legal")
-                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
-                  }`}
-              >
-                <FileText size={20} />
-                <span className="font-medium">Hukuki Dokümanlar</span>
-              </button>
-            )}
-
-            {userRole === 'admin' && (
-              <button
-                onClick={() => { setActiveTab("landing_list"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab.startsWith("landing")
-                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
-                  }`}
-              >
-                <Layout size={20} />
-                <span className="font-medium">Landing Builder</span>
-              </button>
-            )}
-
-            {userRole === 'admin' && (
-              <button
-                onClick={() => { setActiveTab("contact_config_list"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab.startsWith("contact_config")
-                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
-                  }`}
-              >
-                <Phone size={20} />
-                <span className="font-medium">İletişim Ayarları</span>
-              </button>
-            )}
-
-            {userRole === 'admin' && (
-              <button
-                onClick={() => { setActiveTab("media"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "media"
-                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
-                  }`}
-              >
-                <Image size={20} />
-                <span className="font-medium">Medya</span>
-              </button>
-            )}
-
-            {userRole === 'admin' && (
-              <button
-                onClick={() => { setActiveTab("image_optimizer"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "image_optimizer"
-                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
-                  }`}
-              >
-                <HardDrive size={20} />
-                <span className="font-medium">Görsel Optimizasyonu</span>
-              </button>
-            )}
-
-            {userRole === 'admin' && (
-              <button
-                onClick={() => { setActiveTab("nipt_bookings"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "nipt_bookings"
-                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
-                  }`}
-              >
-                <Clock size={20} />
-                <span className="font-medium">NIPT Randevuları</span>
-              </button>
-            )}
-
-            {userRole === 'admin' && (
-              <button
-                onClick={() => { setActiveTab("doctors"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "doctors"
-                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
-                  }`}
-              >
-                <Stethoscope size={20} />
-                <span className="font-medium">Doktorlar</span>
-              </button>
-            )}
-
-            {userRole === 'admin' && (
-              <button
-                onClick={() => { setActiveTab("branding"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "branding"
-                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
-                  }`}
-              >
-                <Palette size={20} />
-                <span className="font-medium">Branding & Social</span>
-              </button>
-            )}
-
-            {userRole === 'admin' && (
-              <button
-                onClick={() => { setActiveTab("settings"); setMobileMenuOpen(false); }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${activeTab === "settings"
-                  ? "bg-rose-600 text-white shadow-lg shadow-rose-900/20"
-                  : "text-slate-400 hover:bg-white/5 hover:text-white"
-                  }`}
-              >
-                <Settings size={20} />
-                <span className="font-medium">Ayarlar</span>
-              </button>
-            )}
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => {
+                              setActiveTab(item.id);
+                              setMobileMenuOpen(false);
+                            }}
+                            className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${activeTab === item.id || activeTab.startsWith(item.id.replace('_list', ''))
+                              ? "bg-rose-600 text-white shadow-md"
+                              : "text-slate-400 hover:bg-white/5 hover:text-white"
+                              }`}
+                          >
+                            <item.icon size={18} />
+                            <span className="font-medium text-sm">{item.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </nav>
-        </div>
 
-        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-white/10 space-y-2">
-          <a href="/" target="_blank" className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors">
-            <ExternalLink size={18} />
-            <span className="text-sm font-medium">Siteyi Görüntüle</span>
-          </a>
-          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 text-rose-400 hover:text-rose-300 transition-colors">
-            <LogOut size={18} />
-            <span className="text-sm font-medium">Güvenli Çıkış</span>
-          </button>
+          <div className="absolute bottom-6 left-6 right-6 pt-6 border-t border-white/10">
+            <a
+              href="/"
+              target="_blank"
+              className="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-white transition-colors mb-2"
+            >
+              <ExternalLink size={18} />
+              <span className="text-sm font-medium">Web Sitesine Git</span>
+            </a>
+            <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 text-rose-400 hover:text-rose-300 transition-colors">
+              <LogOut size={18} />
+              <span className="text-sm font-medium">Güvenli Çıkış</span>
+            </button>
+          </div>
         </div>
       </aside>
 
