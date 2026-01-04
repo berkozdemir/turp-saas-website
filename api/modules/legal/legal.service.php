@@ -30,9 +30,22 @@ function legal_list($tenant_id): array
 function legal_get_by_type($tenant_id, string $key): ?array
 {
     $conn = get_db_connection();
+
+    // Guard rail: Log if tenant_id seems empty
+    if (empty($tenant_id)) {
+        error_log("Legal: Attempted fetch with empty tenant_id for key=$key");
+    }
+
     $stmt = $conn->prepare("SELECT * FROM legal_documents WHERE tenant_id = ? AND `key` = ?");
     $stmt->execute([(string) $tenant_id, $key]);
-    return $stmt->fetch() ?: null;
+
+    $doc = $stmt->fetch() ?: null;
+
+    if (!$doc) {
+        error_log("Legal: Document not found. Tenant: " . $tenant_id . ", Key: " . $key);
+    }
+
+    return $doc;
 }
 
 /**
