@@ -20,27 +20,26 @@ function handle_legal_public(string $action): bool
     global $conn;
     $conn = get_db_connection();
 
-    // Legal docs are usually static or handled by service without DB sometimes,
-    // but better safe than sorry if it extends.
-    // Actually legal service might use it.
-
     switch ($action) {
         case 'get_legal_doc_public':
             // 1. Resolve Tenant ID (Standardized: INT)
             $tenant_id = get_current_tenant_id();
 
-            // 2. Fetch Documents using ID
-            $type = $_GET['type'] ?? 'all';
+            // Support both 'key' and 'type' parameters (frontend uses 'key', legacy uses 'type')
+            $type = $_GET['key'] ?? $_GET['type'] ?? 'all';
 
             if ($type === 'all') {
                 $docs = legal_list($tenant_id);
-                json_response($docs);
+                // Wrap in standard response format
+                echo json_encode(['success' => true, 'data' => $docs]);
             } else {
                 $doc = legal_get_by_type($tenant_id, $type);
                 if ($doc) {
-                    json_response($doc);
+                    // Wrap in standard response format expected by frontend
+                    echo json_encode(['success' => true, 'data' => $doc]);
                 } else {
-                    json_response(['error' => 'Document not found'], 404);
+                    http_response_code(404);
+                    echo json_encode(['success' => false, 'error' => 'Document not found', 'data' => null]);
                 }
             }
             return true;
@@ -48,3 +47,4 @@ function handle_legal_public(string $action): bool
             return false;
     }
 }
+
