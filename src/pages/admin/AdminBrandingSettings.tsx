@@ -9,6 +9,7 @@ interface BrandingConfig {
     logo_light_url: string | null;
     logo_dark_url: string | null;
     favicon_url: string | null;
+    login_hero_image: string | null;
     primary_color: string;
     secondary_color: string;
     accent_color: string;
@@ -31,6 +32,7 @@ const defaultBranding: BrandingConfig = {
     logo_light_url: null,
     logo_dark_url: null,
     favicon_url: null,
+    login_hero_image: null,
     primary_color: '#6366f1',
     secondary_color: '#8b5cf6',
     accent_color: '#10b981',
@@ -195,7 +197,7 @@ export const AdminBrandingSettings = () => {
                         <h2 className="text-lg font-semibold text-slate-900 mb-4 flex items-center gap-2">
                             <Image size={20} /> Logo & Favicon
                         </h2>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label className="block text-sm font-medium text-slate-700 mb-1">Logo (Açık Arkaplan)</label>
                                 <input
@@ -228,6 +230,20 @@ export const AdminBrandingSettings = () => {
                                     placeholder="/media/favicon.ico"
                                     className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                                 />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-slate-700 mb-1">Login Hero Image</label>
+                                <input
+                                    type="text"
+                                    value={config.login_hero_image || ''}
+                                    onChange={(e) => updateField('login_hero_image', e.target.value || null)}
+                                    placeholder="/media/login-hero.jpg"
+                                    className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                />
+                                <p className="text-xs text-slate-500 mt-1">Admin giriş ekranının sol tarafında görünecek resim</p>
+                                {config.login_hero_image && (
+                                    <img src={config.login_hero_image} alt="Login Hero" className="mt-2 h-16 w-full object-cover rounded" />
+                                )}
                             </div>
                         </div>
                     </div>
