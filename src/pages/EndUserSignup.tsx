@@ -219,6 +219,7 @@ export const EndUserSignup = ({ setView }: Props) => {
                                     onChange={handleChange}
                                     className={`w-full pl-11 pr-12 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white ${theme.inputFocus} focus:ring-2 transition-all outline-none`}
                                     placeholder="En az 6 karakter"
+                                    autoComplete="new-password"
                                     required
                                 />
                                 <button
@@ -245,6 +246,7 @@ export const EndUserSignup = ({ setView }: Props) => {
                                     onChange={handleChange}
                                     className={`w-full pl-11 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white ${theme.inputFocus} focus:ring-2 transition-all outline-none`}
                                     placeholder="Şifrenizi tekrar girin"
+                                    autoComplete="new-password"
                                     required
                                 />
                             </div>

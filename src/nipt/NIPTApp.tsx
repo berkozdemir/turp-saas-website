@@ -10,6 +10,7 @@ import { About } from "./pages/About";
 import { VeritasIntro } from "./pages/VeritasIntro";
 import { PodcastHub } from "../pages/PodcastHub";
 import { PodcastDetail } from "../pages/PodcastDetail";
+import { Contact } from "../pages/Contact";
 
 // Create a client
 const queryClient = new QueryClient({

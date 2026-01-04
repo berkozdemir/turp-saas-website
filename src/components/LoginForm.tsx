@@ -167,7 +167,7 @@ export const LoginForm = ({ onSuccess, onError, isAdmin = false }: LoginFormProp
         {view === 'success' && (
           <>
             <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
-                 style={{ backgroundColor: `${branding.colors.primary}20` }}>
+              style={{ backgroundColor: `${branding.colors.primary}20` }}>
               <CheckCircle size={32} style={{ color: branding.colors.primary }} />
             </div>
             <h2 className="text-2xl font-bold text-slate-900 mb-2">E-posta Gönderildi!</h2>
@@ -193,6 +193,7 @@ export const LoginForm = ({ onSuccess, onError, isAdmin = false }: LoginFormProp
                   '--tw-ring-color': `${branding.colors.primary}40`,
                   '--focus-border': branding.colors.primary
                 } as any}
+                autoComplete="username"
                 {...registerLogin('email')}
                 disabled={isLoading}
               />
@@ -216,6 +217,7 @@ export const LoginForm = ({ onSuccess, onError, isAdmin = false }: LoginFormProp
                 style={{
                   '--tw-ring-color': `${branding.colors.primary}40`
                 } as any}
+                autoComplete="current-password"
                 {...registerLogin('password')}
                 disabled={isLoading}
               />
