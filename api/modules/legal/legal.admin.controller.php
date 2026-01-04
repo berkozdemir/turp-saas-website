@@ -54,7 +54,8 @@ function handle_legal_admin($action)
 function legal_admin_list($conn, $tenant_id)
 {
     try {
-        $stmt = $conn->prepare("SELECT id, `key`, title_tr, is_active, updated_at FROM legal_documents WHERE tenant_id = ?");
+        // Fetch ALL fields so the editor has data to show
+        $stmt = $conn->prepare("SELECT * FROM legal_documents WHERE tenant_id = ? ORDER BY type, version DESC");
         $stmt->execute([$tenant_id]);
         echo json_encode(['success' => true, 'data' => $stmt->fetchAll(PDO::FETCH_ASSOC)]);
     } catch (Exception $e) {
@@ -81,13 +82,69 @@ function legal_admin_save($conn, $tenant_id)
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
     $id = $data['id'] ?? 0;
 
+    // Prepare fields
+    $key = $data['key'] ?? '';
+    // TR
+    $title_tr = $data['title_tr'] ?? '';
+    $content_tr = $data['content_tr'] ?? '';
+    // EN
+    $title_en = $data['title_en'] ?? null;
+    $content_en = $data['content_en'] ?? null;
+    // ZH
+    $title_zh = $data['title_zh'] ?? null;
+    $content_zh = $data['content_zh'] ?? null;
+
+    // Meta
+    $is_active = isset($data['is_active']) ? (int) $data['is_active'] : 1;
+    $sort_order = isset($data['sort_order']) ? (int) $data['sort_order'] : 0;
+    $effective_date = $data['effective_date'] ?? null; // YYYY-MM-DD
+
     try {
         if ($id > 0) {
-            $stmt = $conn->prepare("UPDATE legal_documents SET `key`=?, title_tr=?, content_tr=?, is_active=? WHERE id=? AND tenant_id=?");
-            $stmt->execute([$data['key'], $data['title_tr'], $data['content_tr'], $data['is_active'], $id, $tenant_id]);
+            $sql = "UPDATE legal_documents SET 
+                    `key`=?, 
+                    title_tr=?, content_tr=?, 
+                    title_en=?, content_en=?, 
+                    title_zh=?, content_zh=?, 
+                    is_active=?, sort_order=?, effective_date=? 
+                    WHERE id=? AND tenant_id=?";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([
+                $key,
+                $title_tr,
+                $content_tr,
+                $title_en,
+                $content_en,
+                $title_zh,
+                $content_zh,
+                $is_active,
+                $sort_order,
+                $effective_date,
+                $id,
+                $tenant_id
+            ]);
         } else {
-            $stmt = $conn->prepare("INSERT INTO legal_documents (tenant_id, `key`, title_tr, content_tr, is_active) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$tenant_id, $data['key'], $data['title_tr'], $data['content_tr'], $data['is_active']]);
+            $sql = "INSERT INTO legal_documents (
+                    tenant_id, `key`, 
+                    title_tr, content_tr, 
+                    title_en, content_en, 
+                    title_zh, content_zh, 
+                    is_active, sort_order, effective_date
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute([
+                $tenant_id,
+                $key,
+                $title_tr,
+                $content_tr,
+                $title_en,
+                $content_en,
+                $title_zh,
+                $content_zh,
+                $is_active,
+                $sort_order,
+                $effective_date
+            ]);
         }
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
