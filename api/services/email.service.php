@@ -14,6 +14,8 @@ $autoload_paths = [
     __DIR__ . '/../../../vendor/autoload.php',
 ];
 
+require_once __DIR__ . '/../core/tenant/tenant.service.php';
+
 $autoload_loaded = false;
 foreach ($autoload_paths as $path) {
     if (file_exists($path)) {
@@ -78,13 +80,13 @@ function send_email(string $to, string $subject, string $body, string $alt_body 
 
         // Server settings
         $mail->isSMTP();
-        $mail->Host       = $config['smtp_host'];
-        $mail->SMTPAuth   = true;
-        $mail->Username   = $config['smtp_user'];
-        $mail->Password   = $config['smtp_pass'];
+        $mail->Host = $config['smtp_host'];
+        $mail->SMTPAuth = true;
+        $mail->Username = $config['smtp_user'];
+        $mail->Password = $config['smtp_pass'];
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = $config['smtp_port'];
-        $mail->CharSet    = 'UTF-8';
+        $mail->Port = $config['smtp_port'];
+        $mail->CharSet = 'UTF-8';
 
         // Recipients
         $mail->setFrom($config['from_email'], $config['from_name']);
@@ -93,7 +95,7 @@ function send_email(string $to, string $subject, string $body, string $alt_body 
         // Content
         $mail->isHTML(true);
         $mail->Subject = $subject;
-        $mail->Body    = $body;
+        $mail->Body = $body;
         $mail->AltBody = $alt_body ?: strip_tags($body);
 
         $mail->send();
@@ -119,15 +121,19 @@ function send_email(string $to, string $subject, string $body, string $alt_body 
  * @param string $tenant_id Tenant identifier (for branding)
  * @return array ['success' => bool, 'error' => string|null]
  */
-function send_verification_email(string $to, string $name, string $token, string $tenant_id = 'nipt'): array
+function send_verification_email(string $to, string $name, string $token, int $tenant_id = 3): array
 {
     $config = get_email_config();
     $verify_url = $config['app_url'] . "/verify-email?token=" . urlencode($token);
 
+    // Resolve tenant for branding
+    $tenant = get_tenant_by_id($tenant_id);
+    $tenant_code = $tenant ? $tenant['code'] : 'nipt'; // Default to nipt if not found (legacy fallback)
+
     // Determine branding based on tenant
-    $is_iwrs = ($tenant_id === 'iwrs');
-    $brand_name = $is_iwrs ? 'Omega IWRS' : 'Omega Genetik';
-    $primary_color = $is_iwrs ? '#6366f1' : '#1a365d';
+    $is_iwrs = ($tenant_code === 'iwrs');
+    $brand_name = $is_iwrs ? 'Omega IWRS' : ($tenant['name'] ?? 'Omega Genetik');
+    $primary_color = $tenant['primary_color'] ?? ($is_iwrs ? '#6366f1' : '#1a365d');
 
     // Load email template
     $template_path = __DIR__ . '/../templates/emails/verification.html';
@@ -230,12 +236,16 @@ HTML;
 /**
  * Send password reset email (for future use)
  */
-function send_password_reset_email(string $to, string $name, string $token, string $tenant_id = 'nipt'): array
+function send_password_reset_email(string $to, string $name, string $token, int $tenant_id = 3): array
 {
     $config = get_email_config();
     $reset_url = $config['app_url'] . "/reset-password?token=" . urlencode($token);
 
-    $brand_name = ($tenant_id === 'iwrs') ? 'Omega IWRS' : 'Omega Genetik';
+    // Resolve tenant for branding
+    $tenant = get_tenant_by_id($tenant_id);
+    $tenant_code = $tenant ? $tenant['code'] : 'nipt';
+
+    $brand_name = ($tenant_code === 'iwrs') ? 'Omega IWRS' : ($tenant['name'] ?? 'Omega Genetik');
 
     $subject = "Şifre Sıfırlama Talebi - $brand_name";
     $body = "Merhaba $name, şifre sıfırlama linkiniz: $reset_url";

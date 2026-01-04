@@ -78,17 +78,26 @@ const Index = () => {
       {/* Welcome Card for Authenticated Users */}
       {user && (
         <div className="container mx-auto px-4 pt-24 pb-8">
-          <Card className="bg-gradient-to-br from-primary/5 to-accent/5 border-primary/20">
+          <Card className="bg-gradient-to-br from-red-600/10 to-red-500/5 border-red-200">
             <CardHeader>
-              <CardTitle className="text-2xl">
-                {/* user.full_name varsa onu kullan, yoksa email kullan */}
+              <CardTitle className="text-2xl flex items-center gap-2">
+                <span className="text-red-600">🤖</span>
                 {t('index.welcome', { name: user.full_name || user.email })}
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-base">
                 {t('index.welcomeDescription')}
               </CardDescription>
             </CardHeader>
-            <CardContent className="flex gap-4">
+            <CardContent className="flex flex-wrap gap-4">
+              <Button
+                onClick={() => {
+                  // Dispatch custom event to trigger RandomizationBot to open
+                  window.dispatchEvent(new CustomEvent('openChatBot'));
+                }}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                {t('index.startChatButton')}
+              </Button>
               <Button onClick={handleSignOut} variant="outline">
                 {t('index.signOut')}
               </Button>

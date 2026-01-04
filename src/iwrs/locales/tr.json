@@ -289,11 +289,13 @@
   },
   "index": {
     "welcome": "Hoş geldiniz, {{name}}! 👋",
-    "welcomeDescription": "AI Randomizasyon Asistanı'na erişebilirsiniz. Sağ alt köşedeki sohbet simgesine tıklayarak başlayabilirsiniz.",
+    "welcomeDescription": "Çalışmanızdaki randomizasyon akışları ve IWRS kullanımıyla ilgili sorularınızı AI destekli asistanımıza yazabilirsiniz. Sorularınızı Türkçe veya İngilizce olarak iletebilirsiniz.",
     "signOut": "Çıkış Yap",
     "aiAssistantTitle": "AI Randomizasyon Asistanı",
-    "aiAssistantDescription": "AI asistanımızı kullanmak için lütfen giriş yapın veya hesap oluşturun.",
-    "loginSignup": "Giriş Yap / Kayıt Ol",
+    "aiAssistantDescription": "AI asistanımıza erişmek için lütfen giriş yapın.",
+    "loginSignup": "Giriş Yap",
+    "startChatButton": "AI Asistanına Yaz",
+    "chatIconTooltip": "AI Randomizasyon Asistanına Yaz",
     "loading": "Yükleniyor..."
   },
   "randomizationBot": {

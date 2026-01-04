@@ -19,21 +19,36 @@ function deepseek_chat_completion($messages, $temperature = 0.7, $max_tokens = 1
     $api_key = get_env('DEEPSEEK_API_KEY');
 
     if (empty($api_key)) {
+        error_log("[ChatBot] Deepseek API key not configured");
         return ['error' => 'DeepSeek API key yapılandırılmamış'];
     }
 
     if (empty($messages) || !is_array($messages)) {
+        error_log("[ChatBot] Invalid messages format provided");
         return ['error' => 'Geçersiz mesaj formatı'];
     }
+
+    // Log incoming request (sanitized)
+    $user_msg_preview = '';
+    foreach ($messages as $msg) {
+        if ($msg['role'] === 'user') {
+            $user_msg_preview = mb_substr($msg['content'], 0, 100);
+            break;
+        }
+    }
+    error_log("[ChatBot] Deepseek request - message preview: " . $user_msg_preview);
 
     $data = [
         'model' => 'deepseek-chat',
         'messages' => $messages,
         'temperature' => $temperature,
-        'max_tokens' => $max_tokens
+        'max_tokens' => $max_tokens,
+        'stream' => false
     ];
 
-    $ch = curl_init('https://api.deepseek.com/chat/completions');
+    $endpoint = getenv('DEEPSEEK_API_ENDPOINT') ?: 'https://api.deepseek.com/chat/completions';
+
+    $ch = curl_init($endpoint);
     curl_setopt_array($ch, [
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_POST => true,
@@ -42,25 +57,35 @@ function deepseek_chat_completion($messages, $temperature = 0.7, $max_tokens = 1
             'Content-Type: application/json',
             'Authorization: Bearer ' . $api_key
         ],
-        CURLOPT_TIMEOUT => 60
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_CONNECTTIMEOUT => 10,
+        CURLOPT_NOSIGNAL => true
     ]);
 
     $response = curl_exec($ch);
+    $curl_errno = curl_errno($ch);
+    $curl_error = curl_error($ch);
     $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    $error = curl_error($ch);
     curl_close($ch);
 
-    if ($error) {
-        return ['error' => 'Bağlantı hatası: ' . $error];
+    // Handle cURL errors
+    if ($curl_errno !== 0) {
+        error_log("[ChatBot] Deepseek cURL error ($curl_errno): $curl_error");
+        return ['error' => 'AI asistanına şu anda bağlanılamıyor. Lütfen daha sonra tekrar deneyin.'];
     }
 
-    if ($http_code !== 200) {
-        return ['error' => 'API hatası (HTTP ' . $http_code . ')'];
+    // Handle HTTP errors
+    if ($http_code < 200 || $http_code >= 300) {
+        error_log("[ChatBot] Deepseek HTTP error ($http_code): " . mb_substr($response, 0, 500));
+        return ['error' => 'AI asistanı şu anda yanıt veremiyor. Lütfen daha sonra tekrar deneyin.'];
     }
 
     $result = json_decode($response, true);
 
+    // Handle successful response
     if (isset($result['choices'][0]['message']['content'])) {
+        $tokens_used = isset($result['usage']) ? json_encode($result['usage']) : 'N/A';
+        error_log("[ChatBot] Deepseek response received. Tokens: $tokens_used");
         return [
             'success' => true,
             'content' => trim($result['choices'][0]['message']['content']),
@@ -68,7 +93,9 @@ function deepseek_chat_completion($messages, $temperature = 0.7, $max_tokens = 1
         ];
     }
 
-    return ['error' => 'Geçersiz API yanıtı'];
+    // Handle unexpected response format
+    error_log("[ChatBot] Deepseek unexpected payload: " . mb_substr($response, 0, 1000));
+    return ['error' => 'AI asistanından beklenmedik bir yanıt alındı.'];
 }
 
 /**

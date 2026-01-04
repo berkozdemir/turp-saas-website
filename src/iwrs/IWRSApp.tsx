@@ -44,7 +44,7 @@ const EndUserLogin = lazy(() => import("../pages/EndUserLogin").then(m => ({ def
 const EndUserSignup = lazy(() => import("../pages/EndUserSignup").then(m => ({ default: m.EndUserSignup })));
 
 import { useState } from "react";
-import { MessageCircle, X } from "lucide-react";
+import { Bot, X } from "lucide-react";
 import { ChatInterface } from "@/components/chatbot/ChatInterface";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { TenantSettingsProvider } from "../hooks/useTenantSettings";
@@ -145,19 +145,28 @@ const RoutesWrapper = () => {
           {/* Floating Toggle Button */}
           <button
             onClick={() => setIsChatOpen(!isChatOpen)}
-            className="fixed bottom-6 right-6 z-50 p-4 bg-gradient-to-tr from-blue-600 to-purple-600 text-white rounded-full shadow-2xl hover:scale-105 hover:shadow-blue-500/30 transition-all duration-300 group"
-            title="Çalışmanız için AI Randomizasyon Asistanı'nı açmak için tıklayın."
+            className="fixed bottom-6 right-6 z-50 p-4 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-2xl hover:scale-105 transition-all duration-300 group"
+            style={{ animation: isChatOpen ? 'none' : 'gentle-pulse 2s ease-in-out infinite' }}
+            title="AI Randomizasyon Asistanına Yaz"
           >
             {isChatOpen ? (
               <X size={28} />
             ) : (
-              <MessageCircle size={28} className="group-hover:animate-pulse" />
+              <Bot size={28} />
             )}
             {/* Tooltip on hover */}
             <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
-              AI Randomizasyon Asistanı
+              AI Randomizasyon Asistanına Yaz
             </div>
           </button>
+
+          {/* Animation keyframes */}
+          <style>{`
+            @keyframes gentle-pulse {
+              0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+              50% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); }
+            }
+          `}</style>
 
           {/* Chat Panel */}
           {isChatOpen && (

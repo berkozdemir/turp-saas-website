@@ -4,6 +4,7 @@
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../core/tenant/tenant.service.php';
 require_once __DIR__ . '/contact.service.php';
+require_once __DIR__ . '/../nipt/email_service.php'; // Brevo integration
 
 function ensure_contact_submissions_table($conn): void
 {
@@ -37,6 +38,101 @@ function handle_contact_public($action)
     // Silence output to prevent non-JSON data
     error_reporting(E_ALL);
     ini_set('display_errors', 0); // Do not echo errors to stdout
+
+    // ==========================================
+    // General contact form submission
+    // Used by /iletisim page for all tenants
+    // ==========================================
+    if ($action === 'submit_contact_message' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        header('Content-Type: application/json');
+
+        try {
+            $raw_input = file_get_contents('php://input');
+            if (!$raw_input) {
+                throw new Exception('No input data received');
+            }
+
+            $data = json_decode($raw_input, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception('Invalid JSON input');
+            }
+
+            // Validation
+            if (empty($data['name']) || empty($data['email']) || empty($data['message'])) {
+                throw new Exception('Ad, e-posta ve mesaj alanları zorunludur');
+            }
+
+            if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
+                throw new Exception('Geçerli bir e-posta adresi giriniz');
+            }
+
+            $tenant_id = get_current_tenant_id();
+            $tenant_code = get_current_tenant_code();
+
+            if (!$tenant_id) {
+                $tenant_id = 1; // Default to Turp if unknown
+                $tenant_code = 'turp';
+            }
+
+            // Insert into contact_messages table using service
+            $message_id = contact_create_message($tenant_id, [
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'phone' => $data['phone'] ?? null,
+                'subject' => $data['subject'] ?? 'Genel İletişim',
+                'message' => $data['message']
+            ]);
+
+            error_log("[Contact] New message created: ID=$message_id, Tenant=$tenant_code");
+
+            // Send Brevo email notification to admin
+            $admin_email = 'info@nipt.tr'; // Default admin email
+
+            // Try to get admin email from contact config
+            $contact_config = contact_get_config($tenant_id);
+            if ($contact_config && !empty($contact_config['email'])) {
+                $admin_email = $contact_config['email'];
+            }
+
+            $email_subject = "[$tenant_code] Yeni İletişim Formu Mesajı: " . ($data['subject'] ?? 'Genel');
+            $email_body = "
+                <h2>Yeni İletişim Formu Mesajı</h2>
+                <table style='border-collapse: collapse; width: 100%;'>
+                    <tr><td style='padding: 8px; border: 1px solid #ddd;'><strong>Ad Soyad:</strong></td><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($data['name']) . "</td></tr>
+                    <tr><td style='padding: 8px; border: 1px solid #ddd;'><strong>E-posta:</strong></td><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($data['email']) . "</td></tr>
+                    <tr><td style='padding: 8px; border: 1px solid #ddd;'><strong>Telefon:</strong></td><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($data['phone'] ?? '-') . "</td></tr>
+                    <tr><td style='padding: 8px; border: 1px solid #ddd;'><strong>Konu:</strong></td><td style='padding: 8px; border: 1px solid #ddd;'>" . htmlspecialchars($data['subject'] ?? 'Genel') . "</td></tr>
+                    <tr><td style='padding: 8px; border: 1px solid #ddd;'><strong>Mesaj:</strong></td><td style='padding: 8px; border: 1px solid #ddd;'>" . nl2br(htmlspecialchars($data['message'])) . "</td></tr>
+                </table>
+                <p style='margin-top: 16px; color: #666;'>Bu mesaj " . date('d.m.Y H:i') . " tarihinde $tenant_code iletişim formu üzerinden gönderilmiştir.</p>
+            ";
+
+            try {
+                $email_sent = send_notification_email($admin_email, $email_subject, $email_body);
+                if ($email_sent) {
+                    error_log("[Contact] Brevo notification sent to $admin_email for message ID=$message_id");
+                } else {
+                    error_log("[Contact] Brevo notification failed for message ID=$message_id");
+                }
+            } catch (Throwable $e) {
+                error_log("[Contact] Brevo error: " . $e->getMessage());
+                // Don't fail the request if email fails
+            }
+
+            echo json_encode([
+                'success' => true,
+                'message_id' => $message_id,
+                'message' => 'Mesajınız başarıyla gönderildi. En kısa sürede sizinle iletişime geçeceğiz.'
+            ]);
+            return true;
+
+        } catch (Exception $e) {
+            http_response_code(400);
+            error_log("[Contact] Error: " . $e->getMessage());
+            echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+            return true;
+        }
+    }
 
     if ($action === 'submit_nipt_contact' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Content-Type: application/json');

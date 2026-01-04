@@ -59,15 +59,34 @@ export const Contact = ({ setView }: { setView: any }) => {
         loadConfig();
     }, [i18n.language]);
 
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setStatus('sending');
+        setErrorMessage(null);
 
-        // Simulating API call
-        setTimeout(() => {
-            setStatus('success');
-            setFormData({ name: '', email: '', phone: '', subject: '', message: '', consent: false });
-        }, 1500);
+        try {
+            const response = await fetchAPI('submit_contact_message', {
+                name: formData.name,
+                email: formData.email,
+                phone: formData.phone,
+                subject: formData.subject,
+                message: formData.message
+            }, 'POST');
+
+            if (response.success) {
+                setStatus('success');
+                setFormData({ name: '', email: '', phone: '', subject: '', message: '', consent: false });
+            } else {
+                setStatus('error');
+                setErrorMessage(response.error || 'Mesajınız gönderilemedi. Lütfen daha sonra tekrar deneyiniz.');
+            }
+        } catch (error: any) {
+            console.error('Contact form error:', error);
+            setStatus('error');
+            setErrorMessage(error.message || 'Bir hata oluştu. Lütfen daha sonra tekrar deneyiniz.');
+        }
     };
 
     const faqs = [
@@ -90,14 +109,60 @@ export const Contact = ({ setView }: { setView: any }) => {
                 </div>
             </div>
 
-            {/* Hero Section */}
-            <section className="relative py-20 px-6 bg-slate-900 text-white overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-sky-600/20 to-transparent"></div>
-                <div className="max-w-5xl mx-auto relative z-10 text-center">
-                    <h1 className="font-heading text-4xl md:text-6xl font-extrabold mb-6">{t("contact.hero_title")}</h1>
-                    <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto">
-                        {t("contact.hero_desc")}
-                    </p>
+            {/* Hero Section - Podcast Style with Image */}
+            <section className="bg-gradient-to-br from-[#1a365d] via-[#2c5282] to-[#1a365d] text-white py-16 md:py-24 px-4 overflow-hidden">
+                <div className="max-w-6xl mx-auto">
+                    <div className="grid md:grid-cols-2 gap-12 items-center">
+                        {/* Left: Text Content */}
+                        <div>
+                            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-sm font-medium mb-6">
+                                <Mail size={16} />
+                                <span>İletişim</span>
+                            </div>
+
+                            <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight">
+                                NIPT ile ilgili sorularınızda yanınızdayız
+                            </h1>
+
+                            <p className="text-lg text-white/80 mb-8 leading-relaxed">
+                                NIPT testi, gebelik haftanız, sonuçların değerlendirilmesi veya randevu süreçleri hakkında
+                                sorularınız olduğunda, Nipt.tr ekibiyle güvenle iletişime geçebilirsiniz.
+                            </p>
+
+                            {/* Key Points - Pill Style */}
+                            <div className="flex flex-wrap gap-3">
+                                <span className="px-4 py-2 bg-white/10 rounded-full text-sm flex items-center gap-2">
+                                    <Zap size={14} className="text-green-400" />
+                                    Hızlı geri dönüş
+                                </span>
+                                <span className="px-4 py-2 bg-white/10 rounded-full text-sm flex items-center gap-2">
+                                    <MessageSquare size={14} className="text-sky-400" />
+                                    Uzman ekip
+                                </span>
+                                <span className="px-4 py-2 bg-white/10 rounded-full text-sm flex items-center gap-2">
+                                    <CheckCircle2 size={14} className="text-purple-400" />
+                                    Güvenli veri iletişimi
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Right: Image */}
+                        <div className="hidden md:block relative">
+                            <div className="aspect-square max-w-md mx-auto relative">
+                                <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 to-purple-500/20 rounded-3xl transform rotate-3"></div>
+                                <div className="absolute inset-0 bg-gradient-to-br from-sky-500/20 to-blue-500/20 rounded-3xl transform -rotate-3"></div>
+                                <div className="relative bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20 flex flex-col items-center justify-center h-full">
+                                    <div className="w-24 h-24 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full flex items-center justify-center mb-6">
+                                        <Phone size={48} className="text-white" />
+                                    </div>
+                                    <h3 className="text-xl font-bold mb-2">7/24 Destek</h3>
+                                    <p className="text-white/60 text-center text-sm">
+                                        Uzman kadromuz sorularınız için her zaman hazır
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -136,25 +201,106 @@ export const Contact = ({ setView }: { setView: any }) => {
                 </div>
             </section>
 
-            {/* Main Content: Form + Info */}
-            <section className="py-20 px-6 max-w-7xl mx-auto">
-                <div className="grid lg:grid-cols-3 gap-12">
-                    {/* Left: Form (70%) */}
-                    <div className="lg:col-span-2">
-                        <div className="bg-white p-8 md:p-12 rounded-[2rem] shadow-xl border border-slate-100">
-                            <h2 className="font-heading text-3xl font-bold text-slate-900 mb-8">{t("contact.form_title")}</h2>
+            {/* Main Content: Info Left + Form Right - Podcast Style */}
+            <section className="max-w-6xl mx-auto px-4 py-12">
+                <div className="grid lg:grid-cols-5 gap-8">
+                    {/* Left: Contact Info Card (40%) */}
+                    <div className="lg:col-span-2 space-y-6">
+                        <div className="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+                            <h3 className="text-xl font-bold text-slate-900 mb-6 pb-4 border-b border-slate-100">
+                                İletişim Bilgilerimiz
+                            </h3>
+
+                            <div className="space-y-6">
+                                <InfoItem
+                                    icon={<Phone />}
+                                    title="Telefon"
+                                    content={
+                                        <a href={`tel:${tenantInfo.phone.replace(/\s/g, '')}`} className="hover:text-purple-600 transition-colors">
+                                            {tenantInfo.phone}
+                                        </a>
+                                    }
+                                />
+                                <InfoItem
+                                    icon={<Mail />}
+                                    title="E-posta"
+                                    content={
+                                        <a href={`mailto:${tenantInfo.email}`} className="hover:text-purple-600 transition-colors">
+                                            {tenantInfo.email}
+                                        </a>
+                                    }
+                                />
+                                <InfoItem
+                                    icon={<MapPin />}
+                                    title="Adres"
+                                    content={tenantInfo.address}
+                                />
+                                <InfoItem
+                                    icon={<Clock />}
+                                    title="Çalışma Saatleri"
+                                    content={
+                                        <div className="text-sm space-y-1">
+                                            <div>Pazartesi - Cuma: 08:00 - 18:00</div>
+                                            <div>Cumartesi: 09:00 - 16:00</div>
+                                            <div className="text-red-500">Pazar: Kapalı</div>
+                                        </div>
+                                    }
+                                />
+                            </div>
+                        </div>
+
+                        {/* Quick Action Card */}
+                        <div className="bg-gradient-to-br from-purple-600 to-blue-600 p-6 md:p-8 rounded-2xl text-white">
+                            <h4 className="font-bold text-lg mb-3">WhatsApp ile Ulaşın</h4>
+                            <p className="text-white/80 text-sm mb-4">
+                                Hızlı bir şekilde sorularınıza yanıt almak için WhatsApp üzerinden bize yazabilirsiniz.
+                            </p>
+                            <a
+                                href={`https://wa.me/${tenantInfo.whatsapp.replace(/\+/g, '')}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 px-5 py-3 bg-white text-purple-700 font-bold rounded-xl hover:bg-purple-50 transition-colors"
+                            >
+                                <MessageCircle size={18} />
+                                WhatsApp'ta Yaz
+                            </a>
+                        </div>
+                    </div>
+
+                    {/* Right: Form Card (60%) */}
+                    <div className="lg:col-span-3">
+                        <div className="bg-white p-6 md:p-10 rounded-2xl shadow-sm border border-slate-200">
+                            <h2 className="text-2xl font-bold text-slate-900 mb-2">Bize Ulaşın</h2>
+                            <p className="text-slate-500 text-sm mb-8">
+                                Aşağıdaki formu doldurarak NIPT testi ve süreçleri hakkında sorunuzu iletebilirsiniz.
+                            </p>
 
                             {status === 'success' ? (
                                 <div className="py-12 text-center animate-in zoom-in duration-300">
                                     <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
                                         <CheckCircle2 size={48} />
                                     </div>
-                                    <h3 className="text-2xl font-bold text-slate-900 mb-4">{t("contact.form_success")}</h3>
+                                    <h3 className="text-2xl font-bold text-slate-900 mb-4">Mesajınız bize ulaştı!</h3>
+                                    <p className="text-slate-600 mb-6">En kısa sürede sizinle iletişime geçeceğiz.</p>
                                     <button
                                         onClick={() => setStatus('idle')}
-                                        className="text-sky-600 font-bold hover:underline"
+                                        className="text-purple-600 font-bold hover:underline"
                                     >
                                         Yeni bir mesaj gönder
+                                    </button>
+                                </div>
+                            ) : status === 'error' ? (
+                                <div className="py-12 text-center animate-in zoom-in duration-300">
+                                    <div className="w-20 h-20 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                                        <span className="text-4xl">⚠️</span>
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-slate-900 mb-4">Bir hata oluştu</h3>
+                                    <p className="text-slate-600 mb-6">{errorMessage || 'Mesajınız gönderilemedi. Lütfen daha sonra tekrar deneyiniz.'}</p>
+                                    <button
+                                        onClick={() => setStatus('idle')}
+                                        className="text-purple-600 font-bold hover:underline"
+                                    >
+                                        Tekrar dene
                                     </button>
                                 </div>
                             ) : (
@@ -233,7 +379,7 @@ export const Contact = ({ setView }: { setView: any }) => {
                                     <button
                                         type="submit"
                                         disabled={status === 'sending'}
-                                        className="w-full py-5 bg-sky-600 hover:bg-sky-700 text-white font-bold rounded-2xl shadow-lg shadow-sky-600/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+                                        className="w-full py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white font-bold rounded-xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed text-lg"
                                     >
                                         {status === 'sending' ? t("contact.form_sending") : t("contact.form_submit")}
                                     </button>
