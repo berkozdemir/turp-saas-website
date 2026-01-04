@@ -11,7 +11,7 @@ import { VeritasIntro } from "./pages/VeritasIntro";
 import { PodcastHub } from "../pages/PodcastHub";
 import { PodcastDetail } from "../pages/PodcastDetail";
 import { Contact } from "../pages/Contact";
-import { ScrollToTop } from "../iwrs/components/ScrollToTop";
+import ScrollToTop from "../iwrs/components/ScrollToTop";
 
 // Create a client
 const queryClient = new QueryClient({
