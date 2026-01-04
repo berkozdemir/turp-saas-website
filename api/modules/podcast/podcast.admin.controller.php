@@ -9,9 +9,9 @@ require_once __DIR__ . '/podcast.service.php';
 function handle_podcast_admin(string $action): bool
 {
     switch ($action) {
-        case 'get_podcasts':
+        case 'get_podcasts_admin':
             return podcast_admin_list();
-        case 'get_podcast':
+        case 'get_podcast_admin':
             return podcast_admin_get();
         case 'create_podcast':
             return podcast_admin_create();

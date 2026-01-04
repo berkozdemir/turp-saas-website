@@ -1,5 +1,6 @@
 import { NIPTHeader } from '../components/NIPTHeader';
 import { NIPTFooter } from '../components/NIPTFooter';
+import { PodcastAIDisclaimer } from '../components/PodcastAIDisclaimer';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Mic, Play, Pause, Calendar, Clock, Loader2, ArrowLeft, ExternalLink, Lock } from 'lucide-react';
@@ -230,6 +231,11 @@ export const NIPTPodcastDetail = () => {
                                                 )}
                                             </div>
                                         )}
+
+                                        {/* AI Disclaimer */}
+                                        <div className="mt-6">
+                                            <PodcastAIDisclaimer />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

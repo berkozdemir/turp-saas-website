@@ -46,7 +46,7 @@ export const AdminPodcastList = ({ token, onEdit, onCreate }: AdminPodcastListPr
         setLoading(true);
         try {
             const params = new URLSearchParams({
-                action: "get_podcasts",
+                action: "get_podcasts_admin",
                 page: String(page),
                 pageSize: "20",
             });

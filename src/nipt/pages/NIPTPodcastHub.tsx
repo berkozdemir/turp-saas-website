@@ -1,5 +1,6 @@
 import { NIPTHeader } from '../components/NIPTHeader';
 import { NIPTFooter } from '../components/NIPTFooter';
+import { PodcastAIDisclaimer } from '../components/PodcastAIDisclaimer';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mic, Play, Calendar, Clock, Loader2, ExternalLink, Lock } from 'lucide-react';
@@ -140,6 +141,13 @@ export const NIPTPodcastHub = () => {
                                     onDetail={() => navigate(`/podcast/${episode.slug}`)}
                                 />
                             ))}
+                        </div>
+                    )}
+
+                    {/* AI Disclaimer - shown once under the grid */}
+                    {!loading && !error && episodes.length > 0 && (
+                        <div className="mt-10 max-w-2xl mx-auto">
+                            <PodcastAIDisclaimer />
                         </div>
                     )}
                 </div>
