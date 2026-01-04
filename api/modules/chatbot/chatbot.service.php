@@ -31,12 +31,8 @@ function generate_uuid()
 
 /**
  * Start a new chatbot conversation
- *
- * @param int $tenant_id Tenant ID
- * @param array $data User data (email, name, phone, context_type, context_id)
- * @return array Result with session_id or error
  */
-function chatbot_start_conversation($tenant_id, $data)
+function chatbot_start_conversation(int $tenant_id, array $data)
 {
     try {
         $conn = get_db_connection();
@@ -96,13 +92,8 @@ function chatbot_start_conversation($tenant_id, $data)
 
 /**
  * Send a message and get AI response
- *
- * @param int $tenant_id Tenant ID
- * @param string $session_id Session ID
- * @param string $message User message
- * @return array Result with reply and sources or error
  */
-function chatbot_send_message($tenant_id, $session_id, $message)
+function chatbot_send_message(int $tenant_id, string $session_id, string $message)
 {
     try {
         $conn = get_db_connection();
@@ -206,12 +197,8 @@ function chatbot_send_message($tenant_id, $session_id, $message)
 
 /**
  * Get conversation history for display
- *
- * @param int $tenant_id Tenant ID
- * @param string $session_id Session ID
- * @return array Messages array or error
  */
-function chatbot_get_history($tenant_id, $session_id)
+function chatbot_get_history(int $tenant_id, string $session_id)
 {
     try {
         $conn = get_db_connection();
@@ -246,7 +233,7 @@ function chatbot_get_history($tenant_id, $session_id)
  * @param bool $include_metadata Include metadata in response
  * @return array Messages array
  */
-function chatbot_get_history_array($conversation_id, $include_metadata = false)
+function chatbot_get_history_array(int $conversation_id, bool $include_metadata = false)
 {
     try {
         $conn = get_db_connection();
@@ -279,13 +266,8 @@ function chatbot_get_history_array($conversation_id, $include_metadata = false)
 
 /**
  * Save lead to contact_submissions
- *
- * @param int $tenant_id Tenant ID
- * @param int $conversation_id Conversation ID
- * @param int|null $context_id Context ID (podcast_id)
- * @return bool Success status
  */
-function chatbot_save_lead($tenant_id, $conversation_id, $context_id = null)
+function chatbot_save_lead(int $tenant_id, int $conversation_id, ?int $context_id = null)
 {
     try {
         $conn = get_db_connection();
