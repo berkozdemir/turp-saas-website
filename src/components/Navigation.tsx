@@ -33,6 +33,11 @@ export function Navigation({
     const [isMobileModulesExpanded, setIsMobileModulesExpanded] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
 
+    // Check if current domain is NIPT (nipt.tr)
+    const isNIPTDomain = () => {
+        return window.location.hostname.includes('nipt.tr');
+    };
+
     const mobileMenuRef = useRef<HTMLDivElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -182,16 +187,18 @@ export function Navigation({
                                 {t("nav_contact")}
                             </button>
 
-                            {/* Podcast */}
-                            <button
-                                onClick={() => handleNavigation("podcast-hub")}
-                                className={`px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-1 ${view === "podcast-hub"
-                                    ? "bg-slate-900 text-white shadow-md"
-                                    : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
-                                    }`}
-                            >
-                                <Mic size={16} /> Podcast
-                            </button>
+                            {/* Podcast - Only show on NIPT domain */}
+                            {isNIPTDomain() && (
+                                <button
+                                    onClick={() => handleNavigation("podcast-hub")}
+                                    className={`px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-1 ${view === "podcast-hub"
+                                        ? "bg-slate-900 text-white shadow-md"
+                                        : "text-slate-500 hover:text-slate-900 hover:bg-slate-100"
+                                        }`}
+                                >
+                                    <Mic size={16} /> Podcast
+                                </button>
+                            )}
 
                             {/* FAQ (SSS) */}
                             <button
@@ -381,12 +388,15 @@ export function Navigation({
                             ❓ {t("nav_faq")}
                         </button>
 
-                        <button
-                            onClick={() => handleNavigation("podcast-hub")}
-                            className={`text-left px-4 py-3 rounded-lg text-lg font-bold transition-colors flex items-center gap-2 ${view === "podcast-hub" ? "bg-slate-100 text-purple-600" : "text-slate-700 hover:bg-slate-50"}`}
-                        >
-                            <Mic size={20} /> Podcast
-                        </button>
+                        {/* Podcast - Only show on NIPT domain */}
+                        {isNIPTDomain() && (
+                            <button
+                                onClick={() => handleNavigation("podcast-hub")}
+                                className={`text-left px-4 py-3 rounded-lg text-lg font-bold transition-colors flex items-center gap-2 ${view === "podcast-hub" ? "bg-slate-100 text-purple-600" : "text-slate-700 hover:bg-slate-50"}`}
+                            >
+                                <Mic size={20} /> Podcast
+                            </button>
+                        )}
 
                         <button
                             onClick={() => handleNavigation("contact")}
