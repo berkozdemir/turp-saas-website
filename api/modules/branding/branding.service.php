@@ -72,6 +72,16 @@ function ensure_branding_table(): void
             INDEX `idx_tenant` (`tenant_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     ");
+
+    // Add login_hero_image column if it doesn't exist (for existing tables)
+    try {
+        $stmt = $conn->query("SHOW COLUMNS FROM branding_configs LIKE 'login_hero_image'");
+        if ($stmt->rowCount() === 0) {
+            $conn->exec("ALTER TABLE branding_configs ADD COLUMN `login_hero_image` VARCHAR(500) AFTER `favicon_url`");
+        }
+    } catch (Exception $e) {
+        // Ignore errors - column might already exist
+    }
 }
 
 /**
