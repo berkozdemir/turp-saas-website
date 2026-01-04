@@ -22,6 +22,7 @@ import { AdminBrandingSettings } from "./admin/AdminBrandingSettings";
 import { AdminPodcastList } from "./admin/AdminPodcastList";
 import { AdminPodcastEditor } from "./admin/AdminPodcastEditor";
 import { TenantProvider, useTenant, Tenant } from "../context/TenantContext";
+import { BrandingProvider } from "../hooks/useBrandingConfig";
 import { TenantSelector } from "./admin/TenantSelector";
 import { TenantSwitcher } from "../components/TenantSwitcher";
 import {
@@ -596,9 +597,11 @@ const AdminContent = () => {
   );
 };
 
-// Export with TenantProvider wrapper
+// Export with TenantProvider and BrandingProvider wrappers
 export const Admin = () => (
-  <TenantProvider>
-    <AdminContent />
-  </TenantProvider>
+  <BrandingProvider>
+    <TenantProvider>
+      <AdminContent />
+    </TenantProvider>
+  </BrandingProvider>
 );
