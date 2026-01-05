@@ -234,9 +234,9 @@ HTML;
 }
 
 /**
- * Send password reset email (for future use)
+ * Send password reset email for SMTP (legacy/fallback)
  */
-function send_password_reset_email(string $to, string $name, string $token, int $tenant_id = 3): array
+function send_password_reset_email_smtp(string $to, string $name, string $token, int $tenant_id = 3): array
 {
     $config = get_email_config();
     $reset_url = $config['app_url'] . "/reset-password?token=" . urlencode($token);
