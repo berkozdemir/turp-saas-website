@@ -83,7 +83,7 @@ export const BrandingProvider = ({ children }: BrandingProviderProps) => {
     useEffect(() => {
         const fetchBranding = async () => {
             try {
-                const API_URL = import.meta.env.VITE_API_URL || '/api';
+                const API_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/index\.php\/?$/, '').replace(/\/+$/, '');
                 const res = await fetch(`${API_URL}/index.php?action=get_public_branding`);
                 const data = await res.json();
 

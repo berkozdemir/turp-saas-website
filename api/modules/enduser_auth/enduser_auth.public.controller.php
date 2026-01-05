@@ -43,15 +43,15 @@ function handle_enduser_auth_public(string $action): bool
  */
 function enduser_signup_action(): bool
 {
-    $tenant_id = get_current_tenant_id();
-    if (!$tenant_id) {
+    $tenant_code = get_current_tenant_code();
+    if (!$tenant_code) {
         http_response_code(400);
         echo json_encode(['error' => 'Tenant not found']);
         return true;
     }
 
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
-    $result = enduser_signup($tenant_id, $data);
+    $result = enduser_signup($tenant_code, $data);
 
     if (isset($result['error'])) {
         http_response_code(400);
@@ -66,8 +66,8 @@ function enduser_signup_action(): bool
  */
 function enduser_login_action(): bool
 {
-    $tenant_id = get_current_tenant_id();
-    if (!$tenant_id) {
+    $tenant_code = get_current_tenant_code();
+    if (!$tenant_code) {
         http_response_code(400);
         echo json_encode(['error' => 'Tenant not found']);
         return true;
@@ -86,7 +86,7 @@ function enduser_login_action(): bool
     }
 
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
-    $result = enduser_login($tenant_id, $data);
+    $result = enduser_login($tenant_code, $data);
 
     // Record attempt if failed
     if (isset($result['error'])) {
@@ -129,17 +129,17 @@ function enduser_logout_action(): bool
  */
 function enduser_me_action(): bool
 {
-    $tenant_id = get_current_tenant_id();
+    $tenant_code = get_current_tenant_code();
     $token = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
     $token = str_replace('Bearer ', '', $token);
 
-    if (empty($token) || !$tenant_id) {
+    if (empty($token) || !$tenant_code) {
         http_response_code(401);
         echo json_encode(['error' => 'Unauthorized']);
         return true;
     }
 
-    $user = enduser_verify_token($token, $tenant_id);
+    $user = enduser_verify_token($token, $tenant_code);
     if (!$user) {
         http_response_code(401);
         echo json_encode(['error' => 'Invalid or expired token']);
@@ -156,17 +156,17 @@ function enduser_me_action(): bool
  */
 function get_tenant_settings_action(): bool
 {
-    $tenant_id = get_current_tenant_id();
-    if (!$tenant_id) {
+    $tenant_code = get_current_tenant_code();
+    if (!$tenant_code) {
         echo json_encode(['error' => 'Tenant not found']);
         return true;
     }
 
-    $settings = get_tenant_auth_settings($tenant_id);
+    $settings = get_tenant_auth_settings($tenant_code);
     echo json_encode([
         'success' => true,
         'tenant_id' => $settings['tenant_id'],
-        'tenant_name' => $settings['tenant_name'] ?? $tenant_id,
+        'tenant_name' => $settings['tenant_name'] ?? $tenant_code,
         'allow_enduser_login' => (bool) ($settings['allow_enduser_login'] ?? false),
         'allow_enduser_signup' => (bool) ($settings['allow_enduser_signup'] ?? false)
     ]);
@@ -197,8 +197,8 @@ function enduser_verify_email_action(): bool
  */
 function enduser_resend_verification_action(): bool
 {
-    $tenant_id = get_current_tenant_id();
-    if (!$tenant_id) {
+    $tenant_code = get_current_tenant_code();
+    if (!$tenant_code) {
         echo json_encode(['error' => 'Tenant not found']);
         return true;
     }
@@ -211,7 +211,7 @@ function enduser_resend_verification_action(): bool
         return true;
     }
 
-    $result = resend_verification_email($email, $tenant_id);
+    $result = resend_verification_email($email, $tenant_code);
     echo json_encode($result);
     return true;
 }
@@ -222,8 +222,8 @@ function enduser_resend_verification_action(): bool
  */
 function enduser_forgot_password_action(): bool
 {
-    $tenant_id = get_current_tenant_id();
-    if (!$tenant_id) {
+    $tenant_code = get_current_tenant_code();
+    if (!$tenant_code) {
         http_response_code(400);
         echo json_encode(['error' => 'Tenant not found']);
         return true;
@@ -256,7 +256,7 @@ function enduser_forgot_password_action(): bool
     }
 
     record_attempt($email, 'forgot_password');
-    $result = enduser_request_password_reset($email, $tenant_id);
+    $result = enduser_request_password_reset($email, $tenant_code);
     echo json_encode($result);
     return true;
 }

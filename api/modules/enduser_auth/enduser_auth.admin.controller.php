@@ -28,13 +28,13 @@ function get_tenant_auth_settings_admin(): bool
 {
     header('Content-Type: application/json');
 
-    $tenant_id = get_current_tenant_id();
-    if (!$tenant_id) {
+    $tenant_code = get_current_tenant_code();
+    if (!$tenant_code) {
         echo json_encode(['error' => 'Tenant not resolved']);
         return true;
     }
 
-    $settings = get_tenant_auth_settings($tenant_id);
+    $settings = get_tenant_auth_settings($tenant_code);
     echo json_encode([
         'success' => true,
         'allow_login' => (bool) ($settings['allow_enduser_login'] ?? false),
@@ -57,11 +57,11 @@ function update_tenant_auth_settings_admin(): bool
     }
 
     $data = json_decode(file_get_contents('php://input'), true) ?? [];
-    $tenant_id = $data['tenant_id'] ?? $ctx['tenant_id'];
+    $tenant_code = $data['tenant_code'] ?? $data['tenant_id'] ?? $ctx['tenant']['code'];
     $allow_login = (bool) ($data['allow_login'] ?? false);
     $allow_signup = (bool) ($data['allow_signup'] ?? false);
 
-    $result = update_tenant_auth_settings($tenant_id, $allow_login, $allow_signup);
+    $result = update_tenant_auth_settings($tenant_code, $allow_login, $allow_signup);
 
     if ($result) {
         echo json_encode(['success' => true]);
@@ -84,7 +84,7 @@ function list_endusers_admin(): bool
         return true;
     }
 
-    $tenant_id = $_GET['tenant_id'] ?? $ctx['tenant_id'];
+    $tenant_code = $_GET['tenant_code'] ?? $_GET['tenant_id'] ?? $ctx['tenant']['code'];
 
     require_once __DIR__ . '/../../config/db.php';
     $conn = get_db_connection();
@@ -95,7 +95,7 @@ function list_endusers_admin(): bool
         WHERE tenant_id = ?
         ORDER BY created_at DESC
     ");
-    $stmt->execute([$tenant_id]);
+    $stmt->execute([$tenant_code]);
     $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode(['success' => true, 'users' => $users]);

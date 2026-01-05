@@ -9,7 +9,7 @@
  *   const response = await adminFetch('/api/index.php?action=get_blog_posts_admin');
  */
 
-const API_URL = import.meta.env.VITE_API_URL || '/api';
+const API_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/index\.php\/?$/, '').replace(/\/+$/, '');
 
 interface AdminFetchOptions extends RequestInit {
     /** Skip tenant header (for tenant-agnostic endpoints) */
