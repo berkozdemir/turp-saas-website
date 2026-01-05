@@ -45,7 +45,7 @@ function ensure_branding_table(): void
     $conn->exec("
         CREATE TABLE IF NOT EXISTS `branding_configs` (
             `id` INT AUTO_INCREMENT PRIMARY KEY,
-            `tenant_id` INT NOT NULL UNIQUE,
+            `tenant_id` VARCHAR(50) NOT NULL UNIQUE,
             `logo_light_url` VARCHAR(500),
             `logo_dark_url` VARCHAR(500),
             `favicon_url` VARCHAR(500),
@@ -90,7 +90,7 @@ function ensure_branding_table(): void
  * @param int $tenant_id
  * @return array Branding config with defaults applied
  */
-function get_branding_config(int $tenant_id): array
+function get_branding_config(string $tenant_id): array
 {
     $conn = get_db_connection();
     ensure_branding_table();
@@ -122,7 +122,7 @@ function get_branding_config(int $tenant_id): array
  * @param int|null $user_id Updated by user ID
  * @return bool Success
  */
-function save_branding_config(int $tenant_id, array $data, ?int $user_id = null): bool
+function save_branding_config(string $tenant_id, array $data, ?int $user_id = null): bool
 {
     $conn = get_db_connection();
     ensure_branding_table();
@@ -202,7 +202,7 @@ function save_branding_config(int $tenant_id, array $data, ?int $user_id = null)
  * @param int $tenant_id
  * @return array Public branding data
  */
-function get_public_branding(int $tenant_id): array
+function get_public_branding(string $tenant_id): array
 {
     $config = get_branding_config($tenant_id);
 

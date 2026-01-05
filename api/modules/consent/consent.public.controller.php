@@ -20,7 +20,7 @@ function handle_consent_public(string $action): bool
 
     if ($action === 'get_consent_config' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         try {
-            $tenant_id = get_current_tenant_id();
+            $tenant_id = get_current_tenant_code();
             $user_ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
 
             // Get region from IP
@@ -126,7 +126,7 @@ function handle_consent_public(string $action): bool
 
     if ($action === 'save_consent' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
-            $tenant_id = get_current_tenant($conn);
+            $tenant_id = get_current_tenant_code();
             $user_ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
             $ip_hash = hash('sha256', $user_ip . '_' . $tenant_id);
 

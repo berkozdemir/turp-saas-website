@@ -38,7 +38,7 @@ function generate_uuid()
 /**
  * Start a new chatbot conversation
  */
-function chatbot_start_conversation(int $tenant_id, array $data)
+function chatbot_start_conversation(string $tenant_id, array $data)
 {
     try {
         $conn = get_db_connection();
@@ -99,7 +99,7 @@ function chatbot_start_conversation(int $tenant_id, array $data)
 /**
  * Send a message and get AI response
  */
-function chatbot_send_message(int $tenant_id, string $session_id, string $message)
+function chatbot_send_message(string $tenant_id, string $session_id, string $message)
 {
     try {
         $conn = get_db_connection();
@@ -204,7 +204,7 @@ function chatbot_send_message(int $tenant_id, string $session_id, string $messag
 /**
  * Get conversation history for display
  */
-function chatbot_get_history(int $tenant_id, string $session_id)
+function chatbot_get_history(string $tenant_id, string $session_id)
 {
     try {
         $conn = get_db_connection();
@@ -273,7 +273,7 @@ function chatbot_get_history_array(int $conversation_id, bool $include_metadata 
 /**
  * Save lead to contact_submissions
  */
-function chatbot_save_lead(int $tenant_id, int $conversation_id, ?int $context_id = null)
+function chatbot_save_lead(string $tenant_id, int $conversation_id, ?int $context_id = null)
 {
     try {
         $conn = get_db_connection();

@@ -20,7 +20,7 @@ require_once __DIR__ . '/../../config/db.php';
  * @param int $limit Number of results (default: 5)
  * @return array Search results
  */
-function rag_search($tenant_id, $query, $language = 'tr', $limit = 5)
+function rag_search(string $tenant_id, $query, $language = 'tr', $limit = 5)
 {
     try {
         $conn = get_db_connection();
@@ -46,7 +46,7 @@ function rag_search($tenant_id, $query, $language = 'tr', $limit = 5)
         ";
 
         $stmt = $conn->prepare($sql);
-        $stmt->bindValue(':tenant_id', $tenant_id, PDO::PARAM_INT);
+        $stmt->bindValue(':tenant_id', $tenant_id, PDO::PARAM_STR);
         $stmt->bindValue(':language', $language, PDO::PARAM_STR);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
@@ -74,7 +74,7 @@ function rag_search($tenant_id, $query, $language = 'tr', $limit = 5)
  * @param int $podcast_id Podcast ID
  * @return bool Success status
  */
-function rag_index_podcast($tenant_id, $podcast_id)
+function rag_index_podcast(string $tenant_id, $podcast_id)
 {
     try {
         $conn = get_db_connection();
@@ -138,7 +138,7 @@ function rag_index_podcast($tenant_id, $podcast_id)
  * @param int $blog_id Blog post ID
  * @return bool Success status
  */
-function rag_index_blog($tenant_id, $blog_id)
+function rag_index_blog(string $tenant_id, $blog_id)
 {
     try {
         $conn = get_db_connection();
@@ -201,7 +201,7 @@ function rag_index_blog($tenant_id, $blog_id)
  * @param int $faq_id FAQ ID
  * @return bool Success status
  */
-function rag_index_faq($tenant_id, $faq_id)
+function rag_index_faq(string $tenant_id, $faq_id)
 {
     try {
         $conn = get_db_connection();
@@ -256,7 +256,7 @@ function rag_index_faq($tenant_id, $faq_id)
  * @param array $content_array Array of content items with 'title' and 'content'
  * @return int Number of items indexed
  */
-function rag_seed_static($tenant_id, $content_array)
+function rag_seed_static(string $tenant_id, $content_array)
 {
     try {
         $conn = get_db_connection();
@@ -299,7 +299,7 @@ function rag_seed_static($tenant_id, $content_array)
  * @param int|null $source_id Source ID (null for all static content)
  * @return bool Success status
  */
-function rag_clear_index($tenant_id, $source_type, $source_id = null)
+function rag_clear_index(string $tenant_id, $source_type, $source_id = null)
 {
     try {
         $conn = get_db_connection();
@@ -339,7 +339,7 @@ function rag_clear_index($tenant_id, $source_type, $source_id = null)
  * @param array $source_types Array of source types to reindex
  * @return array Counts of indexed items
  */
-function rag_reindex_all($tenant_id, $source_types = ['podcast', 'blog', 'faq'])
+function rag_reindex_all(string $tenant_id, $source_types = ['podcast', 'blog', 'faq'])
 {
     $counts = [];
 

@@ -22,8 +22,8 @@ function handle_legal_public(string $action): bool
 
     switch ($action) {
         case 'get_legal_doc_public':
-            // 1. Resolve Tenant ID (Standardized: INT)
-            $tenant_id = get_current_tenant_id();
+            // 1. Resolve Tenant Code
+            $tenant_id = get_current_tenant_code();
 
             // Support both 'key' and 'type' parameters (frontend uses 'key', legacy uses 'type')
             $type = $_GET['key'] ?? $_GET['type'] ?? 'all';

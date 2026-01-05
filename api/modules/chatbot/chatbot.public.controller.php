@@ -26,8 +26,13 @@ function handle_chatbot_public(string $action): bool
     }
 
     // Resolve tenant
-    $tenant = require_public_tenant();
-    $tenant_id = $tenant['id'];
+    $tenant_id = get_current_tenant_code();
+
+    if (!$tenant_id) {
+        http_response_code(404);
+        echo json_encode(['error' => 'Tenant not found']);
+        return true;
+    }
 
     // Get request method and data
     $method = $_SERVER['REQUEST_METHOD'];
@@ -40,7 +45,7 @@ function handle_chatbot_public(string $action): bool
 /**
  * Handle individual chatbot action
  */
-function handle_chatbot_action(string $action, string $method, int $tenant_id, array $data): void
+function handle_chatbot_action(string $action, string $method, string $tenant_id, array $data): void
 {
 
     if ($action === 'chatbot_start' && $method === 'POST') {

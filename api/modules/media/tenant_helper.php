@@ -14,6 +14,6 @@ require_once __DIR__ . '/../../core/tenant/tenant.service.php';
  */
 function get_current_tenant($conn): string
 {
-    $tenant_id = get_current_tenant_id();
-    return (string) ($tenant_id ?? 1);
+    $tenant_code = get_current_tenant_code();
+    return (string) ($tenant_code ?? 'turp');
 }

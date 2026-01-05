@@ -23,8 +23,8 @@ $response = [
 ];
 
 // Trace resolution
-$tenant_id = get_current_tenant_id();
-$tenant = get_tenant_by_id($tenant_id);
+$tenant_code = get_current_tenant_code();
+$tenant = get_tenant_by_code($tenant_code);
 
 if ($tenant) {
     $response['resolved_tenant'] = [

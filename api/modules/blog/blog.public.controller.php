@@ -30,7 +30,7 @@ function handle_blog_public(string $action): bool
 
 function blog_public_list(): bool
 {
-    $tenant_id = get_current_tenant_id();
+    $tenant_id = get_current_tenant_code();
 
     $posts = blog_get_published_posts($tenant_id);
 
@@ -43,7 +43,7 @@ function blog_public_list(): bool
 
 function blog_public_get(): bool
 {
-    $tenant_id = get_current_tenant_id();
+    $tenant_id = get_current_tenant_code();
     $slug = $_GET['slug'] ?? '';
 
     if (empty($slug)) {

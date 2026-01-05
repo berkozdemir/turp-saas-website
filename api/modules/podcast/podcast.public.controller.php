@@ -31,7 +31,7 @@ function handle_podcast_public(string $action): bool
 function podcast_public_list(): bool
 {
     // Use centralized tenant resolution (handles headers + domain)
-    $tenant_id = get_current_tenant_id(); // Returns int, default 1 if not found
+    $tenant_id = get_current_tenant_code();
 
     // Safety check? get_current_tenant_id always returns an int (fallback to 1/turp).
     // But if we want to be strict for podcasts:
@@ -66,8 +66,8 @@ function podcast_public_list(): bool
 
 function podcast_public_detail(): bool
 {
-    $tenant = resolve_public_tenant();
-    if (!$tenant) {
+    $tenant_code = get_current_tenant_code();
+    if (!$tenant_code) {
         http_response_code(404);
         echo json_encode(['error' => 'Tenant not found']);
         return true;
@@ -80,7 +80,7 @@ function podcast_public_detail(): bool
         return true;
     }
 
-    $item = podcast_get_by_slug($tenant['id'], $slug);
+    $item = podcast_get_by_slug($tenant_code, $slug);
 
     if ($item) {
         echo json_encode(['success' => true, 'data' => $item]);

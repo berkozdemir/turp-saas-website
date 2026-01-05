@@ -170,13 +170,13 @@ function iwrs_submit_contact(): void
     }
 
     $conn = get_db_connection();
-    $tenant_id = get_current_tenant_id(); // Use shared tenant service
+    $tenant_id = get_current_tenant_code(); // Use shared tenant service
 
     try {
         // Ensure table exists
         $conn->exec("CREATE TABLE IF NOT EXISTS contact_messages (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            tenant_id INT NOT NULL,
+            tenant_id VARCHAR(50) NOT NULL,
             name VARCHAR(255) NOT NULL,
             email VARCHAR(255) NOT NULL,
             subject VARCHAR(255),
@@ -252,7 +252,7 @@ function iwrs_get_contact_messages(): void
     // For now assuming the caller has a valid admin token.
 
     $conn = get_db_connection();
-    $tenant_id = get_current_tenant_id();
+    $tenant_id = get_current_tenant_code();
 
     $stmt = $conn->prepare("SELECT * FROM contact_messages WHERE tenant_id = ? ORDER BY created_at DESC LIMIT 100");
     $stmt->execute([$tenant_id]);
@@ -283,7 +283,7 @@ function iwrs_delete_contact_message(): void
     }
 
     $conn = get_db_connection();
-    $tenant_id = get_current_tenant_id();
+    $tenant_id = get_current_tenant_code();
 
     $stmt = $conn->prepare("DELETE FROM contact_messages WHERE id = ? AND tenant_id = ?");
     $stmt->execute([$data['id'], $tenant_id]);

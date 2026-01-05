@@ -121,9 +121,9 @@ function get_tenant_by_domain_endpoint(): void
 function get_tenant_settings_endpoint(): void
 {
     try {
-        $tenant_id = get_current_tenant_id();
+        $tenant_code = get_current_tenant_code();
 
-        if (!$tenant_id) {
+        if (!$tenant_code) {
             http_response_code(404);
             echo json_encode([
                 'success' => false,
@@ -132,7 +132,7 @@ function get_tenant_settings_endpoint(): void
             return;
         }
 
-        $tenant = get_tenant_by_id($tenant_id);
+        $tenant = get_tenant_by_code($tenant_code);
 
         if (!$tenant) {
             http_response_code(404);
@@ -148,8 +148,8 @@ function get_tenant_settings_endpoint(): void
             'success' => true,
             'tenant_id' => $tenant['code'],
             'tenant_name' => $tenant['name'],
-            'allow_enduser_login' => (bool)($tenant['allow_enduser_login'] ?? false),
-            'allow_enduser_signup' => (bool)($tenant['allow_enduser_signup'] ?? false)
+            'allow_enduser_login' => (bool) ($tenant['allow_enduser_login'] ?? false),
+            'allow_enduser_signup' => (bool) ($tenant['allow_enduser_signup'] ?? false)
         ]);
     } catch (Exception $e) {
         http_response_code(500);

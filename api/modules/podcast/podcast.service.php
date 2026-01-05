@@ -11,11 +11,11 @@ require_once __DIR__ . '/../../config/db.php';
 /**
  * List Podcasts
  * 
- * @param int $tenant_id
+ * @param string $tenant_id
  * @param array $options [status, language, search, page, limit]
  * @return array ['items' => [], 'pagination' => []]
  */
-function podcast_list(int $tenant_id, array $options = []): array
+function podcast_list(string $tenant_id, array $options = []): array
 {
     $conn = get_db_connection();
 
@@ -83,7 +83,7 @@ function podcast_list(int $tenant_id, array $options = []): array
 /**
  * Get single Podcast by ID (Admin)
  */
-function podcast_get(int $tenant_id, int $id): ?array
+function podcast_get(string $tenant_id, int $id): ?array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("SELECT * FROM podcasts WHERE id = ? AND tenant_id = ?");
@@ -103,7 +103,7 @@ function podcast_get(int $tenant_id, int $id): ?array
 /**
  * Get single Podcast by Slug (Public)
  */
-function podcast_get_by_slug(int $tenant_id, string $slug): ?array
+function podcast_get_by_slug(string $tenant_id, string $slug): ?array
 {
     $conn = get_db_connection();
     // Only published and date <= now
@@ -129,7 +129,7 @@ function podcast_get_by_slug(int $tenant_id, string $slug): ?array
 /**
  * Create Podcast
  */
-function podcast_create(int $tenant_id, array $data, int $user_id): int
+function podcast_create(string $tenant_id, array $data, int $user_id): int
 {
     $conn = get_db_connection();
 
@@ -174,7 +174,7 @@ function podcast_create(int $tenant_id, array $data, int $user_id): int
 /**
  * Update Podcast
  */
-function podcast_update(int $tenant_id, int $id, array $data, int $user_id): bool
+function podcast_update(string $tenant_id, int $id, array $data, int $user_id): bool
 {
     $conn = get_db_connection();
 
@@ -244,7 +244,7 @@ function podcast_update(int $tenant_id, int $id, array $data, int $user_id): boo
  * Delete (Soft delete via archiving preferred, but user prompt allows hard delete/archive options)
  * We will implement hard delete for now as per "Delete" verb availability
  */
-function podcast_delete(int $tenant_id, int $id): bool
+function podcast_delete(string $tenant_id, int $id): bool
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("DELETE FROM podcasts WHERE id = ? AND tenant_id = ?");

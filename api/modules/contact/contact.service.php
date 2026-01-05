@@ -14,7 +14,7 @@ require_once __DIR__ . '/../../config/db.php';
 /**
  * Get contact config for tenant
  */
-function contact_get_config(int $tenant_id): ?array
+function contact_get_config(string $tenant_id): ?array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("SELECT * FROM contact_configs WHERE tenant_id = ?");
@@ -25,7 +25,7 @@ function contact_get_config(int $tenant_id): ?array
 /**
  * Save contact config
  */
-function contact_save_config(int $tenant_id, array $data): bool
+function contact_save_config(string $tenant_id, array $data): bool
 {
     $conn = get_db_connection();
 
@@ -80,7 +80,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 /**
  * List contact messages for tenant
  */
-function contact_list_messages(int $tenant_id, array $options = []): array
+function contact_list_messages(string $tenant_id, array $options = []): array
 {
     $conn = get_db_connection();
 
@@ -107,7 +107,7 @@ function contact_list_messages(int $tenant_id, array $options = []): array
 /**
  * Create contact message
  */
-function contact_create_message(int $tenant_id, array $data): int
+function contact_create_message(string $tenant_id, array $data): int
 {
     $conn = get_db_connection();
 
@@ -132,7 +132,7 @@ VALUES (?, ?, ?, ?, ?, ?, 'new')
 /**
  * Update message status
  */
-function contact_update_message_status($tenant_id, int $id, string $status): bool
+function contact_update_message_status(string $tenant_id, int $id, string $status): bool
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("UPDATE contact_messages SET status = ? WHERE id = ? AND tenant_id = ?");

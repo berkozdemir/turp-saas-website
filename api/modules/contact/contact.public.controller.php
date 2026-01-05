@@ -66,16 +66,14 @@ function handle_contact_public($action)
                 throw new Exception('Geçerli bir e-posta adresi giriniz');
             }
 
-            $tenant_id = get_current_tenant_id();
             $tenant_code = get_current_tenant_code();
 
-            if (!$tenant_id) {
-                $tenant_id = 1; // Default to Turp if unknown
+            if (!$tenant_code) {
                 $tenant_code = 'turp';
             }
 
             // Insert into contact_messages table using service
-            $message_id = contact_create_message($tenant_id, [
+            $message_id = contact_create_message($tenant_code, [
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'phone' => $data['phone'] ?? null,
@@ -89,7 +87,7 @@ function handle_contact_public($action)
             $admin_email = 'info@nipt.tr'; // Default admin email
 
             // Try to get admin email from contact config
-            $contact_config = contact_get_config($tenant_id);
+            $contact_config = contact_get_config($tenant_code);
             if ($contact_config && !empty($contact_config['email'])) {
                 $admin_email = $contact_config['email'];
             }
@@ -171,20 +169,11 @@ function handle_contact_public($action)
                 $pricing_tier = 'doctor_referral';
             }
 
-            $tenant_id = get_current_tenant_id(); // Returns ID (int)
+            $tenant_code = get_current_tenant_code();
 
             // Fallback if no tenant context found (rare)
-            if (!$tenant_id) {
-                // Try to resolve 'nipt' tenant by code if possible, or just log error?
-                // For now, if we can't determine tenant, we might fail or default to a "default" tenant.
-                // But usually get_current_tenant_id returns something for valid domains.
-                // We will leave it as is, SQL might default to 'nipt' (string) if column allows, 
-                // but we migrated to INT?
-                // If column is INT, we need an int.
-                // Let's assume ID 3 is safe default for NIPT.tr if unknown.
-                // Ideally we should query DB: SELECT id FROM tenants WHERE code='nipt'
-                $tenant_id = 1; // Default to Turp? Or 3? 
-                // Better: don't override if not 0.
+            if (!$tenant_code) {
+                $tenant_code = 'turp';
             }
 
             // DB Insert
@@ -206,7 +195,7 @@ function handle_contact_public($action)
                 $doctor_name,
                 $pricing_tier,
                 $data['message'] ?? null,
-                $tenant_id
+                $tenant_code
             ]);
 
             if (!$result) {

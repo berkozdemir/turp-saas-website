@@ -18,14 +18,14 @@ function handle_branding_public(string $action): bool
     header('Content-Type: application/json');
 
     // Get tenant from domain/headers
-    $tenant_id = get_current_tenant_id();
+    $tenant_code = get_current_tenant_code();
 
-    if (!$tenant_id) {
+    if (!$tenant_code) {
         echo json_encode(['error' => 'Tenant not found']);
         return true;
     }
 
-    $branding = get_public_branding($tenant_id);
+    $branding = get_public_branding($tenant_code);
 
     echo json_encode([
         'success' => true,

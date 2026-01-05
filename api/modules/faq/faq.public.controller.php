@@ -24,7 +24,7 @@ function handle_faq_public(string $action): bool
 
 function faq_public_list(): bool
 {
-    $tenant_id = get_current_tenant_id();
+    $tenant_id = get_current_tenant_code();
     $lang = $_GET['language'] ?? 'tr';
     $page_slug = $_GET['page'] ?? null;
 
@@ -60,7 +60,7 @@ function faq_public_list(): bool
 
 function faq_public_by_page(): bool
 {
-    $tenant_id = get_current_tenant_id();
+    $tenant_id = get_current_tenant_code();
     $page_slug = $_GET['page'] ?? 'global';
     $lang = $_GET['language'] ?? 'tr';
 
@@ -95,7 +95,7 @@ function faq_public_bulk_import(): bool
         return true;
     }
 
-    $tenant_id = get_current_tenant_id();
+    $tenant_id = get_current_tenant_code();
     $data = json_decode(file_get_contents('php://input'), true);
 
     if (empty($data['page_slug']) || !is_array($data['items'])) {

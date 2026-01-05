@@ -10,11 +10,13 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/iwrs/components/ui/navigation-menu";
-import { Menu, ChevronDown } from "lucide-react";
+import { Menu, LogOut, User as UserIcon } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/iwrs/components/ui/sheet";
+import { useEndUserAuth } from "@/hooks/useEndUserAuth";
 
 export const Header = () => {
   const { t } = useTranslation();
+  const { isAuthenticated, user, logout } = useEndUserAuth();
 
   const mobileModules = [
     { href: "/iwrs", title: t('header.iwrsInterface'), description: t('header.iwrsInterfaceDesc') },
@@ -184,13 +186,28 @@ export const Header = () => {
 
                 {/* Butonlar */}
                 <div className="flex flex-col space-y-3 pt-6 border-t">
-                  <SheetClose asChild>
-                    <a href="/login">
-                      <Button variant="ghost" className="w-full">
-                        {t('header.login')}
-                      </Button>
-                    </a>
-                  </SheetClose>
+                  {isAuthenticated ? (
+                    <>
+                      <div className="flex items-center gap-2 px-2 py-2 text-sm text-muted-foreground">
+                        <UserIcon className="h-4 w-4" />
+                        <span>{user?.name || user?.email}</span>
+                      </div>
+                      <SheetClose asChild>
+                        <Button variant="ghost" className="w-full justify-start" onClick={logout}>
+                          <LogOut className="h-4 w-4 mr-2" />
+                          Çıkış Yap
+                        </Button>
+                      </SheetClose>
+                    </>
+                  ) : (
+                    <SheetClose asChild>
+                      <a href="/login">
+                        <Button variant="ghost" className="w-full">
+                          {t('header.login')}
+                        </Button>
+                      </a>
+                    </SheetClose>
+                  )}
                   <SheetClose asChild>
                     <a href="/contact">
                       <Button size="lg" className="w-full bg-primary hover:bg-primary/90">
@@ -204,11 +221,21 @@ export const Header = () => {
           </Sheet>
 
           {/* MASAÜSTÜ BUTONLARI */}
-          <a href="/login" className="hidden md:block">
-            <Button variant="ghost" size="sm">
-              {t('header.login')}
-            </Button>
-          </a>
+          {isAuthenticated ? (
+            <div className="hidden md:flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">{user?.name || user?.email}</span>
+              <Button variant="ghost" size="sm" onClick={logout}>
+                <LogOut className="h-4 w-4 mr-1" />
+                Çıkış
+              </Button>
+            </div>
+          ) : (
+            <a href="/login" className="hidden md:block">
+              <Button variant="ghost" size="sm">
+                {t('header.login')}
+              </Button>
+            </a>
+          )}
           <a href="/contact" className="hidden md:block">
             <Button size="sm" className="bg-primary hover:bg-primary/90">
               {t('header.requestDemo')}

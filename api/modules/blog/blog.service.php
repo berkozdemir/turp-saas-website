@@ -11,11 +11,11 @@ require_once __DIR__ . '/../../config/db.php';
 /**
  * List blog posts for a tenant
  * 
- * @param int $tenant_id
+ * @param string $tenant_id
  * @param array $options [status, search, page, limit]
  * @return array ['posts' => array, 'total' => int, 'pages' => int]
  */
-function blog_list_posts(int $tenant_id, array $options = []): array
+function blog_list_posts(string $tenant_id, array $options = []): array
 {
     $conn = get_db_connection();
 
@@ -66,11 +66,11 @@ function blog_list_posts(int $tenant_id, array $options = []): array
 /**
  * Get single blog post by ID
  * 
- * @param int $tenant_id
+ * @param string $tenant_id
  * @param int $post_id
  * @return array|null Post data or null
  */
-function blog_get_post(int $tenant_id, int $post_id): ?array
+function blog_get_post(string $tenant_id, int $post_id): ?array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("
@@ -89,11 +89,11 @@ function blog_get_post(int $tenant_id, int $post_id): ?array
 /**
  * Get blog post by slug (public)
  * 
- * @param int $tenant_id
+ * @param string $tenant_id
  * @param string $slug
  * @return array|null Post data or null
  */
-function blog_get_post_by_slug(int $tenant_id, string $slug): ?array
+function blog_get_post_by_slug(string $tenant_id, string $slug): ?array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("
@@ -112,11 +112,11 @@ function blog_get_post_by_slug(int $tenant_id, string $slug): ?array
 /**
  * Create blog post
  * 
- * @param int $tenant_id
+ * @param string $tenant_id
  * @param array $data Post data
  * @return int New post ID
  */
-function blog_create_post(int $tenant_id, array $data): int
+function blog_create_post(string $tenant_id, array $data): int
 {
     $conn = get_db_connection();
 
@@ -150,12 +150,12 @@ function blog_create_post(int $tenant_id, array $data): int
 /**
  * Update blog post
  * 
- * @param int $tenant_id
+ * @param string $tenant_id
  * @param int $post_id
  * @param array $data Post data
  * @return bool Success
  */
-function blog_update_post(int $tenant_id, int $post_id, array $data): bool
+function blog_update_post(string $tenant_id, int $post_id, array $data): bool
 {
     $conn = get_db_connection();
 
@@ -190,11 +190,11 @@ function blog_update_post(int $tenant_id, int $post_id, array $data): bool
 /**
  * Delete blog post
  * 
- * @param int $tenant_id
+ * @param string $tenant_id
  * @param int $post_id
  * @return bool Success
  */
-function blog_delete_post(int $tenant_id, int $post_id): bool
+function blog_delete_post(string $tenant_id, int $post_id): bool
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("DELETE FROM blog_posts WHERE id = ? AND tenant_id = ?");
@@ -204,10 +204,10 @@ function blog_delete_post(int $tenant_id, int $post_id): bool
 /**
  * List published posts (public)
  * 
- * @param int $tenant_id
+ * @param string $tenant_id
  * @return array Posts
  */
-function blog_get_published_posts(int $tenant_id): array
+function blog_get_published_posts(string $tenant_id): array
 {
     $conn = get_db_connection();
     $stmt = $conn->prepare("
