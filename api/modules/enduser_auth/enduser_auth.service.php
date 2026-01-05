@@ -263,24 +263,31 @@ function get_tenant_auth_settings(string $tenant_id): array
 {
     $conn = get_db_connection();
 
-    // Ensure columns exist
     try {
-        $conn->exec("ALTER TABLE tenants ADD COLUMN IF NOT EXISTS allow_enduser_login BOOLEAN DEFAULT FALSE");
-        $conn->exec("ALTER TABLE tenants ADD COLUMN IF NOT EXISTS allow_enduser_signup BOOLEAN DEFAULT FALSE");
+        $stmt = $conn->prepare("
+            SELECT code as tenant_id, name as tenant_name, allow_enduser_login, allow_enduser_signup
+            FROM tenants 
+            WHERE code = ?
+        ");
+        $stmt->execute([$tenant_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result) {
+            return [
+                'tenant_id' => $result['tenant_id'],
+                'tenant_name' => $result['tenant_name'],
+                'allow_enduser_login' => (bool) ($result['allow_enduser_login'] ?? false),
+                'allow_enduser_signup' => (bool) ($result['allow_enduser_signup'] ?? false)
+            ];
+        }
     } catch (Exception $e) {
-        // Columns might already exist
+        // Fallback if columns don't exist yet
+        error_log("[get_tenant_auth_settings] Query failed: " . $e->getMessage());
     }
 
-    $stmt = $conn->prepare("
-        SELECT code as tenant_id, name as tenant_name, allow_enduser_login, allow_enduser_signup
-        FROM tenants 
-        WHERE code = ?
-    ");
-    $stmt->execute([$tenant_id]);
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    return $result ?: [
+    return [
         'tenant_id' => $tenant_id,
+        'tenant_name' => $tenant_id,
         'allow_enduser_login' => false,
         'allow_enduser_signup' => false
     ];
