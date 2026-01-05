@@ -9,9 +9,7 @@
  * Related:
  *   - Component: RandomizationBot
  */
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { supabase } from "@/iwrs/integrations/supabase/client"; // Removed
 import { Header } from "@/iwrs/components/Header";
 import { Hero } from "@/iwrs/components/Hero";
 import { Features } from "@/iwrs/components/Features";
@@ -25,37 +23,16 @@ import { Footer } from "@/iwrs/components/Footer";
 import { RandomizationBot } from "@/iwrs/components/RandomizationBot";
 import { Button } from "@/iwrs/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/iwrs/components/ui/card";
-// Supabase'den gelen tipleri kaldırdık, çünkü mock yapıda 'any' kullanıyoruz
 import { useTranslation } from "react-i18next";
-
-import { authApi } from "@/iwrs/lib/api";
-import { EndUser } from "@/hooks/useEndUserAuth";
-
-// ...
+import { useEndUserAuth } from "@/hooks/useEndUserAuth";
 
 const Index = () => {
-  const [user, setUser] = useState<EndUser | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, loading: isLoading, logout } = useEndUserAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  useEffect(() => {
-    const checkSession = async () => {
-      const { session } = await authApi.getSession();
-      if (session) {
-        setUser(session.user);
-        setUser(session.user);
-      } else {
-        setUser(null);
-      }
-      setIsLoading(false);
-    };
-    checkSession();
-  }, [navigate]);
-
   const handleSignOut = async () => {
-    await authApi.logout();
-    setUser(null);
+    logout();
     window.location.reload();
   };
 
