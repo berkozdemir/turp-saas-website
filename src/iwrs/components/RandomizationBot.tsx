@@ -13,6 +13,7 @@ import { useEndUserAuth } from "@/hooks/useEndUserAuth";
 export const RandomizationBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
+  const [conversationStarted, setConversationStarted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { t } = useTranslation();
@@ -22,16 +23,17 @@ export const RandomizationBot = () => {
   const sessionId = user?.id ? `iwrs-${user.id}` : null;
   const { messages, isLoading, sendMessage, error, startConversation } = useChatbot(sessionId);
 
-  // Start conversation when bot opens (if no session exists)
+  // Start conversation when bot opens AND we have a user AND haven't started yet
   useEffect(() => {
-    if (isOpen && !sessionId && user) {
+    if (isOpen && user && !conversationStarted) {
+      setConversationStarted(true);
       startConversation({
         email: user.email || 'user@iwrs.com.tr',
-        name: user.name || user.full_name || 'IWRS User',
+        name: user.name || 'IWRS User',
         context_type: 'podcast_hub' // Generic context for IWRS
       });
     }
-  }, [isOpen, sessionId, user, startConversation]);
+  }, [isOpen, user, conversationStarted, startConversation]);
 
   // Listen for custom event to open chat from external CTA button
   useEffect(() => {
