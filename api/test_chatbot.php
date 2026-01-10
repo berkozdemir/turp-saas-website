@@ -12,30 +12,11 @@ error_reporting(E_ALL);
 
 header('Content-Type: application/json');
 
-// Load env
-$env_config_file = __DIR__ . '/env.php';
-if (file_exists($env_config_file)) {
-    $env_config = include $env_config_file;
-    if (is_array($env_config)) {
-        foreach ($env_config as $key => $value) {
-            putenv("$key=$value");
-            $_ENV[$key] = $value;
-            $_SERVER[$key] = $value;
-        }
-    }
-}
-
-function get_env($key, $default = null)
-{
-    $value = $_SERVER[$key] ?? $_ENV[$key] ?? getenv($key);
-    if ($value === false || $value === null || trim($value) === '') {
-        return $default;
-    }
-    return trim($value);
-}
+// Load db.php which also loads env.php and defines get_env()
+require_once __DIR__ . '/config/db.php';
 
 $result = [
-    'env_file_exists' => file_exists($env_config_file),
+    'env_file_exists' => file_exists(__DIR__ . '/env.php'),
     'deepseek_key_exists' => !empty(get_env('DEEPSEEK_API_KEY')),
     'deepseek_key_length' => strlen(get_env('DEEPSEEK_API_KEY') ?? ''),
     'deepseek_key_preview' => substr(get_env('DEEPSEEK_API_KEY') ?? 'NOT_SET', 0, 8) . '***',
