@@ -13,27 +13,38 @@ import { useEndUserAuth } from "@/hooks/useEndUserAuth";
 export const RandomizationBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState("");
-  const [conversationStarted, setConversationStarted] = useState(false);
+  const [conversationReady, setConversationReady] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { t } = useTranslation();
   const { user } = useEndUserAuth();
 
-  // Use the shared chatbot hook with a session based on user ID
-  const sessionId = user?.id ? `iwrs-${user.id}` : null;
-  const { messages, isLoading, sendMessage, error, startConversation } = useChatbot(sessionId);
+  // Use the shared chatbot hook - no initial session, we'll start fresh
+  const { messages, isLoading, sendMessage, error, startConversation } = useChatbot(null);
 
   // Start conversation when bot opens AND we have a user AND haven't started yet
   useEffect(() => {
-    if (isOpen && user && !conversationStarted) {
-      setConversationStarted(true);
-      startConversation({
-        email: user.email || 'user@iwrs.com.tr',
-        name: user.name || 'IWRS User',
-        context_type: 'podcast_hub' // Generic context for IWRS
-      });
-    }
-  }, [isOpen, user, conversationStarted, startConversation]);
+    const initConversation = async () => {
+      if (isOpen && user && !conversationReady) {
+        const result = await startConversation({
+          email: user.email || 'user@iwrs.com.tr',
+          name: user.name || 'IWRS User',
+          context_type: 'podcast_hub' // Generic context for IWRS
+        });
+        if (result.success) {
+          setConversationReady(true);
+        } else {
+          console.error('Failed to start conversation:', result.error);
+          toast({
+            title: "Hata",
+            description: result.error || "Sohbet başlatılamadı.",
+            variant: "destructive",
+          });
+        }
+      }
+    };
+    initConversation();
+  }, [isOpen, user, conversationReady, startConversation, toast]);
 
   // Listen for custom event to open chat from external CTA button
   useEffect(() => {
