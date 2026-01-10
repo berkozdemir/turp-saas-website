@@ -136,8 +136,8 @@ function chatbot_send_message(string $tenant_id, string $session_id, string $mes
         // RAG search
         $rag_results = rag_search($tenant_id, $message, 'tr', 5);
 
-        // Build DeepSeek prompt
-        $system_prompt = build_chatbot_system_prompt($rag_results);
+        // Build DeepSeek prompt with tenant-specific context
+        $system_prompt = build_chatbot_system_prompt($tenant_id, $rag_results);
         $messages = build_chatbot_messages($system_prompt, $history, $message);
 
         // Call DeepSeek API
