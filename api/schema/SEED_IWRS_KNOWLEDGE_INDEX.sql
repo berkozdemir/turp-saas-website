@@ -31,7 +31,7 @@ INSERT INTO chatbot_knowledge_index (tenant_id, source_type, source_id, title, c
 'tr', '{"type": "security"}'),
 
 ('iwrs', 'static', NULL, 'Destek ve İletişim',
-'IWRS sistemi için teknik destek Omega CRO ekibi tarafından sağlanmaktadır. Destek taleplerinizi iwrs.com.tr/contact sayfasından veya info@omega-cro.com.tr adresinden iletebilirsiniz.',
+'IWRS sistemi için teknik destek Omega CRO ekibi tarafından sağlanmaktadır. Destek taleplerinizi iwrs.com.tr/contact sayfasından, info@omega-cro.com.tr adresinden veya +90 312 426 77 22 numaralı telefondan iletebilirsiniz.',
 'tr', '{"type": "support"}'),
 
 ('iwrs', 'static', NULL, 'Hasta Hatırlatma Servisleri',
