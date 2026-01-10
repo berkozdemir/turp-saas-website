@@ -44,12 +44,10 @@ const EndUserLogin = lazy(() => import("../pages/EndUserLogin").then(m => ({ def
 const EndUserSignup = lazy(() => import("../pages/EndUserSignup").then(m => ({ default: m.EndUserSignup })));
 const EmailVerification = lazy(() => import("../pages/EmailVerification").then(m => ({ default: m.default })));
 
-import { useState } from "react";
-import { Bot, X } from "lucide-react";
-import { ChatInterface } from "@/components/chatbot/ChatInterface";
+
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { TenantSettingsProvider } from "../hooks/useTenantSettings";
-import { EndUserAuthProvider, useEndUserAuth } from "../hooks/useEndUserAuth";
+import { EndUserAuthProvider } from "../hooks/useEndUserAuth";
 import { fetchTenants } from "../hooks/useTenants";
 
 const queryClient = new QueryClient();
@@ -101,9 +99,6 @@ const RoutesWrapper = () => {
   // We need a hook to use navigate, so we extract Routes to a component inside BrowserRouter
   const navigate = useNavigate();
 
-  const { isAuthenticated, user } = useEndUserAuth();
-  const [isChatOpen, setIsChatOpen] = useState(false);
-
   const handleAuthNav = (view: string | any) => {
     if (view === 'home') navigate('/');
     else if (view === 'enduser-login' || view === 'login') navigate('/login');
@@ -140,54 +135,6 @@ const RoutesWrapper = () => {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-
-      {/* FLOATING AI CHAT for Authenticated Users */}
-      {isAuthenticated && (
-        <>
-          {/* Floating Toggle Button */}
-          <button
-            onClick={() => setIsChatOpen(!isChatOpen)}
-            className="fixed bottom-6 right-6 z-50 p-4 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-2xl hover:scale-105 transition-all duration-300 group"
-            style={{ animation: isChatOpen ? 'none' : 'gentle-pulse 2s ease-in-out infinite' }}
-            title="AI Randomizasyon Asistanına Yaz"
-          >
-            {isChatOpen ? (
-              <X size={28} />
-            ) : (
-              <Bot size={28} />
-            )}
-            {/* Tooltip on hover */}
-            <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-slate-900 text-white text-xs px-3 py-2 rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
-              AI Randomizasyon Asistanına Yaz
-            </div>
-          </button>
-
-          {/* Animation keyframes */}
-          <style>{`
-            @keyframes gentle-pulse {
-              0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
-              50% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(220, 38, 38, 0); }
-            }
-          `}</style>
-
-          {/* Chat Panel */}
-          {isChatOpen && (
-            <div className="fixed bottom-24 right-6 w-[380px] max-w-[calc(100vw-48px)] z-40 animate-in slide-in-from-bottom-10 fade-in duration-300 shadow-2xl rounded-xl border border-white/20">
-              <ChatInterface
-                sessionId={`session-${user?.id || 'guest'}`}
-                userName={user?.name || 'Kullanıcı'}
-                title="AI Randomizasyon Asistanı"
-                suggestions={[
-                  "Randomizasyon nasıl yapılır?",
-                  "Stok takibi yapabilir miyim?",
-                  "Gönüllü kaydı nasıl açılır?",
-                  "IWRS destek hattı nedir?"
-                ]}
-              />
-            </div>
-          )}
-        </>
-      )}
     </>
   );
 };
