@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { randomizationApi, authApi } from "@/iwrs/lib/api"; // Added
+import { randomizationApi } from "@/iwrs/lib/api";
 import { useToast } from "@/iwrs/hooks/use-toast";
 import { Button } from "@/iwrs/components/ui/button";
 import { Input } from "@/iwrs/components/ui/input";
@@ -81,21 +81,11 @@ const RandomizationForm = () => {
   // ... imports
 
   // ... inside component
+  // Form is PUBLIC - no authentication required
+  // Anyone can submit a randomization request
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
     try {
-      const { session } = await authApi.getSession();
-
-      if (!session) {
-        toast({
-          title: t('randomizationForm.authError'),
-          description: t('randomizationForm.authErrorDesc'),
-          variant: "destructive",
-        });
-        navigate("/auth");
-        return;
-      }
-
       await randomizationApi.submit(data);
 
       toast({

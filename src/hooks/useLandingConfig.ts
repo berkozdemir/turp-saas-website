@@ -1,64 +1,107 @@
-import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { useQuery } from '@tanstack/react-query';
 
-export interface LandingConfig {
-    id: number;
-    tenant_id: string;
-    language: string;
-    hero_title: string; // Legacy
-    hero_title_line1: string;
-    hero_title_line2: string;
-    hero_subtitle: string;
-    hero_badge: string;
-    primary_cta_label: string;
-    primary_cta_url: string;
-    secondary_cta_label: string;
-    secondary_cta_url: string;
-    hero_image_url: string;
-    background_style: string;
-    is_active: number;
-    // Line 1 styling
-    hero_line1_use_gradient_text: number;
-    hero_line1_solid_color: string;
-    hero_line1_gradient_from: string;
-    hero_line1_gradient_to: string;
-    hero_line1_gradient_angle: number;
-    // Line 2 styling
-    hero_line2_use_gradient_text: number;
-    hero_line2_solid_color: string;
-    hero_line2_gradient_from: string;
-    hero_line2_gradient_to: string;
-    hero_line2_gradient_angle: number;
-    // Gradient background
-    hero_use_gradient_background: number;
-    hero_gradient_bg_from: string;
-    hero_gradient_bg_to: string;
-    hero_gradient_bg_angle: number;
+export interface FeatureItem {
+  icon: string;
+  title: string;
+  description: string;
+  link: string;
 }
 
-import { fetchAPI } from "../lib/contentApi";
+export interface StatItem {
+  label: string;
+  value: string;
+}
 
-export const useLandingConfig = () => {
-    const { i18n } = useTranslation();
-    const [config, setConfig] = useState<LandingConfig | null>(null);
-    const [loading, setLoading] = useState(true);
+export interface Testimonial {
+  name: string;
+  role: string;
+  content: string;
+  rating: number;
+}
 
-    useEffect(() => {
-        const fetchConfig = async () => {
-            try {
-                const data = await fetchAPI('get_landing_config_public', { language: i18n.language });
-                if (data && data.success && data.data) {
-                    setConfig(data.data);
-                }
-            } catch (err) {
-                console.error("Failed to fetch landing config:", err);
-            } finally {
-                setLoading(false);
-            }
+export interface LandingConfig {
+  id: number;
+  tenant_id: number;
+  language: string;
+
+  // Hero Section
+  hero_title: string;
+  hero_title_line2?: string;
+  hero_subtitle: string;
+  hero_badge?: string;
+  hero_cta_text: string;
+  hero_cta_link: string;
+  hero_image_url?: string;
+  hero_bg_gradient_from?: string;
+  hero_bg_gradient_to?: string;
+
+  // Features Section
+  features_title: string;
+  features_json: FeatureItem[];
+
+  // Stats Section
+  stats_json: StatItem[];
+
+  // Testimonials Section
+  testimonials_json: Testimonial[];
+
+  // CTA Section
+  cta_title: string;
+  cta_description: string;
+  cta_button_text: string;
+  cta_button_link: string;
+
+  is_active: boolean;
+}
+
+interface ApiResponse {
+  success: boolean;
+  data: LandingConfig | null;
+  message?: string;
+}
+
+export function useLandingConfig(tenant: string = 'genlerimnediyor', language: string = 'tr') {
+  return useQuery<LandingConfig | null>({
+    queryKey: ['landing-config', tenant, language],
+    queryFn: async () => {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      const url = `${apiUrl}/index.php?action=get_landing_config&tenant=${tenant}&language=${language}`;
+
+      const response = await fetch(url);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch landing config: ${response.statusText}`);
+      }
+
+      const data: ApiResponse = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to fetch landing config');
+      }
+
+      // Parse JSON fields if they are strings
+      if (data.data) {
+        return {
+          ...data.data,
+          features_json: typeof data.data.features_json === 'string'
+            ? JSON.parse(data.data.features_json)
+            : data.data.features_json,
+          stats_json: typeof data.data.stats_json === 'string'
+            ? JSON.parse(data.data.stats_json)
+            : data.data.stats_json,
+          testimonials_json: typeof data.data.testimonials_json === 'string'
+            ? JSON.parse(data.data.testimonials_json)
+            : data.data.testimonials_json,
         };
+      }
 
-        fetchConfig();
-    }, [i18n.language]);
+      return null;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+}
 
-    return { config, loading };
-};
+export default useLandingConfig;

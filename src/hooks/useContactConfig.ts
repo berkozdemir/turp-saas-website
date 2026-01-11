@@ -1,50 +1,56 @@
-import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
+import { useQuery } from '@tanstack/react-query';
 
 export interface ContactConfig {
-    id: number;
-    tenant_id: string;
-    language: string;
-    contact_title: string;
-    contact_subtitle: string;
-    address_line1: string;
-    address_line2: string;
-    city: string;
-    country: string;
-    phone: string;
-    email: string;
-    map_embed_url: string;
-    working_hours: string;
-    form_enabled: number;
-    notification_email: string;
-    success_message: string;
-    error_message: string;
-    is_active: number;
+  id: number;
+  tenant_id: number;
+  language: string;
+  contact_title: string;
+  contact_subtitle: string;
+  address_line1: string;
+  address_line2: string;
+  city: string;
+  country: string;
+  phone: string;
+  whatsapp?: string;
+  email: string;
+  support_email?: string;
+  sales_email?: string;
+  working_hours?: string;
+  is_active: boolean;
 }
 
-import { fetchAPI } from "../lib/contentApi";
+interface ApiResponse {
+  success: boolean;
+  data: ContactConfig | null;
+  message?: string;
+}
 
-export const useContactConfig = () => {
-    const { i18n } = useTranslation();
-    const [config, setConfig] = useState<ContactConfig | null>(null);
-    const [loading, setLoading] = useState(true);
+export function useContactConfig(tenant: string = 'genlerimnediyor', language: string = 'tr') {
+  return useQuery<ContactConfig | null>({
+    queryKey: ['contact-config', tenant, language],
+    queryFn: async () => {
+      const apiUrl = import.meta.env.VITE_API_URL || '/api';
+      const url = `${apiUrl}/index.php?action=get_contact_config&tenant=${tenant}&language=${language}`;
 
-    useEffect(() => {
-        const fetchConfig = async () => {
-            try {
-                const data = await fetchAPI('get_contact_config_public', { language: i18n.language });
-                if (data && data.success && data.data) {
-                    setConfig(data.data);
-                }
-            } catch (err) {
-                console.error("Failed to fetch contact config:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
+      const response = await fetch(url);
 
-        fetchConfig();
-    }, [i18n.language]);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch contact config: ${response.statusText}`);
+      }
 
-    return { config, loading };
-};
+      const data: ApiResponse = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to fetch contact config');
+      }
+
+      return data.data;
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
+    retry: 1,
+    refetchOnWindowFocus: false,
+  });
+}
+
+export default useContactConfig;
